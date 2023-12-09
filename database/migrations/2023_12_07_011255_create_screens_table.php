@@ -30,8 +30,8 @@ return new class extends Migration
             $table->string('server_model', 255);
             $table->string('server_ip_lan', 255);
             $table->string('ingest_capabilities', 255);
-            $table->string('3d_brand', 255)->nullable();
-            $table->string('3d_model', 255)->nullable();
+            $table->string('d_brand', 255)->nullable();
+            $table->string('d_model', 255)->nullable();
             $table->string('automation_brand', 255);
             $table->string('automation_model', 255);
             $table->string('automation_ip_lan', 255);
