@@ -1,0 +1,34 @@
+created:
+    - app/Http/Controllers/LocationController.php
+    - app/Http/Controllers/ScreenController.php
+    - database/factories/LocationFactory.php
+    - database/factories/ScreenFactory.php
+    - database/factories/SplFactory.php
+    - database/factories/CplFactory.php
+    - database/factories/KdmFactory.php
+    - database/migrations/2023_12_07_011254_create_locations_table.php
+    - database/migrations/2023_12_07_011255_create_screens_table.php
+    - database/migrations/2023_12_07_011256_create_spls_table.php
+    - database/migrations/2023_12_07_011257_create_cpls_table.php
+    - database/migrations/2023_12_07_011258_create_kdms_table.php
+    - app/Models/Location.php
+    - app/Models/Screen.php
+    - app/Models/Spl.php
+    - app/Models/Cpl.php
+    - app/Models/Kdm.php
+    - tests/Feature/Http/Controllers/LocationControllerTest.php
+    - tests/Feature/Http/Controllers/ScreenControllerTest.php
+    - app/Http/Requests/LocationStoreRequest.php
+    - app/Http/Requests/ScreenStoreRequest.php
+    - resources/views/locations/index.blade.php
+    - resources/views/locations/show.blade.php
+    - resources/views/screens/index.blade.php
+    - resources/views/screens/show.blade.php
+updated:
+    - routes/web.php
+models:
+    Location: { name: 'string:255', folder_title: 'string:255', connection_ip: 'string:255', tms_system: 'string:255', rentrak_id: 'string:255', type: 'string:255 nullable', hostname: 'string:255 nullable', email: 'string:255 nullable', password: 'string:255 nullable', port: 'string:255 nullable', location_email: 'string:255 nullable', phone: 'string:255 nullable', support_email: 'string:255 nullable', modem: 'string:255', internet: 'string:255', address: 'string:255', city: 'string:255', zip: 'string:255', country: 'string:255', state: 'string:255', company: 'string:255 nullable', language: 'string:255 nullable', relationships: { hasMany: 'Spl, Cpl, Screen' } }
+    Screen: { name: 'string:255', seat: 'bigInteger:100 unsigned', api_namespace: 'string:255', type: 'string:255', masking_movement: 'string:255', screen_h: 'decimal:8,2 unsigned', screen_w: 'decimal:8,2 unsigned', screen_d: 'decimal:8,2 unsigned', projector_brand: 'string:255', projector_model: 'string:255', projector_ip_lan: 'string:255', lens_model: 'string:255', installed: boolean, server_brand: 'string:255', server_model: 'string:255', server_ip_lan: 'string:255', ingest_capabilities: 'string:255', 3d_brand: 'string:255 nullable', 3d_model: 'string:255 nullable', automation_brand: 'string:255', automation_model: 'string:255', automation_ip_lan: 'string:255', satelite_or_live: 'string:255', transmission_brand: 'string:255', transmission_model: 'string:255', transmission_ip_lan: 'string:255', processor_brand: 'string:255', processor_model: 'string:255', processor_ip_lan: 'string:255', audio_type: 'string:255', audio_brand: 'string:255', audio_model: 'string:255', audio_channel: 'string:255', audio_frequency: 'string:255', relationships: { belongsTo: Location } }
+    Spl: { name: 'string:100', uuid: 'string:255', annotation: 'string:255', issue_date: 'string:255', creator: 'string:255', path_file: 'string:255', server_name: 'string:255', last_update: dateTime, file_type: 'string:255', duration: integer, is_downloaded: integer, tms_path: 'string:255', id_server: 'string:255', id_local_server: integer, file_size: 'decimal:8,2 unsigned', file_progress: 'decimal:8,2 unsigned', spl_type: 'string:255', location_id: 'id foreign', relationships: { hasMany: Cpl, belongsTo: Location } }
+    Cpl: { uuid: 'string:255', durationEdits: 'string:255', storageKind: 'string:255', name: 'string:255', contentKind: 'string:255', editRate_numerator: 'string:255', editRate_denominator: 'string:255', editRateFPS: 'string:255', pictureWidth: 'decimal:8,2 unsigned', pictureHeight: 'decimal:8,2 unsigned', pictureEncodingAlgorithm: 'string:255', pictureEncryptionAlgorithm: 'string:255', soundChannelCount: 'decimal:8,2 unsigned', soundQuantizationBits: 'decimal:8,2 unsigned', soundEncodingAlgorithm: 'string:255', soundEncryptionAlgorithm: 'string:255', encryptionKeysCount: 'decimal:8,2 unsigned', framesPerEdit: 'decimal:8,2 unsigned', is3D: boolean, standardCompliance: 'string:255', soundSamplingRate_numerator: 'string:255', soundSamplingRate_denominator: 'string:255', assets: 'decimal:8,2 unsigned', cplSizeInBytes: 'decimal:8,2 unsigned', packageSizeInBytes: 'decimal:8,2 unsigned', markersCount: 'string:255', playable: 'string:255', last_update: dateTime, cpl_list_uuivd: 'string:255', id_auditorium: 'decimal:8,2 unsigned', id_server: 'string:255', location_id: 'id foreign', relationships: { hasMany: Spl, belongsTo: Location } }
+    Kdm: { uuid: 'string:255', name: 'string:255', AnnotationText: 'string:255', ContentKeysNotValidBefore: 'string:255', ContentKeysNotValidAfter: 'string:255', SubjectName: 'string:255', DeviceListDescription: 'string:255', SerialNumber: 'string:255', path_file: 'string:255', server_name: 'string:255', file_type: 'string:255', id_server: 'string:255', file_size: 'decimal:8,2 unsigned', file_progress: 'decimal:8,2 unsigned', tms_path: 'string:255', last_update: dateTime, screen_id: 'id foreign', cpl_id: 'id foreign', relationships: { belongsTo: 'Cpl, Screen' } }
