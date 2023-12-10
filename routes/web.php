@@ -33,4 +33,4 @@ require __DIR__.'/auth.php';
 
 Route::resource('location', App\Http\Controllers\LocationController::class);
 
-Route::resource('screen', App\Http\Controllers\ScreenController::class)->only('index', 'show', 'store');
+Route::resource('screen', App\Http\Controllers\ScreenController::class);
