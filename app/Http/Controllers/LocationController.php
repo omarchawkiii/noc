@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\changeDataEvent;
 use App\Http\Requests\LocationStoreRequest;
 use App\Models\Location;
 use Illuminate\Http\RedirectResponse;
@@ -14,7 +15,8 @@ class LocationController extends Controller
     public function index(Request $request): View
     {
         $locations = Location::all();
-
+        $location= Location::all()->first();
+        broadcast(new changeDataEvent($location))->toOthers() ;
         return view('locations.index', compact('locations'));
     }
 
@@ -45,7 +47,6 @@ class LocationController extends Controller
     public function update (Location $location , LocationStoreRequest $request )
     {
         $location->update($request->validated());
-
         return redirect()->route('location.index')->with('message' ,' The location has been updated  ');
     }
 

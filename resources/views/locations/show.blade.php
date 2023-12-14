@@ -80,7 +80,7 @@
                                     @endforeach
                                 </ul>
                             </div>
-                            <div class="col-12 col-sm-9">
+                            <div class="col-12 col-sm-9" id="content_screen">
                                 <div class="tab-content tab-content-vertical">
                                     @foreach ($location->screens as $key=>  $screen )
                                         <div class="tab-pane fade @if($key == 0 ) show active @endif" id="tab-{{ $screen->id }}" role="tabpanel" aria-labelledby="{{ $screen->name }}">
@@ -169,7 +169,34 @@
 
 @section('custom_script')
 
+<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 
+<script>
+
+
+    // Enable pusher logging - don't include this in production
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher('0c2ff678e201c7fe3754', {
+      cluster: 'ap1'
+    });
+
+
+
+    var channel = pusher.subscribe('screen');
+
+
+    channel.bind('screen', function(data,page_id) {
+      //alert(JSON.stringify(data));
+      $('#content_screen').load(document.URL +  ' #thisdiv');
+      //location.reload(true)
+    });
+
+
+
+
+
+</script>
 <script src="{{asset('/assets/vendors/jquery-toast-plugin/jquery.toast.min.js')}}"></script>
 <script>
     (function($) {
