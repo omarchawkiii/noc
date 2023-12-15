@@ -32,5 +32,6 @@ require __DIR__.'/auth.php';
 
 
 Route::resource('location', App\Http\Controllers\LocationController::class);
+Route::get('location/{location}/getscreens', [App\Http\Controllers\LocationController::class , 'getscreens'])->name('location.getscreens');
 
 Route::resource('screen', App\Http\Controllers\ScreenController::class);

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Screen extends Model
 {
@@ -16,40 +17,35 @@ class Screen extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
-        'seat',
-        'api_namespace',
-        'type',
-        'masking_movement',
-        'screen_h',
-        'screen_w',
-        'screen_d',
-        'projector_brand',
-        'projector_model',
-        'projector_ip_lan',
-        'lens_model',
-        'installed',
-        'server_brand',
-        'server_model',
-        'server_ip_lan',
-        'ingest_capabilities',
-        'd_brand',
-        'd_model',
-        'automation_brand',
-        'automation_model',
-        'automation_ip_lan',
-        'satelite_or_live',
-        'transmission_brand',
-        'transmission_model',
-        'transmission_ip_lan',
-        'processor_brand',
-        'processor_model',
-        'processor_ip_lan',
-        'audio_type',
-        'audio_brand',
-        'audio_model',
-        'audio_channel',
-        'audio_frequency',
+        "id_server" ,
+        "screen_number" ,
+        "screen_name" ,
+        "screenModel" ,
+        "playback" ,
+        "sound" ,
+        "server_ip" ,
+        "ingestProtocol_server" ,
+        "remotPath" ,
+        "managment_ip" ,
+        "projector_enable" ,
+        "projector_ip" ,
+        "projector_brand" ,
+        "projector_model" ,
+        "sound_enable" ,
+        "sound_ip" ,
+        "sound_brand" ,
+        "sound_model" ,
+        "audio_enable" ,
+        "audio_ip" ,
+        "audio_brand" ,
+        "audio_model" ,
+        "automation_enable" ,
+        "automation_ip" ,
+        "automation_brand" ,
+        "automation_model" ,
+        "automation_username" ,
+        "automation_password" ,
+        "enable_power_control" ,
         'location_id',
     ];
 
@@ -71,5 +67,10 @@ class Screen extends Model
     public function location(): BelongsTo
     {
         return $this->belongsTo(Location::class);
+    }
+
+    public function powers(): HasMany
+    {
+        return $this->hasMany(Power::class);
     }
 }

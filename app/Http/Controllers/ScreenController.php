@@ -42,7 +42,6 @@ class ScreenController extends Controller
         return view('screens.create', compact('locations'));
     }
 
-
     public function store(ScreenStoreRequest $request)
     {
         $screen = Screen::create($request->validated());
