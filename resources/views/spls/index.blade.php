@@ -39,6 +39,8 @@
 
 
                     <div class="col-xl-2">
+
+
                         <div class="input-group mb-2 mr-sm-2">
                             <div class="input-group-prepend">
                                 <div class="input-group-text"><i class="mdi mdi-monitor"></i></div>
@@ -72,29 +74,113 @@
                                     @foreach ($screen->spls as $key => $spl )
                                         <tr class="odd">
                                             <td class="sorting_1"><a>{{ $spl->id }}</a> </td>
-                                            <td><a class="text-body align-middle fw-medium text-decoration-none" > {{ $spl->name }}</a></td>
+                                            <td><a class="text-body align-middle fw-medium text-decoration-none" > {{ $spl->name }}</a> <br /></td>
                                             <td><a class="text-body align-middle fw-medium text-decoration-none" > {{ $spl->available_on }}</a></td>
                                             <td>
-                                                <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#spl_model_{{ $spl->id }}"><i class="mdi mdi-magnify"> </i></button>
-                                                <div class="modal fade" id="spl_model_{{ $spl->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog" role="document">
-                                                      <div class="modal-content">
-                                                        <div class="modal-header">
-                                                          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                          </button>
+                                                <a class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#spl_model_-{{ $spl->id }}" href="#"><i class="mdi mdi-magnify"> </i> </a>
+                                                <div class=" modal fade " id="spl_model_-{{ $spl->id }}" tabindex="-1" role="dialog"  aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered  modal-xl">
+                                                        <div class="modal-content border-0">
+                                                            <div class="modal-header p-4 pb-0">
+                                                                <ul class="nav nav-tabs" role="tablist">
+                                                                    <li class="nav-item">
+                                                                      <a class="nav-link active" id="Properties-tab" data-bs-toggle="tab" href="#Properties-{{ $spl->id }}" role="tab" aria-controls="home" aria-selected="true">Properties</a>
+                                                                    </li>
+                                                                    <li class="nav-item">
+                                                                      <a class="nav-link" id="cpls-tab" data-bs-toggle="tab" href="#cpls-{{ $spl->id }}" role="tab" aria-controls="Content CPLs" aria-selected="false">Content CPLs</a>
+                                                                    </li>
+                                                                    <li class="nav-item">
+                                                                      <a class="nav-link" id="schedules-tab" data-bs-toggle="tab" href="#schedules-{{ $spl->id }}" role="tab" aria-controls="schedules" aria-selected="false">Related Schedules</a>
+                                                                    </li>
+                                                                  </ul>
+                                                                <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body text-center p-4">
+
+                                                                <div class="tab-content border-0">
+                                                                    <div class="tab-pane fade show active" id="Properties-{{ $spl->id }}" role="tabpanel" aria-labelledby="Properties-tab">
+                                                                        <div class="card rounded border mb-2">
+                                                                            <div class="card-body p-3">
+                                                                                <div class="media  justify-content-start">
+                                                                                    <div class="media-body d-flex align-items-center">
+                                                                                        <i class=" mdi mdi-star icon-sm align-self-center me-3"></i>
+                                                                                        <h6 class="mb-1">Title : </h6>
+                                                                                    </div>
+                                                                                    <div class="media-body">
+                                                                                        <p class="mb-0 text-muted m-1">   </p>
+                                                                                    </div>
+                                                                                    <div class="media-body">
+                                                                                        <p class="mb-0 text-muted"> {{ $spl->name }} </p>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="card rounded border mb-2">
+                                                                            <div class="card-body p-3">
+                                                                                <div class="media  d-flex justify-content-start">
+                                                                                    <div class="media-body d-flex align-items-center">
+                                                                                        <i class="mdi mdi-star icon-sm align-self-center me-3"></i>
+                                                                                        <h6 class="mb-1">UUID : </h6>
+                                                                                    </div>
+                                                                                    <div class="media-body">
+                                                                                        <p class="mb-0 text-muted m-1">   </p>
+                                                                                    </div>
+                                                                                    <div class="media-body">
+                                                                                        <p class="mb-0 text-muted"> {{ $spl->uuid }} </p>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="card rounded border mb-2">
+                                                                            <div class="card-body p-3">
+                                                                                <div class="media  d-flex justify-content-start mr-5">
+                                                                                    <div class="media-body d-flex align-items-center">
+                                                                                        <i class="mdi mdi-timer icon-sm align-self-center me-3"></i>
+                                                                                        <h6 class="mb-1">Duration : </h6>
+                                                                                    </div>
+                                                                                    <div class="media-body">
+                                                                                        <p class="mb-0 text-muted m-1">   </p>
+                                                                                    </div>
+                                                                                    <div class="media-body">
+                                                                                        <p class="mb-0 text-muted"> {{ gmdate("H:i:s",  $spl->duration)  }} </p>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="tab-pane fade" id="cpls-{{ $spl->id }}" role="tabpanel" aria-labelledby="cpls-tab">
+                                                                        <div class="">
+                                                                            <table class="table">
+                                                                                <thead>
+                                                                                    <tr>
+                                                                                        <th>UUID</th>
+                                                                                        <th>CPL Name</th>
+
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    @foreach ($spl->cpls as $cpl )
+                                                                                        <tr>
+                                                                                            <td> {{  $cpl->uuid }}</td>
+                                                                                            <td> {{  $cpl->contentTitleText }}</td>
+                                                                                        </tr>
+                                                                                    @endforeach
+                                                                              </tbody>
+                                                                            </table>
+                                                                          </div>
+                                                                    </div>
+                                                                    <div class="tab-pane fade" id="schedules-{{ $spl->id }}" role="tabpanel" aria-labelledby="schedules-tab">
+                                                                     Lorem ipsum dolor sit amet consectetur adipisicing elit.<br />Fugiat ipsum facilis debitis similique, libero ratione labore laudantium <br />repellendus illum sit reprehenderit voluptatem laborum repudiandae molestias rem ea aperiam impedit praesentium.
+                                                                    </div>
+                                                                </div>
+
+
+                                                            </div>
                                                         </div>
-                                                        <div class="modal-body">
-                                                          ...
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                          <button type="button" class="btn btn-primary">Save changes</button>
-                                                        </div>
-                                                      </div>
+                                                    <!--end modal-content-->
                                                     </div>
-                                                  </div>
+                                                </div>
+
                                             </td>
 
                                         </tr>

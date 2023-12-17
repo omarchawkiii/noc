@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cpl;
 use App\Models\Location;
 use App\Models\Screen;
+use App\Models\Spl;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -102,5 +103,20 @@ class CplController extends Controller
 
 
 
+    }
+
+    public function sync_spl_cpl( Location $location )
+    {
+        $spls = Spl::all() ;
+
+        foreach($spls as $spl)
+        {
+            $url = $location->connection_ip."?request=getCplsBySpl&spl_uuid=".$spl->uuid;
+
+            $client = new Client();
+            $response = $client->request('GET', $url);
+
+            dd($response) ;
+        }
     }
 }

@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Events\changeDataEvent;
 use App\Http\Requests\LocationStoreRequest;
+use App\Models\Cpl;
 use App\Models\Location;
 use App\Models\Power;
 use App\Models\Screen;
+use App\Models\Spl;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -131,6 +133,50 @@ class LocationController extends Controller
 
 
 
+    }
+
+    public function sync_spl_cpl( Location $location )
+    {
+        $spls = Spl::all() ;
+
+        foreach($spls as $spl)
+        {
+            $url = $location->connection_ip."?request=getCplsBySpl&spl_uuid=".$spl->uuid;
+
+            $client = new Client();
+            $response = $client->request('GET', $url);
+            $contents = json_decode($response->getBody(), true);
+            $spl->cpls()->detach() ;
+
+            if($contents)
+            {
+
+                foreach($contents as $content)
+                {
+                    if($content)
+                    {
+                        foreach($content as $cpl_content)
+                        {
+                            $cpl = Cpl::where('uuid','=',$cpl_content['CompositionPlaylistId'])->where('location_id','=',$location->id)->first() ;
+                            if($cpl)
+                            {
+                                $spl->cpls()->syncWithoutDetaching([$cpl->id]);
+                            }
+                            else
+                            {
+                                dd($cpl_content) ;
+                            }
+
+
+
+                        }
+                    }
+                }
+            }
+
+
+
+        }
     }
 
 

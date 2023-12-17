@@ -33,6 +33,8 @@ require __DIR__.'/auth.php';
 
 Route::resource('location', App\Http\Controllers\LocationController::class);
 Route::get('location/{location}/getscreens', [App\Http\Controllers\LocationController::class , 'getscreens'])->name('location.getscreens');
+Route::get('sync_spl_cpl/{location}', [App\Http\Controllers\LocationController::class , 'sync_spl_cpl'])->name('location.sync_spl_cpl');
+
 
 Route::resource('screen', App\Http\Controllers\ScreenController::class);
 
@@ -44,3 +46,5 @@ Route::get('get_spl_with_filter', [App\Http\Controllers\SplController::class , '
 Route::get('cpls/{location}/{spls}/get_cpls', [App\Http\Controllers\CplController::class , 'getcpls'])->name('cpls.get_cpls');
 Route::get('cpls/screen/{screen}', [App\Http\Controllers\CplController::class , 'cpl_by_screen'])->name('cpls.cpls_by_screen');
 Route::get('get_cpl_with_filter', [App\Http\Controllers\CplController::class , 'get_cpl_with_filter'])->name('cpls.get_cpl_with_filter');
+
+
