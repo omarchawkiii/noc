@@ -10694,7 +10694,7 @@ textarea.is-invalid.tt-hint {
   flex-direction: column;
   align-items: flex-start;
   justify-content: center; }
-  
+
   .btn-group-vertical > .btn,
   .fc .btn-group-vertical > button,
   .ajax-upload-dragdrop .btn-group-vertical > .ajax-file-upload,
@@ -16129,7 +16129,7 @@ code {
 .page-title {
   color: #ffffff;
   font-size: 1.125rem;
-  margin-bottom: 0; 
+  margin-bottom: 0;
   padding: 0 15px;
 }
   .page-title .page-title-icon {
@@ -17886,7 +17886,7 @@ code {
     border-color: #2c2e33;
     padding: 0.56rem 0.75rem;
     color: #4b5564;
-    background: none; 
+    background: none;
     height: 100% ;
   }
 
@@ -19080,7 +19080,7 @@ dl {
     .portfolio-grid figure.effect-text-in img {
       -webkit-backface-visibility: hidden;
       backface-visibility: hidden; }
-    
+
     .portfolio-grid figure.effect-text-in h4,
     .portfolio-grid figure.effect-text-in .h4,
     .portfolio-grid figure.effect-text-in p {
@@ -19623,10 +19623,12 @@ dl {
 .tab-content {
   border: 1px solid #2c2e33;
   border-top: 0;
-  padding: 2rem 1rem;
+  padding: 0rem 1rem;
   text-align: justify; }
-  .tab-content.tab-content-vertical {
-    border-top: 1px solid #2c2e33; }
+  /*.tab-content.tab-content-vertical
+  {
+    border-top: 1px solid #2c2e33;
+ }*/
   .tab-content.tab-content-vertical-custom {
     border: 0;
     padding-top: 0; }
@@ -22640,13 +22642,13 @@ div.tagsinput {
       .navbar .navbar-menu-wrapper .count-indicator .count {
         position: absolute;
         left: 66%;
-       
+
         color: #ffffff;
         border-radius: 100%;
         text-align: center;
         font-size: .750rem;
         line-height: 1.5;
-        top: -4px; 
+        top: -4px;
         padding: 3px;
       }
     .navbar .navbar-menu-wrapper .navbar-nav {
@@ -22840,7 +22842,7 @@ div.tagsinput {
           width: auto;
           max-width: 100%;
           height: 28px;
-          margin: auto; 
+          margin: auto;
           display: table;}
   .sidebar .nav {
     overflow: hidden;
@@ -23090,7 +23092,7 @@ div.tagsinput {
       color: color(white); }
     .sidebar .nav .menu-items .nav-link .menu-icon i
      {
-      color: #297EEE; 
+      color: #297EEE;
     }
     .sidebar .nav .menu-items:nth-child(5n+2) .nav-link .menu-icon i {
       color: theme-color(success); }
@@ -23583,47 +23585,47 @@ footer .footer-box
 
 
 
-.sidebar .nav .menu-items .nav-link .menu-icon.icon-box-danger 
+.sidebar .nav .menu-items .nav-link .menu-icon.icon-box-danger
 {
-  background-color:rgba(143, 95, 232, 0.11) ; 
+  background-color:rgba(143, 95, 232, 0.11) ;
 }
 
-.sidebar .nav .menu-items .nav-link .menu-icon.icon-box-info 
+.sidebar .nav .menu-items .nav-link .menu-icon.icon-box-info
 {
   background-color: rgba(252, 66, 74, 0.11);
 }
 
-.sidebar .nav .menu-items .nav-link .menu-icon.icon-box-warning  
+.sidebar .nav .menu-items .nav-link .menu-icon.icon-box-warning
 {
   background-color: rgba(255, 171, 0, 0.11);
 }
 
-.sidebar .nav .menu-items .nav-link .menu-icon.icon-box-success  
+.sidebar .nav .menu-items .nav-link .menu-icon.icon-box-success
 {
   background-color: rgba(0, 210, 91, 0.11);
 }
 
-.sidebar .nav .menu-items .nav-link .menu-icon.icon-box-orange  
+.sidebar .nav .menu-items .nav-link .menu-icon.icon-box-orange
 {
   background-color: #ff6c2826;
 }
 
-.sidebar .nav .menu-items .nav-link .menu-icon.icon-box-Blue  
+.sidebar .nav .menu-items .nav-link .menu-icon.icon-box-Blue
 {
   background-color: #00a5ff26;
 }
 
-.sidebar .nav .menu-items .nav-link .menu-icon.icon-box-yallow  
+.sidebar .nav .menu-items .nav-link .menu-icon.icon-box-yallow
 {
   background-color: #feff0026;
 }
 
-.sidebar .nav .menu-items .nav-link .menu-icon.icon-box-purple  
+.sidebar .nav .menu-items .nav-link .menu-icon.icon-box-purple
 {
   background-color: #BF24E026;
 }
 
-.sidebar .nav .menu-items .nav-link .menu-icon.icon-box-playlistbuilder  
+.sidebar .nav .menu-items .nav-link .menu-icon.icon-box-playlistbuilder
 {
   background-color: #F24EB126;
 }
@@ -23632,14 +23634,14 @@ footer .footer-box
 
 
 .form-select:after{
-  width: 0; 
-  height: 0; 
+  width: 0;
+  height: 0;
   border-left: 6px solid transparent;
   border-right: 6px solid transparent;
   border-top: 6px solid #f00  !important;
 }
 
-.palyback-form-text 
+.palyback-form-text
 {
   background-color: #2a3038;
 }
@@ -23660,50 +23662,50 @@ footer .footer-box
 
 .playbck-shadow
 {
-  box-shadow : 0px -44px 41px #fc424a; 
+  box-shadow : 0px -44px 41px #fc424a;
 }
 
 .multiplex-shadow
 {
-  box-shadow : 0px -44px 41px #8f5fe8; 
+  box-shadow : 0px -44px 41px #8f5fe8;
 }
 
 .ingester-shadow
 {
-  box-shadow : 0px -44px 41px #ffc107;  
+  box-shadow : 0px -44px 41px #ffc107;
 }
 .library-shadow
 {
-  box-shadow : 0px -44px 41px #00d25b;  
+  box-shadow : 0px -44px 41px #00d25b;
 }
 
 .macros-shadow
 {
-  box-shadow : 0px -44px 41px #ff6c28;  
+  box-shadow : 0px -44px 41px #ff6c28;
 }
 
 
 .scheduler-shadow
 {
-  box-shadow : 0px -44px 41px #00a5ff;  
+  box-shadow : 0px -44px 41px #00a5ff;
 }
 
 .power-control-shadow
 {
-  box-shadow : 0px -44px 41px #feff00;  
+  box-shadow : 0px -44px 41px #feff00;
 }
 .device-shadow
 {
-  box-shadow : 0px -44px 41px #BF24E0;  
+  box-shadow : 0px -44px 41px #BF24E0;
 }
 .playlistbuilder-shadow
 {
-  box-shadow : 0px -44px 41px #F24EB1;  
+  box-shadow : 0px -44px 41px #F24EB1;
 }
 
 .breadcrumb-item a
 {
-  color: rgba(255, 255, 255, 0.8) ; 
+  color: rgba(255, 255, 255, 0.8) ;
   text-decoration: none;
 }
 
@@ -23725,7 +23727,7 @@ footer .footer-box
   font-size: 24px;
 }
 .progress-bar,
-.progress 
+.progress
 {
   border-radius: 5px !important;
 }
@@ -23735,7 +23737,7 @@ footer .footer-box
 {
   margin: 5px;
   padding: 5px;
-  
+
   height: 450px;
   overflow: auto;
   text-align: justify;
@@ -23757,7 +23759,7 @@ footer .footer-box
 .preview-list.multiplex::-webkit-scrollbar-track,
 .fixed-hight::-webkit-scrollbar-track,
 .wizard ::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 6px dark; 
+  -webkit-box-shadow: inset 0 0 6px dark;
 
 }
 
@@ -23766,11 +23768,11 @@ footer .footer-box
 .fixed-hight::-webkit-scrollbar-thumb,
 .wizard ::-webkit-scrollbar-thumb  {
 
-  background: dark; 
-  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+  background: dark;
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
 }
 
-#monitor .option , 
+#monitor .option ,
 #logs .option
 {
   margin-right: 5px;
@@ -23792,7 +23794,7 @@ footer .footer-box
 
 .navbar .navbar-brand-wrapper .navbar-brand.brand-logo-mini.logo-mobile img
 {
-  width: 40px; 
+  width: 40px;
   height: auto;
   max-width: 50px ;
 }

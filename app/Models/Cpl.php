@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Cpl extends Model
@@ -17,38 +18,23 @@ class Cpl extends Model
      * @var array
      */
     protected $fillable = [
+
         'uuid',
-        'durationEdits',
-        'storageKind',
-        'name',
+        'id_dcp',
+        'contentTitleText',
         'contentKind',
-        'editRate_numerator',
-        'editRate_denominator',
-        'editRateFPS',
-        'pictureWidth',
-        'pictureHeight',
-        'pictureEncodingAlgorithm',
-        'pictureEncryptionAlgorithm',
+        'EditRate',
+        'is_3D',
+        'totalSize',
         'soundChannelCount',
-        'soundQuantizationBits',
-        'soundEncodingAlgorithm',
-        'soundEncryptionAlgorithm',
-        'encryptionKeysCount',
-        'framesPerEdit',
-        'is3D',
-        'standardCompliance',
-        'soundSamplingRate_numerator',
-        'soundSamplingRate_denominator',
-        'assets',
-        'cplSizeInBytes',
-        'packageSizeInBytes',
-        'markersCount',
-        'playable',
-        'last_update',
-        'cpl_list_uuivd',
-        'id_auditorium',
-        'id_server',
+        'durationEdits',
+        'ScreenAspectRatio',
+        'available_on',
+        'serverName',
+        'cpl_is_linked',
         'location_id',
+        'screen_id',
+
     ];
 
     /**
@@ -71,12 +57,14 @@ class Cpl extends Model
         'last_update' => 'datetime',
         'id_auditorium' => 'decimal:2',
         'location_id' => 'integer',
+
     ];
 
-    public function spls(): HasMany
+    public function spls(): BelongsToMany
     {
-        return $this->hasMany(Spl::class);
+        return $this->belongsToMany(Spl::class,'cpls_spls');
     }
+
 
     public function location(): BelongsTo
     {

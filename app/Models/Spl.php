@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Spl extends Model
@@ -35,6 +36,8 @@ class Spl extends Model
         'file_progress',
         'spl_type',
         'location_id',
+        'screen_id',
+        'available_on',
     ];
 
     /**
@@ -50,9 +53,9 @@ class Spl extends Model
         'location_id' => 'integer',
     ];
 
-    public function cpls(): HasMany
+    public function cpls(): BelongsToMany
     {
-        return $this->hasMany(Cpl::class);
+        return $this->belongsToMany(Cpl::class,'cpls_spls');
     }
 
     public function location(): BelongsTo

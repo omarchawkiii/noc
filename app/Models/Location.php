@@ -68,6 +68,7 @@ class Location extends Model
         return $this->hasMany(Cpl::class);
     }
 
+
     public function screens(): HasMany
     {
         return $this->hasMany(Screen::class);

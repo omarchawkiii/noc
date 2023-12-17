@@ -20,7 +20,7 @@ class LocationController extends Controller
     {
         $locations = Location::all();
         $location= Location::all()->first();
-        broadcast(new changeDataEvent($location))->toOthers() ;
+       // broadcast(new changeDataEvent($location))->toOthers() ;
         return view('locations.index', compact('locations'));
     }
 

@@ -19,8 +19,8 @@
                     </div>
 
                     <div>
-                        <a href="{{ route('location.getscreens' , $location) }}" class="btn btn-success btn-icon-text">
-                            <i class="mdi mdi-plus btn-icon-prepend"></i> Refresh Screens
+                        <a href="{{ route('location.getscreens' , $location) }}" class="btn btn-warning btn-icon-text">
+                            <i class="mdi mdi-refresh btn-icon-prepend"></i> Refresh Screens
                         </a>
                     </div>
                 </div>
@@ -88,6 +88,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12 col-sm-2">
+                                <h3 class="text-center">Screens</h3>
                                 <ul class="nav nav-tabs nav-tabs-vertical" role="tablist">
                                     @foreach ($location->screens as $key=> $screen )
                                         <li class="nav-item">
@@ -101,6 +102,20 @@
                                     @foreach ($location->screens as $key=>  $screen )
                                         <div class="tab-pane fade @if($key == 0 ) show active @endif" id="tab-{{ $screen->id }}" role="tabpanel" aria-labelledby="{{ $screen->screen_name }}">
                                             <div class="row">
+                                                <div class="d-flex flex-row justify-content-between mt-2 mb-3">
+                                                    <div>
+                                                        <h3 class="">{{ $screen->screen_name }}</h3>
+                                                    </div>
+                                                    <div>
+                                                    <a href="{{ route('spls.get_spls' , [$location->id, $screen->id]) }}" class="btn btn-warning btn-icon-text">
+                                                        <i class="mdi mdi-refresh btn-icon-prepend"></i> Get SPLs
+                                                    </a>
+                                                    <a href="{{ route('cpls.get_cpls' , [$location->id, $screen->id]) }}" class="btn btn-warning btn-icon-text">
+                                                        <i class="mdi mdi-refresh btn-icon-prepend"></i> Get CPLs
+                                                    </a>
+                                                    </div>
+                                                </div>
+
                                                 <div class="col-md-3">
                                                     <div class="card">
                                                         <div class="card-body bg-dark">
@@ -179,6 +194,19 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="row mt-2 mb-2">
+                                                <div class="col-xl-12 ">
+
+                                                    <a type="button" href="{{ route('spls.spls_by_screen' , $screen) }}" class="btn btn-success btn-icon-text">
+                                                      <i class="mdi mdi-information"></i> Show SPLs
+                                                    </a>
+                                                    <a type="button" href="{{ route('cpls.cpls_by_screen' , $screen) }}" class="btn btn-success btn-icon-text">
+                                                        <i class="mdi mdi-information"></i> Show CPLs
+                                                      </a>
+
+                                                </div>
+                                            </div>
+
                                         </div>
                                     @endforeach
                                 </div>

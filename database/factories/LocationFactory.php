@@ -23,7 +23,7 @@ class LocationFactory extends Factory
         return [
             'name' => $this->faker->name(),
             'folder_title' => $this->faker->name(),
-            'connection_ip' => $this->faker->name(),
+            'connection_ip' => 'http://localhost/tms_fronT/system/api2.php',
             'tms_system' => $this->faker->name(),
             'rentrak_id' => $this->faker->name(),
             'type' => $this->faker->name(),

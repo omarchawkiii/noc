@@ -13,6 +13,20 @@
           <span class="menu-title">Locations</span>
         </a>
       </li>
-
+      <li class="nav-item menu-items ">
+        <a class="nav-link" data-bs-toggle="collapse" href="#showm_anagement" aria-expanded="false" aria-controls="icons">
+          <span class="menu-icon">
+            <i class="mdi mdi-contacts"></i>
+          </span>
+          <span class="menu-title">Show Management </span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse " id="showm_anagement">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="{{ route('spls.get_spl_with_filter') }}">Show Playlists</a></li>
+            <li class="nav-item"> <a class="nav-link " href="{{ route('cpls.get_cpl_with_filter') }}">CPLS</a></li>
+          </ul>
+        </div>
+      </li>
     </ul>
   </nav>

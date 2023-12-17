@@ -73,4 +73,12 @@ class Screen extends Model
     {
         return $this->hasMany(Power::class);
     }
+    public function spls(): HasMany
+    {
+        return $this->hasMany(Spl::class);
+    }
+    public function cpls(): HasMany
+    {
+        return $this->hasMany(Cpl::class);
+    }
 }
