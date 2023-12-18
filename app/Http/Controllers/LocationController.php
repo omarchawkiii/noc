@@ -72,7 +72,7 @@ class LocationController extends Controller
                 $screen->powers()->delete() ;
             }
 
-            $location->screens()->9() ;
+            $location->screens()->delete() ;
             foreach($contents as $content)
             {
                 foreach($content as $screen)
