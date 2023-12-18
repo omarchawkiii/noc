@@ -66,6 +66,7 @@
                                     <th class="sorting sorting_asc">No #</th>
                                     <th class="sorting">Playlist</th>
                                     <th class="sorting">Available On </th>
+                                    <th class="sorting">Duration </th>
                                     <th class="sorting">Action</th>
                                 </tr>
                             </thead>
@@ -76,6 +77,7 @@
                                             <td class="sorting_1"><a>{{ $spl->id }}</a> </td>
                                             <td><a class="text-body align-middle fw-medium text-decoration-none" > {{ $spl->name }}</a> <br /></td>
                                             <td><a class="text-body align-middle fw-medium text-decoration-none" > {{ $spl->available_on }}</a></td>
+                                            <td><a class="text-body align-middle fw-medium text-decoration-none" > {{ $spl->duration }}</a></td>
                                             <td>
                                                 <a class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#spl_model_-{{ $spl->id }}" href="#"><i class="mdi mdi-magnify"> </i> </a>
                                                 <div class=" modal fade " id="spl_model_-{{ $spl->id }}" tabindex="-1" role="dialog"  aria-labelledby="delete_client_modalLabel" aria-hidden="true">
@@ -259,9 +261,18 @@
             $("#location-listing").dataTable().fnDestroy();
             $('#location-listing tbody').html('')
 
-            var location =  null;
+
             var country =  $('#country').val();
             var screen =  $('#screen').val();
+            if(screen == 'null')
+            {
+                var location =  $('#location').val();
+
+            }
+            else
+            {
+                var location =  null;
+            }
 
             var url = '/get_spl_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen;
 
@@ -280,6 +291,7 @@
                             +'<td class="sorting_1">'+ value.id+' </td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.name+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.available_on+'</a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.duration+'</a></td>'
                             +'<td><button type="button" class="btn btn-outline-primary"> <i class="mdi mdi-magnify"> </i> </button></td>'
                             +'</tr>';
                     });
@@ -314,7 +326,7 @@
              $('#screen').find('option')
             .remove()
             .end()
-            .append('<option value="null">Screens</option>')
+            .append('<option value="null">All Screens</option>')
 
             //$('#location-listing tbody').html('')
             var location =  $('#location').val();
@@ -330,7 +342,7 @@
                 success:function(response)
                 {
 
-                    screens = '<option value="null" selected>Screens</option>';
+                    screens = '<option value="null" selected>All Screens</option>';
                     $.each(response.screens, function( index_screen, screen ) {
 
                         screens = screens
@@ -345,6 +357,7 @@
                             +'<td class="sorting_1">'+ value.id+' </td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.name+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.available_on+'</a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.duration+'</a></td>'
                             +'<td><button type="button" class="btn btn-outline-primary"> <i class="mdi mdi-magnify"> </i> </button></td>'
                             +'</tr>';
                     });

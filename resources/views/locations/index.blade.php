@@ -47,14 +47,18 @@
                             <tbody>
                                 @foreach ($locations as $key => $location )
                                     <tr class="odd">
-                                        <td class="sorting_1"><a href="{{ route('location.show',$location) }}"> {{  $key }}</a> </td>
+                                        <td class="sorting_1"><a href="{{ route('location.show',$location) }}"> {{  $key +1 }}</a> </td>
                                         <td><a class="text-body align-middle fw-medium text-decoration-none" href="{{ route('location.show',$location) }}"> {{ $location->name }}</a></td>
                                         <td><a class="text-body align-middle fw-medium text-decoration-none" href="{{ route('location.show',$location) }}"> {{ $location->folder_title }}</a></td>
                                         <td><a class="text-body align-middle fw-medium text-decoration-none" href="{{ route('location.show',$location) }}"> {{ $location->screens->count() }}</a></td>
                                         <td><a class="text-body align-middle fw-medium text-decoration-none" href="{{ route('location.show',$location) }}"> {{ $location->city }}</a></td>
                                         <td><a class="text-body align-middle fw-medium text-decoration-none" href="{{ route('location.show',$location) }}"> {{ $location->state }}</a></td>
                                         <td><a class="text-body align-middle fw-medium text-decoration-none" href="{{ route('location.show',$location) }}"> {{ $location->created_at }}</a></td>
-                                        <td><a class="btn btn-outline-primary" href="{{ route('location.edit',$location) }}">Edit</a></td>
+                                        <td>
+                                            <a class="btn btn-outline-primary" href="{{ route('location.edit',$location) }}">Edit</a>
+                                            <a class="btn btn-outline-primary" href="{{ route('refresh_all_data_of_location',$location) }}">Refreesh Location </a>
+                                        </td>
+
                                     </tr>
                                 @endforeach
 

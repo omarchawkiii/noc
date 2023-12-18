@@ -22,9 +22,9 @@ return new class extends Migration
             $table->string('kdm_installed', 255);
             $table->string('content_present', 255);
             $table->string('serverName_by_serial', 255);
-            $table->foreignId('screen_id')->constrained();
-            $table->foreignId('cpl_id')->constrained();
-            $table->foreignId('location_id')->constrained();
+            $table->foreignId('screen_id')->constrained()->onDelete('cascade');;
+            $table->foreignId('cpl_id')->constrained()->onDelete('cascade');;
+            $table->foreignId('location_id')->constrained()->onDelete('cascade');;
             $table->timestamps();
         });
 

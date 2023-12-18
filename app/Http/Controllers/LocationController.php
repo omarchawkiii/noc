@@ -15,6 +15,7 @@ use Illuminate\Http\Response;
 use Illuminate\View\View;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Redirect;
+ini_set('max_execution_time', 600);
 
 class LocationController extends Controller
 {
@@ -53,6 +54,163 @@ class LocationController extends Controller
         return redirect()->route('location.index')->with('message' ,' The location has been updated  ');
     }
 
+
+    public function refresh_all_data()
+    {
+        $locations = Location::all() ;
+        // get all screen
+        foreach($locations as $location)
+        {
+
+            $this->getscreens($location);
+            echo "screens of location $location->name imported <br />" ;
+        }
+
+        echo "screen imported <br />" ;
+        // get all spls
+        foreach($locations as $location)
+        {
+            foreach($location->screens as $screen)
+            {
+                echo "Screen : " . $screen->screen_name ."<br />";
+                app(\App\Http\Controllers\SplController::class)->getspls($location,$screen);
+            }
+            echo "spls of location $location->name imported <br />" ;
+        }
+        echo "All spls imported<br />" ;
+
+        // get all cpls
+        foreach($locations as $location)
+        {
+            foreach($location->screens as $screen)
+            {
+                app(\App\Http\Controllers\CplController::class)->getcpls($location,$screen);
+            }
+            echo "cpls of location $location->name imported <br />" ;
+        }
+        echo "All cpls imported<br />" ;
+
+         //sync cpls with spls
+        foreach($locations as $location)
+        {
+            $this->sync_spl_cpl($location );
+        }
+        echo "SPls and CPLs sync" ;
+
+        // get all KDMs
+        echo "<br />------------------------<br />" ;
+        echo "Start import  KDMs  <br />" ;
+        foreach($locations as $location)
+        {
+
+            foreach($location->screens as $screen)
+            {
+                app(\App\Http\Controllers\KdmController::class)->getkdms($location,$screen);
+            }
+
+
+        }
+        echo "All KDMs imported<br />" ;
+
+    }
+
+    public function refresh_all_data_of_location(Location $location)
+    {
+        $location = Location::find($location->id);
+        echo "Start Import screen<br />" ;
+        $this->getscreens($location);
+        echo "screens of location $location->name imported <br />" ;
+
+        echo "<br />------------------------<br />" ;
+
+        echo "Start Import Spls <br />" ;
+            $location = Location::find($location->id);
+            foreach($location->screens as $screen)
+            {
+                echo "Screen : " . $screen->screen_name ."<br />";
+                app(\App\Http\Controllers\SplController::class)->getspls($location,$screen);
+            }
+            echo "spls of location $location->name imported <br />" ;
+
+        echo "All spls imported<br />" ;
+
+        // get all cpls
+        echo "<br />------------------------<br />" ;
+
+        echo "Start Import CPLs <br />" ;
+        $location = Location::find($location->id);
+        foreach($location->screens as $screen)
+        {
+            app(\App\Http\Controllers\CplController::class)->getcpls($location,$screen);
+        }
+        echo "cpls of location $location->name imported <br />" ;
+
+        echo "All cpls imported<br />" ;
+
+         //sync cpls with spls
+         echo "<br />------------------------<br />" ;
+
+         echo "Start Sync SPLs and CPLs   <br />" ;
+            $location = Location::find($location->id);
+            $this->sync_spl_cpl($location );
+
+        echo "All SPls and CPLs sync" ;
+
+
+        // get all KDMs
+        echo "<br />------------------------<br />" ;
+        echo "Start import  KDMs  <br />" ;
+        $location = Location::find($location->id);
+        foreach($location->screens as $screen)
+        {
+            app(\App\Http\Controllers\KdmController::class)->getkdms($location,$screen);
+        }
+        echo "All KDMs imported<br />" ;
+
+
+    }
+
+    public function refresh_content_of_location(Location $location)
+    {
+        echo "Start Spls Import  <br />" ;
+            foreach($location->screens as $screen)
+            {
+                echo "Screen : " . $screen->screen_name ."<br />";
+                app(\App\Http\Controllers\SplController::class)->getspls($location,$screen);
+            }
+            echo "spls of location $location->name imported <br />" ;
+
+        echo "All spls imported<br />" ;
+        echo "<br />------------------------<br />" ;
+
+        echo "Start CPLs Import  <br />" ;
+            foreach($location->screens as $screen)
+            {
+                app(\App\Http\Controllers\CplController::class)->getcpls($location,$screen);
+            }
+            echo "cpls of location $location->name imported <br />" ;
+
+        echo "All cpls imported<br />" ;
+
+         //sync cpls with spls
+         echo "<br />------------------------<br />" ;
+
+         echo "Start Sync SPLs and CPLs   <br />" ;
+            $this->sync_spl_cpl($location );
+
+        echo "All SPls and CPLs sync" ;
+
+        echo "<br />------------------------<br />" ;
+        echo "Start import  KDMs  <br />" ;
+        foreach($location->screens as $screen)
+        {
+            app(\App\Http\Controllers\KdmController::class)->getkdms($location,$screen);
+        }
+        echo "All KDMs imported<br />" ;
+
+    }
+
+
     public function getscreens(Location $location )
     {
         //$url = "http://localhost/tms_front/system/api2.php?request=get_screens";
@@ -63,26 +221,21 @@ class LocationController extends Controller
         $response = $client->request('GET', $url);
         $contents = json_decode($response->getBody(), true);
 
-
-        // Delete All powers befere deleting screens
         if($contents)
         {
-            foreach($location->screens as $screen)
-            {
-                $screen->powers()->delete() ;
-            }
-
-            $location->screens()->delete() ;
             foreach($contents as $content)
             {
                 foreach($content as $screen)
                 {
-                    $new_screen = Screen::create([
 
+                    $new_screen = Screen::updateOrCreate([
+                        'id_server' => $screen["id_server"],
+                        'location_id' => $location->id
+                    ],[
                         "id_server"  => $screen["id_server"],
                         "screen_number"  => $screen["screen_number"],
                         "screen_name"  => $screen["screen_name"],
-                    "screenModel"  => $screen["screenModel"],
+                        "screenModel"  => $screen["screenModel"],
                         "playback"  => $screen["playback"],
                         "sound"  => $screen["sound"],
                         "server_ip"  => $screen["server_ip"],
@@ -109,24 +262,53 @@ class LocationController extends Controller
                         "automation_password"  => $screen["automation_password"],
                         "enable_power_control"  => $screen["enable_power_control"],
                         'location_id' => $location->id,
+                    ]);
 
-                    ]
 
-                    );
 
 
                     foreach($screen['powers'] as $power)
                     {
-                        Power::create([
+
+
+                        Power::updateOrCreate([
+                            'id_power' => $power["id"],
+                            'location_id' => $location->id,
+                        ],[
+                            'location_id' => $location->id,
                             "model"  => $power["model"],
                             "ip"  => $power["ip"],
                             "device_name"  => $power["device_name"],
                             "model"  => $power["model"],
                             "id_server"  => $screen["id_server"],
                             "screen_id" => $new_screen->id ,
+                            'id_power' => $power["id"],
+
                         ]);
+
+
                     }
                 }
+                if(count($content) < $location->screens->count() )
+                {
+                    $id_servers = array_column($content, 'id_server');
+
+                        foreach($location->screens as $screen)
+                        {
+                            if (! in_array( $screen->id_server , $id_servers))
+                            {
+                                // delete deleted screen
+                                echo "Screen name : $screen->screen_name has been deleted  " ;
+                                $screen->delete() ;
+                            }
+
+
+                        }
+
+                    //dd('we should delete screens ') ;
+                }
+
+
             }
         }
         return Redirect::back()->with('message' ,' The Screens  has been updated');
@@ -135,6 +317,7 @@ class LocationController extends Controller
 
     }
 
+
     public function sync_spl_cpl( Location $location )
     {
         $spls = Spl::all() ;
@@ -142,15 +325,12 @@ class LocationController extends Controller
         foreach($spls as $spl)
         {
             $url = $location->connection_ip."?request=getCplsBySpl&spl_uuid=".$spl->uuid;
-
             $client = new Client();
             $response = $client->request('GET', $url);
             $contents = json_decode($response->getBody(), true);
-            $spl->cpls()->detach() ;
-
+            //$spl->cpls()->detach() ;
             if($contents)
             {
-
                 foreach($contents as $content)
                 {
                     if($content)
@@ -166,9 +346,6 @@ class LocationController extends Controller
                             {
                                 //dd($cpl_content) ;
                             }
-
-
-
                         }
                     }
                 }

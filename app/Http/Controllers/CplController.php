@@ -14,10 +14,7 @@ class CplController extends Controller
 {
     public function getcpls(Location $location,  $screen )
     {
-
-        $screen = Screen::find($screen);
-
-
+        //$screen = Screen::find($screen);
         $url = $location->connection_ip."?request=getCplListByScreenNumber&screen_number=".$screen->screen_number;
 
         $client = new Client();
@@ -36,7 +33,6 @@ class CplController extends Controller
                             'uuid' => $cpl["uuid"],
                             'screen_id' => $screen->id
                         ],[
-
                             'uuid' => $cpl["uuid"],
                             'id_dcp' => $cpl["id_dcp"],
                             'contentTitleText' => $cpl["contentTitleText"],
@@ -50,10 +46,24 @@ class CplController extends Controller
                             'available_on' => $cpl["available_on"],
                             'serverName' => $cpl["serverName"],
                             'cpl_is_linked' => $cpl["cpl_is_linked"],
-
                             'screen_id'     =>$screen->id,
                             'location_id'     =>$location->id,
                         ]);
+                    }
+
+                    if(count($content) < $screen->cpls->count() )
+                    {
+                        $uuid_cpls = array_column($content, 'uuid');
+                            foreach($screen->cpls as $cpl)
+                            {
+                                if (! in_array( $cpl->uuid , $uuid_cpls))
+                                {
+                                    // delete deleted screen
+                                    $cpl->delete() ;
+                                }
+                            }
+
+                        //dd('we should delete screens ') ;
                     }
                 }
             }

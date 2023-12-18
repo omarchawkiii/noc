@@ -15,24 +15,13 @@ class ScreenController extends Controller
 {
     public function index(Request $request): View
     {
-        /*
-        $url = "https://www.themealdb.com/api/json/v1/1/search.php?s=";
-        $client = new Client();
 
-        $response = $client->request('GET', $url);
-        $result = json_decode($response->getBody(), true);
-
-        dd($result) ;
- */
         $screens = Screen::all();
-
-
         return view('screens.index', compact('screens'));
     }
 
     public function show(Request $request, Screen $screen): View
     {
-
         return view('screens.show', compact('screen'));
     }
 

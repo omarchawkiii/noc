@@ -15,7 +15,7 @@ class KdmController extends Controller
     public function getkdms(Location $location,  $screen )
     {
 
-        $screen = Screen::find($screen);
+       // $screen = Screen::find($screen);
         $url = $location->connection_ip . "?request=getKdmListByScreenNumber&screen_number=".$screen->screen_number;
         $client = new Client();
         $response = $client->request('GET', $url);
@@ -58,6 +58,22 @@ class KdmController extends Controller
                             //dd('no Cpl with this UUID ' , $cpl) ;
                         }
                     }
+
+                    if(count($content) < $screen->kdms->count() )
+                    {
+                        $uuid_kdms = array_column($content, 'uuid');
+                            foreach($screen->kdms as $kdm)
+                            {
+                                if (! in_array( $kdm->uuid , $uuid_kdms))
+                                {
+                                    // delete deleted screen
+                                    $kdm->delete() ;
+                                }
+                            }
+
+                        //dd('we should delete screens ') ;
+                    }
+
                 }
             }
         }

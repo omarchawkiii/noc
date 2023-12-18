@@ -262,9 +262,18 @@
             $("#location-listing").dataTable().fnDestroy();
             $('#location-listing tbody').html('')
 
-            var location =  null;
+
             var country =  $('#country').val();
             var screen =  $('#screen').val();
+            if(screen == 'null')
+            {
+                var location =  $('#location').val();
+
+            }
+            else
+            {
+                var location =  null;
+            }
 
             var url = '/get_cpl_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen;
 
@@ -315,13 +324,11 @@
         });
 
         $(' #location').change(function(){
-
             $("#location-listing").dataTable().fnDestroy();
-
              $('#screen').find('option')
             .remove()
             .end()
-            .append('<option value="null">Screens</option>')
+            .append('<option value="null">All Screens</option>')
 
             //$('#location-listing tbody').html('')
             var location =  $('#location').val();
@@ -337,7 +344,7 @@
                 success:function(response)
                 {
 
-                    screens = '<option value="null" selected>Screens</option>';
+                    screens = '<option value="null" selected>All screen </option>';
                     $.each(response.screens, function( index_screen, screen ) {
 
                         screens = screens
@@ -352,7 +359,7 @@
                             +'<td class="sorting_1">'+ value.id+' </td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.contentTitleText+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.contentKind+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none">' + value.cpl_is_linked + '</a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none">' + value.available_on + '</a></td>'
                             +'<td><button type="button" class="btn btn-outline-primary"> <i class="mdi mdi-magnify"> </i> </button></td>'
                             +'</tr>';
                     });

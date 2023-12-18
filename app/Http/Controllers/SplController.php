@@ -16,56 +16,13 @@ use SoulDoit\DataTable\SSP;
 class SplController extends Controller
 {
 
-    /*public function __construct()
+    public function getspls(Location $location,  $screen )
     {
-        $ssp = new SSP();
-
-        $ssp->enableSearch();
-        $ssp->allowExportAllItemsInCsv();
-        $ssp->setAllowedItemsPerPage([5, 10, 20, -1]);
-        $ssp->frontend()->setFramework('datatablejs');
-
-        $ssp->setColumns([
-            ['label'=>'ID',         'db'=>'id',            'formatter' => function ($value, $model) {
-                return str_pad($value, 5, '0', STR_PAD_LEFT);
-            }],
-            ['label'=>'Email',      'db'=>'email',         ],
-            ['label'=>'Username',   'db'=>'uname',         ],
-            ['label'=>'Created At', 'db'=>'created_at',    ],
-            ['label'=>'Action',     'db'=>'id',            'formatter' => function ($value, $model) {
-                $btns = [
-                    '<button onclick="edit(\''.$value.'\');">Edit</button>',
-                    '<button onclick="delete(\''.$value.'\');">Delete</button>',
-                ];
-                return implode($btns, " ");
-            }],
-            ['db'=>'email_verified_at'],
-        ]);
-
-        $ssp->setQuery(function ($selected_columns) {
-            return \App\Models\Screen::select($selected_columns)
-            ->where('status', 'active')
-            ->where(function ($query) {
-                $query->where('id', '!=', 1);
-                $query->orWhere('uname', '!=', 'superadmin');
-            });
-        });
-
-        $this->ssp = $ssp;
-    }*/
-
-
-
-    public function getscreens(Location $location,  $screen )
-    {
-
-        $screen = Screen::find($screen);
-
         $url = $location->connection_ip . "?request=getSplListInfoByScreenNumber&screen_number=".$screen->screen_number;
+       // echo "URL : " . $url . " <br />" ;
         $client = new Client();
         $response = $client->request('GET', $url);
         $contents = json_decode($response->getBody(), true);
-
         if($contents)
         {
             foreach($contents as $content)
@@ -80,12 +37,30 @@ class SplController extends Controller
                         ],[
                             'uuid'     => $spl["uuid"],
                             'name'     => $spl["title"],
-                            'duration'     => $spl["duration"],
+                            'duration'     => gmdate("H:i:s", $spl["duration"]) ,
                             'available_on'     => $spl["available_on"],
                             'screen_id'     =>$screen->id,
                             'location_id'     =>$location->id,
                         ]);
                     }
+
+                    // check if SPLs deleted
+                    if(count($content) < $screen->spls->count() )
+                    {
+                        $uuid_spls = array_column($content, 'uuid');
+                            foreach($screen->spls as $spl)
+                            {
+                                if (! in_array( $spl->uuid , $uuid_spls))
+                                {
+                                    // delete deleted screen
+                                    $spl->delete() ;
+                                }
+                            }
+
+                        //dd('we should delete screens ') ;
+                    }
+
+
                 }
             }
         }

@@ -64,10 +64,10 @@
                             <thead>
                                 <tr>
                                     <th class="sorting sorting_asc">No #</th>
-                                    <th class="sorting">UUID</th>
-                                    <th class="sorting">KDM Name </th>
-                                    <th class="sorting">From </th>
-                                    <th class="sorting">To </th>
+                                    <th class="sorting " style="width: 150px;">UUID</th>
+                                    <th class="sorting" style="width: 150px;">KDM Name </th>
+                                    <th class="sorting" style="width: 150px;">From </th>
+                                    <th class="sorting" style="width: 150px;">To </th>
 
                                 </tr>
                             </thead>
@@ -148,7 +148,9 @@
         "iDisplayLength": 10,
             destroy: true,
             "bDestroy": true,
-
+            'columnDefs': [
+                {'max-width': '320px', 'targets': 0}
+            ]
         });
 
         $('#screen').change(function(){
@@ -156,9 +158,18 @@
             $("#location-listing").dataTable().fnDestroy();
             $('#location-listing tbody').html('')
 
-            var location =  null;
+
             var country =  $('#country').val();
             var screen =  $('#screen').val();
+            if(screen == 'null')
+            {
+                var location =  $('#location').val();
+
+            }
+            else
+            {
+                var location =  null;
+            }
 
             var url = '/get_kdms_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen;
 
@@ -175,10 +186,10 @@
                         result = result
                             +'<tr class="odd">'
                                 +'<td class="sorting_1">'+ value.id+' </td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.uuid+'</a></td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.name+'</a></td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.ContentKeysNotValidBefore+'</a></td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.ContentKeysNotValidAfter+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;">'+value.uuid+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;">'+value.name+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidBefore+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidAfter+'</a></td>'
                             +'</tr>';
                     });
                     console.log(response.kdms)
@@ -191,6 +202,9 @@
                         "iDisplayLength": 10,
                         destroy: true,
                         "bDestroy": true,
+                        'columnDefs': [
+                            {'max-width': '320px', 'targets': 0}
+                        ]
 
                     });
 
@@ -212,7 +226,7 @@
              $('#screen').find('option')
             .remove()
             .end()
-            .append('<option value="null">Screens</option>')
+            .append('<option value="null">All Screens</option>')
 
             //$('#location-listing tbody').html('')
             var location =  $('#location').val();
@@ -228,7 +242,7 @@
                 success:function(response)
                 {
 
-                    screens = '<option value="null" selected>Screens</option>';
+                    screens = '<option value="null" selected>All Screens</option>';
                     $.each(response.screens, function( index_screen, screen ) {
 
                         screens = screens
@@ -241,10 +255,10 @@
                         result = result
                             +'<tr class="odd">'
                                 +'<td class="sorting_1">'+ value.id+' </td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.uuid+'</a></td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.name+'</a></td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.ContentKeysNotValidBefore+'</a></td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.ContentKeysNotValidAfter+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;">'+value.uuid+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;">'+value.name+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidBefore+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidAfter+'</a></td>'
                             +'</tr>';
                     });
                     $('#location-listing tbody').html(result)
@@ -256,6 +270,9 @@
                         "iDisplayLength": 10,
                         destroy: true,
                         "bDestroy": true,
+                        'columnDefs': [
+                            {'max-width': '320px', 'targets': 0}
+                        ]
                     });
 
                 },

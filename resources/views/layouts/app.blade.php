@@ -15,7 +15,7 @@
     @yield('custom_css')
 </head>
 
-<body class="sidebar-icon-only">
+<body class="sidebar-fixed">
     <div class="container-scroller">
         @include('partiels.sidebar')
         <div class="container-fluid page-body-wrapper">

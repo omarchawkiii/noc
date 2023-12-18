@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('ip', 255);
             $table->string('device_name', 255);
             $table->string('id_server', 255);
-            $table->foreignId('screen_id');
+            $table->foreignId('screen_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

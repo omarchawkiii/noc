@@ -42,7 +42,7 @@ return new class extends Migration
             $table->string('automation_username', 255)->nullable();
             $table->string('automation_password', 255)->nullable();
             $table->string('enable_power_control', 255)->nullable();
-            $table->foreignId('location_id');
+            $table->foreignId('location_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

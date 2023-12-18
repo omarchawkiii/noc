@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('server_name', 255)->nullable();
             $table->dateTime('last_update')->nullable();
             $table->string('file_type', 255)->nullable();
-            $table->integer('duration')->nullable();
+            $table->string('duration')->nullable();
             $table->integer('is_downloaded')->nullable();
             $table->string('tms_path', 255)->nullable();
             $table->string('id_server', 255)->nullable();
@@ -33,8 +33,8 @@ return new class extends Migration
             $table->unsignedDecimal('file_progress', 8, 2)->nullable();
             $table->string('spl_type', 255)->nullable();
             $table->string('available_on', 255)->nullable();
-            $table->foreignId('screen_id');
-            $table->foreignId('location_id');
+            $table->foreignId('screen_id')->constrained()->onDelete('cascade');
+            $table->foreignId('location_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
 

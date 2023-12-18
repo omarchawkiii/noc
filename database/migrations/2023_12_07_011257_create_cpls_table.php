@@ -28,8 +28,8 @@ return new class extends Migration
             $table->string('available_on', 255)->nullable();
             $table->string('serverName', 255)->nullable();
             $table->boolean('cpl_is_linked')->nullable();
-            $table->foreignId('location_id')->constrained();
-            $table->foreignId('screen_id');
+            $table->foreignId('location_id')->constrained()->onDelete('cascade');
+            $table->foreignId('screen_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
 
