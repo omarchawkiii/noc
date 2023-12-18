@@ -25,6 +25,8 @@
           <ul class="nav flex-column sub-menu">
             <li class="nav-item"> <a class="nav-link" href="{{ route('spls.get_spl_with_filter') }}">Show Playlists</a></li>
             <li class="nav-item"> <a class="nav-link " href="{{ route('cpls.get_cpl_with_filter') }}">CPLS</a></li>
+            <li class="nav-item"> <a class="nav-link " href="{{ route('kdms.get_Kdm_with_filter') }}">KDMs</a></li>
+
           </ul>
         </div>
       </li>

@@ -66,8 +66,13 @@ class Cpl extends Model
     }
 
 
+
     public function location(): BelongsTo
     {
         return $this->belongsTo(Location::class);
+    }
+    public function kdms(): HasMany
+    {
+        return $this->hasMany(Kdm::class);
     }
 }

@@ -72,7 +72,7 @@ class LocationController extends Controller
                 $screen->powers()->delete() ;
             }
 
-            $location->screens()->delete() ;
+            $location->screens()->9() ;
             foreach($contents as $content)
             {
                 foreach($content as $screen)
@@ -164,7 +164,7 @@ class LocationController extends Controller
                             }
                             else
                             {
-                                dd($cpl_content) ;
+                                //dd($cpl_content) ;
                             }
 
 

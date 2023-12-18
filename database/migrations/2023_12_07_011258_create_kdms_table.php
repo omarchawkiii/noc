@@ -17,22 +17,14 @@ return new class extends Migration
             $table->id();
             $table->string('uuid', 255);
             $table->string('name', 255);
-            $table->string('AnnotationText', 255);
             $table->string('ContentKeysNotValidBefore', 255);
             $table->string('ContentKeysNotValidAfter', 255);
-            $table->string('SubjectName', 255);
-            $table->string('DeviceListDescription', 255);
-            $table->string('SerialNumber', 255);
-            $table->string('path_file', 255);
-            $table->string('server_name', 255);
-            $table->string('file_type', 255);
-            $table->string('id_server', 255);
-            $table->unsignedDecimal('file_size', 8, 2);
-            $table->unsignedDecimal('file_progress', 8, 2);
-            $table->string('tms_path', 255);
-            $table->dateTime('last_update');
+            $table->string('kdm_installed', 255);
+            $table->string('content_present', 255);
+            $table->string('serverName_by_serial', 255);
             $table->foreignId('screen_id')->constrained();
             $table->foreignId('cpl_id')->constrained();
+            $table->foreignId('location_id')->constrained();
             $table->timestamps();
         });
 

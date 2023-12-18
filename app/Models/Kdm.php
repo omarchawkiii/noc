@@ -18,22 +18,14 @@ class Kdm extends Model
     protected $fillable = [
         'uuid',
         'name',
-        'AnnotationText',
         'ContentKeysNotValidBefore',
         'ContentKeysNotValidAfter',
-        'SubjectName',
-        'DeviceListDescription',
-        'SerialNumber',
-        'path_file',
-        'server_name',
-        'file_type',
-        'id_server',
-        'file_size',
-        'file_progress',
-        'tms_path',
-        'last_update',
+        'kdm_installed',
+        'content_present',
+        'serverName_by_serial',
         'screen_id',
         'cpl_id',
+        'location_id',
     ];
 
     /**

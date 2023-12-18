@@ -86,7 +86,7 @@ class CplController extends Controller
         {
             if(isset($screen) && $screen != 'null' )
             {
-                $cpls = Screen::find($screen)->cpls ;
+                $cpls = Screen::find($screen)->cpls->with('kdms') ;
                 return Response()->json(compact('cpls'));
             }
             else
@@ -105,18 +105,5 @@ class CplController extends Controller
 
     }
 
-    public function sync_spl_cpl( Location $location )
-    {
-        $spls = Spl::all() ;
 
-        foreach($spls as $spl)
-        {
-            $url = $location->connection_ip."?request=getCplsBySpl&spl_uuid=".$spl->uuid;
-
-            $client = new Client();
-            $response = $client->request('GET', $url);
-
-            dd($response) ;
-        }
-    }
 }
