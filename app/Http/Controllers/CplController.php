@@ -86,7 +86,7 @@ class CplController extends Controller
         {
             if(isset($screen) && $screen != 'null' )
             {
-                $cpls = Screen::find($screen)->cpls->with('kdms') ;
+                $cpls = Screen::find($screen)->cpls;
                 return Response()->json(compact('cpls'));
             }
             else

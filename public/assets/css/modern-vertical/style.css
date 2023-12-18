@@ -23809,3 +23809,8 @@ footer .footer-box
     max-height: 60vh;
     overflow-y: auto;
 }
+
+.tab-content .card
+{
+  text-align: left !important ;
+}

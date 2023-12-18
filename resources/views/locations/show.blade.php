@@ -108,19 +108,22 @@
                                                     </div>
                                                     <div>
                                                     <a href="{{ route('spls.get_spls' , [$location->id, $screen->id]) }}" class="btn btn-warning btn-icon-text">
-                                                        <i class="mdi mdi-refresh btn-icon-prepend"></i> Get SPLs
+                                                        <i class="mdi mdi-refresh btn-icon-prepend"></i> Refresh SPLs
                                                     </a>
                                                     <a href="{{ route('cpls.get_cpls' , [$location->id, $screen->id]) }}" class="btn btn-warning btn-icon-text">
-                                                        <i class="mdi mdi-refresh btn-icon-prepend"></i> Get CPLs
+                                                        <i class="mdi mdi-refresh btn-icon-prepend"></i> Refresh CPLs
+                                                    </a>
+                                                    <a href="{{ route('kdms.get_kdms' , [$location->id, $screen->id]) }}" class="btn btn-warning btn-icon-text">
+                                                        <i class="mdi mdi-refresh btn-icon-prepend"></i> Refresh KDMs
                                                     </a>
                                                     </div>
                                                 </div>
 
                                                 <div class="col-md-3">
                                                     <div class="card">
-                                                        <div class="card-body bg-dark">
+                                                        <div class="card-body bg-dark ">
                                                             <h3>Screen Infos</h3>
-                                                            <p>id_server  : {{ $screen->id_server }}</p>
+
                                                             <p>Screen Model : {{ $screen->screenModel }}</p>
                                                             <p>Playback  : {{ $screen->playback }}</p>
                                                             <p>Sound : {{ $screen->sound }}</p>

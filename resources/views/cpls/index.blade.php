@@ -283,7 +283,7 @@
                             +'<td class="sorting_1">'+ value.id+' </td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.contentTitleText+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.contentKind+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none">' + value.cpl_is_linked + '</a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none">' + value.available_on + '</a></td>'
                             +'<td><button type="button" class="btn btn-outline-primary"> <i class="mdi mdi-magnify"> </i> </button></td>'
                             +'</tr>';
                     });
