@@ -107,13 +107,13 @@
                                                         <h3 class="">{{ $screen->screen_name }}</h3>
                                                     </div>
                                                     <div>
-                                                    <a href="{{ route('spls.get_spls' , [$location->id, $screen->id]) }}" class="btn btn-warning btn-icon-text">
+                                                    <a href="{{ route('spls.get_spls' , [$location, $screen]) }}" class="btn btn-warning btn-icon-text">
                                                         <i class="mdi mdi-refresh btn-icon-prepend"></i> Refresh SPLs
                                                     </a>
-                                                    <a href="{{ route('cpls.get_cpls' , [$location->id, $screen->id]) }}" class="btn btn-warning btn-icon-text">
+                                                    <a href="{{ route('cpls.get_cpls' , [$location, $screen]) }}" class="btn btn-warning btn-icon-text">
                                                         <i class="mdi mdi-refresh btn-icon-prepend"></i> Refresh CPLs
                                                     </a>
-                                                    <a href="{{ route('kdms.get_kdms' , [$location->id, $screen->id]) }}" class="btn btn-warning btn-icon-text">
+                                                    <a href="{{ route('kdms.get_kdms' , [$location, $screen]) }}" class="btn btn-warning btn-icon-text">
                                                         <i class="mdi mdi-refresh btn-icon-prepend"></i> Refresh KDMs
                                                     </a>
                                                     </div>

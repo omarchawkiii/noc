@@ -55,10 +55,15 @@
                                         <td><a class="text-body align-middle fw-medium text-decoration-none" href="{{ route('location.show',$location) }}"> {{ $location->state }}</a></td>
                                         <td><a class="text-body align-middle fw-medium text-decoration-none" href="{{ route('location.show',$location) }}"> {{ $location->created_at }}</a></td>
                                         <td>
-                                            <a class="btn btn-outline-primary" href="{{ route('location.edit',$location) }}">Edit</a>
-                                            <a class="btn btn-outline-primary" href="{{ route('refresh_all_data_of_location',$location) }}">Refreesh Location </a>
+                                            <div class="dropdown">
+                                                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuOutlineButton6" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Actions </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuOutlineButton6" style="">
+                                                    <a class="btn btn-outline-primary dropdown-item" href="{{ route('location.edit',$location) }}">Edit</a>
+                                                    <a class="btn btn-outline-primary dropdown-item" href="{{ route('refresh_all_data_of_location',$location->id) }}">Refreesh All Data</a>
+                                                    <a class="btn btn-outline-primary dropdown-item" href="{{ route('refresh_all_data_of_location',$location->id) }}">Refreesh Content DATA </a>
+                                                </div>
+                                              </div>
                                         </td>
-
                                     </tr>
                                 @endforeach
 

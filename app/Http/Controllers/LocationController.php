@@ -62,7 +62,7 @@ class LocationController extends Controller
         foreach($locations as $location)
         {
 
-            $this->getscreens($location);
+            $this->getscreens($location->id);
             echo "screens of location $location->name imported <br />" ;
         }
 
@@ -73,7 +73,7 @@ class LocationController extends Controller
             foreach($location->screens as $screen)
             {
                 echo "Screen : " . $screen->screen_name ."<br />";
-                app(\App\Http\Controllers\SplController::class)->getspls($location,$screen);
+                app(\App\Http\Controllers\SplController::class)->getspls($location->id,$screen->id);
             }
             echo "spls of location $location->name imported <br />" ;
         }
@@ -84,7 +84,7 @@ class LocationController extends Controller
         {
             foreach($location->screens as $screen)
             {
-                app(\App\Http\Controllers\CplController::class)->getcpls($location,$screen);
+                app(\App\Http\Controllers\CplController::class)->getcpls($location->id,$screen->id);
             }
             echo "cpls of location $location->name imported <br />" ;
         }
@@ -93,7 +93,7 @@ class LocationController extends Controller
          //sync cpls with spls
         foreach($locations as $location)
         {
-            $this->sync_spl_cpl($location );
+            $this->sync_spl_cpl($location->id );
         }
         echo "SPls and CPLs sync" ;
 
@@ -105,7 +105,7 @@ class LocationController extends Controller
 
             foreach($location->screens as $screen)
             {
-                app(\App\Http\Controllers\KdmController::class)->getkdms($location,$screen);
+                app(\App\Http\Controllers\KdmController::class)->getkdms($location->id,$screen->id);
             }
 
 
@@ -114,9 +114,9 @@ class LocationController extends Controller
 
     }
 
-    public function refresh_all_data_of_location(Location $location)
+    public function refresh_all_data_of_location( $location)
     {
-        $location = Location::find($location->id);
+        $location = Location::find($location)->first();
         echo "Start Import screen<br />" ;
         $this->getscreens($location);
         echo "screens of location $location->name imported <br />" ;
@@ -128,7 +128,7 @@ class LocationController extends Controller
             foreach($location->screens as $screen)
             {
                 echo "Screen : " . $screen->screen_name ."<br />";
-                app(\App\Http\Controllers\SplController::class)->getspls($location,$screen);
+                app(\App\Http\Controllers\SplController::class)->getspls($location->id,$screen->id);
             }
             echo "spls of location $location->name imported <br />" ;
 
@@ -138,10 +138,10 @@ class LocationController extends Controller
         echo "<br />------------------------<br />" ;
 
         echo "Start Import CPLs <br />" ;
-        $location = Location::find($location->id);
+        $location = Location::find($location)->first();
         foreach($location->screens as $screen)
         {
-            app(\App\Http\Controllers\CplController::class)->getcpls($location,$screen);
+            app(\App\Http\Controllers\CplController::class)->getcpls($location->id,$screen->id);
         }
         echo "cpls of location $location->name imported <br />" ;
 
@@ -151,8 +151,8 @@ class LocationController extends Controller
          echo "<br />------------------------<br />" ;
 
          echo "Start Sync SPLs and CPLs   <br />" ;
-            $location = Location::find($location->id);
-            $this->sync_spl_cpl($location );
+            $location = Location::find($location)->first();
+            $this->sync_spl_cpl($location->id );
 
         echo "All SPls and CPLs sync" ;
 
@@ -160,35 +160,41 @@ class LocationController extends Controller
         // get all KDMs
         echo "<br />------------------------<br />" ;
         echo "Start import  KDMs  <br />" ;
-        $location = Location::find($location->id);
+        $location = Location::find($location)->first();
         foreach($location->screens as $screen)
         {
-            app(\App\Http\Controllers\KdmController::class)->getkdms($location,$screen);
+            app(\App\Http\Controllers\KdmController::class)->getkdms($location->id,$screen->id);
         }
         echo "All KDMs imported<br />" ;
 
 
     }
 
-    public function refresh_content_of_location(Location $location)
+
+    public function refresh_content_of_location( $location)
     {
-        echo "Start Spls Import  <br />" ;
+        $location = Location::find($location)->first();
+
+        echo "Start Import Spls <br />" ;
+            $location = Location::find($location->id);
             foreach($location->screens as $screen)
             {
                 echo "Screen : " . $screen->screen_name ."<br />";
-                app(\App\Http\Controllers\SplController::class)->getspls($location,$screen);
+                app(\App\Http\Controllers\SplController::class)->getspls($location->id,$screen->id);
             }
             echo "spls of location $location->name imported <br />" ;
 
         echo "All spls imported<br />" ;
+        // get all cpls
         echo "<br />------------------------<br />" ;
 
-        echo "Start CPLs Import  <br />" ;
-            foreach($location->screens as $screen)
-            {
-                app(\App\Http\Controllers\CplController::class)->getcpls($location,$screen);
-            }
-            echo "cpls of location $location->name imported <br />" ;
+        echo "Start Import CPLs <br />" ;
+        $location = Location::find($location)->first();
+        foreach($location->screens as $screen)
+        {
+            app(\App\Http\Controllers\CplController::class)->getcpls($location->id,$screen->id);
+        }
+        echo "cpls of location $location->name imported <br />" ;
 
         echo "All cpls imported<br />" ;
 
@@ -196,24 +202,32 @@ class LocationController extends Controller
          echo "<br />------------------------<br />" ;
 
          echo "Start Sync SPLs and CPLs   <br />" ;
-            $this->sync_spl_cpl($location );
+            $location = Location::find($location)->first();
+            $this->sync_spl_cpl($location->id );
 
         echo "All SPls and CPLs sync" ;
 
+
+        // get all KDMs
         echo "<br />------------------------<br />" ;
         echo "Start import  KDMs  <br />" ;
+        $location = Location::find($location)->first();
         foreach($location->screens as $screen)
         {
-            app(\App\Http\Controllers\KdmController::class)->getkdms($location,$screen);
+            app(\App\Http\Controllers\KdmController::class)->getkdms($location->id,$screen->id);
         }
         echo "All KDMs imported<br />" ;
+
 
     }
 
 
-    public function getscreens(Location $location )
+
+    public function getscreens( $location )
     {
         //$url = "http://localhost/tms_front/system/api2.php?request=get_screens";
+
+        $location = Location::find($location)->first() ;
 
         $url = $location->connection_ip . "?request=get_screens";
 
@@ -318,9 +332,11 @@ class LocationController extends Controller
     }
 
 
-    public function sync_spl_cpl( Location $location )
+    public function sync_spl_cpl( $location )
     {
         $spls = Spl::all() ;
+
+        $location = Location::find($location)->first() ;
 
         foreach($spls as $spl)
         {

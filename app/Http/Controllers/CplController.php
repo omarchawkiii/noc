@@ -12,9 +12,12 @@ use Illuminate\Support\Facades\Redirect;
 
 class CplController extends Controller
 {
-    public function getcpls(Location $location,  $screen )
+    public function getcpls($location,  $screen )
     {
-        //$screen = Screen::find($screen);
+
+        $screen = Screen::find($screen);
+        $location = Location::find($location) ;
+
         $url = $location->connection_ip."?request=getCplListByScreenNumber&screen_number=".$screen->screen_number;
 
         $client = new Client();
@@ -29,6 +32,7 @@ class CplController extends Controller
                 {
                     foreach($content as $cpl)
                     {
+
                         Cpl::updateOrCreate([
                             'uuid' => $cpl["uuid"],
                             'screen_id' => $screen->id
@@ -51,14 +55,14 @@ class CplController extends Controller
                         ]);
                     }
 
-                    if(count($content) < $screen->cpls->count() )
+                    if(count($content) != $screen->cpls->count() )
                     {
                         $uuid_cpls = array_column($content, 'uuid');
                             foreach($screen->cpls as $cpl)
                             {
                                 if (! in_array( $cpl->uuid , $uuid_cpls))
                                 {
-                                    // delete deleted screen
+
                                     $cpl->delete() ;
                                 }
                             }

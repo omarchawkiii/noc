@@ -144,7 +144,7 @@
                                                                                         <p class="mb-0 text-muted m-1">   </p>
                                                                                     </div>
                                                                                     <div class="media-body">
-                                                                                        <p class="mb-0 text-muted"> {{ gmdate("H:i:s",  $spl->duration)  }} </p>
+                                                                                        <p class="mb-0 text-muted">   {{ $spl->duration }} </p>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>

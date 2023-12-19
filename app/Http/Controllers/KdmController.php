@@ -12,16 +12,15 @@ use Illuminate\Support\Facades\Redirect;
 
 class KdmController extends Controller
 {
-    public function getkdms(Location $location,  $screen )
+    public function getkdms($location,$screen )
     {
 
-       // $screen = Screen::find($screen);
+        $screen = Screen::find($screen);
+        $location = Location::find($location) ;
         $url = $location->connection_ip . "?request=getKdmListByScreenNumber&screen_number=".$screen->screen_number;
         $client = new Client();
         $response = $client->request('GET', $url);
         $contents = json_decode($response->getBody(), true);
-
-
 
         if($contents)
         {
@@ -33,6 +32,8 @@ class KdmController extends Controller
                     {
 
                         $cpl = Cpl::where('uuid','=',$kdm['cplId'])->where('location_id','=',$location->id)->first() ;
+
+
                         if($cpl)
                         {
                             Kdm::updateOrCreate([
@@ -59,9 +60,11 @@ class KdmController extends Controller
                         }
                     }
 
-                    if(count($content) < $screen->kdms->count() )
+                    if(count($content) != $screen->kdms->count() )
                     {
+
                         $uuid_kdms = array_column($content, 'uuid');
+
                             foreach($screen->kdms as $kdm)
                             {
                                 if (! in_array( $kdm->uuid , $uuid_kdms))
@@ -82,6 +85,7 @@ class KdmController extends Controller
 
     public function get_Kdm_with_filter (Request $request )
     {
+
 
         $location = $request->location;
         $country = $request->country;

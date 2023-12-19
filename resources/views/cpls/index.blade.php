@@ -75,7 +75,7 @@
                                             <td class="sorting_1"><a>{{ $cpl->id }}</a> </td>
                                             <td><a class="text-body align-middle fw-medium text-decoration-none" > {{ $cpl->contentTitleText }}</a></td>
                                             <td><a class="text-body align-middle fw-medium text-decoration-none" > {{ $cpl->contentKind }}</a></td>
-                                            <td><a class="text-body align-middle fw-medium text-decoration-none" > @if($cpl->cpl_is_linked) <i class="mdi mdi-link-variant text-success"> </i> @else  <i class="mdi mdi-link-variant-off text-danger"> </i> @endif</a></td>
+                                            <td><a class="text-body align-middle fw-medium text-decoration-none" >{{ $cpl->available_on }}</a></td>
                                             <td>
                                                 <a class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#cpl_model_-{{ $cpl->id }}" href="#"><i class="mdi mdi-magnify"> </i> </a>
                                                 <div class=" modal fade " id="cpl_model_-{{ $cpl->id }}" tabindex="-1" role="dialog"  aria-labelledby="delete_client_modalLabel" aria-hidden="true">

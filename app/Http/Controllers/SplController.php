@@ -16,8 +16,11 @@ use SoulDoit\DataTable\SSP;
 class SplController extends Controller
 {
 
-    public function getspls(Location $location,  $screen )
+    public function getspls( $location,  $screen )
     {
+        $screen = Screen::find($screen);
+        $location = Location::find($location) ;
+
         $url = $location->connection_ip . "?request=getSplListInfoByScreenNumber&screen_number=".$screen->screen_number;
        // echo "URL : " . $url . " <br />" ;
         $client = new Client();
@@ -45,7 +48,7 @@ class SplController extends Controller
                     }
 
                     // check if SPLs deleted
-                    if(count($content) < $screen->spls->count() )
+                    if(count($content) != $screen->spls->count() )
                     {
                         $uuid_spls = array_column($content, 'uuid');
                             foreach($screen->spls as $spl)
