@@ -162,64 +162,7 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Modem</label>
-                            <div class="col-sm-2">
-                                <div class="form-check">
-                                    <label class="form-check-label">
-                                    <input type="radio" class="form-check-input"  id="modem1" value="Yes" checked=""  value="{{ $location->modem }}"  name="modem" > Yes <i class="input-helper"></i><i class="input-helper"></i></label>
-                                </div>
-                            </div>
-                            <div class="col-sm-2">
-                                <div class="form-check">
-                                <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" id="modem2" value="No"  value="{{ $location->modem }}"  name="modem" > Non <i class="input-helper"></i><i class="input-helper"></i></label>
-                                </div>
-                            </div>
-                            @error('modem')
-                                <div class="text-danger mt-1 ">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label> </label>
-                            <input type="text" class="form-control" placeholder="Model Non" disabled=""  value="{{ $location->modem_value }}"  name="modem_value">
-                            @error('modem_value')
-                                <div class="text-danger mt-1 ">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Internet</label>
-                        <div class="col-sm-2">
-                            <div class="form-check">
-                            <label class="form-check-label">
-                                <input type="radio" class="form-check-input" id="internet1" value="Yes" checked=""  value="{{ $location->internet }}"  name="internet"> Yes <i class="input-helper"></i><i class="input-helper"></i></label>
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="form-check">
-                            <label class="form-check-label">
-                                <input type="radio" class="form-check-input" id="internet2" value="No"  value="{{ $location->internet }}"  name="internet"> Non <i class="input-helper"></i><i class="input-helper"></i></label>
-                            </div>
-                        </div>
-                        @error('internet')
-                            <div class="text-danger mt-1 ">{{ $message }}</div>
-                        @enderror
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label></label>
-                            <input type="text" class="form-control" placeholder="Type DSL" disabled=""  value="{{ $location->internet_value }}"  name="internet_value">
-                            @error('internet_value')
-                                <div class="text-danger mt-1 ">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
+
 
                     <div class="col-md-4">
                         <div class="form-group">

@@ -167,6 +167,21 @@ class LocationController extends Controller
         }
         echo "All KDMs imported<br />" ;
 
+        echo "<br />------------------------<br />" ;
+        echo "Start import  schedules  <br />" ;
+        $location = Location::find($location)->first();
+
+
+        foreach($location->spls as $spls)
+        {
+            app(\App\Http\Controllers\ScheduleContoller::class)->getschedules($location->id,$spls->uuid);
+        }
+        echo "All schedules imported<br />" ;
+
+
+
+
+
 
     }
 

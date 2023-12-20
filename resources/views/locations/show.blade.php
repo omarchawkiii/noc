@@ -61,18 +61,19 @@
                             <h3>Contact Informations</h3>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <p> Location E-mail : {{ $location->location_email }} </p>
-                                    <p>Phone Number : {{ $location->phone }} </p>
-                                    <p>Support E-mail : {{ $location->support_email }} </p>
-                                    <p>Modem : {{ $location->modem }} |  {{ $location->modem_value }}  </p>
-                                    <p>Internet : {{ $location->internet }} |  {{ $location->internet_value }}  </p>
+
+
                                     <p>Address : {{ $location->address }} </p>
-                                </div>
-                                <div class="col-md-6">
                                     <p>City : {{ $location->city }} </p>
                                     <p>Zip Code : {{ $location->zip }} </p>
                                     <p>Country : {{ $location->country }} </p>
                                     <p>State : {{ $location->state }} </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p> Location E-mail : {{ $location->location_email }} </p>
+                                    <p>Phone Number : {{ $location->phone }} </p>
+                                    <p>Support E-mail : {{ $location->support_email }} </p>
+
                                     <p>Company / Owner : {{ $location->company }} </p>
                                     <p>Language : {{ $location->language }} </p>
                                 </div>

@@ -37,7 +37,7 @@
                                     <th class="sorting sorting_asc">Order #</th>
                                     <th class="sorting">Name</th>
                                     <th class="sorting">Folder Title</th>
-                                    <th class="sorting">Screen number</th>
+                                    <th class="sorting">Screen Count</th>
                                     <th class="sorting">City </th>
                                     <th class="sorting">Status</th>
                                     <th class="sorting">Creatred At</th>

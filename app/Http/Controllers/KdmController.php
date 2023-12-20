@@ -14,7 +14,6 @@ class KdmController extends Controller
 {
     public function getkdms($location,$screen )
     {
-
         $screen = Screen::find($screen);
         $location = Location::find($location) ;
         $url = $location->connection_ip . "?request=getKdmListByScreenNumber&screen_number=".$screen->screen_number;
@@ -85,8 +84,6 @@ class KdmController extends Controller
 
     public function get_Kdm_with_filter (Request $request )
     {
-
-
         $location = $request->location;
         $country = $request->country;
         $screen = $request->screen;

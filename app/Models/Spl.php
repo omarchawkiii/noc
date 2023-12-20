@@ -62,4 +62,8 @@ class Spl extends Model
     {
         return $this->belongsTo(Location::class);
     }
+    public function schedules(): HasMany
+    {
+        return $this->hasMany(Schedule::class);
+    }
 }

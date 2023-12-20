@@ -76,7 +76,7 @@ class Location extends Model
 
     public function screens(): HasMany
     {
-        return $this->hasMany(Screen::class);
+        return $this->hasMany(Screen::class)->orderBy('id_server');;
     }
 
 }

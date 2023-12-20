@@ -79,109 +79,8 @@
                                             <td><a class="text-body align-middle fw-medium text-decoration-none" > {{ $spl->available_on }}</a></td>
                                             <td><a class="text-body align-middle fw-medium text-decoration-none" > {{ $spl->duration }}</a></td>
                                             <td>
-                                                <a class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#spl_model_-{{ $spl->id }}" href="#"><i class="mdi mdi-magnify"> </i> </a>
-                                                <div class=" modal fade " id="spl_model_-{{ $spl->id }}" tabindex="-1" role="dialog"  aria-labelledby="delete_client_modalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog modal-dialog-centered  modal-xl">
-                                                        <div class="modal-content border-0">
-                                                            <div class="modal-header p-4 pb-0">
-                                                                <ul class="nav nav-tabs" role="tablist">
-                                                                    <li class="nav-item">
-                                                                      <a class="nav-link active" id="Properties-tab" data-bs-toggle="tab" href="#Properties-{{ $spl->id }}" role="tab" aria-controls="home" aria-selected="true">Properties</a>
-                                                                    </li>
-                                                                    <li class="nav-item">
-                                                                      <a class="nav-link" id="cpls-tab" data-bs-toggle="tab" href="#cpls-{{ $spl->id }}" role="tab" aria-controls="Content CPLs" aria-selected="false">Content CPLs</a>
-                                                                    </li>
-                                                                    <li class="nav-item">
-                                                                      <a class="nav-link" id="schedules-tab" data-bs-toggle="tab" href="#schedules-{{ $spl->id }}" role="tab" aria-controls="schedules" aria-selected="false">Related Schedules</a>
-                                                                    </li>
-                                                                  </ul>
-                                                                <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                            </div>
-                                                            <div class="modal-body text-center p-4">
+                                                <a class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#"><i class="mdi mdi-magnify"> </i> </a>
 
-                                                                <div class="tab-content border-0">
-                                                                    <div class="tab-pane fade show active" id="Properties-{{ $spl->id }}" role="tabpanel" aria-labelledby="Properties-tab">
-                                                                        <div class="card rounded border mb-2">
-                                                                            <div class="card-body p-3">
-                                                                                <div class="media  justify-content-start">
-                                                                                    <div class="media-body d-flex align-items-center">
-                                                                                        <i class=" mdi mdi-star icon-sm align-self-center me-3"></i>
-                                                                                        <h6 class="mb-1">Title : </h6>
-                                                                                    </div>
-                                                                                    <div class="media-body">
-                                                                                        <p class="mb-0 text-muted m-1">   </p>
-                                                                                    </div>
-                                                                                    <div class="media-body">
-                                                                                        <p class="mb-0 text-muted"> {{ $spl->name }} </p>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="card rounded border mb-2">
-                                                                            <div class="card-body p-3">
-                                                                                <div class="media  d-flex justify-content-start">
-                                                                                    <div class="media-body d-flex align-items-center">
-                                                                                        <i class="mdi mdi-star icon-sm align-self-center me-3"></i>
-                                                                                        <h6 class="mb-1">UUID : </h6>
-                                                                                    </div>
-                                                                                    <div class="media-body">
-                                                                                        <p class="mb-0 text-muted m-1">   </p>
-                                                                                    </div>
-                                                                                    <div class="media-body">
-                                                                                        <p class="mb-0 text-muted"> {{ $spl->uuid }} </p>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="card rounded border mb-2">
-                                                                            <div class="card-body p-3">
-                                                                                <div class="media  d-flex justify-content-start mr-5">
-                                                                                    <div class="media-body d-flex align-items-center">
-                                                                                        <i class="mdi mdi-timer icon-sm align-self-center me-3"></i>
-                                                                                        <h6 class="mb-1">Duration : </h6>
-                                                                                    </div>
-                                                                                    <div class="media-body">
-                                                                                        <p class="mb-0 text-muted m-1">   </p>
-                                                                                    </div>
-                                                                                    <div class="media-body">
-                                                                                        <p class="mb-0 text-muted">   {{ $spl->duration }} </p>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="tab-pane fade" id="cpls-{{ $spl->id }}" role="tabpanel" aria-labelledby="cpls-tab">
-                                                                        <div class="">
-                                                                            <table class="table">
-                                                                                <thead>
-                                                                                    <tr>
-                                                                                        <th>UUID</th>
-                                                                                        <th>CPL Name</th>
-
-                                                                                    </tr>
-                                                                                </thead>
-                                                                                <tbody>
-                                                                                    @foreach ($spl->cpls as $cpl )
-                                                                                        <tr>
-                                                                                            <td> {{  $cpl->uuid }}</td>
-                                                                                            <td> {{  $cpl->contentTitleText }}</td>
-                                                                                        </tr>
-                                                                                    @endforeach
-                                                                              </tbody>
-                                                                            </table>
-                                                                          </div>
-                                                                    </div>
-                                                                    <div class="tab-pane fade" id="schedules-{{ $spl->id }}" role="tabpanel" aria-labelledby="schedules-tab">
-                                                                     Lorem ipsum dolor sit amet consectetur adipisicing elit.<br />Fugiat ipsum facilis debitis similique, libero ratione labore laudantium <br />repellendus illum sit reprehenderit voluptatem laborum repudiandae molestias rem ea aperiam impedit praesentium.
-                                                                    </div>
-                                                                </div>
-
-
-                                                            </div>
-                                                        </div>
-                                                    <!--end modal-content-->
-                                                    </div>
-                                                </div>
 
                                             </td>
 
@@ -198,6 +97,103 @@
         </div>
     </div>
 
+
+    <div class=" modal fade " id="infos_modal" tabindex="-1" role="dialog"  aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered  modal-xl">
+            <div class="modal-content border-0">
+                <div class="modal-header p-4 pb-0">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                          <a class="nav-link active" id="Properties-tab" data-bs-toggle="tab" href="#Properties" role="tab" aria-controls="home" aria-selected="true">Properties</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" id="cpls-tab" data-bs-toggle="tab" href="#cpls" role="tab" aria-controls="Content CPLs" aria-selected="false">Content CPLs</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" id="schedules-tab" data-bs-toggle="tab" href="#schedules" role="tab" aria-controls="schedules" aria-selected="false">Related Schedules</a>
+                        </li>
+                      </ul>
+                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center p-4">
+
+                    <div class="tab-content border-0">
+                        <div class="tab-pane fade show active" id="Properties" role="tabpanel" aria-labelledby="Properties-tab">
+                            <div class="card rounded border mb-2">
+                                <div class="card-body p-3">
+                                    <div class="media  justify-content-start">
+                                        <div class="media-body d-flex align-items-center">
+                                            <i class=" mdi mdi-star icon-sm align-self-center me-3"></i>
+                                            <h6 class="mb-1">Title : </h6>
+                                        </div>
+                                        <div class="media-body">
+                                            <p class="mb-0 text-muted m-1">   </p>
+                                        </div>
+                                        <div class="media-body">
+                                            <p class="mb-0 text-muted">  </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card rounded border mb-2">
+                                <div class="card-body p-3">
+                                    <div class="media  d-flex justify-content-start">
+                                        <div class="media-body d-flex align-items-center">
+                                            <i class="mdi mdi-star icon-sm align-self-center me-3"></i>
+                                            <h6 class="mb-1">UUID : </h6>
+                                        </div>
+                                        <div class="media-body">
+                                            <p class="mb-0 text-muted m-1">   </p>
+                                        </div>
+                                        <div class="media-body">
+                                            <p class="mb-0 text-muted">  </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card rounded border mb-2">
+                                <div class="card-body p-3">
+                                    <div class="media  d-flex justify-content-start mr-5">
+                                        <div class="media-body d-flex align-items-center">
+                                            <i class="mdi mdi-timer icon-sm align-self-center me-3"></i>
+                                            <h6 class="mb-1">Duration : </h6>
+                                        </div>
+                                        <div class="media-body">
+                                            <p class="mb-0 text-muted m-1">   </p>
+                                        </div>
+                                        <div class="media-body">
+                                            <p class="mb-0 text-muted">    </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="cpls" role="tabpanel" aria-labelledby="cpls-tab">
+                            <div class="">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>UUID</th>
+                                            <th>CPL Name</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                  </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="schedules" role="tabpanel" aria-labelledby="schedules-tab">
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        <!--end modal-content-->
+        </div>
+    </div>
 
 
 @endsection
@@ -260,7 +256,13 @@
 
             $("#location-listing").dataTable().fnDestroy();
             $('#location-listing tbody').html('')
-
+            var loader_content  =
+            '<div class="jumping-dots-loader">'
+                +'<span></span>'
+                +'<span></span>'
+                +'<span></span>'
+                +'</div>'
+            $('#location-listing tbody').html(loader_content)
 
             var country =  $('#country').val();
             var screen =  $('#screen').val();
@@ -292,7 +294,7 @@
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.name+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.available_on+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.duration+'</a></td>'
-                            +'<td><button type="button" class="btn btn-outline-primary"> <i class="mdi mdi-magnify"> </i> </button></td>'
+                            +'<td><a class="btn btn-outline-primary infos_modal" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
                             +'</tr>';
                     });
                     console.log(response.spls)
@@ -322,6 +324,13 @@
         $(' #location').change(function(){
 
             $("#location-listing").dataTable().fnDestroy();
+            var loader_content  =
+            '<div class="jumping-dots-loader">'
+                +'<span></span>'
+                +'<span></span>'
+                +'<span></span>'
+                +'</div>'
+            $('#location-listing tbody').html(loader_content)
 
              $('#screen').find('option')
             .remove()
@@ -358,7 +367,7 @@
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.name+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.available_on+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.duration+'</a></td>'
-                            +'<td><button type="button" class="btn btn-outline-primary"> <i class="mdi mdi-magnify"> </i> </button></td>'
+                            +'<td><a class="btn btn-outline-primary infos_modal" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
                             +'</tr>';
                     });
                     $('#location-listing tbody').html(result)
@@ -384,6 +393,213 @@
 
 </script>
 
+<SCRIpt>
+     $(document).on('click', '.infos_modal', function () {
+
+        var loader_content  =
+            '<div class="jumping-dots-loader">'
+                +'<span></span>'
+                +'<span></span>'
+                +'<span></span>'
+                +'</div>'
+        $('#Properties').html(loader_content)
+
+        window.spl_id = $(this).attr("id") ;
+
+        var url = "get_spl_infos/"+spl_id ;
+        $.ajax({
+                url: url,
+                method: 'GET',
+                success:function(response)
+                {
+                    //console.log(response.spl.name) ;
+
+                        result =
+                        '<div class="card rounded border mb-2">'
+                                +'<div class="card-body p-3">'
+                                    +'<div class="media  justify-content-start">'
+                                        +'<div class="media-body d-flex align-items-center">'
+                                            +'<i class=" mdi mdi-star icon-sm align-self-center me-3"></i>'
+                                            +'<h6 class="mb-1">Title :  </h6>'
+                                        +'</div>'
+                                        +'<div class="media-body">'
+                                            +'<p class="mb-0 text-muted m-1">   </p>'
+                                        +'</div>'
+                                        +'<div class="media-body">'
+                                            +'<p class="mb-0 text-muted"> '+ response.spl.name + ' </p>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>'
+                            +'<div class="card rounded border mb-2">'
+                                +'<div class="card-body p-3">'
+                                    +'<div class="media  d-flex justify-content-start">'
+                                        +'<div class="media-body d-flex align-items-center">'
+                                            +'<i class="mdi mdi-star icon-sm align-self-center me-3"></i>'
+                                            +'<h6 class="mb-1">UUID : </h6>'
+                                        +'</div>'
+                                        +'<div class="media-body">'
+                                            +'<p class="mb-0 text-muted m-1">   </p>'
+                                        +'</div>'
+                                        +'<div class="media-body">'
+                                            +'<p class="mb-0 text-muted"> '+ response.spl.uuid + ' </p>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>'
+                            +'<div class="card rounded border mb-2">'
+                                +'<div class="card-body p-3">'
+                                    +'<div class="media  d-flex justify-content-start mr-5">'
+                                        +'<div class="media-body d-flex align-items-center">'
+                                            +'<i class="mdi mdi-timer icon-sm align-self-center me-3"></i>'
+                                            +'<h6 class="mb-1">Duration : </h6>'
+                                        +'</div>'
+                                        +'<div class="media-body">'
+                                            +'<p class="mb-0 text-muted m-1">   </p>'
+                                        +'</div>'
+                                        +'<div class="media-body">'
+                                            +'<p class="mb-0 text-muted"> '+ response.spl.duration + '   </p>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>'
+
+
+
+
+                    $('#Properties').html(result)
+
+
+
+
+
+                },
+                error: function(response) {
+
+                }
+        })
+
+     });
+
+     $(document).on('click', '#cpls-tab', function () {
+
+        var loader_content  =
+            '<div class="jumping-dots-loader">'
+                +'<span></span>'
+                +'<span></span>'
+                +'<span></span>'
+                +'</div>'
+        $('#cpls').html(loader_content)
+        var url = "get_spl_infos/"+spl_id ;
+
+        $.ajax({
+                url: url,
+                method: 'GET',
+                success:function(response)
+                {
+                    //console.log(response.spl.name) ;
+                    result =
+                        '<div class="">'
+                            +'<table class="table">'
+                                +'<thead>'
+                                    +'<tr>'
+                                        +'<th>UUID</th>'
+                                        +'<th>CPL Name</th>'
+
+                                    +'</tr>'
+                                +'</thead>'
+                                +'<tbody>'
+
+                    $.each(response.cpls, function( index, value ) {
+
+                    result = result
+                                    +'<tr>'
+                                        +'<th>'+value.uuid+'</th>'
+                                        +'<th>'+value.contentTitleText+'</th>'
+
+                                    +'</tr>'
+                    });
+                    result = result
+                                +'</tbody>'
+                            +'</table>'
+                        +'</div>'
+                    $('#cpls').html(result)
+
+
+
+
+
+                },
+                error: function(response) {
+
+                }
+        })
+
+    });
+
+    $(document).on('click', '#schedules-tab', function () {
+
+        var loader_content  =
+            '<div class="jumping-dots-loader">'
+                +'<span></span>'
+                +'<span></span>'
+                +'<span></span>'
+                +'</div>'
+        $('#schedules').html(loader_content)
+        var url = "get_spl_infos/"+spl_id ;
+        $.ajax({
+                url: url,
+                method: 'GET',
+                success:function(response)
+                {
+                    console.log() ;
+                    if(response.schedules.length)
+                    {
+                        result =
+                            '<div class="">'
+                                +'<table class="table">'
+                                    +'<thead>'
+                                        +'<tr>'
+                                            +'<th>Date</th>'
+                                            +'<th>Screen Name</th>'
+                                            +'<th>Screen Number</th>'
+                                        +'</tr>'
+                                    +'</thead>'
+                                    +'<tbody>'
+
+                        $.each(response.schedules, function( index, value ) {
+
+                        result = result
+                                        +'<tr>'
+                                            +'<th>'+value.ContentKeysNotValidBefore+'</th>'
+                                            +'<th>'+value.screen_name+'</th>'
+                                            +'<th>'+value.screen_number+'</th>'
+
+                                        +'</tr>'
+                        });
+                        result = result
+                                    +'</tbody>'
+                                +'</table>'
+                            +'</div>'
+                        $('#schedules').html(result)
+                    }
+                    else
+                    {
+                        $('#schedules').html('No data ')
+                    }
+
+
+
+                },
+                error: function(response) {
+
+                }
+        })
+
+    });
+
+
+</SCRIpt>
 @endsection
 
 @section('custom_css')

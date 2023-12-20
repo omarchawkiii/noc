@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Location;
+use App\Models\Schedule;
 use App\Models\Screen;
 use App\Models\Spl;
 use GuzzleHttp\Client;
@@ -15,6 +16,7 @@ use SoulDoit\DataTable\SSP;
 
 class SplController extends Controller
 {
+
 
     public function getspls( $location,  $screen )
     {
@@ -69,6 +71,15 @@ class SplController extends Controller
         }
         return Redirect::back()->with('message' ,' The Screens  has been updated');
     }
+
+    public function get_spl_infos($spl )
+    {
+        $spl = Spl::find($spl)->first() ;
+        $cpls = $spl->cpls ;
+        $schedules =  $spl->schedules ;
+        return Response()->json(compact('spl','cpls','schedules'));
+    }
+
 
     public function spl_by_screen(Screen $screen)
     {
