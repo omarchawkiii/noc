@@ -55,7 +55,24 @@ class KdmController extends Controller
                         }
                         else
                         {
-                            //dd('no Cpl with this UUID ' , $cpl) ;
+
+                            Kdm::updateOrCreate([
+                                'uuid' => $kdm["uuid"],
+                                'location_id' => $location->id
+                            ],[
+                                'uuid' => $kdm['uuid'],
+                                'name' => $kdm['ContentTitleText'],
+                                'ContentKeysNotValidBefore' => $kdm['ContentKeysNotValidBefore'],
+                                'ContentKeysNotValidAfter' => $kdm['ContentKeysNotValidAfter'],
+                                'kdm_installed' => $kdm['kdm_installed'],
+                                'content_present' => $kdm['content_present'],
+                                'serverName_by_serial' => $kdm['serverName_by_serial'],
+                                //'cpl_id' => $cpl->id,
+
+                                'screen_id' => $screen->id,
+                                'location_id' => $location->id,
+
+                            ]);
                         }
                     }
 

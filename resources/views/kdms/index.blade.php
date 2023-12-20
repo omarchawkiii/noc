@@ -68,6 +68,7 @@
                                     <th class="sorting" style="width: 150px;">KDM Name </th>
                                     <th class="sorting" style="width: 150px;">From </th>
                                     <th class="sorting" style="width: 150px;">To </th>
+                                    <th class="sorting" style="width: 150px;">Content Present  </th>
 
                                 </tr>
                             </thead>
@@ -182,7 +183,11 @@
                 {
 
                     $.each(response.kdms, function( index, value ) {
-
+                        if(value.content_present == 'yes' ){
+                            content_present = '<i class= "mdi mdi-check-circle-outline text-success" > </i>'
+                        }else{
+                            content_present = '<i class= "mdi mdi-checkbox-blank-circle-outline text-danger" > </i>'
+                        }
                         result = result
                             +'<tr class="odd">'
                                 +'<td class="sorting_1">'+ value.id+' </td>'
@@ -190,6 +195,7 @@
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;">'+value.name+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidBefore+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidAfter+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+content_present+'</a></td>'
                             +'</tr>';
                     });
                     console.log(response.kdms)
@@ -252,6 +258,11 @@
 
                     $.each(response.kdms, function( index, value ) {
 
+                        if(value.content_present == 'yes' ){
+                            content_present = '<i class= "mdi mdi-check-circle-outline text-success" > </i>'
+                        }else{
+                            content_present = '<i class= "mdi mdi-checkbox-blank-circle-outline text-danger" > </i>'
+                        }
                         result = result
                             +'<tr class="odd">'
                                 +'<td class="sorting_1">'+ value.id+' </td>'
@@ -259,6 +270,7 @@
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;">'+value.name+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidBefore+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidAfter+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ content_present+'</a></td>'
                             +'</tr>';
                     });
                     $('#location-listing tbody').html(result)
