@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title') connexion  @endsection
 @section('content')
-    <div class="page-header">
+    <div class="page-header playlistbuilder-shadow">
         <h3 class="page-title">CPLS </h3>
         <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -718,9 +718,10 @@
         "iDicplayLength": 10,
             destroy: true,
             "bDestroy": true,
-            'columnDefs': [
-                {'max-width': '20%', 'targets': 0}
-            ]
+            "language": {
+                search: "_INPUT_",
+                searchPlaceholder: "Search..."
+            }
 
         });
 
@@ -780,9 +781,10 @@
                         "iDicplayLength": 10,
                         destroy: true,
                         "bDestroy": true,
-                        'columnDefs': [
-                            {'max-width': '20%', 'targets': 0}
-                        ]
+                        "language": {
+                            search: "_INPUT_",
+                            searchPlaceholder: "Search..."
+                        }
 
                     });
 
@@ -854,9 +856,10 @@
                         "iDicplayLength": 10,
                         destroy: true,
                         "bDestroy": true,
-                        'columnDefs': [
-                            {'max-width': '20%', 'targets': 0}
-                        ]
+                        "language": {
+                            search: "_INPUT_",
+                            searchPlaceholder: "Search..."
+                        }
                     });
 
                 },

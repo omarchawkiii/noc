@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title') connexion  @endsection
 @section('content')
-    <div class="page-header">
+    <div class="page-header playlistbuilder-shadow">
         <h3 class="page-title">KDMs </h3>
         <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -130,16 +130,16 @@
 
 <script>
 
-function dhm (ms) {
-  const days = Math.floor(ms / (24*60*60*1000));
-  const daysms = ms % (24*60*60*1000);
-  const hours = Math.floor(daysms / (60*60*1000));
-  const hoursms = ms % (60*60*1000);
-  const minutes = Math.floor(hoursms / (60*1000));
-  const minutesms = ms % (60*1000);
-  const sec = Math.floor(minutesms / 1000);
-  return days + "D " + hours + "H " + minutes + "M " + sec  + "S ";
-}
+    function dhm (ms) {
+    const days = Math.floor(ms / (24*60*60*1000));
+    const daysms = ms % (24*60*60*1000);
+    const hours = Math.floor(daysms / (60*60*1000));
+    const hoursms = ms % (60*60*1000);
+    const minutes = Math.floor(hoursms / (60*1000));
+    const minutesms = ms % (60*1000);
+    const sec = Math.floor(minutesms / 1000);
+    return days + "D " + hours + "H " + minutes + "M " + sec  + "S ";
+    }
 
 
     (function($) {
@@ -161,9 +161,10 @@ function dhm (ms) {
         "iDisplayLength": 10,
             destroy: true,
             "bDestroy": true,
-            'columnDefs': [
-                {'max-width': '320px', 'targets': 0}
-            ]
+            "language": {
+                search: "_INPUT_",
+                searchPlaceholder: "Search..."
+            }
         });
 
         $('#screen').change(function(){
@@ -222,11 +223,11 @@ function dhm (ms) {
                             background_difftime = "bg-success"
                             console.log(diffTime)
                         }
-                        if(diffTime/100/60/60 < 48  && diffTime/100/60/60 > 1 )
+                        if(diffTime/100/60/60 < 48  && diffTime/100/60/60 > 0 )
                         {
                             background_difftime = "bg-warning"
                         }
-                        if(diffTime/100/60/60 < 1 )
+                        if(diffTime/100/60/60 <= 0 )
                         {
                             background_difftime = "bg-danger"
                         }
@@ -252,9 +253,10 @@ function dhm (ms) {
                         "iDisplayLength": 10,
                         destroy: true,
                         "bDestroy": true,
-                        'columnDefs': [
-                            {'max-width': '320px', 'targets': 0}
-                        ]
+                        "language": {
+                            search: "_INPUT_",
+                            searchPlaceholder: "Search..."
+                        }
 
                     });
 
@@ -326,11 +328,11 @@ function dhm (ms) {
                             background_difftime = "bg-success"
                             console.log(diffTime)
                         }
-                        if(diffTime/100/60/60 < 48  && diffTime/100/60/60 > 1 )
+                        if(diffTime/100/60/60 < 48  && diffTime/100/60/60 > 0 )
                         {
                             background_difftime = "bg-warning"
                         }
-                        if(diffTime/100/60/60 < 1 )
+                        if(diffTime/100/60/60 <= 0 )
                         {
                             background_difftime = "bg-danger"
                         }
@@ -355,9 +357,10 @@ function dhm (ms) {
                         "iDisplayLength": 10,
                         destroy: true,
                         "bDestroy": true,
-                        'columnDefs': [
-                            {'max-width': '320px', 'targets': 0}
-                        ]
+                        "language": {
+                            search: "_INPUT_",
+                            searchPlaceholder: "Search..."
+                        }
                     });
 
                 },

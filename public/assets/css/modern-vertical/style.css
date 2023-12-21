@@ -23820,3 +23820,23 @@ table .btn
 {
     padding: 10px 15px !important ;
 }
+
+.active_playlistbuilder.active
+{
+  color : #F24EB1 !important;
+}
+
+
+table td ,
+table th ,
+
+{
+    text-align: center !important;
+}
+
+table th a ,
+table td a
+{
+    color : #fff ;
+    text-decoration: none ;
+}

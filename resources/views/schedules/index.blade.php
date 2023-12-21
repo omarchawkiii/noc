@@ -1,12 +1,12 @@
 @extends('layouts.app')
 @section('title') connexion  @endsection
 @section('content')
-    <div class="page-header">
-        <h3 class="page-title">SPLS </h3>
+    <div class="page-header scheduler-shadow">
+        <h3 class="page-title">Schedules </h3>
         <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">SPLS</li>
+            <li class="breadcrumb-item active" aria-current="page">Schedules</li>
         </ol>
         </nav>
     </div>
@@ -17,7 +17,7 @@
             <div class="row">
                 <div class="d-flex flex-row justify-content-between mt-2 mb-3">
                     <div>
-                        <h4 class="card-title ">SPLS</h4>
+                        <h4 class="card-title ">Schedules</h4>
                     </div>
                 </div>
                 <div class="row">
@@ -246,6 +246,10 @@
         "iDisplayLength": 10,
             destroy: true,
             "bDestroy": true,
+            "language": {
+                search: "_INPUT_",
+                searchPlaceholder: "Search..."
+            }
 
         });
 
@@ -344,6 +348,9 @@
                         "iDisplayLength": 10,
                         destroy: true,
                         "bDestroy": true,
+                        "language": {
+                            search: "Search"
+                        }
 
                     });
 
@@ -456,6 +463,9 @@
                         "iDisplayLength": 10,
                         destroy: true,
                         "bDestroy": true,
+                        "language": {
+                            search: "Search"
+                        }
                     });
 
                 },

@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('title') connexion  @endsection
 @section('content')
-    <div class="page-header">
-        <h3 class="page-title">Locations </h3>
+    <div class="page-header playbck-shadow">
+        <h3 class="page-title ">Locations </h3>
         <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="#">Home</a></li>

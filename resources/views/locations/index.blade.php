@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('title') connexion  @endsection
 @section('content')
-    <div class="page-header">
-        <h3 class="page-title">Locations </h3>
+    <div class="page-header playbck-shadow">
+        <h3 class="page-title ">Locations </h3>
         <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="#">Home</a></li>
@@ -23,7 +23,7 @@
 
                     <div>
 
-                    <a  href="{{ route('location.create') }}" class="btn btn-success btn-icon-text">
+                    <a  href="{{ route('location.create') }}" class="btn btn-primary  btn-icon-text">
                         <i class="mdi mdi-plus btn-icon-prepend"></i> Create Location
                     </a>
                     </div>
@@ -96,7 +96,8 @@
       ],
       "iDisplayLength": 10,
       "language": {
-        search: ""
+        search: "_INPUT_",
+        searchPlaceholder: "Search..."
       }
     });
 

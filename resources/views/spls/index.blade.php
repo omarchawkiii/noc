@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title') connexion  @endsection
 @section('content')
-    <div class="page-header">
+    <div class="page-header playlistbuilder-shadow">
         <h3 class="page-title">SPLS </h3>
         <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -244,6 +244,10 @@
         "iDisplayLength": 10,
             destroy: true,
             "bDestroy": true,
+            "language": {
+                search: "_INPUT_",
+                searchPlaceholder: "Search..."
+            }
 
         });
 
@@ -302,7 +306,10 @@
                         "iDisplayLength": 10,
                         destroy: true,
                         "bDestroy": true,
-
+                        "language": {
+                            search: "_INPUT_",
+                            searchPlaceholder: "Search..."
+                        }
                     });
 
                 },
@@ -374,6 +381,10 @@
                         "iDisplayLength": 10,
                         destroy: true,
                         "bDestroy": true,
+                        "language": {
+                            search: "_INPUT_",
+                            searchPlaceholder: "Search..."
+                        }
                     });
 
                 },
@@ -591,8 +602,6 @@
         })
 
     });
-
-
 </SCRIpt>
 @endsection
 

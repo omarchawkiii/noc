@@ -7,7 +7,7 @@
 
       <li class="nav-item menu-items">
         <a class="nav-link" href="{{ route('location.index') }}">
-          <span class="menu-icon">
+          <span class="menu-icon icon-box-danger">
             <i class="mdi mdi-speedometer"></i>
           </span>
           <span class="menu-title">Locations</span>
@@ -15,7 +15,7 @@
       </li>
       <li class="nav-item menu-items ">
         <a class="nav-link" data-bs-toggle="collapse" href="#showm_anagement" aria-expanded="false" aria-controls="icons">
-          <span class="menu-icon">
+          <span class="menu-icon icon-box-playlistbuilder">
             <i class="mdi mdi-contacts"></i>
           </span>
           <span class="menu-title">Show Management </span>
@@ -23,13 +23,21 @@
         </a>
         <div class="collapse " id="showm_anagement">
           <ul class="nav flex-column sub-menu">
-            <li class="nav-item"> <a class="nav-link" href="{{ route('spls.get_spl_with_filter') }}">Show Playlists</a></li>
-            <li class="nav-item"> <a class="nav-link " href="{{ route('cpls.get_cpl_with_filter') }}">CPLS</a></li>
-            <li class="nav-item"> <a class="nav-link " href="{{ route('kdms.get_Kdm_with_filter') }}">KDMs</a></li>
-            <li class="nav-item"> <a class="nav-link " href="{{ route('schedules.get_schedules_with_filter') }}">Schedules</a></li>
+            <li class="nav-item"> <a class="nav-link active_playlistbuilder " href="{{ route('spls.get_spl_with_filter') }}"> <i class="mdi mdi-checkbox-blank-circle me-1"></i> Playlists</a></li>
+            <li class="nav-item"> <a class="nav-link active_playlistbuilder " href="{{ route('cpls.get_cpl_with_filter') }}"> <i class="mdi mdi-checkbox-blank-circle me-1"></i> CPLS</a></li>
+            <li class="nav-item"> <a class="nav-link active_playlistbuilder " href="{{ route('kdms.get_Kdm_with_filter') }}"> <i class="mdi mdi-checkbox-blank-circle  me-1"></i> KDMs</a></li>
+
 
           </ul>
         </div>
+      </li>
+      <li class="nav-item menu-items">
+        <a class="nav-link" href="{{ route('schedules.get_schedules_with_filter') }}">
+          <span class="menu-icon icon-box-blue">
+            <i class="mdi mdi-calendar-today "></i>
+          </span>
+          <span class="menu-title">Schedule Management </span>
+        </a>
       </li>
       <li>
         <br />
