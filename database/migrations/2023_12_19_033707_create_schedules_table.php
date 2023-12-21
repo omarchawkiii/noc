@@ -29,7 +29,7 @@ return new class extends Migration
             $table->string('status', 255)->nullable();
             $table->string('ShowTitleText', 255)->nullable();
             $table->string('spl_available', 255)->nullable();
-            //$table->string('cpls', 255)->nullable();
+            $table->string('cpls', 255)->nullable();
             $table->string('kdm', 255)->nullable();
             $table->string('idserver', 255)->nullable();
             //$table->string('screen_name', 255)->nullable();
