@@ -109,14 +109,16 @@ class KdmController extends Controller
         {
             $location = Location::find($location) ;
             $screens =$location->screens ;
-            $kdms =$location->kdms ;
+           // $kdms =$location->kdms ;
+            $kdms =Kdm::with('screen')->where('location_id',$location->id)->get();
+
             return Response()->json(compact('kdms','screens'));
         }
         else
         {
             if(isset($screen) && $screen != 'null' )
             {
-                $kdms = Screen::find($screen)->kdms ;
+                $kdms = Kdm::with('screen')->where('screen_id',$screen)->get();
                 return Response()->json(compact('kdms'));
             }
             else

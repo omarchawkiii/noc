@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cpl;
+use App\Models\Kdm;
 use App\Models\Location;
+use App\Models\Schedule;
 use App\Models\Screen;
 use App\Models\Spl;
 use GuzzleHttp\Client;
@@ -118,6 +120,19 @@ class CplController extends Controller
 
 
     }
+
+    public function get_cpl_infos($cpl )
+    {
+        $cpl = Cpl::find($cpl) ;
+        $spls = $cpl->spls ;
+        $kdms = $cpl->kdms ;
+        $kdms =Kdm::with('screen')->where('cpl_id',$cpl->id)->get();
+      //  $schedules =  $spl->schedules ;
+        //$schedules =Schedule::with('screen')->where('spl_id',$cpl->id)->get();
+        $schedules = null ;
+        return Response()->json(compact('cpl','spls','kdms'));
+    }
+
 
 
 }

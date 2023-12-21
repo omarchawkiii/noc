@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Location;
 use App\Models\Schedule;
+use App\Models\Screen;
 use App\Models\Spl;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
@@ -11,21 +12,18 @@ use Illuminate\Support\Facades\Redirect;
 
 class ScheduleContoller extends Controller
 {
-    public function getschedules($location, $spl)
+    public function getschedules($location)
     {
-
-
-        //$spl_content = Spl::where('uuid',$spl)->first() ;
-        $spl_content = Spl::where('uuid', '=', $spl)->first();
-        if($spl_content)
-        {
             $location = Location::find($location) ;
 
-            $url = $location->connection_ip."?request=getCplListByScreenNumber&screen_number=".$spl;
+            $url = $location->connection_ip."?request=getListSessionsScheduleFromNow";
             $client = new Client();
             $response = $client->request('GET', $url);
             $contents = json_decode($response->getBody(), true);
             echo "url : $url <br />" ;
+
+
+
             if($contents)
             {
                 foreach($contents as $content)
@@ -34,37 +32,86 @@ class ScheduleContoller extends Controller
                     {
                         foreach($content as $schedule)
                         {
-                            Schedule::updateOrCreate([
-                                'scheduleId' => $schedule["scheduleId"],
-                                'location' => $location->id,
-                            ],[
-                                "scheduleId" => $schedule['scheduleId'],
-                                "screen_number" => $schedule['screen_number'],
-                                "date_start" => $schedule['date_start_string_format'],
-                                "date_end" => $schedule['date_end_string_format'],
-                                "duration" => $schedule['duration'],
-                                "cod_film" => $schedule['cod_film'],
-                                "id_film" => $schedule['id_film'],
-                                "color" => $schedule['color'],
-                                "type" => $schedule['type'],
-                                "spl_uuid" => $spl,
-                                "screen_name" => $schedule['screen_name'],
-                            ]);
-                        }
 
-                        if(count($content) != $spl_content->schedules->count() )
-                        {
-                            $uuid_schedule = array_column($content, 'scheduleId');
-                                foreach($spl_content->schedules as $schedul)
+                            if( isset($schedule['cpls']))
+                            {
+                                $cpls = $schedule['cpls'] ;
+                            }
+                            else
+                            {
+                                $cpls = null ;
+                            }
+
+                            if( isset($schedule['kdm']))
+                            {
+                                $kdm = $schedule['kdm'] ;
+                            }
+                            else
+                            {
+                                $kdm = null ;
+                            }
+
+                            $screen = Screen::where('screen_number', $schedule['number'])->first() ;
+                            if($screen)
+                            {
+                                if( $schedule['status'] != "linked" || $schedule['uuid_spl'] == 'null'  )
                                 {
-                                    if (! in_array( $schedul->scheduleId , $uuid_schedule))
+                                    $spl_id =null ;
+                                }
+                                else
+                                {
+                                    $spl = Spl::where('uuid',$schedule['uuid_spl'])->first() ;
+                                   if($spl )
+                                   {
+                                        $spl_id = $spl->id ;
+                                   }
+                                   else
+                                   {
+                                        $spl_id =null ;
+                                   }
+                                }
+
+
+                                Schedule::updateOrCreate([
+                                    'scheduleId' => $schedule["id"],
+                                    'location_id' => $location->id,
+                                ],[
+                                   'name' => $schedule['name'],
+                                   'scheduleId' => $schedule['id'],
+                                   'titleShort' => $schedule['titleShort'],
+                                   'uuid_spl' => $schedule['uuid_spl'],
+                                   'screen_number' => $schedule['number'],
+                                   //'duration' => $schedule['Lorem'],
+                                   'cod_film' => $schedule['cod_film'],
+                                   'id_film' => $schedule['id_film'],
+                                   'color' => $schedule['color'],
+                                   'date_start' => $schedule['start'],
+                                   'date_end' => $schedule['end'],
+                                   'type' => $schedule['type'],
+                                   'status' => $schedule['status'],
+                                    'cpls' => $cpls,
+                                   'kdm' => $kdm,
+                                   "idserver" =>  $schedule['idserver'],
+                                   'ShowTitleText' => $schedule['ShowTitleText'],
+                                   'spl_available' => $schedule['spl_available'],
+                                   'screen_id' => $screen->id ,
+                                    'spl_id' => $spl_id ,
+                                    'location_id' => $location->id ,
+
+                                ]);
+                            }
+
+                        }
+                            $uuid_schedule = array_column($content, 'scheduleId');
+                                foreach($location->schedules as $schedule)
+                                {
+                                    if (! in_array( $schedule->scheduleId , $uuid_schedule) &&  strtotime($schedule->date_start) < strtotime('now')  )
                                     {
-                                        $schedul->delete() ;
+                                        $schedule->delete() ;
                                     }
                                 }
 
                             //dd('we should delete screens ') ;
-                        }
                     }
                 }
             }
@@ -72,7 +119,44 @@ class ScheduleContoller extends Controller
             {
                 echo "no content <br />" ;
             }
-           // return Redirect::back()->with('message' ,' The schedules  has been updated');
-        }
+
+
     }
+
+    public function get_schedules_with_filter(Request $request )
+    {
+        $location = $request->location;
+        $screen = $request->screen;
+        if(isset($location) &&  $location != 'null' )
+        {
+            $location = Location::find($location) ;
+            $screens =$location->screens ;
+            $schedules =Schedule::with('screen','spls')->where('location_id',$location->id)->get();
+
+            return Response()->json(compact('schedules','screens'));
+        }
+        else
+        {
+
+            if(isset($screen) && $screen != 'null' )
+            {
+                //$schedules = Screen::find($screen)->schedules ;
+                $schedules =Schedule::with('screen','spls')->where('screen_id',$screen)->get();
+
+                return Response()->json(compact('schedules'));
+            }
+            else
+            {
+                $locations = Location::all() ;
+                $schedules =null ;
+                $screens = null ;
+
+                return view('schedules.index', compact('screen','screens','locations'));
+            }
+        }
+
+    }
+
+
+
 }

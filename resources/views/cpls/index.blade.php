@@ -197,7 +197,102 @@
     </div>
 
 
+    <div class=" modal fade " id="infos_modal" tabindex="-1" role="dialog"  aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered  modal-xl">
+            <div class="modal-content border-0">
+                <div class="modal-header p-4 pb-0">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                          <a class="nav-link active" id="Properties-tab" data-bs-toggle="tab" href="#Properties" role="tab" aria-controls="home" aria-selected="true">Properties</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" id="spls-tab" data-bs-toggle="tab" href="#spls" role="tab" aria-controls="Content CPLs" aria-selected="false">SPL(S)</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" id="kdms-tab" data-bs-toggle="tab" href="#kdms" role="tab" aria-controls="schedules" aria-selected="false">Keys Messages</a>
+                        </li>
+                      </ul>
+                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center p-4">
 
+                    <div class="tab-content border-0">
+                        <div class="tab-pane fade show active" id="Properties" role="tabpanel" aria-labelledby="Properties-tab">
+                            <div class="card rounded border mb-2">
+                                <div class="card-body p-3">
+                                    <div class="media  justify-content-start">
+                                        <div class="media-body d-flex align-items-center">
+                                            <i class=" mdi mdi-star icon-sm align-self-center me-3"></i>
+                                            <h6 class="mb-1">Title : </h6>
+                                        </div>
+                                        <div class="media-body">
+                                            <p class="mb-0 text-muted m-1">   </p>
+                                        </div>
+                                        <div class="media-body">
+                                            <p class="mb-0 text-muted">  </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card rounded border mb-2">
+                                <div class="card-body p-3">
+                                    <div class="media  d-flex justify-content-start">
+                                        <div class="media-body d-flex align-items-center">
+                                            <i class="mdi mdi-star icon-sm align-self-center me-3"></i>
+                                            <h6 class="mb-1">UUID : </h6>
+                                        </div>
+                                        <div class="media-body">
+                                            <p class="mb-0 text-muted m-1">   </p>
+                                        </div>
+                                        <div class="media-body">
+                                            <p class="mb-0 text-muted">  </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card rounded border mb-2">
+                                <div class="card-body p-3">
+                                    <div class="media  d-flex justify-content-start mr-5">
+                                        <div class="media-body d-flex align-items-center">
+                                            <i class="mdi mdi-timer icon-sm align-self-center me-3"></i>
+                                            <h6 class="mb-1">Duration : </h6>
+                                        </div>
+                                        <div class="media-body">
+                                            <p class="mb-0 text-muted m-1">   </p>
+                                        </div>
+                                        <div class="media-body">
+                                            <p class="mb-0 text-muted">    </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="spls" role="tabpanel" aria-labelledby="spls-tab">
+                            <div class="">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>UUID</th>
+                                            <th>CPL Name</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                  </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="kdms" role="tabpanel" aria-labelledby="schedules-tab">
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        <!--end modal-content-->
+        </div>
+    </div>
 @endsection
 
 @section('custom_script')
@@ -227,6 +322,378 @@
     @endif
 })(jQuery);
 </script>
+
+
+<SCRIpt>
+    $(document).on('click', '.infos_modal', function () {
+
+       var loader_content  =
+           '<div class="jumping-dots-loader">'
+               +'<span></span>'
+               +'<span></span>'
+               +'<span></span>'
+            +'</div>'
+       $('#Properties').html(loader_content)
+
+       window.spl_id = $(this).attr("id") ;
+
+       var url = "get_cpl_infos/"+spl_id ;
+       $.ajax({
+               url: url,
+               method: 'GET',
+               success:function(response)
+               {
+
+
+                       result =
+                       '<div class="card rounded border mb-2">'
+                               +'<div class="card-body p-3">'
+                                   +'<div class="media  justify-content-start">'
+                                       +'<div class="media-body d-flex align-items-center">'
+                                           +'<i class=" mdi mdi-star icon-sm align-self-center me-3"></i>'
+                                           +'<h6 class="mb-1">Title :  </h6>'
+                                       +'</div>'
+                                       +'<div class="media-body">'
+                                           +'<p class="mb-0 text-muted m-1">   </p>'
+                                       +'</div>'
+                                       +'<div class="media-body">'
+                                           +'<p class="mb-0 text-muted"> '+ response.cpl.contentTitleText + ' </p>'
+                                       +'</div>'
+                                   +'</div>'
+                               +'</div>'
+                           +'</div>'
+                           +'<div class="card rounded border mb-2">'
+                               +'<div class="card-body p-3">'
+                                   +'<div class="media  d-flex justify-content-start">'
+                                       +'<div class="media-body d-flex align-items-center">'
+                                           +'<i class="mdi mdi-star icon-sm align-self-center me-3"></i>'
+                                           +'<h6 class="mb-1">UUID : </h6>'
+                                       +'</div>'
+                                       +'<div class="media-body">'
+                                           +'<p class="mb-0 text-muted m-1">   </p>'
+                                       +'</div>'
+                                       +'<div class="media-body">'
+                                           +'<p class="mb-0 text-muted"> '+ response.cpl.uuid + ' </p>'
+                                       +'</div>'
+                                   +'</div>'
+                               +'</div>'
+                           +'</div>'
+                           +'<div class="card rounded border mb-2">'
+                               +'<div class="card-body p-3">'
+                                   +'<div class="media  d-flex justify-content-start mr-5">'
+                                       +'<div class="media-body d-flex align-items-center">'
+                                           +'<i class="mdi mdi-timer icon-sm align-self-center me-3"></i>'
+                                           +'<h6 class="mb-1">Kind : </h6>'
+                                       +'</div>'
+                                       +'<div class="media-body">'
+                                           +'<p class="mb-0 text-muted m-1">   </p>'
+                                       +'</div>'
+                                       +'<div class="media-body">'
+                                           +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                       +'</div>'
+                                   +'</div>'
+                               +'</div>'
+                           +'</div>'
+
+                           +'<div class="card rounded border mb-2">'
+                               +'<div class="card-body p-3">'
+                                   +'<div class="media  d-flex justify-content-start mr-5 row">'
+
+                                        +'<div class="col-md-4 text-center" >'
+                                            +'<div class="media-body ">'
+                                                +'<h6 class="mb-1">Duration   </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.cpl.durationEdits + '   </p>'
+                                            +'</div>'
+                                        +'</div>'
+
+                                        +'<div class="col-md-4 text-center" >'
+                                            +'<div class="media-body ">'
+                                                +'<h6 class="mb-1">Edit Rate   </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.cpl.EditRate + '   </p>'
+                                            +'</div>'
+                                        +'</div>'
+
+                                        +'<div class="col-md-4 text-center" >'
+                                            +'<div class="media-body ">'
+                                                +'<h6 class="mb-1">Disk size   </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.cpl.totalSize + '   </p>'
+                                            +'</div>'
+                                        +'</div>'
+
+
+
+                                   +'</div>'
+                               +'</div>'
+                           +'</div>'
+
+
+
+                           +'<div class="card rounded border mb-2">'
+                               +'<div class="card-body p-3">'
+                                   +'<div class="media  d-flex justify-content-start mr-5 row">'
+
+                                        +'<div class="col-md-3 text-center" >'
+                                            +'<div class="media-body ">'
+                                                +'<h6 class="mb-1">Picture Height  </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                            +'</div>'
+                                        +'</div>'
+
+                                        +'<div class="col-md-3 text-center" >'
+                                            +'<div class="media-body ">'
+                                                +'<h6 class="mb-1">Picture width  </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                            +'</div>'
+                                        +'</div>'
+
+                                        +'<div class="col-md-3 text-center" >'
+                                            +'<div class="media-body ">'
+                                                +'<h6 class="mb-1">Picture Encoding Algorithm   </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                            +'</div>'
+                                        +'</div>'
+
+                                        +'<div class="col-md-3 text-center" >'
+                                            +'<div class="media-body ">'
+                                                +'<h6 class="mb-1">Picture Encryption Algorithm  </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                            +'</div>'
+                                        +'</div>'
+
+                                   +'</div>'
+                               +'</div>'
+                           +'</div>'
+
+                           +'<div class="card rounded border mb-2">'
+                               +'<div class="card-body p-3">'
+                                   +'<div class="media  d-flex justify-content-start mr-5 row">'
+
+                                        +'<div class="col-md-3 text-center" >'
+                                            +'<div class="media-body ">'
+                                                +'<h6 class="mb-1">Sound Channel Count  </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.cpl.soundChannelCount + '   </p>'
+                                            +'</div>'
+                                        +'</div>'
+
+                                        +'<div class="col-md-3 text-center" >'
+                                            +'<div class="media-body ">'
+                                                +'<h6 class="mb-1">Sound Encoding Algorithm </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                            +'</div>'
+                                        +'</div>'
+
+                                        +'<div class="col-md-3 text-center" >'
+                                            +'<div class="media-body ">'
+                                                +'<h6 class="mb-1">Sound Encryption   </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                            +'</div>'
+                                        +'</div>'
+
+                                        +'<div class="col-md-3 text-center" >'
+                                            +'<div class="media-body ">'
+                                                +'<h6 class="mb-1"> Algorithm  </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                            +'</div>'
+                                        +'</div>'
+
+                                   +'</div>'
+                               +'</div>'
+                           +'</div>'
+
+
+
+
+
+
+                   $('#Properties').html(result)
+
+
+
+
+
+               },
+               error: function(response) {
+
+               }
+       })
+
+    });
+
+    $(document).on('click', '#spls-tab', function () {
+
+       var loader_content  =
+           '<div class="jumping-dots-loader">'
+               +'<span></span>'
+               +'<span></span>'
+               +'<span></span>'
+               +'</div>'
+       $('#spls').html(loader_content)
+       var url = "get_cpl_infos/"+spl_id ;
+
+       $.ajax({
+               url: url,
+               method: 'GET',
+               success:function(response)
+               {
+                   console.log(response.spls) ;
+                   result =
+                       '<div class="">'
+                           +'<table class="table">'
+                               +'<thead>'
+                                   +'<tr>'
+                                       +'<th>UUID</th>'
+                                       +'<th>CPL Name</th>'
+
+                                   +'</tr>'
+                               +'</thead>'
+                               +'<tbody>'
+
+                   $.each(response.spls, function( index, value ) {
+
+                   result = result
+                                   +'<tr>'
+                                       +'<th>'+value.uuid+'</th>'
+                                       +'<th>'+value.name+'</th>'
+
+                                   +'</tr>'
+                   });
+                   result = result
+                               +'</tbody>'
+                           +'</table>'
+                       +'</div>'
+                   $('#spls').html(result)
+
+
+
+
+
+               },
+               error: function(response) {
+
+               }
+       })
+
+   });
+
+   $(document).on('click', '#kdms-tab', function () {
+
+       var loader_content  =
+           '<div class="jumping-dots-loader">'
+               +'<span></span>'
+               +'<span></span>'
+               +'<span></span>'
+               +'</div>'
+       $('#kdms').html(loader_content)
+       var url = "get_cpl_infos/"+spl_id ;
+       $.ajax({
+               url: url,
+               method: 'GET',
+               success:function(response)
+               {
+                   console.log(response) ;
+                   if(response.kdms.length)
+                   {
+                       result =
+                           '<div class="">'
+                               +'<table class="table">'
+                                   +'<thead>'
+                                       +'<tr>'
+                                           +'<th>Screen</th>'
+                                           +'<th>Note Valide Before </th>'
+                                           +'<th>Note Valid After</th>'
+                                           +'<th>UUID</th>'
+                                       +'</tr>'
+                                   +'</thead>'
+                                   +'<tbody>'
+
+                       $.each(response.kdms, function( index, value ) {
+
+                       result = result
+                                       +'<tr>'
+                                           +'<th>'+value.screen.screen_name+'</th>'
+                                           +'<th>'+value.ContentKeysNotValidBefore+'</th>'
+                                           +'<th>'+value.ContentKeysNotValidAfter+'</th>'
+                                           +'<th>'+value.uuid+'</th>'
+
+                                       +'</tr>'
+                       });
+                       result = result
+                                   +'</tbody>'
+                               +'</table>'
+                           +'</div>'
+                       $('#kdms').html(result)
+                   }
+                   else
+                   {
+                       $('#kdms').html('No data ')
+                   }
+
+
+
+               },
+               error: function(response) {
+
+               }
+       })
+
+   });
+</SCRIpt>
+
 
 
 <script>
@@ -262,6 +729,13 @@
             $("#location-listing").dataTable().fnDestroy();
             $('#location-listing tbody').html('')
 
+            var loader_content  =
+           '<div class="jumping-dots-loader">'
+               +'<span></span>'
+               +'<span></span>'
+               +'<span></span>'
+               +'</div>'
+            $('#location-listing tbody').html(loader_content)
 
             var country =  $('#country').val();
             var screen =  $('#screen').val();
@@ -293,7 +767,7 @@
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.contentTitleText+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.contentKind+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none">' + value.available_on + '</a></td>'
-                            +'<td><button type="button" class="btn btn-outline-primary"> <i class="mdi mdi-magnify"> </i> </button></td>'
+                            +'<td><a class="btn btn-outline-primary infos_modal" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
                             +'</tr>';
                     });
                     console.log(response.cpls)
@@ -330,6 +804,13 @@
             .end()
             .append('<option value="null">All Screens</option>')
 
+            var loader_content  =
+           '<div class="jumping-dots-loader">'
+               +'<span></span>'
+               +'<span></span>'
+               +'<span></span>'
+               +'</div>'
+            $('#location-listing tbody').html(loader_content)
             //$('#location-listing tbody').html('')
             var location =  $('#location').val();
             var country =  $('#country').val();
@@ -360,7 +841,7 @@
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.contentTitleText+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.contentKind+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none">' + value.available_on + '</a></td>'
-                            +'<td><button type="button" class="btn btn-outline-primary"> <i class="mdi mdi-magnify"> </i> </button></td>'
+                            +'<td><a class="btn btn-outline-primary infos_modal" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
                             +'</tr>';
                     });
                     console.log(response.cpls)

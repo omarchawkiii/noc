@@ -26,6 +26,7 @@
             <li class="nav-item"> <a class="nav-link" href="{{ route('spls.get_spl_with_filter') }}">Show Playlists</a></li>
             <li class="nav-item"> <a class="nav-link " href="{{ route('cpls.get_cpl_with_filter') }}">CPLS</a></li>
             <li class="nav-item"> <a class="nav-link " href="{{ route('kdms.get_Kdm_with_filter') }}">KDMs</a></li>
+            <li class="nav-item"> <a class="nav-link " href="{{ route('schedules.get_schedules_with_filter') }}">Schedules</a></li>
 
           </ul>
         </div>

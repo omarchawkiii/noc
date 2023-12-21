@@ -63,12 +63,13 @@
                         <table id="location-listing" class="table">
                             <thead>
                                 <tr>
-                                    <th class="sorting sorting_asc">No #</th>
-                                    <th class="sorting " style="width: 150px;">UUID</th>
-                                    <th class="sorting" style="width: 150px;">KDM Name </th>
-                                    <th class="sorting" style="width: 150px;">From </th>
-                                    <th class="sorting" style="width: 150px;">To </th>
+                                    <th class="sorting sorting_asc">Screen </th>
+
+                                    <th class="sorting" style="width: 150px;">Content Name </th>
+                                    <th class="sorting" style="width: 150px;">Begin Validity </th>
+                                    <th class="sorting" style="width: 150px;">End Validity </th>
                                     <th class="sorting" style="width: 150px;">Content Present  </th>
+                                    <th class="sorting " style="width: 150px;">Notes</th>
 
                                 </tr>
                             </thead>
@@ -129,6 +130,17 @@
 
 <script>
 
+function dhm (ms) {
+  const days = Math.floor(ms / (24*60*60*1000));
+  const daysms = ms % (24*60*60*1000);
+  const hours = Math.floor(daysms / (60*60*1000));
+  const hoursms = ms % (60*60*1000);
+  const minutes = Math.floor(hoursms / (60*1000));
+  const minutesms = ms % (60*1000);
+  const sec = Math.floor(minutesms / 1000);
+  return days + "D " + hours + "H " + minutes + "M " + sec  + "S ";
+}
+
 
     (function($) {
     'use strict';
@@ -159,6 +171,13 @@
             $("#location-listing").dataTable().fnDestroy();
             $('#location-listing tbody').html('')
 
+            var loader_content  =
+            '<div class="jumping-dots-loader">'
+                +'<span></span>'
+                +'<span></span>'
+                +'<span></span>'
+                +'</div>'
+            $('#location-listing tbody').html(loader_content)
 
             var country =  $('#country').val();
             var screen =  $('#screen').val();
@@ -183,21 +202,46 @@
                 {
 
                     $.each(response.kdms, function( index, value ) {
+
                         if(value.content_present == 'yes' ){
-                            content_present = '<i class= "mdi mdi-check-circle-outline text-success" > </i>'
+                            content_present = '<i class= "mdi mdi-check-circle-outline text-white" > </i>'
                         }else{
-                            content_present = '<i class= "mdi mdi-checkbox-blank-circle-outline text-danger" > </i>'
+                            content_present = '<i class= "mdi mdi-checkbox-blank-circle-outline text-white" > </i>'
                         }
+
+                        const date1 = new Date();
+                        const date2 = new Date(value.ContentKeysNotValidAfter);
+                        let diffTime = Math.abs(date2 - date1);
+
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                        background_difftime=""
+
+                        if(diffTime/100/60/60 > 48 )
+                        {
+                            background_difftime = "bg-success"
+                            console.log(diffTime)
+                        }
+                        if(diffTime/100/60/60 < 48  && diffTime/100/60/60 > 1 )
+                        {
+                            background_difftime = "bg-warning"
+                        }
+                        if(diffTime/100/60/60 < 1 )
+                        {
+                            background_difftime = "bg-danger"
+                        }
+
+
                         result = result
-                            +'<tr class="odd">'
-                                +'<td class="sorting_1">'+ value.id+' </td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;">'+value.uuid+'</a></td>'
+                            +'<tr class="odd '+background_difftime+'">'
+                                +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.screen.screen_name+' </td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;">'+value.name+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidBefore+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidAfter+'</a></td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+content_present+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ content_present+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ dhm (diffTime)+'</a></td>'
                             +'</tr>';
-                    });
+                        });
                     console.log(response.kdms)
 
                     $('#location-listing tbody').html(result)
@@ -233,7 +277,13 @@
             .remove()
             .end()
             .append('<option value="null">All Screens</option>')
-
+            var loader_content  =
+            '<div class="jumping-dots-loader">'
+                +'<span></span>'
+                +'<span></span>'
+                +'<span></span>'
+                +'</div>'
+            $('#location-listing tbody').html(loader_content)
             //$('#location-listing tbody').html('')
             var location =  $('#location').val();
             var country =  $('#country').val();
@@ -247,7 +297,6 @@
                 method: 'GET',
                 success:function(response)
                 {
-
                     screens = '<option value="null" selected>All Screens</option>';
                     $.each(response.screens, function( index_screen, screen ) {
 
@@ -259,18 +308,42 @@
                     $.each(response.kdms, function( index, value ) {
 
                         if(value.content_present == 'yes' ){
-                            content_present = '<i class= "mdi mdi-check-circle-outline text-success" > </i>'
+                            content_present = '<i class= "mdi mdi-check-circle-outline text-white" > </i>'
                         }else{
-                            content_present = '<i class= "mdi mdi-checkbox-blank-circle-outline text-danger" > </i>'
+                            content_present = '<i class= "mdi mdi-checkbox-blank-circle-outline text-white" > </i>'
                         }
+
+                        const date1 = new Date();
+                        const date2 = new Date(value.ContentKeysNotValidAfter);
+                        let diffTime = Math.abs(date2 - date1);
+
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                        background_difftime=""
+
+                        if(diffTime/100/60/60 > 48 )
+                        {
+                            background_difftime = "bg-success"
+                            console.log(diffTime)
+                        }
+                        if(diffTime/100/60/60 < 48  && diffTime/100/60/60 > 1 )
+                        {
+                            background_difftime = "bg-warning"
+                        }
+                        if(diffTime/100/60/60 < 1 )
+                        {
+                            background_difftime = "bg-danger"
+                        }
+
+
                         result = result
-                            +'<tr class="odd">'
-                                +'<td class="sorting_1">'+ value.id+' </td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;">'+value.uuid+'</a></td>'
+                            +'<tr class="odd '+background_difftime+'">'
+                                +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.screen.screen_name+' </td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;">'+value.name+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidBefore+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidAfter+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ content_present+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ dhm (diffTime)+'</a></td>'
                             +'</tr>';
                     });
                     $('#location-listing tbody').html(result)

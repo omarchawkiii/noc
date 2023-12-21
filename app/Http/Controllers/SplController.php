@@ -74,9 +74,10 @@ class SplController extends Controller
 
     public function get_spl_infos($spl )
     {
-        $spl = Spl::find($spl)->first() ;
+        $spl = Spl::find($spl) ;
         $cpls = $spl->cpls ;
-        $schedules =  $spl->schedules ;
+      //  $schedules =  $spl->schedules ;
+        $schedules =Schedule::with('screen')->where('spl_id',$spl->id)->get();
         return Response()->json(compact('spl','cpls','schedules'));
     }
 

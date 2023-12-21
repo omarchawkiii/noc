@@ -73,10 +73,15 @@ class Location extends Model
         return $this->hasMany(Kdm::class);
     }
 
+    public function schedules(): HasMany
+    {
+        return $this->hasMany(Schedule::class);
+    }
+
 
     public function screens(): HasMany
     {
-        return $this->hasMany(Screen::class)->orderBy('id_server');;
+        return $this->hasMany(Screen::class);
     }
 
 }

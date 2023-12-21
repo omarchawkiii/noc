@@ -63,11 +63,13 @@
                         <table id="location-listing" class="table">
                             <thead>
                                 <tr>
-                                    <th class="sorting sorting_asc">No #</th>
-                                    <th class="sorting">Playlist</th>
-                                    <th class="sorting">Available On </th>
-                                    <th class="sorting">Duration </th>
-                                    <th class="sorting">Action</th>
+                                    <th class="sorting sorting_asc">Type #</th>
+                                    <th class="sorting">Screen</th>
+                                    <th class="sorting">Movie </th>
+                                    <th class="sorting">Date/Time </th>
+                                    <th class="sorting">Spl</th>
+                                    <th class="sorting">Infos</th>
+                                    <th class="sorting">Note</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -271,7 +273,7 @@
                 var location =  null;
             }
 
-            var url = '/get_spl_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen;
+            var url = '/get_schedules_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen;
 
             result =" " ;
 
@@ -281,14 +283,54 @@
                 success:function(response)
                 {
 
-                    $.each(response.spls, function( index, value ) {
+                    $.each(response.schedules, function( index, value ) {
+                        bg_status="" ;
+                        if(value.status !="linked" )
+                        {
+                            bg_status = "bg-danger"
+                        }
+
+                        icon_spl = ""
+                        icon_cpl = ""
+                        icon_kdm = ""
+                        statu_content=""
+                        if(value.status !="linked" )
+                        {
+                            icon_spl = '<i class="mdi mdi-playlist-play text-danger"> </i>'
+                            statu_content = 'SPL <br /> <spn class="text-danger" >Unlinked  </span>'
+                        }
+                        else
+                        {
+                            icon_spl =  '<i class="mdi mdi-playlist-play text-success"> </i>'
+                            statu_content = 'SPL <br /> <spn class="text-success" > Linled</span>'
+                        }
+
+                        if(value.cpls ==1)
+                        {
+                            icon_cpl = '<i class="mdi mdi-filmstrip text-success">'
+                        }
+                        else
+                        {
+                            icon_cpl = '<i class="mdi mdi-filmstrip text-warning">'
+                        }
+
+                        if(value.kdm  ==1 )
+                        {
+                            icon_kdm = '</i> <i class="mdi mdi-key-remove text-success"> </i>'
+                        }
+                        else
+                        {
+                            icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
+                        }
 
                         result = result
-                            +'<tr class="odd">'
-                            +'<td class="sorting_1">'+ value.id+' </td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.name+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.available_on+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.duration+'</a></td>'
+                            +'<tr class="odd ">'
+                            +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.type+' </td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.screen.screen_name+'</a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.name+'</a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.date_start+'</a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+ icon_spl + icon_cpl + icon_kdm +' </i></a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+statu_content+'</a></td>'
                             +'<td><a class="btn btn-outline-primary infos_modal" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
                             +'</tr>';
                     });
@@ -337,7 +379,7 @@
             var country =  $('#country').val();
             var screen =  null;
 
-            var url = '/get_spl_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen;
+            var url = '/get_schedules_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen;
             result =" " ;
 
             $.ajax({
@@ -354,14 +396,54 @@
                     });
                         $('#screen').html(screens)
 
-                    $.each(response.spls, function( index, value ) {
+                    $.each(response.schedules, function( index, value ) {
+                        bg_status="" ;
+                        if(value.status !="linked" )
+                        {
+                            bg_status = "bg-danger"
+                        }
+
+                        icon_spl = ""
+                        icon_cpl = ""
+                        icon_kdm = ""
+                        statu_content=""
+                        if(value.status !="linked" )
+                        {
+                            icon_spl = '<i class="mdi mdi-playlist-play text-danger"> </i>'
+                            statu_content = 'SPL <br /> <spn class="text-danger" >Unlinked  </span>'
+                        }
+                        else
+                        {
+                            icon_spl =  '<i class="mdi mdi-playlist-play text-success"> </i>'
+                            statu_content = 'SPL <br /> <spn class="text-success" > Linled</span>'
+                        }
+
+                        if(value.cpls ==1)
+                        {
+                            icon_cpl = '<i class="mdi mdi-filmstrip text-success">'
+                        }
+                        else
+                        {
+                            icon_cpl = '<i class="mdi mdi-filmstrip text-warning">'
+                        }
+
+                        if(value.kdm  ==1 )
+                        {
+                            icon_kdm = '</i> <i class="mdi mdi-key-remove text-success"> </i>'
+                        }
+                        else
+                        {
+                            icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
+                        }
 
                         result = result
-                            +'<tr class="odd">'
-                            +'<td class="sorting_1">'+ value.id+' </td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.name+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.available_on+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.duration+'</a></td>'
+                            +'<tr class="odd ">'
+                            +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.type+' </td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.screen.screen_name+'</a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.name+'</a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.date_start+'</a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+ icon_spl + icon_cpl + icon_kdm +' </i></a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+statu_content+'</a></td>'
                             +'<td><a class="btn btn-outline-primary infos_modal" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
                             +'</tr>';
                     });
@@ -546,7 +628,7 @@
                 method: 'GET',
                 success:function(response)
                 {
-                    console.log(response) ;
+                    console.log() ;
                     if(response.schedules.length)
                     {
                         result =
@@ -565,9 +647,9 @@
 
                         result = result
                                         +'<tr>'
-                                            +'<th>'+value.date_end+'</th>'
-                                            +'<th>'+value.screen.screen_name+'</th>'
-                                            +'<th>'+value.screen.screen_number+'</th>'
+                                            +'<th>'+value.ContentKeysNotValidBefore+'</th>'
+                                            +'<th>'+value.screen_name+'</th>'
+                                            +'<th>'+value.screen_number+'</th>'
 
                                         +'</tr>'
                         });

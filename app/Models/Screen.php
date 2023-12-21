@@ -85,4 +85,10 @@ class Screen extends Model
     {
         return $this->hasMany(Kdm::class);
     }
+
+    public function schedules(): HasMany
+    {
+        return $this->hasMany(Schedule::class);
+    }
+
 }
