@@ -60,7 +60,7 @@
 
                 <div class="col-12">
                     <div class="table-responsive">
-                        <table id="location-listing" class="table">
+                        <table id="location-listing" class="table text-center">
                             <thead>
                                 <tr>
                                     <th class="sorting sorting_asc">No #</th>
@@ -287,11 +287,23 @@
 
                     $.each(response.spls, function( index, value ) {
 
+                        available_on_array =  value.available_on.split(",");
+                        available_on_content=""
+                        for(i = 0 ; i< available_on_array.length ; i++ )
+                        {
+                            if(i != 0 &&  i % 4 == 0 )
+                            {
+                                available_on_content = available_on_content + '<br />'
+                            }
+                            available_on_content = available_on_content + '<div class="badge badge-primary m-1">'+ available_on_array[i]+'</div>'
+                        }
+
+
                         result = result
                             +'<tr class="odd">'
                             +'<td class="sorting_1">'+ value.id+' </td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.name+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.available_on+'</a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"  style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+available_on_content+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.duration+'</a></td>'
                             +'<td><a class="btn btn-outline-primary infos_modal" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
                             +'</tr>';
@@ -362,12 +374,23 @@
                         $('#screen').html(screens)
 
                     $.each(response.spls, function( index, value ) {
+                        available_on_array =  value.available_on.split(",");
+                        available_on_content=""
+                        for(i = 0 ; i< available_on_array.length ; i++ )
+                        {
+                            if(i != 0 &&  i % 4 == 0 )
+                            {
+                                available_on_content = available_on_content + '<br />'
+                            }
+                            available_on_content = available_on_content + '<div class="badge badge-primary m-1">'+ available_on_array[i]+'</div>'
+                        }
+
 
                         result = result
                             +'<tr class="odd">'
                             +'<td class="sorting_1">'+ value.id+' </td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.name+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.available_on+'</a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+available_on_content+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.duration+'</a></td>'
                             +'<td><a class="btn btn-outline-primary infos_modal" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
                             +'</tr>';

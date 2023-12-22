@@ -60,7 +60,7 @@
 
                 <div class="col-12">
                     <div class="table-responsive">
-                        <table id="location-listing" class="table">
+                        <table id="location-listing" class="table text-center">
                             <thead>
                                 <tr>
                                     <th class="sorting sorting_asc">Screen </th>
@@ -236,7 +236,7 @@
                         result = result
                             +'<tr class="odd '+background_difftime+'">'
                                 +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.screen.screen_name+' </td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;">'+value.name+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidBefore+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidAfter+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ content_present+'</a></td>'
@@ -341,7 +341,7 @@
                         result = result
                             +'<tr class="odd '+background_difftime+'">'
                                 +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.screen.screen_name+' </td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;">'+value.name+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidBefore+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidAfter+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ content_present+'</a></td>'

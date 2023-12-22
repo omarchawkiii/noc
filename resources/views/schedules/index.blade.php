@@ -60,7 +60,7 @@
 
                 <div class="col-12">
                     <div class="table-responsive">
-                        <table id="location-listing" class="table">
+                        <table id="location-listing" class="table text-center">
                             <thead>
                                 <tr>
                                     <th class="sorting sorting_asc">Type #</th>
@@ -68,7 +68,6 @@
                                     <th class="sorting">Movie </th>
                                     <th class="sorting">Date/Time </th>
                                     <th class="sorting">Spl</th>
-                                    <th class="sorting">Infos</th>
                                     <th class="sorting">Note</th>
                                 </tr>
                             </thead>
@@ -301,12 +300,12 @@
                         if(value.status !="linked" )
                         {
                             icon_spl = '<i class="mdi mdi-playlist-play text-danger"> </i>'
-                            statu_content = 'SPL <br /> <spn class="text-danger" >Unlinked  </span>'
+                            statu_content = '<spn class="text-danger" >Unlinked  </span>'
                         }
                         else
                         {
                             icon_spl =  '<i class="mdi mdi-playlist-play text-success"> </i>'
-                            statu_content = 'SPL <br /> <spn class="text-success" > Linled</span>'
+                            statu_content = '<spn class="text-success" > Linled</span>'
                         }
 
                         if(value.cpls ==1)
@@ -320,7 +319,7 @@
 
                         if(value.kdm  ==1 )
                         {
-                            icon_kdm = '</i> <i class="mdi mdi-key-remove text-success"> </i>'
+                            icon_kdm = '</i> <i class="mdi mdi-key-change text-success"> </i>'
                         }
                         else
                         {
@@ -335,7 +334,6 @@
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.date_start+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+ icon_spl + icon_cpl + icon_kdm +' </i></a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+statu_content+'</a></td>'
-                            +'<td><a class="btn btn-outline-primary infos_modal" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
                             +'</tr>';
                     });
                     console.log(response.spls)
@@ -349,7 +347,8 @@
                         destroy: true,
                         "bDestroy": true,
                         "language": {
-                            search: "Search"
+                            search: "_INPUT_",
+                            searchPlaceholder: "Search..."
                         }
 
                     });
@@ -417,12 +416,12 @@
                         if(value.status !="linked" )
                         {
                             icon_spl = '<i class="mdi mdi-playlist-play text-danger"> </i>'
-                            statu_content = 'SPL <br /> <spn class="text-danger" >Unlinked  </span>'
+                            statu_content = '<spn class="text-danger" >Unlinked  </span>'
                         }
                         else
                         {
                             icon_spl =  '<i class="mdi mdi-playlist-play text-success"> </i>'
-                            statu_content = 'SPL <br /> <spn class="text-success" > Linled</span>'
+                            statu_content = '<spn class="text-success" > Linled</span>'
                         }
 
                         if(value.cpls ==1)
@@ -436,7 +435,7 @@
 
                         if(value.kdm  ==1 )
                         {
-                            icon_kdm = '</i> <i class="mdi mdi-key-remove text-success"> </i>'
+                            icon_kdm = '</i> <i class="mdi mdi-key-change text-success"> </i>'
                         }
                         else
                         {
@@ -451,7 +450,6 @@
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.date_start+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+ icon_spl + icon_cpl + icon_kdm +' </i></a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+statu_content+'</a></td>'
-                            +'<td><a class="btn btn-outline-primary infos_modal" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
                             +'</tr>';
                     });
                     $('#location-listing tbody').html(result)
@@ -464,7 +462,8 @@
                         destroy: true,
                         "bDestroy": true,
                         "language": {
-                            search: "Search"
+                            search: "_INPUT_",
+                            searchPlaceholder: "Search..."
                         }
                     });
 

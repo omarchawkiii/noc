@@ -18,7 +18,7 @@
           <span class="menu-icon icon-box-playlistbuilder">
             <i class="mdi mdi-contacts"></i>
           </span>
-          <span class="menu-title">Show Management </span>
+          <span class="menu-title">Content Management</span>
           <i class="menu-arrow"></i>
         </a>
         <div class="collapse " id="showm_anagement">
@@ -26,8 +26,6 @@
             <li class="nav-item"> <a class="nav-link active_playlistbuilder " href="{{ route('spls.get_spl_with_filter') }}"> <i class="mdi mdi-checkbox-blank-circle me-1"></i> Playlists</a></li>
             <li class="nav-item"> <a class="nav-link active_playlistbuilder " href="{{ route('cpls.get_cpl_with_filter') }}"> <i class="mdi mdi-checkbox-blank-circle me-1"></i> CPLS</a></li>
             <li class="nav-item"> <a class="nav-link active_playlistbuilder " href="{{ route('kdms.get_Kdm_with_filter') }}"> <i class="mdi mdi-checkbox-blank-circle  me-1"></i> KDMs</a></li>
-
-
           </ul>
         </div>
       </li>
@@ -36,12 +34,12 @@
           <span class="menu-icon icon-box-blue">
             <i class="mdi mdi-calendar-today "></i>
           </span>
-          <span class="menu-title">Schedule Management </span>
+          <span class="menu-title">Schedule Management</span>
         </a>
       </li>
       <li>
         <br />
-        <br /><br /><br /><br /><br /> <br /><br /><br /><br /><br /> <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /> <br /><br /><br /><br /><br /> <br /><br />
+        <br /><br /><br /><br /><br /> <br /><br /><br /><br /><br />
       </li>
     </ul>
   </nav>
