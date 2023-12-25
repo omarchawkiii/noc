@@ -13,6 +13,26 @@ return new class extends Migration
     {
         Schema::create('lmscpls', function (Blueprint $table) {
             $table->id();
+
+            $table->string('uuid', 255)->nullable();
+            $table->string('id_dcp', 255)->nullable();
+            $table->string('contentTitleText', 255)->nullable();
+            $table->string('contentKind', 255)->nullable();
+            $table->string('EditRate', 255)->nullable();
+            $table->string('is_3D',255)->nullable();
+            $table->string('totalSize', 255)->nullable();
+            $table->string('soundChannelCount', 255)->nullable();
+            $table->string('durationEdits', 255)->nullable();
+            $table->string('ScreenAspectRatio', 255)->nullable();
+            $table->string('available_on', 255)->nullable();
+            $table->string('serverName', 255)->nullable();
+            $table->boolean('cpl_is_linked')->nullable();
+            $table->string('date_create_ingest', 255)->nullable();
+            $table->string('pictureEncryptionAlgorithm', 255)->nullable();
+            $table->string('Width', 255)->nullable();
+            $table->string('Height', 255)->nullable();
+            $table->foreignId('location_id')->constrained()->onDelete('cascade');
+            //$table->foreignId('screen_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

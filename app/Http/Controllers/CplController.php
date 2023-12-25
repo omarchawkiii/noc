@@ -90,6 +90,24 @@ class CplController extends Controller
         $location = $request->location;
         $country = $request->country;
         $screen = $request->screen;
+        $lms= $request->lms ;
+        if($lms== true)
+        {
+            $location = Location::find($location) ;
+            if($location)
+            {
+                $screens =$location->screens ;
+                $cpls =$location->lmscpls ;
+            }
+            else
+            {
+                $screens =null;
+                $cpls=null;
+            }
+
+
+            return Response()->json(compact('cpls','screens'));
+        }
 
         if(isset($location) &&  $location != 'null' )
         {

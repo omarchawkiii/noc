@@ -30,7 +30,6 @@
                             <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="location">
                                 <option selected="">Locations</option>
                                 @foreach ($locations as $location )
-
                                     <option @if($screen) @if( $screen->location->id == $location->id) selected @endif @endif  value="{{ $location->id }}">{{ $location->name }}</option>
                                 @endforeach
                             </select>
@@ -55,6 +54,12 @@
                             </select>
                         </div>
                     </div>
+
+                    <div class="col-xl-2">
+                        <button type="button" id="refresh_lms"  class="btn btn-icon-text " style="color: #6f6f6f;background: #2a3038; height: 37px; display:none">
+                            <i class="mdi mdi-server-network"></i> LMS </button>
+                    </div>
+
 
                 </div>
 
@@ -265,6 +270,7 @@
 
             var country =  $('#country').val();
             var screen =  $('#screen').val();
+            window.lms = false ;
             if(screen == 'null')
             {
                 var location =  $('#location').val();
@@ -335,7 +341,7 @@
 
         });
 
-        $(' #location').change(function(){
+        $('#location').change(function(){
 
             $("#location-listing").dataTable().fnDestroy();
             var loader_content  =
@@ -352,10 +358,19 @@
             .append('<option value="null">All Screens</option>')
 
             //$('#location-listing tbody').html('')
+
             var location =  $('#location').val();
             var country =  $('#country').val();
             var screen =  null;
-
+            window.lms = false ;
+            if(location != "Locations")
+            {
+                $('#refresh_lms').show();
+            }
+            else
+            {
+                $('#refresh_lms').hide();
+            }
             var url = '/get_spl_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen;
             result =" " ;
 
@@ -417,6 +432,91 @@
             })
 
         });
+
+        $('#refresh_lms').click(function(){
+
+            $("#location-listing").dataTable().fnDestroy();
+            var loader_content  =
+            '<div class="jumping-dots-loader">'
+                +'<span></span>'
+                +'<span></span>'
+                +'<span></span>'
+                +'</div>'
+            $('#location-listing tbody').html(loader_content)
+
+            $('#screen').find('option')
+            .remove()
+            .end()
+            .append('<option value="null">All Screens</option>')
+
+            //$('#location-listing tbody').html('')
+            var location =  $('#location').val();
+            var country =  $('#country').val();
+            window.lms = true ;
+            var screen =  null;
+
+            var url = '/get_spl_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen+'&lms='+ lms;
+            result =" " ;
+
+            $.ajax({
+                url: url,
+                method: 'GET',
+                success:function(response)
+                {
+
+                    screens = '<option value="null" selected>All Screens</option>';
+                    $.each(response.screens, function( index_screen, screen ) {
+
+                        screens = screens
+                            +'<option  value="'+screen.id+'">'+screen.screen_name+'</option>';
+                    });
+                        $('#screen').html(screens)
+
+                    $.each(response.spls, function( index, value ) {
+                        available_on_array =  value.available_on.split(",");
+                        available_on_content=""
+                        for(i = 0 ; i< available_on_array.length ; i++ )
+                        {
+                            if(i != 0 &&  i % 4 == 0 )
+                            {
+                                available_on_content = available_on_content + '<br />'
+                            }
+                            available_on_content = available_on_content + '<div class="badge badge-primary m-1">'+ available_on_array[i]+'</div>'
+                        }
+
+
+                        result = result
+                            +'<tr class="odd">'
+                            +'<td class="sorting_1">'+ value.id+' </td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+available_on_content+'</a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.duration+'</a></td>'
+                            +'<td><a class="btn btn-outline-primary infos_modal" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
+                            +'</tr>';
+                    });
+                    $('#location-listing tbody').html(result)
+
+                    console.log(response.spls)
+                    /***** refresh datatable **** **/
+
+                    var spl_datatable = $('#location-listing').DataTable({
+                        "iDisplayLength": 10,
+                        destroy: true,
+                        "bDestroy": true,
+                        "language": {
+                            search: "_INPUT_",
+                            searchPlaceholder: "Search..."
+                        }
+                    });
+
+                },
+                error: function(response) {
+
+                }
+            })
+
+        });
+
     })(jQuery);
 
 </script>
@@ -434,7 +534,24 @@
 
         window.spl_id = $(this).attr("id") ;
 
-        var url = "get_spl_infos/"+spl_id ;
+        $('#Properties-tab').addClass('active');
+        $('#cpls-tab').removeClass('active');
+        $('#schedules-tab').removeClass('active');
+        $('#Properties').addClass('show active ');
+        $('#cpls').removeClass('show active');
+        $('#schedules').removeClass('show active');
+
+        if(lms == true )
+        {
+            var url = "get_lmsspl_infos/"+spl_id ;
+            $('#schedules-tab').hide();
+        }
+        else
+        {
+            var url = "get_spl_infos/"+spl_id ;
+            $('#schedules-tab').show();
+        }
+
         $.ajax({
                 url: url,
                 method: 'GET',
@@ -518,7 +635,17 @@
                 +'<span></span>'
                 +'</div>'
         $('#cpls').html(loader_content)
-        var url = "get_spl_infos/"+spl_id ;
+
+        if(lms == true )
+        {
+            var url = "get_lmsspl_infos/"+spl_id ;
+        }
+        else
+        {
+            var url = "get_spl_infos/"+spl_id ;
+        }
+
+
 
         $.ajax({
                 url: url,

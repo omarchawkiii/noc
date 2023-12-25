@@ -30,7 +30,6 @@
                             <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="location">
                                 <option selected="">Locations</option>
                                 @foreach ($locations as $location )
-
                                     <option @if($screen) @if( $screen->location->id == $location->id) selected @endif @endif  value="{{ $location->id }}">{{ $location->name }}</option>
                                 @endforeach
                             </select>
@@ -52,6 +51,11 @@
                                 @endif
                             </select>
                         </div>
+                    </div>
+
+                    <div class="col-xl-2">
+                        <button type="button" id="refresh_lms"  class="btn btn-icon-text " style="color: #6f6f6f;background: #2a3038; height: 37px; display:none">
+                            <i class="mdi mdi-server-network"></i> LMS </button>
                     </div>
 
                 </div>
@@ -335,16 +339,30 @@
             +'</div>'
        $('#Properties').html(loader_content)
 
+        $('#Properties-tab').addClass('active');
+        $('#spls-tab').removeClass('active');
+        $('#kdms-tab').removeClass('active');
+        $('#Properties').addClass('show active ');
+        $('#spls').removeClass('show active');
+        $('#kdms').removeClass('show active');
+
        window.spl_id = $(this).attr("id") ;
 
-       var url = "get_cpl_infos/"+spl_id ;
+       if(lms == true )
+        {
+            var url = "get_lmscpl_infos/"+spl_id ;
+            $('#kdms-tab').hide();
+        }
+        else
+        {
+            var url = "get_cpl_infos/"+spl_id ;
+            $('#kdms-tab').show();
+        }
        $.ajax({
                url: url,
                method: 'GET',
                success:function(response)
                {
-
-
                        result =
                        '<div class="card rounded border mb-2">'
                                +'<div class="card-body p-3">'
@@ -740,6 +758,7 @@
 
             var country =  $('#country').val();
             var screen =  $('#screen').val();
+            window.lms = false ;
             if(screen == 'null')
             {
                 var location =  $('#location').val();
@@ -827,6 +846,15 @@
             var location =  $('#location').val();
             var country =  $('#country').val();
             var screen =  null;
+            window.lms = false ;
+            if(location != "Locations")
+            {
+                $('#refresh_lms').show();
+            }
+            else
+            {
+                $('#refresh_lms').hide();
+            }
 
             var url = '/get_cpl_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen;
             result =" " ;
@@ -888,6 +916,107 @@
             })
 
         });
+
+        $('#refresh_lms').click(function(){
+
+            $("#location-listing").dataTable().fnDestroy();
+            var loader_content  =
+            '<div class="jumping-dots-loader">'
+                +'<span></span>'
+                +'<span></span>'
+                +'<span></span>'
+                +'</div>'
+            $('#location-listing tbody').html(loader_content)
+
+            $('#screen').find('option')
+            .remove()
+            .end()
+            .append('<option value="null">All Screens</option>')
+
+            //$('#location-listing tbody').html('')
+            var location =  $('#location').val();
+            var country =  $('#country').val();
+            window.lms = true ;
+            var screen =  null;
+
+            var url = '/get_cpl_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen+'&lms='+ lms;
+            result =" " ;
+
+            $.ajax({
+                url: url,
+                method: 'GET',
+                success:function(response)
+                {
+
+                    screens = '<option value="null" selected>All screen </option>';
+                    $.each(response.screens, function( index_screen, screen ) {
+
+                        screens = screens
+                            +'<option  value="'+screen.id+'">'+screen.screen_name+'</option>';
+                    });
+                        $('#screen').html(screens)
+
+                    $.each(response.cpls, function( index, value ) {
+
+                        available_on_content="";
+                        if(value.available_on != null)
+                        {    if (value.available_on.indexOf(',') > -1)
+                            {
+                                available_on_array =  value.available_on.split(",");
+                                available_on_content=""
+                                for(i = 0 ; i< available_on_array.length ; i++ )
+                                {
+                                    if(i != 0 &&  i % 4 == 0 )
+                                    {
+                                        available_on_content = available_on_content + '<br />'
+                                    }
+                                    available_on_content = available_on_content + '<div class="badge badge-primary m-1">'+ available_on_array[i]+'</div>'
+                                }
+                            }
+                            else
+                            {
+                                available_on_content = '<div class="badge badge-primary m-1">'+ value.available_on+'</div>'
+                            }
+                        }
+                        else
+                        {
+                            available_on_content ="" ;
+                        }
+
+
+                        result = result
+                            +'<tr class="odd text-center">'
+                            +'<td class="sorting_1">'+ value.id+' </td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.contentTitleText+'</a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">'+value.contentKind+'</a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">' + available_on_content + '</a></td>'
+                            +'<td><a class="btn btn-outline-primary infos_modal text-center" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
+                            +'</tr>';
+                    });
+                    console.log(response.cpls)
+                    $('#location-listing tbody').html(result)
+
+                    console.log(response.cpls)
+                    /***** refresh datatable **** **/
+
+                    var cpl_datatable = $('#location-listing').DataTable({
+                        "iDicplayLength": 10,
+                        destroy: true,
+                        "bDestroy": true,
+                        "language": {
+                            search: "_INPUT_",
+                            searchPlaceholder: "Search..."
+                        }
+                    });
+
+                },
+                error: function(response) {
+
+                }
+            })
+
+        });
+
     })(jQuery);
 
 

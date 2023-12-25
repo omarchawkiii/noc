@@ -78,6 +78,16 @@ class Location extends Model
         return $this->hasMany(Schedule::class);
     }
 
+    public function lmsspls(): HasMany
+    {
+        return $this->hasMany(Lmsspl::class);
+    }
+
+    public function lmscpls(): HasMany
+    {
+        return $this->hasMany(Lmscpl::class);
+    }
+
 
     public function screens(): HasMany
     {

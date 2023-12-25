@@ -61,6 +61,9 @@
                                                     <a class="btn btn-outline-primary dropdown-item" href="{{ route('location.edit',$location) }}">Edit</a>
                                                     <a class="btn btn-outline-primary dropdown-item" href="{{ route('refresh_all_data_of_location',$location->id) }}">Refreesh All Data</a>
                                                     <a class="btn btn-outline-primary dropdown-item" href="{{ route('refresh_all_data_of_location',$location->id) }}">Refreesh Content DATA </a>
+                                                    <a class="btn btn-outline-primary dropdown-item" href="{{ route('refresh_lms_data_of_location',$location->id) }}">Refreesh LMS Content DATA </a>
+
+
                                                 </div>
                                               </div>
                                         </td>

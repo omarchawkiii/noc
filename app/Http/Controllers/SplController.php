@@ -95,12 +95,41 @@ class SplController extends Controller
         $location = $request->location;
         $country = $request->country;
         $screen = $request->screen;
+        $lms= $request->lms ;
+        if($lms== true)
+        {
+            $location = Location::find($location) ;
+            if($location)
+            {
+                $screens =$location->screens ;
+                $spls =$location->lmsspls ;
+            }
+            else
+            {
+                $screens =null;
+                $spls=null;
+            }
+
+
+            return Response()->json(compact('spls','screens'));
+        }
 
         if(isset($location) &&  $location != 'null' )
         {
             $location = Location::find($location) ;
-            $screens =$location->screens ;
-            $spls =$location->spls ;
+
+            if($location)
+            {
+                $screens =$location->screens ;
+                $spls =$location->spls ;
+            }
+            else
+            {
+                $screens =null;
+                $spls=null;
+            }
+
+
             return Response()->json(compact('spls','screens'));
         }
         else

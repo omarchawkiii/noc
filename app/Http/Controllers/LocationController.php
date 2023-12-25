@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Events\changeDataEvent;
 use App\Http\Requests\LocationStoreRequest;
 use App\Models\Cpl;
+use App\Models\Lmscpl;
+use App\Models\Lmsspl;
 use App\Models\Location;
 use App\Models\Power;
 use App\Models\Screen;
@@ -179,10 +181,6 @@ class LocationController extends Controller
         echo "All schedules imported<br />" ;
 
 
-
-
-
-
     }
 
 
@@ -236,6 +234,36 @@ class LocationController extends Controller
 
     }
 
+
+    public function refresh_lms_data_of_location( $location)
+    {
+        $location = Location::find($location)->first();
+
+        echo "Start Import LMS Spls <br />" ;
+            $location = Location::find($location->id);
+            app(\App\Http\Controllers\LmssplController::class)->getlmsspls($location->id);
+            echo "spls of location $location->name imported <br />" ;
+
+        echo "All LMS spls imported<br />" ;
+
+        // get all LMS cpls
+        echo "<br />------------------------<br />" ;
+
+        echo "Start Import LMS CPLs <br />" ;
+        $location = Location::find($location)->first();
+        app(\App\Http\Controllers\LmscplController::class)->getlmscpls($location->id);
+        echo "All LMS cpls imported<br />" ;
+         //sync cpls with spls
+         echo "<br />------------------------<br />" ;
+
+         echo "Start Sync LMS SPLs and CPLs   <br />" ;
+            $location = Location::find($location)->first();
+            $this->sync_lms_spl_cpl($location->id );
+
+        echo "All SPls and CPLs sync" ;
+
+
+    }
 
 
     public function getscreens( $location )
@@ -372,6 +400,46 @@ class LocationController extends Controller
                             if($cpl)
                             {
                                 $spl->cpls()->syncWithoutDetaching([$cpl->id]);
+                            }
+                            else
+                            {
+                                //dd($cpl_content) ;
+                            }
+                        }
+                    }
+                }
+            }
+
+
+
+        }
+    }
+
+    public function sync_lms_spl_cpl( $location )
+    {
+        $lms_spls = Lmsspl::all() ;
+
+        $location = Location::find($location)->first() ;
+
+        foreach($lms_spls as $lms_spl)
+        {
+            $url = $location->connection_ip."?request=getCplsBySpl&spl_uuid=".$lms_spl->uuid;
+            $client = new Client();
+            $response = $client->request('GET', $url);
+            $contents = json_decode($response->getBody(), true);
+            //$spl->cpls()->detach() ;
+            if($contents)
+            {
+                foreach($contents as $content)
+                {
+                    if($content)
+                    {
+                        foreach($content as $cpl_content)
+                        {
+                            $lms_cpl = Lmscpl::where('uuid','=',$cpl_content['CompositionPlaylistId'])->where('location_id','=',$location->id)->first() ;
+                            if($lms_cpl)
+                            {
+                                $lms_spl->lmscpls()->syncWithoutDetaching([$lms_cpl->id]);
                             }
                             else
                             {
