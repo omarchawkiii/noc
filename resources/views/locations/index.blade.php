@@ -60,16 +60,16 @@
                                                 @if($location->diskusage->free_space_percentage < 80 )
 
                                                     <div class="progress progress-lg">
-                                                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ $location->diskusage->free_space_percentage }}%" aria-valuenow="{{ $location->diskusage->free_space_percentage }}" aria-valuemin="{{ $location->diskusage->free_space_percentage }}" aria-valuemax="{{ $location->diskusage->free_space_percentage }}">{{ $location->diskusage->free_space_percentage }}%</div>
+                                                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ round( (int) $location->diskusage->free_space_percentage) }}%" aria-valuenow="{{ $location->diskusage->free_space_percentage }}" aria-valuemin="{{ $location->diskusage->free_space_percentage }}" aria-valuemax="{{ $location->diskusage->free_space_percentage }}">{{ $location->diskusage->free_space_percentage }}%</div>
                                                     </div>
                                                 @elseif(($location->diskusage->free_space_percentage >= 80  && $location->diskusage->free_space_percentage < 90))
                                                     <div class="progress progress-lg">
-                                                        <div class="progress-bar bg-warning" role="progressbar" style="width: {{ $location->diskusage->free_space_percentage }}%" aria-valuenow="{{ $location->diskusage->free_space_percentage }}" aria-valuemin="{{ $location->diskusage->free_space_percentage }}" aria-valuemax="{{ $location->diskusage->free_space_percentage }}">{{ $location->diskusage->free_space_percentage }}%</div>
+                                                        <div class="progress-bar bg-warning" role="progressbar" style="width: {{ round( (int)$location->diskusage->free_space_percentage) }}%" aria-valuenow="{{ $location->diskusage->free_space_percentage }}" aria-valuemin="{{ $location->diskusage->free_space_percentage }}" aria-valuemax="{{ $location->diskusage->free_space_percentage }}">{{ $location->diskusage->free_space_percentage }}%</div>
                                                     </div>
 
                                                 @else
                                                     <div class="progress progress-lg">
-                                                        <div class="progress-bar bg-danger" role="progressbar" style="width: {{ $location->diskusage->free_space_percentage }}%" aria-valuenow="{{ $location->diskusage->free_space_percentage }}" aria-valuemin="{{ $location->diskusage->free_space_percentage }}" aria-valuemax="{{ $location->diskusage->free_space_percentage }}">{{ $location->diskusage->free_space_percentage }}%</div>
+                                                        <div class="progress-bar bg-danger" role="progressbar" style="width: {{ round( (int)$location->diskusage->free_space_percentage) }}%" aria-valuenow="{{ $location->diskusage->free_space_percentage }}" aria-valuemin="{{ $location->diskusage->free_space_percentage }}" aria-valuemax="{{ $location->diskusage->free_space_percentage }}">{{ $location->diskusage->free_space_percentage }}%</div>
                                                     </div>
                                                 @endif
 

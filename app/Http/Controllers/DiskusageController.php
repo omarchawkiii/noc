@@ -21,7 +21,7 @@ class DiskusageController extends Controller
         if($contents)
         {
             $free_space_percentage=($contents['usedSpace'] * 100) / $contents['totalSpace'];
-
+            $free_space_percentage=number_format($free_space_percentage, 2, ',', '') ;
             Diskusage::updateOrCreate([
                 'location_id' => $location->id
             ],[
