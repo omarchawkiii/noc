@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Location extends Model
 {
@@ -88,6 +89,10 @@ class Location extends Model
         return $this->hasMany(Lmscpl::class);
     }
 
+    public function diskusage(): HasOne
+    {
+        return $this->hasOne(Diskusage::class);
+    }
 
     public function screens(): HasMany
     {

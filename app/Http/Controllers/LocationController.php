@@ -56,6 +56,13 @@ class LocationController extends Controller
         return redirect()->route('location.index')->with('message' ,' The location has been updated  ');
     }
 
+    public function location_infos($location )
+    {
+        $location = Location::find($location) ;
+        $diskusage = $location->diskusage ;
+        return Response()->json(compact('location','diskusage'));
+    }
+
 
     public function refresh_all_data()
     {

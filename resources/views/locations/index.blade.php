@@ -40,20 +40,43 @@
                                     <th class="sorting">Screen Count</th>
                                     <th class="sorting">City </th>
                                     <th class="sorting">Status</th>
-                                    <th class="sorting">Creatred At</th>
+                                    <th class="sorting">Space</th>
                                     <th class="sorting">Actions</th>
+                                    <th class="sorting">Infos</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($locations as $key => $location )
-                                    <tr class="odd">
+                                    <tr class="odd text-center  ">
                                         <td class="sorting_1"><a href="{{ route('location.show',$location) }}"> {{  $key +1 }}</a> </td>
                                         <td><a class="text-body align-middle fw-medium text-decoration-none" href="{{ route('location.show',$location) }}"> {{ $location->name }}</a></td>
                                         <td><a class="text-body align-middle fw-medium text-decoration-none" href="{{ route('location.show',$location) }}"> {{ $location->folder_title }}</a></td>
                                         <td><a class="text-body align-middle fw-medium text-decoration-none" href="{{ route('location.show',$location) }}"> {{ $location->screens->count() }}</a></td>
                                         <td><a class="text-body align-middle fw-medium text-decoration-none" href="{{ route('location.show',$location) }}"> {{ $location->city }}</a></td>
                                         <td><a class="text-body align-middle fw-medium text-decoration-none" href="{{ route('location.show',$location) }}"> {{ $location->state }}</a></td>
-                                        <td><a class="text-body align-middle fw-medium text-decoration-none" href="{{ route('location.show',$location) }}"> {{ $location->created_at }}</a></td>
+                                        <td><a class="text-body align-middle fw-medium text-decoration-none" href="{{ route('location.show',$location) }}">
+
+                                            @if($location->diskusage)
+                                                @if($location->diskusage->free_space_percentage < 80 )
+
+                                                    <div class="progress progress-lg">
+                                                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ $location->diskusage->free_space_percentage }}%" aria-valuenow="{{ $location->diskusage->free_space_percentage }}" aria-valuemin="{{ $location->diskusage->free_space_percentage }}" aria-valuemax="{{ $location->diskusage->free_space_percentage }}">{{ $location->diskusage->free_space_percentage }}%</div>
+                                                    </div>
+                                                @elseif(($location->diskusage->free_space_percentage >= 80  && $location->diskusage->free_space_percentage < 90))
+                                                    <div class="progress progress-lg">
+                                                        <div class="progress-bar bg-warning" role="progressbar" style="width: {{ $location->diskusage->free_space_percentage }}%" aria-valuenow="{{ $location->diskusage->free_space_percentage }}" aria-valuemin="{{ $location->diskusage->free_space_percentage }}" aria-valuemax="{{ $location->diskusage->free_space_percentage }}">{{ $location->diskusage->free_space_percentage }}%</div>
+                                                    </div>
+
+                                                @else
+                                                    <div class="progress progress-lg">
+                                                        <div class="progress-bar bg-danger" role="progressbar" style="width: {{ $location->diskusage->free_space_percentage }}%" aria-valuenow="{{ $location->diskusage->free_space_percentage }}" aria-valuemin="{{ $location->diskusage->free_space_percentage }}" aria-valuemax="{{ $location->diskusage->free_space_percentage }}">{{ $location->diskusage->free_space_percentage }}%</div>
+                                                    </div>
+                                                @endif
+
+
+                                            @endif
+
+                                        </a></td>
                                         <td>
                                             <div class="dropdown">
                                                 <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuOutlineButton6" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Actions </button>
@@ -67,6 +90,7 @@
                                                 </div>
                                               </div>
                                         </td>
+                                        <td> <a class="btn btn-outline-primary info" data-bs-toggle="modal" id="{{ $location->id }}" data-bs-target="#infos_modal" href="#"><i class="mdi mdi-magnify"> </i> </a></td>
                                     </tr>
                                 @endforeach
 
@@ -79,7 +103,14 @@
         </div>
     </div>
 
+    <div class=" modal fade " id="infos_modal" tabindex="-1" role="dialog"  aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered  modal-xl">
+            <div class="modal-content border-0">
 
+            </div>
+        <!--end modal-content-->
+        </div>
+    </div>
 
 @endsection
 
@@ -158,6 +189,230 @@
     });
   });
 })(jQuery);
+
+    $(document).on('click', '.info', function () {
+        var loader_content  =
+            '<div class="jumping-dots-loader">'
+                +'<span></span>'
+                +'<span></span>'
+                +'<span></span>'
+                +'</div>'
+        $('#infos_modal .modal-body').html(loader_content)
+        location_id = $(this).attr("id") ;
+        var url = "location_infos/"+location_id ;
+        $.ajax({
+                url: url,
+                method: 'GET',
+                success:function(response)
+                {
+                    console.log(response.location) ;
+
+                        result =
+                        '<div class="modal-header p-4 pb-0">'
+                            +'<h3><i class="mdi mdi-home align-self-center me-3"></i> Location : '+ response.location.name +'</h3>'
+                            +'<button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"></button>'
+                        +'</div>'
+                        +'<div class="modal-body text-center p-4">'
+                        +'<div class="row">'
+                            +'<div class="col-md-3">'
+                                +'<div class="card rounded border mb-2">'
+                                    +'<div class="card-body p-3">'
+                                        +'<div class="media  justify-content-start">'
+                                            +'<div class="media-body d-flex align-items-center">'
+                                                +'<i class="mdi mdi-login-variant icon-sm align-self-center me-3"></i>'
+                                                +'<h6 class="mb-1">Session :  </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.diskusage.session + ' </p>'
+                                            +'</div>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>'
+                            +'<div class="col-md-3">'
+                                +'<div class="card rounded border mb-2">'
+                                    +'<div class="card-body p-3">'
+                                        +'<div class="media  d-flex justify-content-start">'
+                                            +'<div class="media-body d-flex align-items-center">'
+                                                +'<i class="mdi mdi-format-indent-decrease icon-sm align-self-center me-3"></i>'
+                                                +'<h6 class="mb-1">type : </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.diskusage.type + ' </p>'
+                                            +'</div>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>'
+
+                            +'<div class="col-md-3">'
+                                +'<div class="card rounded border mb-2">'
+                                    +'<div class="card-body p-3">'
+                                        +'<div class="media  d-flex justify-content-start mr-5">'
+                                            +'<div class="media-body d-flex align-items-center">'
+                                                +'<i class="mdi mdi-harddisk icon-sm align-self-center me-3"></i>'
+                                                +'<h6 class="mb-1">Total Space  : </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.diskusage.totalSpaceFormatted+ '   </p>'
+                                            +'</div>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>'
+
+                            +'<div class="col-md-3">'
+                                +'<div class="card rounded border mb-2">'
+                                    +'<div class="card-body p-3">'
+                                        +'<div class="media  d-flex justify-content-start mr-5">'
+                                            +'<div class="media-body d-flex align-items-center">'
+                                                +'<i class="mdi mdi-harddisk icon-sm align-self-center me-3"></i>'
+                                                +'<h6 class="mb-1">Total Space Used: </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.diskusage.usedSpaceFormatted+ '   </p>'
+                                            +'</div>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>'
+
+                            +'<div class="col-md-3">'
+                                +'<div class="card rounded border mb-2">'
+                                    +'<div class="card-body p-3">'
+                                        +'<div class="media  d-flex justify-content-start mr-5">'
+                                            +'<div class="media-body d-flex align-items-center">'
+                                                +'<i class="mdi mdi-playlist-check icon-sm align-self-center me-3"></i>'
+                                                +'<h6 class="mb-1">cpls Complete : </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.diskusage.cpls_complete+ '   </p>'
+                                            +'</div>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>'
+
+                            +'<div class="col-md-3">'
+                                +'<div class="card rounded border mb-2">'
+                                    +'<div class="card-body p-3">'
+                                        +'<div class="media  d-flex justify-content-start mr-5">'
+                                            +'<div class="media-body d-flex align-items-center">'
+                                                +'<i class="mdi mdi-playlist-remove icon-sm align-self-center me-3"></i>'
+                                                +'<h6 class="mb-1">Cpls Incomplete : </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.diskusage.cpls_incomplete+ '   </p>'
+                                            +'</div>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>'
+
+                            +'<div class="col-md-3">'
+                                +'<div class="card rounded border mb-2">'
+                                    +'<div class="card-body p-3">'
+                                        +'<div class="media  d-flex justify-content-start mr-5">'
+                                            +'<div class="media-body d-flex align-items-center">'
+                                                +'<i class="mdi mdi-key-remove icon-sm align-self-center me-3"></i>'
+                                                +'<h6 class="mb-1">Kdms Expired : </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.diskusage.Kdms_expired+ '   </p>'
+                                            +'</div>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>'
+
+                            +'<div class="col-md-3">'
+                                +'<div class="card rounded border mb-2">'
+                                    +'<div class="card-body p-3">'
+                                        +'<div class="media  d-flex justify-content-start mr-5">'
+                                            +'<div class="media-body d-flex align-items-center">'
+                                                +'<i class="mdi mdi-key-remove icon-sm align-self-center me-3"></i>'
+                                                +'<h6 class="mb-1">Kdms Not Valid : </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.diskusage.Kdms_not_valid+ '   </p>'
+                                            +'</div>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>'
+                            +'<div class="col-md-3">'
+                                +'<div class="card rounded border mb-2">'
+                                    +'<div class="card-body p-3">'
+                                        +'<div class="media  d-flex justify-content-start mr-5">'
+                                            +'<div class="media-body d-flex align-items-center">'
+                                                +'<i class="mdi mdi-key icon-sm align-self-center me-3"></i>'
+                                                +'<h6 class="mb-1">Kdms Valid : </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.diskusage.Kdms_valid+ '   </p>'
+                                            +'</div>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>'
+                            +'<div class="col-md-3">'
+                                +'<div class="card rounded border mb-2">'
+                                    +'<div class="card-body p-3">'
+                                        +'<div class="media  d-flex justify-content-start mr-5">'
+                                            +'<div class="media-body d-flex align-items-center">'
+                                                +'<i class="mdi mdi-playlist-play icon-sm align-self-center me-3"></i>'
+                                                +'<h6 class="mb-1">Spls Count : </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.diskusage.splCount+ '   </p>'
+                                            +'</div>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>'
+
+                        +'</div>'
+                        +'</div>'
+
+                    $('#infos_modal .modal-content ').html(result)
+
+                },
+                error: function(response) {
+
+                }
+        })
+
+    });
 </script>
 
 @endsection
