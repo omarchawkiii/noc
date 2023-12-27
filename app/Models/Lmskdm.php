@@ -27,6 +27,12 @@ class Lmskdm extends Model
         'tms_path',
         'last_update',
         'device_target',
+
+        'serverName_by_serial',
+        'kdm_installed',
+        'content_present',
+        'screen_id',
+
         'cpl_id',
         'location_id',
     ];

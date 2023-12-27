@@ -459,7 +459,7 @@
                         }
                         else
                         {
-                            screen_name = "LMS"
+                            screen_name = value.device_target;
                         }
 
 

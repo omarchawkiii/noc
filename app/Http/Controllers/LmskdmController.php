@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Lmscpl;
 use App\Models\Lmskdm;
 use App\Models\Location;
+use App\Models\Screen;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -29,7 +30,15 @@ class LmskdmController extends Controller
                     {
 
                         $lmscpl = Lmscpl::where('uuid','=',$kdm['CompositionPlaylistId'])->where('location_id','=',$location->id)->first() ;
-
+                        $screen = Screen::where('id_server','=',$kdm ['id_server_by_serial'])->where('location_id','=',$location->id)->first() ;
+                        if(!$screen)
+                        {
+                           $id_screen = null ;
+                        }
+                        else
+                        {
+                            $id_screen = $screen->id ;
+                        }
                         if($lmscpl)
                         {
                             Lmskdm::updateOrCreate([
@@ -54,7 +63,11 @@ class LmskdmController extends Controller
                                 'tms_path' => $kdm ['tms_path'],
                                 'last_update' => $kdm ['last_update'],
                                 'device_target' => $kdm ['device_target'],
+                                'serverName_by_serial' => $kdm ['serverName_by_serial'],
+                                'kdm_installed' => $kdm ['kdm_installed'],
+                                'content_present' => $kdm ['content_present'],
 
+                                'screen_id' => $id_screen,
                                 'lmscpl_id' => $lmscpl->id,
                                 'location_id' => $location->id,
 
@@ -84,8 +97,12 @@ class LmskdmController extends Controller
                                 'tms_path' => $kdm ['tms_path'],
                                 'last_update' => $kdm ['last_update'],
                                 'device_target' => $kdm ['device_target'],
+                                'serverName_by_serial' => $kdm ['serverName_by_serial'],
+                                'kdm_installed' => $kdm ['kdm_installed'],
+                                'content_present' => $kdm ['content_present'],
 
                                 //'lmscpl_id' => $cpl->id,
+                                'screen_id' => $id_screen,
                                 'location_id' => $location->id,
 
                             ]);

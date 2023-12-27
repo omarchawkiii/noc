@@ -30,6 +30,10 @@ return new class extends Migration
             $table->string('tms_path', 255)->nullable();
             $table->string('last_update', 255)->nullable();
             $table->string('device_target', 255)->nullable();
+            $table->string('serverName_by_serial', 255)->nullable();
+            $table->string('kdm_installed', 255);
+            $table->string('content_present', 255);
+            $table->foreignId('screen_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('lmscpl_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('location_id')->constrained()->onDelete('cascade');
             $table->timestamps();
