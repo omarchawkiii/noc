@@ -272,6 +272,8 @@
 
             var country =  $('#country').val();
             var screen =  $('#screen').val();
+            var date = new Date($('#scheduleDatePicker').val());
+
             if(screen == 'null')
             {
                 var location =  $('#location').val();
@@ -282,7 +284,7 @@
                 var location =  null;
             }
 
-            var url = '/get_schedules_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen;
+            var url = '/get_schedules_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen+'&date='+ date.toLocaleDateString('en-GB')+' 00';
 
             result =" " ;
 
@@ -391,6 +393,7 @@
             var location =  $('#location').val();
             var country =  $('#country').val();
             var screen =  null;
+            var date = new Date($('#scheduleDatePicker').val());
 
             if(location != "Locations")
             {
@@ -401,7 +404,7 @@
                 $('#scheduleDate').hide();
             }
 
-            var url = '/get_schedules_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen;
+            var url = '/get_schedules_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen+'&date='+ date.toLocaleDateString('en-GB')+' 00';
             result =" " ;
 
             $.ajax({
@@ -779,15 +782,6 @@
                 method: 'GET',
                 success:function(response)
                 {
-
-                    screens = '<option value="null" selected>All Screens</option>';
-                    $.each(response.screens, function( index_screen, screen ) {
-
-                        screens = screens
-                            +'<option  value="'+screen.id+'">'+screen.screen_name+'</option>';
-                    });
-                        $('#screen').html(screens)
-
                     $.each(response.schedules, function( index, value ) {
                         bg_status="" ;
                         if(value.status !="linked" )

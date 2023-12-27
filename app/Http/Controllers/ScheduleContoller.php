@@ -151,6 +151,14 @@ class ScheduleContoller extends Controller
             $next_date = $date ;
             $schedules = $schedules->where('date_start','>',$date->addHours(3)->toDateTimeString())->where('date_start','<',$next_date->addHours(28)->toDateTimeString());
 
+            if(isset($screen) && $screen != 'null' )
+            {
+
+
+                $schedules = $schedules->where('screen_id',$screen) ;
+
+            }
+
             return Response()->json(compact('schedules','screens'));
         }
         else
