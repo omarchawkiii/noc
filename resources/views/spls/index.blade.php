@@ -297,7 +297,7 @@
                         available_on_content=""
                         for(i = 0 ; i< available_on_array.length ; i++ )
                         {
-                            if(i != 0 &&  i % 4 == 0 )
+                            if(i != 0 &&  i % 9 == 0 )
                             {
                                 available_on_content = available_on_content + '<br />'
                             }
@@ -393,7 +393,7 @@
                         available_on_content=""
                         for(i = 0 ; i< available_on_array.length ; i++ )
                         {
-                            if(i != 0 &&  i % 4 == 0 )
+                            if(i != 0 &&  i % 9 == 0 )
                             {
                                 available_on_content = available_on_content + '<br />'
                             }
@@ -477,7 +477,7 @@
                         available_on_content=""
                         for(i = 0 ; i< available_on_array.length ; i++ )
                         {
-                            if(i != 0 &&  i % 4 == 0 )
+                            if(i != 0 &&  i % 9 == 0 )
                             {
                                 available_on_content = available_on_content + '<br />'
                             }

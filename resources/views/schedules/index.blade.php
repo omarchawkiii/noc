@@ -13,46 +13,65 @@
 
     <div class="card">
         <div class="card-body">
-
             <div class="row">
                 <div class="d-flex flex-row justify-content-between mt-2 mb-3">
                     <div>
                         <h4 class="card-title ">Schedules</h4>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mb-3">
+                    <div class="col-md-6 row">
+                        <div class="col-xl-4">
+                            <div class="input-group mb-2 mr-sm-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text"><i class="mdi mdi-home-map-marker"></i></div>
+                                </div>
+                                <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="location">
+                                    <option selected="">Locations</option>
+                                    @foreach ($locations as $location )
 
-                    <div class="col-xl-2">
-                        <div class="input-group mb-2 mr-sm-2">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text"><i class="mdi mdi-home-map-marker"></i></div>
+                                        <option @if($screen) @if( $screen->location->id == $location->id) selected @endif @endif  value="{{ $location->id }}">{{ $location->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
-                            <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="location">
-                                <option selected="">Locations</option>
-                                @foreach ($locations as $location )
+                        </div>
 
-                                    <option @if($screen) @if( $screen->location->id == $location->id) selected @endif @endif  value="{{ $location->id }}">{{ $location->name }}</option>
-                                @endforeach
-                            </select>
+                        <div class="col-xl-4">
+                            <div class="input-group mb-2 mr-sm-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text"><i class="mdi mdi-monitor"></i></div>
+                                </div>
+                                <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="screen">
+                                    <option value="null">Screens</option>
+                                    @if($screens)
+                                        @foreach ($screens as $all_screen )
+                                            <option @if($all_screen->id == $screen->id) selected @endif  value="{{ $all_screen->id }}">{{ $all_screen->screen_name }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
                         </div>
                     </div>
+                    <div class="col-md-6 row " id="scheduleDate" style="display: none">
 
+                        <div class="col-xl-3 justify-content-end d-flex " >
+                            <button type="button" id="btnPrevDate" class="btn btn-icon-text " style="color: rgb(111, 111, 111); background: rgb(42, 48, 56); height: 37px;">
+                                <i class="mdi mdi-arrow-left"></i>Prev
+                            </button>
+                        </div>
+                        <div class="col-xl-6 " >
+                            <div id="datepicker-popup" class="input-group date datepicker">
+                                <span class="input-group-addon input-group-append border-left">
+                                    <span class="mdi mdi-calendar input-group-text"></span>
+                                </span>
+                                <input type="text" class="form-control"  id="scheduleDatePicker">
 
-                    <div class="col-xl-2">
-
-
-                        <div class="input-group mb-2 mr-sm-2">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text"><i class="mdi mdi-monitor"></i></div>
                             </div>
-                            <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="screen">
-                                <option value="null">Screens</option>
-                                @if($screens)
-                                    @foreach ($screens as $all_screen )
-                                        <option @if($all_screen->id == $screen->id) selected @endif  value="{{ $all_screen->id }}">{{ $all_screen->screen_name }}</option>
-                                    @endforeach
-                                @endif
-                            </select>
+                        </div>
+                        <div class="col-xl-3  d-flex " >
+                            <button type="button" id="btnNextDate" class="btn btn-icon-text " style="color: rgb(111, 111, 111); background: rgb(42, 48, 56); height: 37px;">
+                                Next <i class="mdi mdi-arrow-right"></i>
+                            </button>
                         </div>
                     </div>
 
@@ -200,15 +219,12 @@
 @endsection
 
 @section('custom_script')
+
 <!-- ------- DATA TABLE ---- -->
 <script src="{{asset('/assets/vendors/datatables.net/jquery.dataTables.js')}}"></script>
 <script src="{{asset('/assets/vendors/datatables.net-bs4/dataTables.bootstrap4.js')}}"></script>
-<script>
-
-
-</script>
 <!-- -------END  DATA TABLE ---- -->
-
+<script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.all.min.js"></script>
 
 <script src="{{asset('/assets/vendors/jquery-toast-plugin/jquery.toast.min.js')}}"></script>
 <script>
@@ -230,18 +246,8 @@
 <script>
 
     (function($) {
-    'use strict';
-    $(function() {
-
-
-    });
-    })(jQuery);
-
-    // filter location
-    (function($) {
 
         var spl_datatable = $('#location-listing').DataTable({
-
         "iDisplayLength": 10,
             destroy: true,
             "bDestroy": true,
@@ -336,7 +342,7 @@
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+statu_content+'</a></td>'
                             +'</tr>';
                     });
-                    console.log(response.spls)
+                    console.log(response.schedules)
 
                     $('#location-listing tbody').html(result)
                     /***** refresh datatable ***** */
@@ -380,10 +386,20 @@
             .end()
             .append('<option value="null">All Screens</option>')
 
+
             //$('#location-listing tbody').html('')
             var location =  $('#location').val();
             var country =  $('#country').val();
             var screen =  null;
+
+            if(location != "Locations")
+            {
+                $('#scheduleDate').show();
+            }
+            else
+            {
+                $('#scheduleDate').hide();
+            }
 
             var url = '/get_schedules_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen;
             result =" " ;
@@ -454,7 +470,7 @@
                     });
                     $('#location-listing tbody').html(result)
 
-                    console.log(response.spls)
+                    console.log(response.schedules)
                     /***** refresh datatable **** **/
 
                     var spl_datatable = $('#location-listing').DataTable({
@@ -474,11 +490,13 @@
             })
 
         });
+
+
     })(jQuery);
 
 </script>
 
-<SCRIpt>
+<script>
      $(document).on('click', '.infos_modal', function () {
 
         var loader_content  =
@@ -684,11 +702,301 @@
     });
 
 
-</SCRIpt>
+</script>
+
+
+
+<script>
+    (function($) {
+
+
+         var currentDate = new Date();
+         var selectedDate = new Date();
+         var startDate = new Date();
+         var endDate = new Date();
+
+         selectedDate.setDate(currentDate.getDate());
+         startDate.setDate(currentDate.getDate() - 7);
+         endDate.setDate(currentDate.getDate() + 7);
+
+         $("#scheduleDatePicker").kendoDatePicker({
+            value: selectedDate,
+            min: startDate,
+            max: endDate,
+        change: function (e) {
+
+                var datepicker = $('#scheduleDatePicker').data('kendoDatePicker');
+
+                selectedDate.setDate(datepicker.value().getDate());
+
+                if (selectedDate.getDate() == endDate.getDate()) {
+                     $('#btnNextDate').prop('disabled', true);
+                 } else if (selectedDate.getDate() == startDate.getDate()) {
+                     $('#btnPrevDate').prop('disabled', true);
+                 }
+
+                 if (selectedDate.getDate() != endDate.getDate()) {
+                     $('#btnNextDate').prop('disabled', false);
+                 }
+                 if (selectedDate.getDate() != startDate.getDate()) {
+                     $('#btnPrevDate').prop('disabled', false);
+                 }
+
+            }
+         });
+
+         $('#btnPrevDate').on('click', function () {
+            $('#btnPrevDate').prop('disabled', true);
+            var datepicker = $('#scheduleDatePicker').data('kendoDatePicker');
+            selectedDate.setDate(selectedDate.getDate() - 1);
+            datepicker.value(selectedDate);
+
+            $('#btnNextDate').prop('disabled', false);
+
+            if (selectedDate.getDate() == startDate.getDate()) {
+                $(this).prop('disabled', true);
+            }
+
+           $("#location-listing").dataTable().fnDestroy();
+            $('#location-listing tbody').html('')
+            var loader_content  =
+            '<div class="jumping-dots-loader">'
+                +'<span></span>'
+                +'<span></span>'
+                +'<span></span>'
+                +'</div>'
+            $('#location-listing tbody').html(loader_content)
+
+            var location =  $('#location').val();
+            var country =  $('#country').val();
+            var screen =  $('#screen').val();
+
+            var url = '/get_schedules_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen +'&date='+ selectedDate.toLocaleDateString('en-GB')+' 00' ;
+            result =" " ;
+
+            $.ajax({
+                url: url,
+                method: 'GET',
+                success:function(response)
+                {
+
+                    screens = '<option value="null" selected>All Screens</option>';
+                    $.each(response.screens, function( index_screen, screen ) {
+
+                        screens = screens
+                            +'<option  value="'+screen.id+'">'+screen.screen_name+'</option>';
+                    });
+                        $('#screen').html(screens)
+
+                    $.each(response.schedules, function( index, value ) {
+                        bg_status="" ;
+                        if(value.status !="linked" )
+                        {
+                            bg_status = "bg-danger"
+                        }
+
+                        icon_spl = ""
+                        icon_cpl = ""
+                        icon_kdm = ""
+                        statu_content=""
+                        if(value.status !="linked" )
+                        {
+                            icon_spl = '<i class="mdi mdi-playlist-play text-danger"> </i>'
+                            statu_content = '<spn class="text-danger" >Unlinked  </span>'
+                        }
+                        else
+                        {
+                            icon_spl =  '<i class="mdi mdi-playlist-play text-success"> </i>'
+                            statu_content = '<spn class="text-success" > Linled</span>'
+                        }
+
+                        if(value.cpls ==1)
+                        {
+                            icon_cpl = '<i class="mdi mdi-filmstrip text-success">'
+                        }
+                        else
+                        {
+                            icon_cpl = '<i class="mdi mdi-filmstrip text-warning">'
+                        }
+
+                        if(value.kdm  ==1 )
+                        {
+                            icon_kdm = '</i> <i class="mdi mdi-key-change text-success"> </i>'
+                        }
+                        else
+                        {
+                            icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
+                        }
+
+                        result = result
+                            +'<tr class="odd ">'
+                            +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.type+' </td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.screen.screen_name+'</a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.name+'</a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.date_start+'</a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+ icon_spl + icon_cpl + icon_kdm +' </i></a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+statu_content+'</a></td>'
+                            +'</tr>';
+                    });
+                    $('#location-listing tbody').html(result)
+                    $('#btnPrevDate').prop('disabled', false);
+                    console.log(response.schedules)
+                    /***** refresh datatable **** **/
+
+                    var spl_datatable = $('#location-listing').DataTable({
+                        "iDisplayLength": 10,
+                        destroy: true,
+                        "bDestroy": true,
+                        "language": {
+                            search: "_INPUT_",
+                            searchPlaceholder: "Search..."
+                        }
+                    });
+
+                },
+                error: function(response) {
+
+                }
+            })
+
+
+         });
+
+         $('#btnNextDate').on('click', function () {
+            $('#btnNextDate').prop('disabled', true);
+            var datepicker = $('#scheduleDatePicker').data('kendoDatePicker');
+            selectedDate.setDate(selectedDate.getDate() + 1);
+            datepicker.value(selectedDate);
+
+            $('#btnPrevDate').prop('disabled', false);
+
+            if (selectedDate.getDate() == endDate.getDate()) {
+                $(this).prop('disabled', true);
+            }
+
+            $("#location-listing").dataTable().fnDestroy();
+            $('#location-listing tbody').html('')
+            var loader_content  =
+            '<div class="jumping-dots-loader">'
+                +'<span></span>'
+                +'<span></span>'
+                +'<span></span>'
+                +'</div>'
+            $('#location-listing tbody').html(loader_content)
+
+            var location =  $('#location').val();
+            var country =  $('#country').val();
+            var screen =  $('#screen').val();
+
+            var url = '/get_schedules_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen +'&date='+ selectedDate.toLocaleDateString('en-GB')+' 00' ;
+            result =" " ;
+
+            $.ajax({
+                url: url,
+                method: 'GET',
+                success:function(response)
+                {
+
+                    screens = '<option value="null" selected>All Screens</option>';
+                    $.each(response.screens, function( index_screen, screen ) {
+
+                        screens = screens
+                            +'<option  value="'+screen.id+'">'+screen.screen_name+'</option>';
+                    });
+                        $('#screen').html(screens)
+
+                    $.each(response.schedules, function( index, value ) {
+                        bg_status="" ;
+                        if(value.status !="linked" )
+                        {
+                            bg_status = "bg-danger"
+                        }
+
+                        icon_spl = ""
+                        icon_cpl = ""
+                        icon_kdm = ""
+                        statu_content=""
+                        if(value.status !="linked" )
+                        {
+                            icon_spl = '<i class="mdi mdi-playlist-play text-danger"> </i>'
+                            statu_content = '<spn class="text-danger" >Unlinked  </span>'
+                        }
+                        else
+                        {
+                            icon_spl =  '<i class="mdi mdi-playlist-play text-success"> </i>'
+                            statu_content = '<spn class="text-success" > Linled</span>'
+                        }
+
+                        if(value.cpls ==1)
+                        {
+                            icon_cpl = '<i class="mdi mdi-filmstrip text-success">'
+                        }
+                        else
+                        {
+                            icon_cpl = '<i class="mdi mdi-filmstrip text-warning">'
+                        }
+
+                        if(value.kdm  ==1 )
+                        {
+                            icon_kdm = '</i> <i class="mdi mdi-key-change text-success"> </i>'
+                        }
+                        else
+                        {
+                            icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
+                        }
+
+                        result = result
+                            +'<tr class="odd ">'
+                            +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.type+' </td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.screen.screen_name+'</a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.name+'</a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.date_start+'</a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+ icon_spl + icon_cpl + icon_kdm +' </i></a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+statu_content+'</a></td>'
+                            +'</tr>';
+                    });
+                    $('#location-listing tbody').html(result)
+                    $('#btnNextDate').prop('disabled', false);
+                    console.log(response.schedules)
+                    /***** refresh datatable **** **/
+
+                    var spl_datatable = $('#location-listing').DataTable({
+                        "iDisplayLength": 10,
+                        destroy: true,
+                        "bDestroy": true,
+                        "language": {
+                            search: "_INPUT_",
+                            searchPlaceholder: "Search..."
+                        }
+                    });
+
+                },
+                error: function(response) {
+
+                }
+            })
+
+         });
+    })(jQuery);
+</script>
 @endsection
 
 @section('custom_css')
 
 <link rel="stylesheet" href="{{asset('/assets/vendors/datatables.net-bs4/dataTables.bootstrap4.css')}}">
 <link rel="stylesheet" href="{{asset('/assets/vendors/jquery-toast-plugin/jquery.toast.min.css')}}">
+<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2021.2.616/styles/kendo.default-v2.min.css"/>
+
+<style>
+    #scheduleDatePicker
+    {
+        background: #2a3038;
+        border-radius: 0;
+        color: #4b5564 ;
+    }
+    .k-select
+    {
+        display: none !important ;
+    }
+</style>
 @endsection

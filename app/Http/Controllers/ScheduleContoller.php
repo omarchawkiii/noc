@@ -6,6 +6,7 @@ use App\Models\Location;
 use App\Models\Schedule;
 use App\Models\Screen;
 use App\Models\Spl;
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -127,11 +128,28 @@ class ScheduleContoller extends Controller
     {
         $location = $request->location;
         $screen = $request->screen;
+        $date = $request->date;
+
+        if($date)
+        {
+            $date = Carbon::createFromFormat('d/m/Y H', $date);
+        }
+        else
+        {
+            $date = Carbon::now();
+        }
+        //dd($schedules) ;
+
+
+
         if(isset($location) &&  $location != 'null' )
         {
             $location = Location::find($location) ;
             $screens =$location->screens ;
             $schedules =Schedule::with('screen','spls')->where('location_id',$location->id)->get();
+
+            $next_date = $date ;
+            $schedules = $schedules->where('date_start','>',$date->addHours(3)->toDateTimeString())->where('date_start','<',$next_date->addHours(28)->toDateTimeString());
 
             return Response()->json(compact('schedules','screens'));
         }
@@ -142,7 +160,8 @@ class ScheduleContoller extends Controller
             {
                 //$schedules = Screen::find($screen)->schedules ;
                 $schedules =Schedule::with('screen','spls')->where('screen_id',$screen)->get();
-
+                $next_date = $date ;
+                $schedules = $schedules->where('date_start','>',$date->addHours(3)->toDateTimeString())->where('date_start','<',$next_date->addHours(28)->toDateTimeString());
                 return Response()->json(compact('schedules'));
             }
             else
