@@ -105,6 +105,25 @@ class KdmController extends Controller
         $country = $request->country;
         $screen = $request->screen;
 
+        $lms= $request->lms ;
+        if($lms== true)
+        {
+            $location = Location::find($location) ;
+            if($location)
+            {
+                $screens =$location->screens ;
+                $kdms =$location->lmskdms ;
+            }
+            else
+            {
+                $screens =null;
+                $cpls=null;
+            }
+
+
+            return Response()->json(compact('kdms','screens'));
+        }
+
         if(isset($location) &&  $location != 'null' )
         {
             $location = Location::find($location) ;

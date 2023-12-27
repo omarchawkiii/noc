@@ -26,6 +26,7 @@ class Kdm extends Model
         'screen_id',
         'cpl_id',
         'location_id',
+
     ];
 
     /**

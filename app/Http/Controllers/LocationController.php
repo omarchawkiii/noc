@@ -267,9 +267,19 @@ class LocationController extends Controller
             $location = Location::find($location)->first();
             $this->sync_lms_spl_cpl($location->id );
 
-        echo "All SPls and CPLs sync" ;
+        echo "All LMS  SPls and CPLs sync" ;
 
 
+        echo "<br />------------------------<br />" ;
+
+        echo "Start Import LMS KDMs <br />" ;
+        $location = Location::find($location)->first();
+        app(\App\Http\Controllers\LmskdmController::class)->getlmskdms($location->id);
+        echo "All LMS KDMs imported<br />" ;
+         //sync cpls with spls
+         echo "<br />------------------------<br />" ;
+
+         echo "All LMS KDms imported<br />" ;
     }
 
 

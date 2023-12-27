@@ -89,6 +89,11 @@ class Location extends Model
         return $this->hasMany(Lmscpl::class);
     }
 
+    public function lmskdms(): HasMany
+    {
+        return $this->hasMany(Lmskdm::class);
+    }
+
     public function diskusage(): HasOne
     {
         return $this->hasOne(Diskusage::class);
