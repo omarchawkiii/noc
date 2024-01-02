@@ -76,25 +76,25 @@
                                 @if ($screen)
                                     @foreach ($screen->cpls as $key => $cpl )
                                         <tr class="odd">
-                                            <td class="sorting_1"><a>{{ $cpl->id }}</a> </td>
+                                            <td class="sorting_1"><a>{{ $cpl->uuid }}</a> </td>
                                             <td><a class="text-body align-middle fw-medium text-decoration-none" > {{ $cpl->contentTitleText }}</a></td>
                                             <td><a class="text-body align-middle fw-medium text-decoration-none" > {{ $cpl->contentKind }}</a></td>
                                             <td><a class="text-body align-middle fw-medium text-decoration-none" >{{ $cpl->available_on }}</a></td>
                                             <td>
-                                                <a class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#cpl_model_-{{ $cpl->id }}" href="#"><i class="mdi mdi-magnify"> </i> </a>
-                                                <div class=" modal fade " id="cpl_model_-{{ $cpl->id }}" tabindex="-1" role="dialog"  aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+                                                <a class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#cpl_model_-{{ $cpl->uuid }}" href="#"><i class="mdi mdi-magnify"> </i> </a>
+                                                <div class=" modal fade " id="cpl_model_-{{ $cpl->uuid }}" tabindex="-1" role="dialog"  aria-labelledby="delete_client_modalLabel" aria-hidden="true">
                                                     <div class="modal-dialog modal-dialog-centered  modal-xl">
                                                         <div class="modal-content border-0">
                                                             <div class="modal-header p-4 pb-0">
                                                                 <ul class="nav nav-tabs" role="tablist">
                                                                     <li class="nav-item">
-                                                                      <a class="nav-link active" id="Properties-tab" data-bs-toggle="tab" href="#Properties-{{ $cpl->id }}" role="tab" aria-controls="home" aria-selected="true">Properties</a>
+                                                                      <a class="nav-link active" id="Properties-tab" data-bs-toggle="tab" href="#Properties-{{ $cpl->uuid }}" role="tab" aria-controls="home" aria-selected="true">Properties</a>
                                                                     </li>
                                                                     <li class="nav-item">
-                                                                      <a class="nav-link" id="cpls-tab" data-bs-toggle="tab" href="#cpls-{{ $cpl->id }}" role="tab" aria-controls="Content CPLs" aria-selected="false">Content CPLs</a>
+                                                                      <a class="nav-link" id="cpls-tab" data-bs-toggle="tab" href="#cpls-{{ $cpl->uuid }}" role="tab" aria-controls="Content CPLs" aria-selected="false">Content CPLs</a>
                                                                     </li>
                                                                     <li class="nav-item">
-                                                                      <a class="nav-link" id="schedules-tab" data-bs-toggle="tab" href="#schedules-{{ $cpl->id }}" role="tab" aria-controls="schedules" aria-selected="false">Related Schedules</a>
+                                                                      <a class="nav-link" id="schedules-tab" data-bs-toggle="tab" href="#schedules-{{ $cpl->uuid }}" role="tab" aria-controls="schedules" aria-selected="false">Related Schedules</a>
                                                                     </li>
                                                                   </ul>
                                                                 <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -102,7 +102,7 @@
                                                             <div class="modal-body text-center p-4">
 
                                                                 <div class="tab-content border-0">
-                                                                    <div class="tab-pane fade show active" id="Properties-{{ $cpl->id }}" role="tabpanel" aria-labelledby="Properties-tab">
+                                                                    <div class="tab-pane fade show active" id="Properties-{{ $cpl->uuid }}" role="tabpanel" aria-labelledby="Properties-tab">
                                                                         <div class="card rounded border mb-2">
                                                                             <div class="card-body p-3">
                                                                                 <div class="media  justify-content-start">
@@ -152,7 +152,7 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="tab-pane fade" id="cpls-{{ $cpl->id }}" role="tabpanel" aria-labelledby="cpls-tab">
+                                                                    <div class="tab-pane fade" id="cpls-{{ $cpl->uuid }}" role="tabpanel" aria-labelledby="cpls-tab">
                                                                         <div class="">
                                                                             <table class="table">
                                                                                 <thead>
@@ -173,7 +173,7 @@
                                                                             </table>
                                                                           </div>
                                                                     </div>
-                                                                    <div class="tab-pane fade" id="schedules-{{ $cpl->id }}" role="tabpanel" aria-labelledby="schedules-tab">
+                                                                    <div class="tab-pane fade" id="schedules-{{ $cpl->uuid }}" role="tabpanel" aria-labelledby="schedules-tab">
                                                                      Lorem ipsum dolor sit amet consectetur adipisicing elit.<br />Fugiat ipsum facilis debitis similique, libero ratione labore laudantium <br />repellendus illum sit reprehenderit voluptatem laborum repudiandae molestias rem ea aperiam impedit praesentium.
                                                                     </div>
                                                                 </div>
@@ -328,7 +328,7 @@
 </script>
 
 
-<SCRIpt>
+<script>
     $(document).on('click', '.infos_modal', function () {
 
        var loader_content  =
@@ -346,16 +346,17 @@
         $('#spls').removeClass('show active');
         $('#kdms').removeClass('show active');
 
-       window.spl_id = $(this).attr("id") ;
+       window.cpl_id = $(this).attr("id") ;
+       window.location_id = $(this).attr("data-location")
 
        if(lms == true )
         {
-            var url = "get_lmscpl_infos/"+spl_id ;
+            var url = "{{  url('') }}"+   "/get_lmscpl_infos/"+cpl_id;
             $('#kdms-tab').hide();
         }
         else
         {
-            var url = "get_cpl_infos/"+spl_id ;
+            var url = "{{  url('') }}"+ "/get_cpl_infos/"+location_id+"/"+cpl_id ;
             $('#kdms-tab').show();
         }
        $.ajax({
@@ -575,9 +576,6 @@
 
 
 
-
-
-
                    $('#Properties').html(result)
 
 
@@ -601,7 +599,21 @@
                +'<span></span>'
                +'</div>'
        $('#spls').html(loader_content)
-       var url = "get_cpl_infos/"+spl_id ;
+
+
+       if(lms == true )
+        {
+            var url = "{{  url('') }}"+   "/get_lmscpl_infos/"+cpl_id;
+            $('#kdms-tab').hide();
+        }
+        else
+        {
+            var url = "{{  url('') }}"+ "/get_cpl_infos/"+location_id+"/"+cpl_id ;
+            $('#kdms-tab').show();
+        }
+
+
+
 
        $.ajax({
                url: url,
@@ -657,7 +669,10 @@
                +'<span></span>'
                +'</div>'
        $('#kdms').html(loader_content)
-       var url = "get_cpl_infos/"+spl_id ;
+
+       var url = "{{  url('') }}"+ "/get_cpl_infos/"+location_id+"/"+cpl_id ;
+
+
        $.ajax({
                url: url,
                method: 'GET',
@@ -710,37 +725,23 @@
        })
 
    });
-</SCRIpt>
+</script>
 
 
 
 <script>
 
-
-    (function($) {
-    'use strict';
-    $(function() {
-
-
-
-    });
-    })(jQuery);
-
-
-
     // filter location
     (function($) {
 
         var cpl_datatable = $('#location-listing').DataTable({
-
-        "iDicplayLength": 10,
+            "iDicplayLength": 10,
             destroy: true,
             "bDestroy": true,
             "language": {
                 search: "_INPUT_",
                 searchPlaceholder: "Search..."
             }
-
         });
 
         $('#screen').change(function(){
@@ -759,17 +760,9 @@
             var country =  $('#country').val();
             var screen =  $('#screen').val();
             window.lms = false ;
-            if(screen == 'null')
-            {
-                var location =  $('#location').val();
+            var location =  $('#location').val();
 
-            }
-            else
-            {
-                var location =  null;
-            }
-
-            var url = '/get_cpl_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen;
+            var url = "{{  url('') }}"+ '/get_cpl_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen;
 
             result =" " ;
 
@@ -780,6 +773,7 @@
                 {
 
                     $.each(response.cpls, function( index, value ) {
+                        index++;
                         available_on_array =  value.available_on.split(",");
                         available_on_content=""
                         for(i = 0 ; i< available_on_array.length ; i++ )
@@ -793,11 +787,11 @@
 
                         result = result
                             +'<tr class="odd">'
-                                +'<td class="sorting_1">'+ value.id+' </td>'
+                                +'<td class="sorting_1">'+ index+' </td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.contentTitleText+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">'+value.contentKind+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">' + available_on_content + '</a></td>'
-                                +'<td><a class="btn btn-outline-primary infos_modal text-center" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
+                                +'<td><a class="btn btn-outline-primary infos_modal text-center" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+'" data-location="'+value.location.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
                             +'</tr>';
                     });
                     console.log(response.cpls)
@@ -856,7 +850,7 @@
                 $('#refresh_lms').hide();
             }
 
-            var url = '/get_cpl_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen;
+            var url = "{{  url('') }}"+ '/get_cpl_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen;
             result =" " ;
 
             $.ajax({
@@ -874,6 +868,7 @@
                         $('#screen').html(screens)
 
                     $.each(response.cpls, function( index, value ) {
+                        index ++ ;
                         available_on_array =  value.available_on.split(",");
                         available_on_content=""
                         for(i = 0 ; i< available_on_array.length ; i++ )
@@ -886,11 +881,11 @@
                         }
                         result = result
                             +'<tr class="odd text-center">'
-                            +'<td class="sorting_1">'+ value.id+' </td>'
+                            +'<td class="sorting_1">'+ index+' </td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.contentTitleText+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">'+value.contentKind+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">' + available_on_content + '</a></td>'
-                            +'<td><a class="btn btn-outline-primary infos_modal text-center" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
+                            +'<td><a class="btn btn-outline-primary infos_modal text-center" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+' " data-location="'+value.location.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
                             +'</tr>';
                     });
                     console.log(response.cpls)
@@ -939,7 +934,7 @@
             window.lms = true ;
             var screen =  null;
 
-            var url = '/get_cpl_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen+'&lms='+ lms;
+            var url = "{{  url('') }}"+ '/get_cpl_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen+'&lms='+ lms;
             result =" " ;
 
             $.ajax({
@@ -957,7 +952,7 @@
                         $('#screen').html(screens)
 
                     $.each(response.cpls, function( index, value ) {
-
+                        index++;
                         available_on_content="";
                         if(value.available_on != null)
                         {    if (value.available_on.indexOf(',') > -1)
@@ -986,11 +981,11 @@
 
                         result = result
                             +'<tr class="odd text-center">'
-                            +'<td class="sorting_1">'+ value.id+' </td>'
+                            +'<td class="sorting_1">'+ index+' </td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.contentTitleText+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">'+value.contentKind+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">' + available_on_content + '</a></td>'
-                            +'<td><a class="btn btn-outline-primary infos_modal text-center" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
+                            +'<td><a class="btn btn-outline-primary infos_modal text-center" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+'" data-location="'+value.location.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
                             +'</tr>';
                     });
                     console.log(response.cpls)

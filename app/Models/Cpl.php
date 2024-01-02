@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
 
 class Cpl extends Model
 {
@@ -18,7 +19,7 @@ class Cpl extends Model
      * @var array
      */
     protected $fillable = [
-
+        'id',
         'uuid',
         'id_dcp',
         'contentTitleText',
@@ -37,13 +38,16 @@ class Cpl extends Model
 
     ];
 
+    protected $primaryKey = 'id';
+   // protected $primaryKey = ['uuid', 'location_id'];
+    public $incrementing = false;
     /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
     protected $casts = [
-        'id' => 'integer',
+        //'id' => 'integer',
         'pictureWidth' => 'decimal:2',
         'pictureHeight' => 'decimal:2',
         'soundChannelCount' => 'decimal:2',
@@ -65,12 +69,11 @@ class Cpl extends Model
         return $this->belongsToMany(Spl::class,'cpls_spls');
     }
 
-
-
     public function location(): BelongsTo
     {
         return $this->belongsTo(Location::class);
     }
+
     public function kdms(): HasMany
     {
         return $this->hasMany(Kdm::class);

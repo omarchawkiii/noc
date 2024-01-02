@@ -41,5 +41,9 @@ class Lmskdm extends Model
     {
         return $this->belongsTo(Lmscpl::class);
     }
+    public function screen(): BelongsTo
+    {
+        return $this->belongsTo(Screen::class);
+    }
 
 }

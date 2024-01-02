@@ -37,6 +37,14 @@
           <span class="menu-title">Schedule Management</span>
         </a>
       </li>
+      <li class="nav-item menu-items">
+        <a class="nav-link" href="{{ route('snmp.get_snmp_with_filter') }}">
+          <span class="menu-icon icon-box-danger">
+            <i class="mdi mdi-calendar-today "></i>
+          </span>
+          <span class="menu-title">SNMP Errors</span>
+        </a>
+      </li>
       <li>
         <br />
         <br /><br /><br /><br /><br /> <br /><br /><br /><br /><br />

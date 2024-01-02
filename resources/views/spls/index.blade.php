@@ -22,42 +22,40 @@
                 </div>
                 <div class="row">
 
-                    <div class="col-xl-2">
-                        <div class="input-group mb-2 mr-sm-2">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text"><i class="mdi mdi-home-map-marker"></i></div>
-                            </div>
-                            <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="location">
-                                <option selected="">Locations</option>
-                                @foreach ($locations as $location )
-                                    <option @if($screen) @if( $screen->location->id == $location->id) selected @endif @endif  value="{{ $location->id }}">{{ $location->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-
-
-                    <div class="col-xl-2">
-
-
-                        <div class="input-group mb-2 mr-sm-2">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text"><i class="mdi mdi-monitor"></i></div>
-                            </div>
-                            <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="screen">
-                                <option value="null">Screens</option>
-                                @if($screens)
-                                    @foreach ($screens as $all_screen )
-                                        <option @if($all_screen->id == $screen->id) selected @endif  value="{{ $all_screen->id }}">{{ $all_screen->screen_name }}</option>
+                    <div class="col-md-12 row">
+                        <div class="col-xl-2">
+                            <div class="input-group mb-2 mr-sm-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text"><i class="mdi mdi-home-map-marker"></i></div>
+                                </div>
+                                <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="location">
+                                    <option selected="">Locations</option>
+                                    @foreach ($locations as $location )
+                                        <option @if($screen) @if( $screen->location->id == $location->id) selected @endif @endif  value="{{ $location->id }}">{{ $location->name }}</option>
                                     @endforeach
-                                @endif
-                            </select>
+                                </select>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="col-xl-2">
-                        <button type="button" id="refresh_lms"  class="btn btn-icon-text " style="color: #6f6f6f;background: #2a3038; height: 37px; display:none">
-                            <i class="mdi mdi-server-network"></i> LMS </button>
+                        <div class="col-xl-2">
+                            <div class="input-group mb-2 mr-sm-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text"><i class="mdi mdi-monitor"></i></div>
+                                </div>
+                                <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="screen">
+                                    <option value="null">Screens</option>
+                                    @if($screens)
+                                        @foreach ($screens as $all_screen )
+                                            <option @if($all_screen->id == $screen->id) selected @endif  value="{{ $all_screen->id }}">{{ $all_screen->screen_name }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xl-2">
+                            <button type="button" id="refresh_lms"  class="btn btn-icon-text " style="color: #6f6f6f;background: #2a3038; height: 37px; display:none">
+                                <i class="mdi mdi-server-network"></i> LMS </button>
+                        </div>
                     </div>
 
 
@@ -233,13 +231,6 @@
 
 <script>
 
-    (function($) {
-    'use strict';
-    $(function() {
-
-
-    });
-    })(jQuery);
 
     // filter location
     (function($) {
@@ -258,6 +249,7 @@
 
         $('#screen').change(function(){
 
+
             $("#location-listing").dataTable().fnDestroy();
             $('#location-listing tbody').html('')
             var loader_content  =
@@ -269,19 +261,20 @@
             $('#location-listing tbody').html(loader_content)
 
             var country =  $('#country').val();
-            var screen =  $('#screen').val();
-            window.lms = false ;
-            if(screen == 'null')
-            {
-                var location =  $('#location').val();
+            var location =  $('#location').val();
 
+            if(this.id == "screen")
+            {
+                lms=false ;
+                $('#lms_screen').hide();
+                var screen =  $('#screen').val();
             }
             else
             {
-                var location =  null;
+                lms= true ;
+                var screen =  $('#lms_screen_content').val();
             }
-
-            var url = '/get_spl_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen;
+            var url = "{{  url('') }}"+ '/get_spl_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen+'&lms='+ lms;
 
             result =" " ;
 
@@ -290,24 +283,32 @@
                 method: 'GET',
                 success:function(response)
                 {
-
-                    $.each(response.spls, function( index, value ) {
-
-                        available_on_array =  value.available_on.split(",");
-                        available_on_content=""
-                        for(i = 0 ; i< available_on_array.length ; i++ )
+                    key = 0 ;
+                    $.each(response.spls, function( index , value ) {
+                        key++ ;
+                        if(value.available_on)
                         {
-                            if(i != 0 &&  i % 9 == 0 )
+                            available_on_array =  value.available_on.split(",");
+                            available_on_content=""
+                            for(i = 0 ; i< available_on_array.length ; i++ )
                             {
-                                available_on_content = available_on_content + '<br />'
+                                if(i != 0 &&  i % 9 == 0 )
+                                {
+                                    available_on_content = available_on_content + '<br />'
+                                }
+                                available_on_content = available_on_content + '<div class="badge badge-primary m-1">'+ available_on_array[i]+'</div>'
                             }
-                            available_on_content = available_on_content + '<div class="badge badge-primary m-1">'+ available_on_array[i]+'</div>'
                         }
+                        else
+                        {
+                            available_on_content="" ;
+                        }
+
 
 
                         result = result
                             +'<tr class="odd">'
-                            +'<td class="sorting_1">'+ value.id+' </td>'
+                            +'<td class="sorting_1">'+ key+' </td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"  style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+available_on_content+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.duration+'</a></td>'
@@ -363,6 +364,7 @@
             var country =  $('#country').val();
             var screen =  null;
             window.lms = false ;
+
             if(location != "Locations")
             {
                 $('#refresh_lms').show();
@@ -371,7 +373,7 @@
             {
                 $('#refresh_lms').hide();
             }
-            var url = '/get_spl_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen;
+            var url = "{{  url('') }}"+ '/get_spl_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen;
             result =" " ;
 
             $.ajax({
@@ -387,23 +389,32 @@
                             +'<option  value="'+screen.id+'">'+screen.screen_name+'</option>';
                     });
                         $('#screen').html(screens)
-
+                        $('#lms_screen_content').html(screens)
                     $.each(response.spls, function( index, value ) {
-                        available_on_array =  value.available_on.split(",");
-                        available_on_content=""
-                        for(i = 0 ; i< available_on_array.length ; i++ )
+                        index++ ;
+                        if(value.available_on)
                         {
-                            if(i != 0 &&  i % 9 == 0 )
+                            available_on_array =  value.available_on.split(",");
+                            available_on_content=""
+                            for(i = 0 ; i< available_on_array.length ; i++ )
                             {
-                                available_on_content = available_on_content + '<br />'
+                                if(i != 0 &&  i % 9 == 0 )
+                                {
+                                    available_on_content = available_on_content + '<br />'
+                                }
+                                available_on_content = available_on_content + '<div class="badge badge-primary m-1">'+ available_on_array[i]+'</div>'
                             }
-                            available_on_content = available_on_content + '<div class="badge badge-primary m-1">'+ available_on_array[i]+'</div>'
                         }
+                        else
+                        {
+                            available_on_content="" ;
+                        }
+
 
 
                         result = result
                             +'<tr class="odd">'
-                            +'<td class="sorting_1">'+ value.id+' </td>'
+                            +'<td class="sorting_1">'+index +' </td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+available_on_content+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.duration+'</a></td>'
@@ -455,7 +466,8 @@
             window.lms = true ;
             var screen =  null;
 
-            var url = '/get_spl_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen+'&lms='+ lms;
+
+            var url = "{{  url('') }}"+ '/get_spl_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen+'&lms='+ lms;
             result =" " ;
 
             $.ajax({
@@ -473,21 +485,28 @@
                         $('#screen').html(screens)
 
                     $.each(response.spls, function( index, value ) {
-                        available_on_array =  value.available_on.split(",");
-                        available_on_content=""
-                        for(i = 0 ; i< available_on_array.length ; i++ )
+                        index++ ;
+                        if(value.available_on)
                         {
-                            if(i != 0 &&  i % 9 == 0 )
+                            available_on_array =  value.available_on.split(",");
+                            available_on_content=""
+                            for(i = 0 ; i< available_on_array.length ; i++ )
                             {
-                                available_on_content = available_on_content + '<br />'
+                                if(i != 0 &&  i % 9 == 0 )
+                                {
+                                    available_on_content = available_on_content + '<br />'
+                                }
+                                available_on_content = available_on_content + '<div class="badge badge-primary m-1">'+ available_on_array[i]+'</div>'
                             }
-                            available_on_content = available_on_content + '<div class="badge badge-primary m-1">'+ available_on_array[i]+'</div>'
                         }
-
+                        else
+                        {
+                            available_on_content="" ;
+                        }
 
                         result = result
                             +'<tr class="odd">'
-                            +'<td class="sorting_1">'+ value.id+' </td>'
+                            +'<td class="sorting_1">'+ index +' </td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+available_on_content+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.duration+'</a></td>'
@@ -543,12 +562,12 @@
 
         if(lms == true )
         {
-            var url = "get_lmsspl_infos/"+spl_id ;
+            var url = "{{  url('') }}"+ "/get_lmsspl_infos/"+spl_id ;
             $('#schedules-tab').hide();
         }
         else
         {
-            var url = "get_spl_infos/"+spl_id ;
+            var url = "{{  url('') }}"+ "/get_spl_infos/"+spl_id ;
             $('#schedules-tab').show();
         }
 
@@ -638,11 +657,11 @@
 
         if(lms == true )
         {
-            var url = "get_lmsspl_infos/"+spl_id ;
+            var url = "{{  url('') }}"+ "/get_lmsspl_infos/"+spl_id ;
         }
         else
         {
-            var url = "get_spl_infos/"+spl_id ;
+            var url = "{{  url('') }}"+ "/get_spl_infos/"+spl_id ;
         }
 
 
@@ -701,7 +720,7 @@
                 +'<span></span>'
                 +'</div>'
         $('#schedules').html(loader_content)
-        var url = "get_spl_infos/"+spl_id ;
+        var url = "{{  url('') }}"+ "/get_spl_infos/"+spl_id ;
         $.ajax({
                 url: url,
                 method: 'GET',

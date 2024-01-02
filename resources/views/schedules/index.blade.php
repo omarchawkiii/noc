@@ -284,7 +284,7 @@
                 var location =  null;
             }
 
-            var url = '/get_schedules_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen+'&date='+ date.toLocaleDateString('en-GB')+' 00';
+            var url = "{{  url('') }}"+ '/get_schedules_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen+'&date='+ date.toLocaleDateString('en-GB')+' 00';
 
             result =" " ;
 
@@ -404,7 +404,7 @@
                 $('#scheduleDate').hide();
             }
 
-            var url = '/get_schedules_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen+'&date='+ date.toLocaleDateString('en-GB')+' 00';
+            var url = "{{  url('') }}"+ '/get_schedules_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen+'&date='+ date.toLocaleDateString('en-GB')+' 00';
             result =" " ;
 
             $.ajax({
@@ -512,7 +512,7 @@
 
         window.spl_id = $(this).attr("id") ;
 
-        var url = "get_spl_infos/"+spl_id ;
+        var url = "{{  url('') }}"+ "get_spl_infos/"+spl_id ;
         $.ajax({
                 url: url,
                 method: 'GET',
@@ -596,7 +596,7 @@
                 +'<span></span>'
                 +'</div>'
         $('#cpls').html(loader_content)
-        var url = "get_spl_infos/"+spl_id ;
+        var url = "{{  url('') }}"+ "get_spl_infos/"+spl_id ;
 
         $.ajax({
                 url: url,
@@ -652,7 +652,7 @@
                 +'<span></span>'
                 +'</div>'
         $('#schedules').html(loader_content)
-        var url = "get_spl_infos/"+spl_id ;
+        var url = "{{  url('') }}"+ "get_spl_infos/"+spl_id ;
         $.ajax({
                 url: url,
                 method: 'GET',
@@ -774,7 +774,7 @@
             var country =  $('#country').val();
             var screen =  $('#screen').val();
 
-            var url = '/get_schedules_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen +'&date='+ selectedDate.toLocaleDateString('en-GB')+' 00' ;
+            var url = "{{  url('') }}"+ '/get_schedules_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen +'&date='+ selectedDate.toLocaleDateString('en-GB')+' 00' ;
             result =" " ;
 
             $.ajax({
@@ -882,7 +882,7 @@
             var country =  $('#country').val();
             var screen =  $('#screen').val();
 
-            var url = '/get_schedules_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen +'&date='+ selectedDate.toLocaleDateString('en-GB')+' 00' ;
+            var url = "{{  url('') }}"+ '/get_schedules_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen +'&date='+ selectedDate.toLocaleDateString('en-GB')+' 00' ;
             result =" " ;
 
             $.ajax({

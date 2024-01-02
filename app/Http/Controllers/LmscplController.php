@@ -21,6 +21,7 @@ class LmscplController extends Controller
         $response = $client->request('GET', $url);
 
         $contents = json_decode($response->getBody(), true);
+
         if($contents)
         {
             foreach($contents as $content)
@@ -50,8 +51,8 @@ class LmscplController extends Controller
                             //'cpl_is_linked'=> $cpl['cpl_is_linked'] ,
                             'date_create_ingest'=> $cpl['date_create_ingest'] ,
                             'pictureEncryptionAlgorithm'=> $cpl['pictureEncryptionAlgorithm'] ,
-                            'Width'=> $cpl['Width'] ,
-                            'Height' => $cpl['Height'] ,
+                            'Width'=> $cpl['pictureWidth'] ,
+                            'Height' => $cpl['pictureHeight'] ,
                             'location_id'=> $location->id,
 
                         ]);

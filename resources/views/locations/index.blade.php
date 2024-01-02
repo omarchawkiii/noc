@@ -83,9 +83,14 @@
                                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuOutlineButton6" style="">
                                                     <a class="btn btn-outline-primary dropdown-item" href="{{ route('location.edit',$location) }}">Edit</a>
                                                     <a class="btn btn-outline-primary dropdown-item" href="{{ route('refresh_all_data_of_location',$location->id) }}">Refreesh All Data</a>
-                                                    <a class="btn btn-outline-primary dropdown-item" href="{{ route('refresh_all_data_of_location',$location->id) }}">Refreesh Content DATA </a>
+                                                    <a class="btn btn-outline-primary dropdown-item" href="{{ route('refresh_content_of_location',$location->id) }}">Refreesh Content DATA </a>
                                                     <a class="btn btn-outline-primary dropdown-item" href="{{ route('refresh_lms_data_of_location',$location->id) }}">Refreesh LMS Content DATA </a>
-
+                                                    <a class="btn btn-outline-primary dropdown-item" href="{{ route('refresh_spl_content',$location->id) }}">Refreesh SPL Content </a>
+                                                    <a class="btn btn-outline-primary dropdown-item" href="{{ route('refresh_cpl_content',$location->id) }}">Refreesh CPL Content  </a>
+                                                    <a class="btn btn-outline-primary dropdown-item" href="{{ route('location.sync_spl_cpl',$location->id) }}">Sync CPL SPL Content  </a>
+                                                    <a class="btn btn-outline-primary dropdown-item" href="{{ route('refresh_kdm_content',$location->id) }}">Refreesh KDms Content</a>
+                                                    <a class="btn btn-outline-primary dropdown-item" href="{{ route('schedules.getschedules',$location->id) }}">Refreesh Schedule Content</a>
+                                                    <a class="btn btn-outline-primary dropdown-item" href="{{ route('snmp.getsnmp',$location->id) }}">Refreesh SNMP Content</a>
 
                                                 </div>
                                               </div>
@@ -199,7 +204,7 @@
                 +'</div>'
         $('#infos_modal .modal-body').html(loader_content)
         location_id = $(this).attr("id") ;
-        var url = "location_infos/"+location_id ;
+        var url = "{{  url('') }}"+  "location_infos/"+location_id ;
         $.ajax({
                 url: url,
                 method: 'GET',

@@ -103,5 +103,9 @@ class Location extends Model
     {
         return $this->hasMany(Screen::class);
     }
+    public function snmps(): HasMany
+    {
+        return $this->hasMany(Snmp::class);
+    }
 
 }

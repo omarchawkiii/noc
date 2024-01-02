@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cpl;
 use App\Models\Kdm;
+use App\Models\Lmscpl;
 use App\Models\Location;
 use App\Models\Schedule;
 use App\Models\Screen;
@@ -16,7 +17,6 @@ class CplController extends Controller
 {
     public function getcpls($location,  $screen )
     {
-
         $screen = Screen::find($screen);
         $location = Location::find($location) ;
 
@@ -24,8 +24,8 @@ class CplController extends Controller
 
         $client = new Client();
         $response = $client->request('GET', $url);
-
         $contents = json_decode($response->getBody(), true);
+
         if($contents)
         {
             foreach($contents as $content)
@@ -35,11 +35,12 @@ class CplController extends Controller
                     foreach($content as $cpl)
                     {
 
+
                         Cpl::updateOrCreate([
-                            'uuid' => $cpl["uuid"],
-                            'screen_id' => $screen->id
+                            'id' => $cpl["uuid"],
+                            'location_id' => $location->id
                         ],[
-                            'uuid' => $cpl["uuid"],
+                            'id' => $cpl["uuid"],
                             'id_dcp' => $cpl["id_dcp"],
                             'contentTitleText' => $cpl["contentTitleText"],
                             'contentKind' => $cpl["contentKind"],
@@ -57,20 +58,19 @@ class CplController extends Controller
                         ]);
                     }
 
-                    if(count($content) != $screen->cpls->count() )
+                    /*if(count($content) != $screen->cpls->count() )
                     {
                         $uuid_cpls = array_column($content, 'uuid');
                             foreach($screen->cpls as $cpl)
                             {
                                 if (! in_array( $cpl->uuid , $uuid_cpls))
                                 {
-
                                     $cpl->delete() ;
                                 }
                             }
 
                         //dd('we should delete screens ') ;
-                    }
+                    }*/
                 }
             }
         }
@@ -91,66 +91,55 @@ class CplController extends Controller
         $country = $request->country;
         $screen = $request->screen;
         $lms= $request->lms ;
-        if($lms== true)
+
+
+
+        if( $lms == 'true')
         {
-            $location = Location::find($location) ;
-            if($location)
-            {
-                $screens =$location->screens ;
-                $cpls =$location->lmscpls ;
-            }
-            else
-            {
-                $screens =null;
-                $cpls=null;
-            }
-
-
-            return Response()->json(compact('cpls','screens'));
+            $cpls =Lmscpl::with('location');
         }
+        else
+        {
+            $cpls =Cpl::with('location');
+        }
+
 
         if(isset($location) &&  $location != 'null' )
         {
             $location = Location::find($location) ;
             $screens =$location->screens ;
-            $cpls =$location->cpls ;
-            return Response()->json(compact('cpls','screens'));
+            $cpls =$cpls->where('location_id',$location->id);
         }
         else
         {
-            if(isset($screen) && $screen != 'null' )
-            {
-                $cpls = Screen::find($screen)->cpls;
-                return Response()->json(compact('cpls'));
-            }
-            else
-            {
-                $locations = Location::all() ;
-                $cpls =null ;
-                $screens = null ;
-                return view('cpls.index', compact('screen','screens','locations'));
-
-            }
-
+            $screens =null;
+            $screen=null ;
+            $locations = Location::all() ;
+            return view('cpls.index', compact('screen','screens','locations'));
         }
+       // dd($cpls->get()) ;
 
-
-
+        if(isset($screen) && $screen != 'null' )
+        {
+            $cpls =$cpls->where('screen_id',$screen);
+        }
+        $cpls = $cpls->get() ;
+        return Response()->json(compact('cpls','screens'));
 
     }
 
-    public function get_cpl_infos($cpl )
+    public function get_cpl_infos($location , $cpl )
     {
-        $cpl = Cpl::find($cpl) ;
+        $cpl = Cpl::where('id',$cpl)->where('location_id',$location)->first() ;
+
         $spls = $cpl->spls ;
         $kdms = $cpl->kdms ;
+
         $kdms =Kdm::with('screen')->where('cpl_id',$cpl->id)->get();
       //  $schedules =  $spl->schedules ;
         //$schedules =Schedule::with('screen')->where('spl_id',$cpl->id)->get();
         $schedules = null ;
         return Response()->json(compact('cpl','spls','kdms'));
     }
-
-
 
 }

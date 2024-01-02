@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Lmsspl;
 use App\Models\Location;
 use App\Models\Schedule;
 use App\Models\Screen;
@@ -24,7 +25,7 @@ class SplController extends Controller
         $location = Location::find($location) ;
 
         $url = $location->connection_ip . "?request=getSplListInfoByScreenNumber&screen_number=".$screen->screen_number;
-       // echo "URL : " . $url . " <br />" ;
+        echo "URL : " . $url . " <br />" ;
         $client = new Client();
         $response = $client->request('GET', $url);
         $contents = json_decode($response->getBody(), true);
@@ -96,63 +97,38 @@ class SplController extends Controller
         $country = $request->country;
         $screen = $request->screen;
         $lms= $request->lms ;
-        if($lms== true)
+
+        if( $lms == 'true')
         {
-            $location = Location::find($location) ;
-            if($location)
-            {
-                $screens =$location->screens ;
-                $spls =$location->lmsspls ;
-            }
-            else
-            {
-                $screens =null;
-                $spls=null;
-            }
-
-
-            return Response()->json(compact('spls','screens'));
-        }
-
-        if(isset($location) &&  $location != 'null' )
-        {
-            $location = Location::find($location) ;
-
-            if($location)
-            {
-                $screens =$location->screens ;
-                $spls =$location->spls ;
-            }
-            else
-            {
-                $screens =null;
-                $spls=null;
-            }
-
-
-            return Response()->json(compact('spls','screens'));
+            $spls =Lmsspl::all();
         }
         else
         {
-            if(isset($screen) && $screen != 'null' )
-            {
-                $spls = Screen::find($screen)->spls ;
-                return Response()->json(compact('spls'));
-            }
-            else
-            {
-                $locations = Location::all() ;
-                $spls =null ;
-                $screens = null ;
-                return view('spls.index', compact('screen','screens','locations'));
+            $spls =Spl::all();
+        }
+        if(isset($location) &&  $location != 'null' )
+        {
+            $location = Location::find($location) ;
+            $screens =$location->screens ;
+            $spls =$spls->where('location_id',$location->id);
+        }
+        else
+        {
+            $screens =null;
+            $screen=null ;
+            $locations = Location::all() ;
 
-            }
-
+            return view('spls.index', compact('screen','screens','locations'));
         }
 
-
-
-
+        if(isset($screen) && $screen != 'null' )
+        {
+            $spls =$spls->where('screen_id',$screen);
+        }
+        return Response()->json(compact('spls','screens'));
     }
+
+
+
 
 }

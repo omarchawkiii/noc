@@ -29,6 +29,7 @@ class Lmscpl extends Model
         'pictureEncryptionAlgorithm',
         'Width',
         'Height' ,
+        'screen_id',
         'location_id',
     ];
 
@@ -40,6 +41,10 @@ class Lmscpl extends Model
     public function lmsspls(): BelongsToMany
     {
         return $this->belongsToMany(Lmsspl::class,'lmscpls_lmsspls');
+    }
+    public function screen(): BelongsTo
+    {
+        return $this->belongsTo(Screen::class);
     }
 
 }

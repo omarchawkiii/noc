@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Lmsspl extends Model
@@ -29,11 +30,20 @@ class Lmsspl extends Model
         'file_progress',
         'spl_type',
         'location_id',
+        'screen_id',
         'available_on',
     ];
 
     public function lmscpls(): BelongsToMany
     {
         return $this->belongsToMany(Lmscpl::class,'lmscpls_lmsspls');
+    }
+    public function screen(): BelongsTo
+    {
+        return $this->belongsTo(Screen::class);
+    }
+    public function location(): BelongsTo
+    {
+        return $this->belongsTo(Location::class);
     }
 }

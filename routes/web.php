@@ -13,11 +13,11 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
+/*
 Route::get('/', function () {
-    return view('welcome');
-});
-
+    return view('locations.index');
+});*/
+Route::get('/', [App\Http\Controllers\LocationController::class , 'index'])->name('location.index');
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -39,6 +39,9 @@ Route::get('refresh_all_data', [App\Http\Controllers\LocationController::class ,
 Route::get('refresh_all_data_by_location/{location}', [App\Http\Controllers\LocationController::class , 'refresh_all_data_of_location'])->name('refresh_all_data_of_location');
 Route::get('refresh_content_of_location/{location}', [App\Http\Controllers\LocationController::class , 'refresh_content_of_location'])->name('refresh_content_of_location');
 Route::get('refresh_lms_data_of_location/{location}', [App\Http\Controllers\LocationController::class , 'refresh_lms_data_of_location'])->name('refresh_lms_data_of_location');
+Route::get('refresh_spl_content/{location}', [App\Http\Controllers\LocationController::class , 'refresh_spl_content'])->name('refresh_spl_content');
+Route::get('refresh_cpl_content/{location}', [App\Http\Controllers\LocationController::class , 'refresh_cpl_content'])->name('refresh_cpl_content');
+Route::get('refresh_kdm_content/{location}', [App\Http\Controllers\LocationController::class , 'refresh_kdm_content'])->name('refresh_kdm_content');
 
 
 
@@ -53,7 +56,7 @@ Route::get('get_spl_infos/{spl}', [App\Http\Controllers\SplController::class , '
 Route::get('cpls/{location}/{spls}/get_cpls', [App\Http\Controllers\CplController::class , 'getcpls'])->name('cpls.get_cpls');
 Route::get('cpls/screen/{screen}', [App\Http\Controllers\CplController::class , 'cpl_by_screen'])->name('cpls.cpls_by_screen');
 Route::get('get_cpl_with_filter', [App\Http\Controllers\CplController::class , 'get_cpl_with_filter'])->name('cpls.get_cpl_with_filter');
-Route::get('get_cpl_infos/{cpl}', [App\Http\Controllers\CplController::class , 'get_cpl_infos'])->name('cpls.get_cpl_infos');
+Route::get('get_cpl_infos/{location}/{cpl}', [App\Http\Controllers\CplController::class , 'get_cpl_infos'])->name('cpls.get_cpl_infos');
 
 Route::get('kdms/{location}/{cpls}/get_kdms', [App\Http\Controllers\KdmController::class , 'getkdms'])->name('kdms.get_kdms');
 Route::get('get_kdms_with_filter', [App\Http\Controllers\KdmController::class , 'get_Kdm_with_filter'])->name('kdms.get_Kdm_with_filter');
@@ -73,3 +76,6 @@ Route::get('get_lmscpl_infos/{cpl}', [App\Http\Controllers\LmscplController::cla
 
 
 Route::get('getdiskusage/{location}', [App\Http\Controllers\DiskusageController::class , 'getdiskusage'])->name('diskusage.getdiskusage');
+
+Route::get('getsnmp/{location}', [App\Http\Controllers\SnmpController::class , 'getsnmp'])->name('snmp.getsnmp');
+Route::get('get_snmp_with_filter', [App\Http\Controllers\SnmpController::class , 'get_snmp_with_filter'])->name('snmp.get_snmp_with_filter');

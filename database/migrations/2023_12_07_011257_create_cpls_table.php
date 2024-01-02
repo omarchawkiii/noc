@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::disableForeignKeyConstraints();
 
         Schema::create('cpls', function (Blueprint $table) {
-            $table->id();
+            //$table->id();
+            $table->string('id', 255)->nullable();
             $table->string('uuid', 255)->nullable();
             $table->string('id_dcp', 255)->nullable();
             $table->string('contentTitleText', 255)->nullable();
@@ -30,6 +31,7 @@ return new class extends Migration
             $table->boolean('cpl_is_linked')->nullable();
             $table->foreignId('location_id')->constrained()->onDelete('cascade');
             $table->foreignId('screen_id')->constrained()->onDelete('cascade');
+            $table->primary(['id', 'location_id']);
             $table->timestamps();
         });
 

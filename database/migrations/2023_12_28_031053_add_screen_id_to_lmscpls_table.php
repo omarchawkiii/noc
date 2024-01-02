@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('kdms', function (Blueprint $table) {
-            $table->foreignId('cpl_id')->nullable()->change();
+        Schema::table('lmscpls', function (Blueprint $table) {
+            $table->foreignId('screen_id')->nullable()->constrained()->onDelete('cascade');
         });
     }
 
@@ -21,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('kdms', function (Blueprint $table) {
+        Schema::table('lmscpls', function (Blueprint $table) {
             //
         });
     }

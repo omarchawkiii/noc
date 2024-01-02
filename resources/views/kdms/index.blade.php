@@ -21,43 +21,57 @@
                     </div>
                 </div>
                 <div class="row">
-
-                    <div class="col-xl-2">
-                        <div class="input-group mb-2 mr-sm-2">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text"><i class="mdi mdi-home-map-marker"></i></div>
-                            </div>
-                            <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="location">
-                                <option selected="">Locations</option>
-                                @foreach ($locations as $location )
-
-                                    <option @if($screen) @if( $screen->location->id == $location->id) selected @endif @endif  value="{{ $location->id }}">{{ $location->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-
-
-                    <div class="col-xl-2">
-
-
-                        <div class="input-group mb-2 mr-sm-2">
-                            <div class="input-group-prepend">
-                                <div class="input-group-text"><i class="mdi mdi-monitor"></i></div>
-                            </div>
-                            <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="screen">
-                                <option value="null">Screens</option>
-                                @if($screens)
-                                    @foreach ($screens as $all_screen )
-                                        <option @if($all_screen->id == $screen->id) selected @endif  value="{{ $all_screen->id }}">{{ $all_screen->screen_name }}</option>
+                    <div class="col-md-6 row">
+                        <div class="col-xl-4">
+                            <div class="input-group mb-2 mr-sm-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text"><i class="mdi mdi-home-map-marker"></i></div>
+                                </div>
+                                <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="location">
+                                    <option selected="">Locations</option>
+                                    @foreach ($locations as $location )
+                                        <option @if($screen) @if( $screen->location->id == $location->id) selected @endif @endif  value="{{ $location->id }}">{{ $location->name }}</option>
                                     @endforeach
-                                @endif
-                            </select>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xl-4">
+                            <div class="input-group mb-2 mr-sm-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text"><i class="mdi mdi-monitor"></i></div>
+                                </div>
+                                <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="screen">
+                                    <option value="null">Screens</option>
+                                    @if($screens)
+                                        @foreach ($screens as $all_screen )
+                                            <option @if($all_screen->id == $screen->id) selected @endif  value="{{ $all_screen->id }}">{{ $all_screen->screen_name }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-xl-2">
-                        <button type="button" id="refresh_lms"  class="btn btn-icon-text " style="color: #6f6f6f;background: #2a3038; height: 37px; display:none">
-                            <i class="mdi mdi-server-network"></i> LMS </button>
+                    <div class="col-md-6 row ">
+                        <div class="col-xl-3">
+                            <button type="button" id="refresh_lms"  class="btn btn-icon-text " style="color: #6f6f6f;background: #2a3038; height: 37px; display:none">
+                                <i class="mdi mdi-server-network"></i> LMS </button>
+                        </div>
+
+                        <div class="col-xl-4" style="display:none" id="lms_screen">
+                            <div class="input-group mb-2 mr-sm-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text"><i class="mdi mdi-monitor"></i></div>
+                                </div>
+                                <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="lms_screen_content">
+                                    <option value="null">LMS Screen </option>
+                                    @if($screens)
+                                        @foreach ($screens as $all_screen )
+                                            <option @if($all_screen->id == $screen->id) selected @endif  value="{{ $all_screen->id }}">{{ $all_screen->screen_name }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -68,11 +82,13 @@
                                 <tr>
                                     <th class="sorting sorting_asc">Screen </th>
 
-                                    <th class="sorting" style="width: 150px;">Content Name </th>
-                                    <th class="sorting" style="width: 150px;">Begin Validity </th>
-                                    <th class="sorting" style="width: 150px;">End Validity </th>
-                                    <th class="sorting" style="width: 150px;">Content Present  </th>
-                                    <th class="sorting " style="width: 150px;">Notes</th>
+                                    <th class="sorting">Content Name </th>
+                                    <th class="sorting">Begin Validity </th>
+                                    <th class="sorting">End Validity </th>
+                                    <th class="sorting">CPL</th>
+                                    <th class="sorting">KDM</th>
+                                    <th class="sorting ">Notes</th>
+                                    <th class="sorting ">Device Target</th>
 
                                 </tr>
                             </thead>
@@ -170,7 +186,7 @@
             }
         });
 
-        $('#screen').change(function(){
+        $('#screen , #lms_screen_content').change(function(){
 
             $("#location-listing").dataTable().fnDestroy();
             $('#location-listing tbody').html('')
@@ -184,18 +200,20 @@
             $('#location-listing tbody').html(loader_content)
 
             var country =  $('#country').val();
-            var screen =  $('#screen').val();
-            if(screen == 'null')
-            {
-                var location =  $('#location').val();
 
+            var location =  $('#location').val();
+            if(this.id == "screen")
+            {
+                lms=false ;
+                $('#lms_screen').hide();
+                var screen =  $('#screen').val();
             }
             else
             {
-                var location =  null;
+                lms= true ;
+                var screen =  $('#lms_screen_content').val();
             }
-
-            var url = '/get_kdms_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen;
+            var url ="{{  url('') }}"+ '/get_kdms_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen+'&lms='+ lms;
 
             result =" " ;
 
@@ -213,6 +231,12 @@
                             content_present = '<i class= "mdi mdi-checkbox-blank-circle-outline text-white" > </i>'
                         }
 
+                        if(value.kdm_installed == 'yes' ){
+                            kdm_installed = '<i class= "mdi mdi-check-circle-outline text-white" > </i>'
+                        }else{
+                            kdm_installed = '<i class= "mdi mdi-checkbox-blank-circle-outline text-white" > </i>'
+                        }
+
                         const date1 = new Date();
                         const date2 = new Date(value.ContentKeysNotValidAfter);
                         let diffTime = Math.abs(date2 - date1);
@@ -224,7 +248,6 @@
                         if(diffTime/100/60/60 > 48 )
                         {
                             background_difftime = "bg-success"
-                            console.log(diffTime)
                         }
                         if(diffTime/100/60/60 < 48  && diffTime/100/60/60 > 0 )
                         {
@@ -234,16 +257,26 @@
                         {
                             background_difftime = "bg-danger"
                         }
+                        if(value.screen)
+                        {
+                            screen_name = value.screen.screen_name
+                        }
+                        else
+                        {
+                            screen_name = value.device_target;
+                        }
 
 
                         result = result
                             +'<tr class="odd '+background_difftime+'">'
-                                +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.screen.screen_name+' </td>'
+                                +'<td class="text-body align-middle fw-medium text-decoration-none">'+ screen_name +' </td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidBefore+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidAfter+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ content_present+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ kdm_installed+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ dhm (diffTime)+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;">  '+value.device_target+' </a></td>'
                             +'</tr>';
                         });
                     console.log(response.kdms)
@@ -296,6 +329,7 @@
             var country =  $('#country').val();
             var screen =  null;
 
+            $('#lms_screen').hide();
             if(location != "Locations")
             {
                 $('#refresh_lms').show();
@@ -305,7 +339,7 @@
                 $('#refresh_lms').hide();
             }
 
-            var url = '/get_kdms_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen;
+            var url ="{{  url('') }}"+  '/get_kdms_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen;
             result =" " ;
 
             $.ajax({
@@ -319,7 +353,8 @@
                         screens = screens
                             +'<option  value="'+screen.id+'">'+screen.screen_name+'</option>';
                     });
-                        $('#screen').html(screens)
+                        $('#screen').html(screens);
+                        $('#lms_screen_content').html(screens)
 
                     $.each(response.kdms, function( index, value ) {
 
@@ -327,6 +362,11 @@
                             content_present = '<i class= "mdi mdi-check-circle-outline text-white" > </i>'
                         }else{
                             content_present = '<i class= "mdi mdi-checkbox-blank-circle-outline text-white" > </i>'
+                        }
+                        if(value.kdm_installed == 'yes' ){
+                            kdm_installed = '<i class= "mdi mdi-check-circle-outline text-white" > </i>'
+                        }else{
+                            kdm_installed = '<i class= "mdi mdi-checkbox-blank-circle-outline text-white" > </i>'
                         }
 
                         const date1 = new Date();
@@ -340,7 +380,6 @@
                         if(diffTime/100/60/60 > 48 )
                         {
                             background_difftime = "bg-success"
-                            console.log(diffTime)
                         }
                         if(diffTime/100/60/60 < 48  && diffTime/100/60/60 > 0 )
                         {
@@ -359,7 +398,9 @@
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidBefore+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidAfter+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ content_present+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ kdm_installed+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ dhm (diffTime)+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> - </a></td>'
                             +'</tr>';
                     });
                     $('#location-listing tbody').html(result)
@@ -406,8 +447,9 @@
             var country =  $('#country').val();
             window.lms = true ;
             var screen =  null;
+            $('#lms_screen').show();
 
-            var url = '/get_kdms_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen+'&lms='+ lms;
+            var url ="{{  url('') }}"+  '/get_kdms_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen+'&lms='+ lms;
             result =" " ;
 
             $.ajax({
@@ -421,7 +463,8 @@
                         screens = screens
                             +'<option  value="'+screen.id+'">'+screen.screen_name+'</option>';
                     });
-                        $('#screen').html(screens)
+                        $('#screen').html(screens);
+                        $('#lms_screen_content').html(screens)
 
                     $.each(response.kdms, function( index, value ) {
 
@@ -429,6 +472,11 @@
                             content_present = '<i class= "mdi mdi-check-circle-outline text-white" > </i>'
                         }else{
                             content_present = '<i class= "mdi mdi-checkbox-blank-circle-outline text-white" > </i>'
+                        }
+                        if(value.kdm_installed == 'yes' ){
+                            kdm_installed = '<i class= "mdi mdi-check-circle-outline text-white" > </i>'
+                        }else{
+                            kdm_installed = '<i class= "mdi mdi-checkbox-blank-circle-outline text-white" > </i>'
                         }
 
                         const date1 = new Date();
@@ -442,7 +490,6 @@
                         if(diffTime/100/60/60 > 48 )
                         {
                             background_difftime = "bg-success"
-                            console.log(diffTime)
                         }
                         if(diffTime/100/60/60 < 48  && diffTime/100/60/60 > 0 )
                         {
@@ -471,7 +518,9 @@
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidBefore+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidAfter+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ content_present+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ kdm_installed+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ dhm (diffTime)+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ value.device_target +'</a></td>'
                             +'</tr>';
                     });
                     $('#location-listing tbody').html(result)

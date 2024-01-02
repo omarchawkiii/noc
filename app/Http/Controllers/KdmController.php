@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cpl;
 use App\Models\Kdm;
+use App\Models\Lmskdm;
 use App\Models\Location;
 use App\Models\Screen;
 use GuzzleHttp\Client;
@@ -17,6 +18,7 @@ class KdmController extends Controller
         $screen = Screen::find($screen);
         $location = Location::find($location) ;
         $url = $location->connection_ip . "?request=getKdmListByScreenNumber&screen_number=".$screen->screen_number;
+
         $client = new Client();
         $response = $client->request('GET', $url);
         $contents = json_decode($response->getBody(), true);
@@ -29,51 +31,24 @@ class KdmController extends Controller
                 {
                     foreach($content as $kdm)
                     {
+                        //$cpl = Cpl::where('uuid','=',$kdm['cplId'])->where('location_id','=',$location->id)->first() ;
+                        Kdm::updateOrCreate([
+                            'uuid' => $kdm["uuid"],
+                            'location_id' => $location->id
+                        ],[
+                            'uuid' => $kdm['uuid'],
+                            'name' => $kdm['ContentTitleText'],
+                            'ContentKeysNotValidBefore' => $kdm['ContentKeysNotValidBefore'],
+                            'ContentKeysNotValidAfter' => $kdm['ContentKeysNotValidAfter'],
+                            'kdm_installed' => $kdm['kdm_installed'],
+                            'content_present' => $kdm['content_present'],
+                            'serverName_by_serial' => $kdm['serverName_by_serial'],
+                            'cpl_uuid' => $kdm['cplId'],
 
-                        $cpl = Cpl::where('uuid','=',$kdm['cplId'])->where('location_id','=',$location->id)->first() ;
+                            'screen_id' => $screen->id,
+                            'location_id' => $location->id,
 
-
-                        if($cpl)
-                        {
-                            Kdm::updateOrCreate([
-                                'uuid' => $kdm["uuid"],
-                                'location_id' => $location->id
-                            ],[
-                                'uuid' => $kdm['uuid'],
-                                'name' => $kdm['ContentTitleText'],
-                                'ContentKeysNotValidBefore' => $kdm['ContentKeysNotValidBefore'],
-                                'ContentKeysNotValidAfter' => $kdm['ContentKeysNotValidAfter'],
-                                'kdm_installed' => $kdm['kdm_installed'],
-                                'content_present' => $kdm['content_present'],
-                                'serverName_by_serial' => $kdm['serverName_by_serial'],
-                                'cpl_id' => $cpl->id,
-
-                                'screen_id' => $screen->id,
-                                'location_id' => $location->id,
-
-                            ]);
-                        }
-                        else
-                        {
-
-                            Kdm::updateOrCreate([
-                                'uuid' => $kdm["uuid"],
-                                'location_id' => $location->id
-                            ],[
-                                'uuid' => $kdm['uuid'],
-                                'name' => $kdm['ContentTitleText'],
-                                'ContentKeysNotValidBefore' => $kdm['ContentKeysNotValidBefore'],
-                                'ContentKeysNotValidAfter' => $kdm['ContentKeysNotValidAfter'],
-                                'kdm_installed' => $kdm['kdm_installed'],
-                                'content_present' => $kdm['content_present'],
-                                'serverName_by_serial' => $kdm['serverName_by_serial'],
-                                //'cpl_id' => $cpl->id,
-
-                                'screen_id' => $screen->id,
-                                'location_id' => $location->id,
-
-                            ]);
-                        }
+                        ]);
                     }
 
                     if(count($content) != $screen->kdms->count() )
@@ -104,55 +79,37 @@ class KdmController extends Controller
         $location = $request->location;
         $country = $request->country;
         $screen = $request->screen;
-
         $lms= $request->lms ;
         if($lms== true)
         {
-            $location = Location::find($location) ;
-            if($location)
-            {
-                $screens =$location->screens ;
-                $kdms =$location->lmskdms ;
-            }
-            else
-            {
-                $screens =null;
-                $cpls=null;
-            }
-
-
-            return Response()->json(compact('kdms','screens'));
+            $kdms =Lmskdm::with('screen');
+        }
+        else
+        {
+            $kdms =Kdm::with('screen');
         }
 
         if(isset($location) &&  $location != 'null' )
         {
             $location = Location::find($location) ;
             $screens =$location->screens ;
-           // $kdms =$location->kdms ;
-            $kdms =Kdm::with('screen')->where('location_id',$location->id)->get();
-
-            return Response()->json(compact('kdms','screens'));
+            $kdms =$kdms->where('location_id',$location->id);
         }
         else
         {
-            if(isset($screen) && $screen != 'null' )
-            {
-                $kdms = Kdm::with('screen')->where('screen_id',$screen)->get();
-                return Response()->json(compact('kdms'));
-            }
-            else
-            {
-                $locations = Location::all() ;
-                $cpls =null ;
-                $screens = null ;
-                return view('kdms.index', compact('screen','screens','locations'));
-
-            }
-
+            $screens =null;
+            $screen=null ;
+            $locations = Location::all() ;
+            return view('kdms.index', compact('screen','screens','locations'));
         }
 
+        if(isset($screen) && $screen != 'null' )
+        {
+            $kdms =$kdms->where('screen_id',$screen);
+        }
+        $kdms =$kdms->get() ;
 
-
+        return Response()->json(compact('kdms','screens'));
 
     }
 

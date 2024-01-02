@@ -19,7 +19,6 @@ class LmssplController extends Controller
         $client = new Client();
         $response = $client->request('GET', $url);
         $contents = json_decode($response->getBody(), true);
-
         if($contents)
         {
             foreach($contents as $content)

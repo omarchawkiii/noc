@@ -66,4 +66,8 @@ class Spl extends Model
     {
         return $this->hasMany(Schedule::class);
     }
+    public function screen(): BelongsTo
+    {
+        return $this->belongsTo(Screen::class);
+    }
 }
