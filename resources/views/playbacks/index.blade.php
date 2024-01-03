@@ -1,12 +1,12 @@
 @extends('layouts.app')
 @section('title') connexion  @endsection
 @section('content')
-    <div class="page-header playbck-shadow">
-        <h3 class="page-title ">Locations </h3>
+    <div class="page-header ingester-shadow">
+        <h3 class="page-title  ">Playback </h3>
         <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Location</li>
+            <li class="breadcrumb-item active" aria-current="page">Playback</li>
         </ol>
         </nav>
     </div>
@@ -16,16 +16,8 @@
 
             <div class="row">
                 <div class="d-flex flex-row justify-content-between mt-2 mb-3">
-
                     <div>
-                    <h4 class="card-title ">Locations</h4>
-                    </div>
-
-                    <div>
-
-                    <a  href="{{ route('location.create') }}" class="btn btn-primary  btn-icon-text">
-                        <i class="mdi mdi-plus btn-icon-prepend"></i> Create Location
-                    </a>
+                    <h4 class="card-title ">Playback</h4>
                     </div>
                 </div>
 
@@ -34,69 +26,135 @@
                         <table id="location-listing" class="table">
                             <thead>
                                 <tr>
-                                    <th class="sorting sorting_asc">Order #</th>
-                                    <th class="sorting">Name</th>
-                                    <th class="sorting">Folder Title</th>
-                                    <th class="sorting">Screen Count</th>
-                                    <th class="sorting">City </th>
-                                    <th class="sorting">Status</th>
-                                    <th class="sorting">Space</th>
-                                    <th class="sorting">Actions</th>
-                                    <th class="sorting">Infos</th>
+                                    <th class="sorting sorting_asc">Location</th>
+
+
+                                    <th class="sorting">1</th>
+                                    <th class="sorting">2</th>
+                                    <th class="sorting">3</th>
+                                    <th class="sorting">4</th>
+                                    <th class="sorting">5</th>
+                                    <th class="sorting">6</th>
+                                    <th class="sorting">7</th>
+                                    <th class="sorting">8</th>
+                                    <th class="sorting">9</th>
+                                    <th class="sorting">10</th>
+                                    <th class="sorting">11</th>
+                                    <th class="sorting">12</th>
+                                    <th class="sorting">13</th>
+                                    <th class="sorting">14</th>
+                                    <th class="sorting">15</th>
+
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($locations as $key => $location )
+
                                     <tr class="odd text-center  ">
-                                        <td class="sorting_1"><a href="{{ route('location.show',$location) }}"> {{  $key +1 }}</a> </td>
-                                        <td><a class="text-body align-middle fw-medium text-decoration-none" href="{{ route('location.show',$location) }}"> {{ $location->name }}</a></td>
-                                        <td><a class="text-body align-middle fw-medium text-decoration-none" href="{{ route('location.show',$location) }}"> {{ $location->folder_title }}</a></td>
-                                        <td><a class="text-body align-middle fw-medium text-decoration-none" href="{{ route('location.show',$location) }}"> {{ $location->screens->count() }}</a></td>
-                                        <td><a class="text-body align-middle fw-medium text-decoration-none" href="{{ route('location.show',$location) }}"> {{ $location->city }}</a></td>
-                                        <td><a class="text-body align-middle fw-medium text-decoration-none" href="{{ route('location.show',$location) }}"> {{ $location->state }}</a></td>
-                                        <td><a class="text-body align-middle fw-medium text-decoration-none" href="{{ route('location.show',$location) }}">
+                                        <td class="sorting_1"> {{ $location->name }}  </td>
+                                        @if($location->playbacks->count() >0  )
+                                            @foreach ( $location->playbacks as  $playback)
+                                                <td class="sorting_1">
+                                                    @if ($playback->playback_status == 'Pause' )
+                                                        <div class="icon icon-box-warning " style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="{{$playback->playback_status}}">
+                                                            <span class="mdi mdi-play-pause "></span>
+                                                        </div>
+                                                    @endif
+                                                    @if ($playback->playback_status == 'Stop')
+                                                        <div class="icon icon-box-danger " style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="{{$playback->playback_status}}">
+                                                            <span class="mdi mdi-stop  "></span>
+                                                        </div>
+                                                    @endif
+                                                    @if ($playback->playback_status == 'Unknown' )
+                                                        <div class="icon icon-box-warning " style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="{{$playback->playback_status}}">
+                                                            <span class="mdi mdi-lightbulb  "></span>
+                                                        </div>
+                                                    @endif
+                                                    @if ($playback->playback_status == 'Play')
+                                                        <div class="icon icon-box-success " style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="{{$playback->playback_status}}">
+                                                            <span class="mdi mdi-play "></span>
+                                                        </div>
+                                                    @endif
+                                                </td>
+                                            @endforeach
+                                        @else
 
-                                            @if($location->diskusage)
-                                                @if($location->diskusage->free_space_percentage < 80 )
-
-                                                    <div class="progress progress-lg">
-                                                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ round( (int) $location->diskusage->free_space_percentage) }}%" aria-valuenow="{{ $location->diskusage->free_space_percentage }}" aria-valuemin="{{ $location->diskusage->free_space_percentage }}" aria-valuemax="{{ $location->diskusage->free_space_percentage }}">{{ $location->diskusage->free_space_percentage }}%</div>
-                                                    </div>
-                                                @elseif(($location->diskusage->free_space_percentage >= 80  && $location->diskusage->free_space_percentage < 90))
-                                                    <div class="progress progress-lg">
-                                                        <div class="progress-bar bg-warning" role="progressbar" style="width: {{ round( (int)$location->diskusage->free_space_percentage) }}%" aria-valuenow="{{ $location->diskusage->free_space_percentage }}" aria-valuemin="{{ $location->diskusage->free_space_percentage }}" aria-valuemax="{{ $location->diskusage->free_space_percentage }}">{{ $location->diskusage->free_space_percentage }}%</div>
-                                                    </div>
-
-                                                @else
-                                                    <div class="progress progress-lg">
-                                                        <div class="progress-bar bg-danger" role="progressbar" style="width: {{ round( (int)$location->diskusage->free_space_percentage) }}%" aria-valuenow="{{ $location->diskusage->free_space_percentage }}" aria-valuemin="{{ $location->diskusage->free_space_percentage }}" aria-valuemax="{{ $location->diskusage->free_space_percentage }}">{{ $location->diskusage->free_space_percentage }}%</div>
-                                                    </div>
-                                                @endif
-
-
-                                            @endif
-
-                                        </a></td>
-                                        <td>
-                                            <div class="dropdown">
-                                                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuOutlineButton6" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Actions </button>
-                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuOutlineButton6" style="">
-                                                    <a class="btn btn-outline-primary dropdown-item" href="{{ route('location.edit',$location) }}">Edit</a>
-                                                    <a class="btn btn-outline-primary dropdown-item" href="{{ route('refresh_all_data_of_location',$location->id) }}">Refreesh All Data</a>
-                                                    <a class="btn btn-outline-primary dropdown-item" href="{{ route('refresh_content_of_location',$location->id) }}">Refreesh Content DATA </a>
-                                                    <a class="btn btn-outline-primary dropdown-item" href="{{ route('refresh_lms_data_of_location',$location->id) }}">Refreesh LMS Content DATA </a>
-                                                    <a class="btn btn-outline-primary dropdown-item" href="{{ route('refresh_spl_content',$location->id) }}">Refreesh SPL Content </a>
-                                                    <a class="btn btn-outline-primary dropdown-item" href="{{ route('refresh_cpl_content',$location->id) }}">Refreesh CPL Content  </a>
-                                                    <a class="btn btn-outline-primary dropdown-item" href="{{ route('location.sync_spl_cpl',$location->id) }}">Sync CPL SPL Content  </a>
-                                                    <a class="btn btn-outline-primary dropdown-item" href="{{ route('refresh_kdm_content',$location->id) }}">Refreesh KDms Content</a>
-                                                    <a class="btn btn-outline-primary dropdown-item" href="{{ route('schedules.getschedules',$location->id) }}">Refreesh Schedule Content</a>
-                                                    <a class="btn btn-outline-primary dropdown-item" href="{{ route('snmp.getsnmp',$location->id) }}">Refreesh SNMP Content</a>
-                                                    <a class="btn btn-outline-primary dropdown-item" href="{{ route('playback.getplayback',$location->id) }}">Refreesh Playback </a>
-
+                                            <td class="sorting_1">
+                                                <div class="icon icon-box-secondary  " style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="">
+                                                    <span class=" "></span>
                                                 </div>
-                                              </div>
-                                        </td>
-                                        <td> <a class="btn btn-outline-primary info" data-bs-toggle="modal" id="{{ $location->id }}" data-bs-target="#infos_modal" href="#"><i class="mdi mdi-magnify"> </i> </a></td>
+                                            </td>
+                                            <td class="sorting_1">
+                                                <div class="icon icon-box-secondary  " style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="">
+                                                    <span class=" "></span>
+                                                </div>
+                                            </td>
+                                            <td class="sorting_1">
+                                                <div class="icon icon-box-secondary  " style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="">
+                                                    <span class=" "></span>
+                                                </div>
+                                            </td>
+                                            <td class="sorting_1">
+                                                <div class="icon icon-box-secondary  " style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="">
+                                                    <span class=" "></span>
+                                                </div>
+                                            </td>
+                                            <td class="sorting_1">
+                                                <div class="icon icon-box-secondary  " style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="">
+                                                    <span class=" "></span>
+                                                </div>
+                                            </td>
+                                            <td class="sorting_1">
+                                                <div class="icon icon-box-secondary  " style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="">
+                                                    <span class=" "></span>
+                                                </div>
+                                            </td>
+                                            <td class="sorting_1">
+                                                <div class="icon icon-box-secondary  " style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="">
+                                                    <span class=" "></span>
+                                                </div>
+                                            </td>
+                                            <td class="sorting_1">
+                                                <div class="icon icon-box-secondary  " style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="">
+                                                    <span class=" "></span>
+                                                </div>
+                                            </td>
+                                            <td class="sorting_1">
+                                                <div class="icon icon-box-secondary  " style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="">
+                                                    <span class=" "></span>
+                                                </div>
+                                            </td>
+                                            <td class="sorting_1">
+                                                <div class="icon icon-box-secondary  " style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="">
+                                                    <span class=" "></span>
+                                                </div>
+                                            </td>
+                                            <td class="sorting_1">
+                                                <div class="icon icon-box-secondary  " style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="">
+                                                    <span class=" "></span>
+                                                </div>
+                                            </td>
+                                            <td class="sorting_1">
+                                                <div class="icon icon-box-secondary  " style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="">
+                                                    <span class=" "></span>
+                                                </div>
+                                            </td>
+                                            <td class="sorting_1">
+                                                <div class="icon icon-box-secondary  " style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="">
+                                                    <span class=" "></span>
+                                                </div>
+                                            </td>
+                                            <td class="sorting_1">
+                                                <div class="icon icon-box-secondary  " style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="">
+                                                    <span class=" "></span>
+                                                </div>
+                                            </td>
+                                            <td class="sorting_1">
+                                                <div class="icon icon-box-secondary  " style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="">
+                                                    <span class=" "></span>
+                                                </div>
+                                            </td>
+                                        @endif
                                     </tr>
                                 @endforeach
 
@@ -149,6 +207,7 @@
 
 
 <script src="{{asset('/assets/vendors/jquery-toast-plugin/jquery.toast.min.js')}}"></script>
+<script src="{{asset('/assets/js/tooltips.js')}}"></script>
 <script>
     (function($) {
 

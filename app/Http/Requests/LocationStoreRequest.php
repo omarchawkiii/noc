@@ -25,8 +25,6 @@ class LocationStoreRequest extends FormRequest
             'connection_ip' => ['required', 'string', 'max:255'],
             'tms_system' => ['required', 'string', 'max:255'],
             'rentrak_id' => ['required', 'string', 'max:255'],
-            'modem' => ['required', 'string', 'max:255'],
-            'internet' => ['required', 'string', 'max:255'],
             'address' => ['required', 'string', 'max:255'],
             'city' => ['required', 'string', 'max:255'],
             'zip' => ['required', 'string', 'max:255'],

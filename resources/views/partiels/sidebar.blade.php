@@ -45,6 +45,14 @@
           <span class="menu-title">SNMP Errors</span>
         </a>
       </li>
+      <li class="nav-item menu-items">
+        <a class="nav-link" href="{{ route('playback.index') }}">
+          <span class="menu-icon icon-box-warning">
+            <i class="mdi mdi-calendar-today "></i>
+          </span>
+          <span class="menu-title">Playback</span>
+        </a>
+      </li>
       <li>
         <br />
         <br /><br /><br /><br /><br /> <br /><br /><br /><br /><br />

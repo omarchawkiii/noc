@@ -240,10 +240,7 @@ class LocationController extends Controller
             app(\App\Http\Controllers\KdmController::class)->getkdms($location->id,$screen->id);
         }
         echo "All KDMs imported<br />" ;
-
-
     }
-
 
     public function refresh_lms_data_of_location( $location)
     {

@@ -107,5 +107,9 @@ class Location extends Model
     {
         return $this->hasMany(Snmp::class);
     }
+    public function playbacks(): HasMany
+    {
+        return $this->hasMany(Playback::class);
+    }
 
 }

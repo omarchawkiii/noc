@@ -91,4 +91,9 @@ class Screen extends Model
         return $this->hasMany(Schedule::class);
     }
 
+    public function playbacks(): HasMany
+    {
+        return $this->hasMany(Playback::class);
+    }
+
 }

@@ -95,6 +95,17 @@
 
 <script>
 
+    function extractTextWithinQuotes(inputText)
+    {
+        var regex = /"([^"]+)"/g;
+        var result = [];
+        var match;
+        while ((match = regex.exec(inputText)) !== null) {
+            result.push(match[1]);
+        }
+        return result;
+    }
+
     (function($) {
 
         var spl_datatable = $('#location-listing').DataTable({
@@ -143,12 +154,11 @@
                 success:function(response)
                 {
                     $.each(response.snmps, function( index, value ) {
-
                         result = result
                             +'<tr class="odd ">'
                             +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.serverName+' </td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.snmp_created_at+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;"> '+value.trap_data+'</a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;"> '+ extractTextWithinQuotes(value.trap_data)+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.type+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.category+' </i></a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.severity+'</a></td>'

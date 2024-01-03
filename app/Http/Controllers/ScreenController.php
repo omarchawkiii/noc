@@ -15,7 +15,6 @@ class ScreenController extends Controller
 {
     public function index(Request $request): View
     {
-
         $screens = Screen::all();
         return view('screens.index', compact('screens'));
     }
@@ -34,13 +33,11 @@ class ScreenController extends Controller
     public function store(ScreenStoreRequest $request)
     {
         $screen = Screen::create($request->validated());
-
         return redirect()->route('screens.index');
     }
 
     public function edit(Screen $screen): View
     {
-
         return view('screens.edit',compact('screen') );
     }
 }
