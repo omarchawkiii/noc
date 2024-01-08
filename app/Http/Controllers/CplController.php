@@ -6,6 +6,7 @@ use App\Models\Cpl;
 use App\Models\Kdm;
 use App\Models\Lmscpl;
 use App\Models\Location;
+use App\Models\Macro;
 use App\Models\Schedule;
 use App\Models\Screen;
 use App\Models\Spl;
@@ -91,7 +92,8 @@ class CplController extends Controller
         $country = $request->country;
         $screen = $request->screen;
         $lms= $request->lms ;
-
+        $playlist_builder= $request->playlist_builder ;
+        $macros = null ;
 
 
         if( $lms == 'true')
@@ -123,8 +125,16 @@ class CplController extends Controller
         {
             $cpls =$cpls->where('screen_id',$screen);
         }
+
+        if(isset($playlist_builder) && $screen != 'null')
+        {
+
+            $cpls = $cpls->orderBy('contentKind', 'desc') ;
+            $macros = Macro::where('location_id',$location->id)->get() ;
+
+        }
         $cpls = $cpls->get() ;
-        return Response()->json(compact('cpls','screens'));
+        return Response()->json(compact('cpls','screens','macros'));
 
     }
 

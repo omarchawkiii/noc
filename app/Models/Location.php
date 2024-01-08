@@ -111,5 +111,9 @@ class Location extends Model
     {
         return $this->hasMany(Playback::class);
     }
+    public function macros(): HasMany
+    {
+        return $this->hasMany(Macro::class);
+    }
 
 }

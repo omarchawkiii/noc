@@ -129,6 +129,12 @@ class SplController extends Controller
     }
 
 
+    public function spl_builder()
+    {
+        $locations = Location::all() ;
+
+        return view('spls.splbuilder', compact('locations'));
+    }
 
 
 }
