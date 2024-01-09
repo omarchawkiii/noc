@@ -95,7 +95,6 @@ class CplController extends Controller
         $playlist_builder= $request->playlist_builder ;
         $macros = null ;
 
-
         if( $lms == 'true')
         {
             $cpls =Lmscpl::with('location');
@@ -128,8 +127,7 @@ class CplController extends Controller
 
         if(isset($playlist_builder) && $screen != 'null')
         {
-
-            $cpls = $cpls->orderBy('contentKind', 'desc') ;
+            $cpls = $cpls->orderBy('contentKind', 'ASC')->orderBy('contentTitleText', 'ASC') ;
             $macros = Macro::where('location_id',$location->id)->get() ;
 
         }

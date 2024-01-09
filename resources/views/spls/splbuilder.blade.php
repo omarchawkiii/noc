@@ -268,29 +268,32 @@
                                 '       <div class="card-body  "  >\n' +
                                 '            <div>\n' +
                                 '                 <div class="media-body  ">\n' +
-                                '                      <h6 class="mb-1"  style="color:'
+                                '                      <h6 class="mb-1"  style="color:'+
+                                                        (value.type === "Flat" ? "#52d4f7" :
+                                                        (value.type === "Scope" ? "#00d25b" : "white"))
                                 +'">'+value.contentTitleText+
                                 ( (value.pictureEncryptionAlgorithm=="None" || value.pictureEncryptionAlgorithm== 0 ) ?" ": "<i class=\"mdi mdi-lock-outline  cpl_need_kdm\" aria-hidden=\"true\"></i>") +
                                 '</h6>\n' +
                                 '                  </div>\n' +
                                 '                  <div class="media-body">\n' +
-                                '                       <p class="mb-0 text-muted float-left"> Subtitle, VI, HI, DBox    </p>\n' +
+                                '                       <p class="mb-0 text-muted float-left">'+ value.duration + ' Subtitle, VI, HI, DBox    </p>\n' +
                                 '                       <p class="mb-0 text-muted float-right">\n' +
                                 '                          <span class="icon-prop-cpl">' +
-                                                              (value.is_3D == 1?'3D':'2D')+
+                                                            (value.is_3D == 1?'3D':'2D')+
                                 '                          </span>\n' +
                                 '                          <span class="flat">  ' +
-
+                                                            (value.aspect_Ratio=="unknown"? value.type
+                                                                : value.aspect_Ratio+' '+value.cinema_DCP  )+
                                 '                           </span>\n' +
                                 '                          <span class="flat">'+value.soundChannelCount+' </span>\n' +
                                 '                          <span class="flat"> ST  </span>\n' +
-                                '                          <span class="flat"> <i class="mdi mdi-magnify"> </i></span>\n' +
+                                '                          <span class="cpl-details" data-uuid="urn:uuid:e83235b4-f50d-4f46-906f-2ce2cca1ba52" class="flat"> <i class="mdi mdi-magnify"> </i></span>\n' +
                                 '                       </p>\n' +
                                 '                   </div>\n' +
                                 '              </div>\n' +
                                 '       </div>\n' +
                                 '   </div>';
-                    });
+                            });
 
                     box += '<div class=" filtered  div_list   title-kind  " data-type="Pattern "> Pattern   </div>';
                         box += '' +
@@ -346,10 +349,14 @@
                 }
             })
         });
+        function formatDurationToHMS(duration){
+            //  console.log(new Date(duration  * 1000).toISOString().slice(11, 19));
+            return   new Date(duration  * 1000).toISOString().slice(11, 19);
 
+        }
 
         $(document).on('change', '#filter_type', function (event) {
-            var criteria = $(this).val().toLowerCase();
+            var criteria = $(this).val();
 
             if (criteria == 'all') {
                 $('.left-side-item').show();

@@ -31,11 +31,12 @@ class MacroController extends Controller
                     foreach($content as $macro_section)
                     {
 
+
+
                         foreach($macro_section['macros_section'] as $macro_element)
                         {
-
                             Macro::updateOrCreate([
-                                'id' => $macro_element['idmacro_config'],
+                                'idmacro_config' => $macro_element['idmacro_config'],
                                 'location_id' => $location->id,
                             ],[
                                 'section_title' => $macro_section['title'],
@@ -50,6 +51,6 @@ class MacroController extends Controller
                 }
             }
         }
-        return Redirect::back()->with('message' ,' The cpls  has been updated');
+     //   return Redirect::back()->with('message' ,' The cpls  has been updated');
     }
 }

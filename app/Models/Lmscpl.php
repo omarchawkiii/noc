@@ -31,6 +31,12 @@ class Lmscpl extends Model
         'Height' ,
         'screen_id',
         'location_id',
+        'type',
+        'cinema_DCP',
+        'aspect_Ratio',
+        'duration_seconds',
+        'duration',
+
     ];
 
     public function location(): BelongsTo
