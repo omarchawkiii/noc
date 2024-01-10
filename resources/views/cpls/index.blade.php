@@ -795,7 +795,7 @@
                             +'</tr>';
                     });
                     console.log(response.cpls)
-                    $('#dragula-left').html(box);
+                    $('#location-listing tbody').html(result)
 
                     /***** refresh datatable ***** */
 

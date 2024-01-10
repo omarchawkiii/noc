@@ -29,8 +29,10 @@
                                                 </div>
                                                 <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="location">
                                                     <option selected="">Locations</option>
+                                                    <option  value="all">All locations</option>
                                                     @foreach ($locations as $location )
-                                                        <option  value="{{ $location->id }}">{{ $location->name }}</option>
+
+                                                    <option  value="{{ $location->id }}">{{ $location->name }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -95,7 +97,7 @@
                                     <div class="row mb-3">
                                         <div class="col-xl-12 ">
 
-                                            <button type="button" class="btn btn-success btn-icon-text">
+                                            <button type="button" class="btn btn-success btn-icon-text" id="reset_spl_builder">
                                                 <i class="mdi mdi-plus btn-icon-prepend"></i> New
                                             </button>
                                             <button type="button" class="btn btn-primary btn-icon-text">
@@ -124,50 +126,7 @@
                                         </div>
                                     </div>
                                     <div id="dragula-right" class="py-2">
-                                        <div class="card rounded border mb-2">
-                                            <div class="card-body p-3">
-                                                <div class="media">
-                                                    <i class="mdi mdi-account icon-sm align-self-center me-3"></i>
-                                                    <div class="media-body">
-                                                        <h6 class="mb-1">Prohect details</h6>
-                                                        <p class="mb-0 text-muted"> Get new project details from Greg </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="card rounded border mb-2">
-                                            <div class="card-body p-3">
-                                                <div class="media">
-                                                    <i class="mdi mdi-apps icon-sm align-self-center me-3"></i>
-                                                    <div class="media-body">
-                                                        <h6 class="mb-1">Leave approval</h6>
-                                                        <p class="mb-0 text-muted"> Approve leaves for Mike </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="card rounded border mb-2">
-                                            <div class="card-body p-3">
-                                                <div class="media">
-                                                    <i class="mdi mdi-bank icon-sm align-self-center me-3"></i>
-                                                    <div class="media-body">
-                                                        <h6 class="mb-1">Make reservations at hotel</h6>
-                                                        <p class="mb-0 text-muted"> Book rooms for vacation </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="card rounded border mb-2">
-                                            <div class="card-body p-3">
-                                                <div class="media">
-                                                    <i class="mdi mdi-calendar icon-sm align-self-center me-3"></i>
-                                                    <div class="media-body">
-                                                        <h6 class="mb-1">Meeting with client</h6>
-                                                        <p class="mb-0 text-muted"> New project meeting </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+
                                     </div>
                                 </div>
                                 <div class="col-md-1" style="padding-top: 29px;">
@@ -203,11 +162,935 @@
             </div>
 
 
+
+            <div class=" modal fade " id="infos_modal" tabindex="-1" role="dialog"  aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered  modal-xl">
+                    <div class="modal-content border-0">
+                        <div class="modal-header p-4 pb-0">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="nav-item">
+                                  <a class="nav-link active" id="Properties-tab" data-bs-toggle="tab" href="#Properties" role="tab" aria-controls="home" aria-selected="true">Properties</a>
+                                </li>
+                                <li class="nav-item">
+                                  <a class="nav-link" id="spls-tab" data-bs-toggle="tab" href="#spls" role="tab" aria-controls="Content CPLs" aria-selected="false">SPL(S)</a>
+                                </li>
+                                <li class="nav-item">
+                                  <a class="nav-link" id="kdms-tab" data-bs-toggle="tab" href="#kdms" role="tab" aria-controls="schedules" aria-selected="false">Keys Messages</a>
+                                </li>
+                              </ul>
+                            <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center p-4">
+
+                            <div class="tab-content border-0">
+                                <div class="tab-pane fade show active" id="Properties" role="tabpanel" aria-labelledby="Properties-tab">
+                                    <div class="card rounded border mb-2">
+                                        <div class="card-body p-3">
+                                            <div class="media  justify-content-start">
+                                                <div class="media-body d-flex align-items-center">
+                                                    <i class=" mdi mdi-star icon-sm align-self-center me-3"></i>
+                                                    <h6 class="mb-1">Title : </h6>
+                                                </div>
+                                                <div class="media-body">
+                                                    <p class="mb-0 text-muted m-1">   </p>
+                                                </div>
+                                                <div class="media-body">
+                                                    <p class="mb-0 text-muted">  </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card rounded border mb-2">
+                                        <div class="card-body p-3">
+                                            <div class="media  d-flex justify-content-start">
+                                                <div class="media-body d-flex align-items-center">
+                                                    <i class="mdi mdi-star icon-sm align-self-center me-3"></i>
+                                                    <h6 class="mb-1">UUID : </h6>
+                                                </div>
+                                                <div class="media-body">
+                                                    <p class="mb-0 text-muted m-1">   </p>
+                                                </div>
+                                                <div class="media-body">
+                                                    <p class="mb-0 text-muted">  </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card rounded border mb-2">
+                                        <div class="card-body p-3">
+                                            <div class="media  d-flex justify-content-start mr-5">
+                                                <div class="media-body d-flex align-items-center">
+                                                    <i class="mdi mdi-timer icon-sm align-self-center me-3"></i>
+                                                    <h6 class="mb-1">Duration : </h6>
+                                                </div>
+                                                <div class="media-body">
+                                                    <p class="mb-0 text-muted m-1">   </p>
+                                                </div>
+                                                <div class="media-body">
+                                                    <p class="mb-0 text-muted">    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="spls" role="tabpanel" aria-labelledby="spls-tab">
+                                    <div class="">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>UUID</th>
+                                                    <th>CPL Name</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                          </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="kdms" role="tabpanel" aria-labelledby="schedules-tab">
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                <!--end modal-content-->
+                </div>
+            </div>
+
 @endsection
 
 @section('custom_script')
     <script src="{{ asset('assets/vendors/dragula/dragula.min.js') }}"></script>
     <script src="{{ asset('assets/js/dragula.js') }}"></script>
+
+
+
+    <script>
+
+// *********************** functions
+        function formatDurationToHMS(duration){
+            //  console.log(new Date(duration  * 1000).toISOString().slice(11, 19));
+            return   new Date(duration  * 1000).toISOString().slice(11, 19);
+
+        }
+
+        function convertHMSToSeconds(time) {
+            var parts = time.split(":");
+            var hours = parseInt(parts[0]);
+            var minutes = parseInt(parts[1]);
+            var seconds = parseInt(parts[2]);
+            return hours * 3600 + minutes * 60 + seconds;
+        }
+
+        function convertSecondsToHMS(seconds) {
+            var hours = Math.floor(seconds / 3600);
+            var minutes = Math.floor((seconds % 3600) / 60);
+            var remainingSeconds = seconds % 60;
+
+            // Add leading zeros if necessary
+            hours = String(hours).padStart(2, '0');
+            minutes = String(minutes).padStart(2, '0');
+            remainingSeconds = String(remainingSeconds).padStart(2, '0');
+
+            return hours + ':' + minutes + ':' + remainingSeconds;
+        }
+
+        function formatSize(sizeInBytes) {
+            if (sizeInBytes >= 1024 * 1024 * 1024) {
+                return (sizeInBytes / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
+            } else if (sizeInBytes >= 1024 * 1024) {
+                return (sizeInBytes / (1024 * 1024)).toFixed(2) + ' MB';
+            } else {
+                return sizeInBytes + ' Bytes';
+            }
+        }
+
+        function formatTime(seconds) {
+            var hours = Math.floor(seconds / 3600);
+            var minutes = Math.floor((seconds - (hours * 3600)) / 60);
+            var secs = Math.floor(seconds - (hours * 3600) - (minutes * 60));
+            return (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (secs < 10 ? "0" + secs : secs);
+        }
+
+        function getCplDetails(id_cpl,need_kdm){
+            $.ajax({
+                url: 'system/controller_playlist_builder.php',
+                type: 'post',
+
+                data: {
+                    action_control: "get_cpl_details_left_sid",
+                    id_cpl: id_cpl,
+                    need_kdm:need_kdm
+                },
+
+                success: function (response) {
+
+                    var obj = JSON.parse(response);
+                    var detail_cpl=obj.details_cpl;
+                    if(detail_cpl==false){
+
+                    }
+
+                    var details_spl_contains_cpl=obj.details_spl_contains_cpl;
+                    $('#date_create_ingest_details').html("Creation Date :"+detail_cpl.date_create_ingest);
+                    $('#details_title').html(detail_cpl.contentTitleText);
+                    $('#details_uuid').html(detail_cpl.uuid);
+                    $('#details_kind').html(detail_cpl.contentKind);
+                    let duration_Seconds= detail_cpl.durationEdits *detail_cpl.editRate_denominator/detail_cpl.editRate_numerator;
+
+                    duration_Seconds=convertSecondsToHMS(Math.round(duration_Seconds));
+                    $('#details_duration').html(duration_Seconds);
+                    $('#details_edit_rate').html(detail_cpl.editRate_numerator+" "+detail_cpl.editRate_denominator);
+                    $('#details_dcp_size').html( formatSize(detail_cpl.packageSizeInBytes)  );
+                    $('#details_pictureHeight').html(detail_cpl.pictureHeight);
+                    $('#details_pictureWidth').html(detail_cpl.pictureWidth);
+                    $('#details_pictureEncodingAlgorithm').html(detail_cpl.pictureEncodingAlgorithm);
+                    $('#details_pictureEncryptionAlgorithm').html(detail_cpl.pictureEncryptionAlgorithm);
+                    $('#details_soundChannelCount').html(detail_cpl.soundChannelCount);
+                    $('#details_soundEncodingAlgorithm').html(detail_cpl.soundEncodingAlgorithm);
+                    $('#details_soundEncryptionAlgorithm').html(detail_cpl.soundEncryptionAlgorithm);
+                    $("#cpl_detail_model_left").modal('show');
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                },
+                complete: function (jqXHR, textStatus) {
+                }
+            });
+        }
+
+        // open selected spl
+
+        function openSpl(id_spl) {
+            $.ajax({
+                url: 'system/controller_playlist_builder.php',
+                type: 'post',
+                data: {
+                    action_control: "open_spl",
+                    id_spl: id_spl
+                },
+                success: function (response) {
+                    var response = JSON.parse(response);
+                    var obj= response.spl_file;
+                    var capabilities= response.capabilities;
+                    let box = "";
+
+                    try {
+                        $('#actual_spl_title').text(obj.AnnotationText);
+                        $('#id_spl_opened').text(obj.Id);
+                        $('#id_spl_opened').attr('data-spl_uuid', obj.Id );
+                        $('#id_spl_opened').attr('data-title', obj.AnnotationText);
+
+                        setSplOpenedData(capabilities);
+
+
+
+
+
+                        if (obj.hasOwnProperty('EventList') && !obj.hasOwnProperty('PackList') ) {
+                            var pack =[obj.EventList]  ;
+                            var obj = {
+                                "EventList": obj.EventList
+                            };
+                            var packList=[obj];
+
+                        }
+                        else{
+                            var packList = obj.PackList;
+
+                            if (Array.isArray(packList.Pack)) {
+                                packList = obj.PackList.Pack;
+
+                            }else if (typeof packList.Pack === 'object'){
+
+                                var packList =[packList.Pack]  ;
+
+                            }
+                        }
+
+                        for (var packId in packList) {
+                            var pack = packList[packId];
+
+                            if( Object.keys(pack.EventList).length === 0){
+                                console.log(pack);
+                                box +='<div class="list-group-item div_list segment_list row segment"' +
+                                    '  data-id="'+pack.Id+'"' +
+                                    '  data-title="'+pack.PackName+'" ' +
+                                    '  data-type="segment" ' +
+                                    '  data-action="add" draggable="false"> ' +
+                                    '   <div class="title-content col-md-7" style="font-size: 12px;"> ' +
+                                    '      <i class="fa fa-link" aria-hidden="true" style="color:#a2b927;"></i> ' +
+                                    pack.PackName +
+                                    '   </div>   ' +
+                                    '    <div class="details-content col-md-3" style=""> ' +
+                                    '       <div class="col-12 col-md-7">  </div>  ' +
+                                    '    </div>  ' +
+                                    '    <i class="fa fa-search  segment_properties"></i>  ' +
+                                    '    <i class="fa fa-close delete-spl_item"></i> ' +
+                                    '</div>';
+                            }
+                            else{
+
+                                var events = pack.EventList.Event;
+                                // if (Array.isArray(pack.EventList.Event)) {
+                                //     var events = pack.EventList.Event;
+                                //
+                                // }
+                                //
+                                // if (typeof pack.EventList.Event === 'object'){
+                                //     var  events =[  pack.EventList.Event]  ;
+                                //
+                                // }
+                                // if (typeof events === 'object'){
+                                //       events =[events]  ;
+                                //
+                                // }else{
+                                //      events = pack.EventList.Event;
+                                // }
+                                console.log(events);
+                                for (var i = 0; i < events.length; i++) {
+
+                                    console.log(events[i]);
+                                    var macro_box='';
+                                    var marker_box='';
+                                    var event = events[i];
+
+                                    // Access event properties
+                                    var eventId = event.Id;
+                                    var ElementList = event.ElementList ;
+                                    var mainElement = event.ElementList.MainElement;
+
+                                    // check macro
+                                    if(ElementList.hasOwnProperty('AutomationCue')){
+                                        if (Array.isArray(ElementList.AutomationCue)) {
+                                            var macro_list = ElementList.AutomationCue;
+                                        }else  {
+                                            var macro_list  =[ElementList.AutomationCue]  ;
+                                        }
+                                        for (let i=0;i<  macro_list.length;i++) {
+                                            macro_box+=
+                                                '   <div class="col-md-10 macro_item macro_style" data-title="'+macro_list[i].Action+'" ' +
+                                                'data-offset="'+macro_list[i].Kind+'"' +
+                                                ' data-time="'+convertSecondsToHMS(macro_list[i].Offset*1/24)+'"' +
+                                                ' data-uuid="'+macro_list[i].Id+'"' +
+                                                ' data-idmacro="">' +
+                                                '         <div class="col-md-2" style="padding-left:12px;">|------</div>' +
+                                                '         <div class="col-md-2" id="macro_time">'+convertSecondsToHMS(macro_list[i].Offset*1/24)+'</div>' +
+                                                '         <div class="col-md-6" id="macro_title">'+macro_list[i].Action+'</div>' +
+                                                '         <i class="fa fa-search col-sd-1 search-macro_item"></i>' +
+                                                '         <i class="fa fa-close col-sd-1  delete-macro_item"></i>' +
+                                                '   </div>   ';
+                                        }
+                                    }
+                                    // check markers
+                                    if(ElementList.hasOwnProperty('Marker')){
+                                        if (Array.isArray(ElementList.Marker)) {
+                                            var Marker_list = ElementList.Marker;
+                                        }else  {
+                                            var Marker_list  =[ElementList.Marker]  ;
+                                        }
+                                        for (let i=0;i<  Marker_list.length;i++) {
+                                            marker_box+=
+                                                '<div class="col-md-12 marker_item marker_style" style="margin-left: 0px!important;"' +
+                                                ' data-title="'+Marker_list[i].Label+'"' +
+                                                ' data-offset="'+Marker_list[i].Kind+'" ' +
+                                                ' data-time="'+convertSecondsToHMS(Marker_list[i].Offset*1/24)+'"' +
+                                                ' data-uuid="16b06cf1-2e7b-40ef-9807-d22485bb7c36"> ' +
+                                                '   <div class="col-md-2" style="padding-left:12px;">|------</div> ' +
+                                                '   <div class="col-md-2" id="marker_time">'+convertSecondsToHMS(Marker_list[i].Offset*1/24)+'</div>' +
+                                                '   <div class="col-md-6" id="macrker_title">'+Marker_list[i].Label+'</div>  ' +
+                                                '   <i class="fa fa-search col-sd-1 search-marker_item"></i>' +
+                                                '   <i class="fa fa-close col-sd-1  delete-marker_item"></i>' +
+                                                '</div>';
+                                        }
+                                        console.log(marker_box);
+                                    }
+                                    if(mainElement.hasOwnProperty('Composition')){
+
+                                        var Composition=mainElement.Composition;
+
+                                        var IntrinsicDuration=Composition.IntrinsicDuration;
+                                        var EditRate= extractEditRateValues(Composition.EditRate);
+                                        var editRate_numerator =EditRate[0];
+                                        var editRate_denominator  =EditRate[1];
+                                        var duration_seconds=Composition.IntrinsicDuration*editRate_denominator/editRate_numerator;
+                                        var hms_time= convertSecondsToHMS(duration_seconds);
+                                        console.log("composition");
+                                        box +=
+                                            '<div class="macro_list_sortable list-group-item div_list row cpl_component_to_select cpl_component component"' +
+                                            '      data-type="Composition"' +
+                                            '      data-id="'+eventId+'"' +
+                                            '      data-uuid="'+Composition.CompositionPlaylistId+'" ' +
+                                            '      data-source="undefined"' +
+                                            '      data-title="'+Composition.AnnotationText+'"' +
+                                            '      data-editrate_denominator="'+editRate_denominator+'" ' +
+                                            '      data-editrate_numerator="'+editRate_numerator+'"' +
+                                            '      data-id_server="undefined"' +
+                                            '      data-version="new_item" data-time_seconds="'+duration_seconds+'"' +
+                                            '      data-time="'+hms_time+'" data-starttime="00:00:00" ' +
+                                            '      draggable="false" style=""> ' +
+                                            '   <div class="title-content col-md-7 left_panel_title">' +
+                                            '     <i class="fa fa-list content_pack" aria-hidden="true"></i> ' +
+                                            Composition.AnnotationText +
+                                            '   </div>  ' +
+                                            '   <div class="details-content col-md-3" style="">      ' +
+                                            '      <div class=" ">          ' +
+                                            '          <i class="fa fa-clock-o" aria-hidden="true"></i>         ' +
+                                            '         <span class="start_time">00:00:00</span>       ' +
+                                            '      </div> ' +
+                                            '  </div>\n' +
+                                            '  <i class="fa fa-search col-sd-1 search-spl_item"></i>  ' +
+                                            '  <i class="fa fa-close col-sd-1  delete-spl_item"></i>  ' +
+
+                                            '   <div class="col-md-12 macro_list" style="padding :0px"> ' +
+                                            macro_box+
+                                            '   </div>   ' +
+                                            '   <div class="col-md-10 marker_list">' +
+                                            marker_box+
+                                            '   </div>   ' +
+                                            '   <div class="col-md-10 intermission_list"></div>' +
+                                            '</div>';
+                                    }
+                                    else if(mainElement.hasOwnProperty('Pattern')){
+                                        console.log("Pattern");
+
+                                        var Pattern=mainElement.Pattern;
+                                        console.log(Pattern);
+
+                                        var IntrinsicDuration=Pattern.Duration;
+                                        var EditRate= extractEditRateValues(Pattern.EditRate);
+                                        var editRate_numerator =EditRate[0];
+                                        var editRate_denominator  =EditRate[1];
+                                        var duration_seconds=Pattern.Duration*editRate_denominator/editRate_numerator;
+                                        var hms_time= convertSecondsToHMS(duration_seconds);
+
+                                        box +=
+                                            '<div class="macro_list_sortable list-group-item div_list row cpl_component_to_select cpl_component component"' +
+                                            '      data-type="pattern" ' +
+                                            '      data-id="'+eventId+'"' +
+                                            '      data-uuid="'+Pattern.Id+'" ' +
+                                            '      data-source="undefined"' +
+                                            '      data-title="'+Pattern.AnnotationText+'"' +
+                                            '      data-editrate_denominator="'+editRate_denominator+'" ' +
+                                            '      data-editrate_numerator="'+editRate_numerator+'" data-id_server="undefined"' +
+                                            '      data-version="new_item" data-time_seconds="'+duration_seconds+'"' +
+                                            '      data-time="'+hms_time+'" data-starttime="00:00:00" ' +
+                                            '      draggable="false" style=""> ' +
+                                            '   <div class="title-content col-md-7 left_panel_title">' +
+
+                                            (Pattern.AnnotationText=="Black 3D" || Pattern.AnnotationText=="Black 3D 48"?'<span class="icon_pattern">3D</span> '
+                                                :  "")+
+                                            Pattern.AnnotationText +
+                                            '   </div>  ' +
+                                            '   <div class="details-content col-md-3" style="">      ' +
+                                            '      <div class=" ">          ' +
+                                            '          <i class="fa fa-clock-o" aria-hidden="true"></i>         ' +
+                                            '         <span class="start_time">00:00:00</span>       ' +
+                                            '      </div> ' +
+                                            '  </div>\n' +
+                                            '  <i class="fa fa-search col-sd-1 search-spl_item"></i>  ' +
+                                            '  <i class="fa fa-close col-sd-1  delete-spl_item"></i>  ' +
+                                            '    <div class="col-md-12 macro_list" style="padding :0px"> ' +
+                                            macro_box+
+                                            '    </div>   ' +
+                                            '    <div class="col-md-10 marker_list">' +
+                                            marker_box+
+                                            '    </div>   ' +
+                                            '    <div class="col-md-10 intermission_list"></div>' +
+                                            '</div>';
+                                        console.log(marker_box);
+                                    }
+                                    macro_box="";
+                                    marker_box="";
+                                }
+                            }
+
+                        }
+
+                        $('#dragula-right').html(box);
+                        var items = container2.querySelectorAll('.component');
+                        var startTime = 0;
+                        for (var i = 0; i < items.length; i++) {
+                            console.log(items[i]);
+                            var duration = parseInt(items[i].getAttribute('data-time_seconds'));
+
+                            items[i].setAttribute('data-starttime',   formatTime(startTime));
+                            var composition_start_time=   items[i].getAttribute('data-starttime');
+
+                            $(items[i]).find('div:nth-child(2) span').html(formatTime(startTime));
+                            startTime += duration;
+                            var composition_end_time=   startTime;
+                            // Process the macro_list within the current item if it exists
+                            var macroItems = items[i].querySelectorAll('.macro_item');
+                            if (macroItems.length > 0) {
+                                for (var j = 0; j < macroItems.length; j++) {
+                                    var macroTime = macroItems[j].getAttribute('data-time');
+                                    var macroKind = macroItems[j].getAttribute('data-offset');
+
+                                    // Calculate the macro start time based on Kind
+                                    var macroStartTime;
+                                    if (macroKind === "Start") {
+                                        console.log(composition_start_time);
+                                        console.log(macroTime);
+                                        macroStartTime = convertHMSToSeconds(composition_start_time) + convertHMSToSeconds(macroTime);
+                                    } else if (macroKind === "End") {
+                                        console.log(composition_end_time);
+                                        console.log(macroTime);
+                                        macroStartTime = composition_end_time - convertHMSToSeconds(macroTime);
+                                    } else {
+                                        // Handle other cases if needed
+                                        macroStartTime = 0;
+                                    }
+
+                                    // Update the macro_time div with the calculated start time
+                                    macroItems[j].querySelector('#macro_time').innerText = convertSecondsToHMS(macroStartTime);
+                                }
+                            }
+
+
+                            var markerItems = items[i].querySelectorAll('.marker_item');
+
+                            if (markerItems.length > 0) {
+                                for (var j = 0; j < markerItems.length; j++) {
+                                    var markerTime = markerItems[j].getAttribute('data-time');
+                                    var markerKind = markerItems[j].getAttribute('data-offset');
+
+                                    // Calculate the macro start time based on Kind
+                                    var markerStartTime;
+                                    if (markerKind === "Start") {
+
+                                        markerStartTime = convertHMSToSeconds(composition_start_time) + convertHMSToSeconds(markerTime);
+
+                                    } else if (markerKind === "End") {
+                                        console.log(composition_end_time);
+                                        console.log(markerTime);
+                                        markerStartTime = composition_end_time - convertHMSToSeconds(markerTime);
+                                    } else {
+                                        // Handle other cases if needed
+                                        markerTime = 0;d
+                                    }
+
+                                    // Update the macro_time div with the calculated start time
+                                    markerItems[j].querySelector('#marker_time').innerText = convertSecondsToHMS(markerStartTime);
+                                }
+                            }
+                        }
+
+                    } catch (e) {
+                        console.log(e);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                },
+                complete: function (jqXHR, textStatus) {
+                }
+            })
+        }
+
+
+
+        $(document).on('click', '.infos_modal', function () {
+
+           var loader_content  =
+               '<div class="jumping-dots-loader">'
+                   +'<span></span>'
+                   +'<span></span>'
+                   +'<span></span>'
+                +'</div>'
+           $('#Properties').html(loader_content)
+
+            $('#Properties-tab').addClass('active');
+            $('#spls-tab').removeClass('active');
+            $('#kdms-tab').removeClass('active');
+            $('#Properties').addClass('show active ');
+            $('#spls').removeClass('show active');
+            $('#kdms').removeClass('show active');
+
+           window.cpl_id = $(this).attr("id") ;
+           window.location_id = $(this).attr("data-location")
+
+           if(true  )
+            {
+                var url = "{{  url('') }}"+   "/get_lmscpl_infos/"+cpl_id;
+                $('#kdms-tab').hide();
+            }
+            else
+            {
+                var url = "{{  url('') }}"+ "/get_cpl_infos/"+location_id+"/"+cpl_id ;
+                $('#kdms-tab').show();
+            }
+           $.ajax({
+                   url: url,
+                   method: 'GET',
+                   success:function(response)
+                   {
+                           result =
+                           '<div class="card rounded border mb-2">'
+                                   +'<div class="card-body p-3">'
+                                       +'<div class="media  justify-content-start">'
+                                           +'<div class="media-body d-flex align-items-center">'
+                                               +'<i class=" mdi mdi-star icon-sm align-self-center me-3"></i>'
+                                               +'<h6 class="mb-1">Title :  </h6>'
+                                           +'</div>'
+                                           +'<div class="media-body">'
+                                               +'<p class="mb-0 text-muted m-1">   </p>'
+                                           +'</div>'
+                                           +'<div class="media-body">'
+                                               +'<p class="mb-0 text-muted"> '+ response.cpl.contentTitleText + ' </p>'
+                                           +'</div>'
+                                       +'</div>'
+                                   +'</div>'
+                               +'</div>'
+                               +'<div class="card rounded border mb-2">'
+                                   +'<div class="card-body p-3">'
+                                       +'<div class="media  d-flex justify-content-start">'
+                                           +'<div class="media-body d-flex align-items-center">'
+                                               +'<i class="mdi mdi-star icon-sm align-self-center me-3"></i>'
+                                               +'<h6 class="mb-1">UUID : </h6>'
+                                           +'</div>'
+                                           +'<div class="media-body">'
+                                               +'<p class="mb-0 text-muted m-1">   </p>'
+                                           +'</div>'
+                                           +'<div class="media-body">'
+                                               +'<p class="mb-0 text-muted"> '+ response.cpl.uuid + ' </p>'
+                                           +'</div>'
+                                       +'</div>'
+                                   +'</div>'
+                               +'</div>'
+                               +'<div class="card rounded border mb-2">'
+                                   +'<div class="card-body p-3">'
+                                       +'<div class="media  d-flex justify-content-start mr-5">'
+                                           +'<div class="media-body d-flex align-items-center">'
+                                               +'<i class="mdi mdi-timer icon-sm align-self-center me-3"></i>'
+                                               +'<h6 class="mb-1">Kind : </h6>'
+                                           +'</div>'
+                                           +'<div class="media-body">'
+                                               +'<p class="mb-0 text-muted m-1">   </p>'
+                                           +'</div>'
+                                           +'<div class="media-body">'
+                                               +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                           +'</div>'
+                                       +'</div>'
+                                   +'</div>'
+                               +'</div>'
+
+                               +'<div class="card rounded border mb-2">'
+                                   +'<div class="card-body p-3">'
+                                       +'<div class="media  d-flex justify-content-start mr-5 row">'
+
+                                            +'<div class="col-md-4 text-center" >'
+                                                +'<div class="media-body ">'
+                                                    +'<h6 class="mb-1">Duration   </h6>'
+                                                +'</div>'
+                                                +'<div class="media-body">'
+                                                    +'<p class="mb-0 text-muted m-1">   </p>'
+                                                +'</div>'
+                                                +'<div class="media-body">'
+                                                    +'<p class="mb-0 text-muted"> '+ response.cpl.durationEdits + '   </p>'
+                                                +'</div>'
+                                            +'</div>'
+
+                                            +'<div class="col-md-4 text-center" >'
+                                                +'<div class="media-body ">'
+                                                    +'<h6 class="mb-1">Edit Rate   </h6>'
+                                                +'</div>'
+                                                +'<div class="media-body">'
+                                                    +'<p class="mb-0 text-muted m-1">   </p>'
+                                                +'</div>'
+                                                +'<div class="media-body">'
+                                                    +'<p class="mb-0 text-muted"> '+ response.cpl.EditRate + '   </p>'
+                                                +'</div>'
+                                            +'</div>'
+
+                                            +'<div class="col-md-4 text-center" >'
+                                                +'<div class="media-body ">'
+                                                    +'<h6 class="mb-1">Disk size   </h6>'
+                                                +'</div>'
+                                                +'<div class="media-body">'
+                                                    +'<p class="mb-0 text-muted m-1">   </p>'
+                                                +'</div>'
+                                                +'<div class="media-body">'
+                                                    +'<p class="mb-0 text-muted"> '+ response.cpl.totalSize + '   </p>'
+                                                +'</div>'
+                                            +'</div>'
+
+
+
+                                       +'</div>'
+                                   +'</div>'
+                               +'</div>'
+
+
+
+                               +'<div class="card rounded border mb-2">'
+                                   +'<div class="card-body p-3">'
+                                       +'<div class="media  d-flex justify-content-start mr-5 row">'
+
+                                            +'<div class="col-md-3 text-center" >'
+                                                +'<div class="media-body ">'
+                                                    +'<h6 class="mb-1">Picture Height  </h6>'
+                                                +'</div>'
+                                                +'<div class="media-body">'
+                                                    +'<p class="mb-0 text-muted m-1">   </p>'
+                                                +'</div>'
+                                                +'<div class="media-body">'
+                                                    +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                                +'</div>'
+                                            +'</div>'
+
+                                            +'<div class="col-md-3 text-center" >'
+                                                +'<div class="media-body ">'
+                                                    +'<h6 class="mb-1">Picture width  </h6>'
+                                                +'</div>'
+                                                +'<div class="media-body">'
+                                                    +'<p class="mb-0 text-muted m-1">   </p>'
+                                                +'</div>'
+                                                +'<div class="media-body">'
+                                                    +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                                +'</div>'
+                                            +'</div>'
+
+                                            +'<div class="col-md-3 text-center" >'
+                                                +'<div class="media-body ">'
+                                                    +'<h6 class="mb-1">Picture Encoding Algorithm   </h6>'
+                                                +'</div>'
+                                                +'<div class="media-body">'
+                                                    +'<p class="mb-0 text-muted m-1">   </p>'
+                                                +'</div>'
+                                                +'<div class="media-body">'
+                                                    +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                                +'</div>'
+                                            +'</div>'
+
+                                            +'<div class="col-md-3 text-center" >'
+                                                +'<div class="media-body ">'
+                                                    +'<h6 class="mb-1">Picture Encryption Algorithm  </h6>'
+                                                +'</div>'
+                                                +'<div class="media-body">'
+                                                    +'<p class="mb-0 text-muted m-1">   </p>'
+                                                +'</div>'
+                                                +'<div class="media-body">'
+                                                    +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                                +'</div>'
+                                            +'</div>'
+
+                                       +'</div>'
+                                   +'</div>'
+                               +'</div>'
+
+                               +'<div class="card rounded border mb-2">'
+                                   +'<div class="card-body p-3">'
+                                       +'<div class="media  d-flex justify-content-start mr-5 row">'
+
+                                            +'<div class="col-md-3 text-center" >'
+                                                +'<div class="media-body ">'
+                                                    +'<h6 class="mb-1">Sound Channel Count  </h6>'
+                                                +'</div>'
+                                                +'<div class="media-body">'
+                                                    +'<p class="mb-0 text-muted m-1">   </p>'
+                                                +'</div>'
+                                                +'<div class="media-body">'
+                                                    +'<p class="mb-0 text-muted"> '+ response.cpl.soundChannelCount + '   </p>'
+                                                +'</div>'
+                                            +'</div>'
+
+                                            +'<div class="col-md-3 text-center" >'
+                                                +'<div class="media-body ">'
+                                                    +'<h6 class="mb-1">Sound Encoding Algorithm </h6>'
+                                                +'</div>'
+                                                +'<div class="media-body">'
+                                                    +'<p class="mb-0 text-muted m-1">   </p>'
+                                                +'</div>'
+                                                +'<div class="media-body">'
+                                                    +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                                +'</div>'
+                                            +'</div>'
+
+                                            +'<div class="col-md-3 text-center" >'
+                                                +'<div class="media-body ">'
+                                                    +'<h6 class="mb-1">Sound Encryption   </h6>'
+                                                +'</div>'
+                                                +'<div class="media-body">'
+                                                    +'<p class="mb-0 text-muted m-1">   </p>'
+                                                +'</div>'
+                                                +'<div class="media-body">'
+                                                    +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                                +'</div>'
+                                            +'</div>'
+
+                                            +'<div class="col-md-3 text-center" >'
+                                                +'<div class="media-body ">'
+                                                    +'<h6 class="mb-1"> Algorithm  </h6>'
+                                                +'</div>'
+                                                +'<div class="media-body">'
+                                                    +'<p class="mb-0 text-muted m-1">   </p>'
+                                                +'</div>'
+                                                +'<div class="media-body">'
+                                                    +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                                +'</div>'
+                                            +'</div>'
+
+                                       +'</div>'
+                                   +'</div>'
+                               +'</div>'
+
+
+
+                       $('#Properties').html(result)
+
+
+
+
+
+                   },
+                   error: function(response) {
+
+                   }
+           })
+
+        });
+
+        $(document).on('click', '#spls-tab', function () {
+
+           var loader_content  =
+               '<div class="jumping-dots-loader">'
+                   +'<span></span>'
+                   +'<span></span>'
+                   +'<span></span>'
+                   +'</div>'
+           $('#spls').html(loader_content)
+
+
+           if(true )
+            {
+                var url = "{{  url('') }}"+   "/get_lmscpl_infos/"+cpl_id;
+                $('#kdms-tab').hide();
+            }
+            else
+            {
+                var url = "{{  url('') }}"+ "/get_cpl_infos/"+location_id+"/"+cpl_id ;
+                $('#kdms-tab').show();
+            }
+
+
+
+
+           $.ajax({
+                   url: url,
+                   method: 'GET',
+                   success:function(response)
+                   {
+                       console.log(response.spls) ;
+                       result =
+                           '<div class="">'
+                               +'<table class="table">'
+                                   +'<thead>'
+                                       +'<tr>'
+                                           +'<th>UUID</th>'
+                                           +'<th>CPL Name</th>'
+
+                                       +'</tr>'
+                                   +'</thead>'
+                                   +'<tbody>'
+
+                       $.each(response.spls, function( index, value ) {
+
+                       result = result
+                                       +'<tr>'
+                                           +'<th>'+value.uuid+'</th>'
+                                           +'<th>'+value.name+'</th>'
+
+                                       +'</tr>'
+                       });
+                       result = result
+                                   +'</tbody>'
+                               +'</table>'
+                           +'</div>'
+                       $('#spls').html(result)
+
+
+
+
+
+                   },
+                   error: function(response) {
+
+                   }
+           })
+
+       });
+
+       $(document).on('click', '#kdms-tab', function () {
+
+           var loader_content  =
+               '<div class="jumping-dots-loader">'
+                   +'<span></span>'
+                   +'<span></span>'
+                   +'<span></span>'
+                   +'</div>'
+           $('#kdms').html(loader_content)
+
+           var url = "{{  url('') }}"+ "/get_cpl_infos/"+location_id+"/"+cpl_id ;
+
+
+           $.ajax({
+                   url: url,
+                   method: 'GET',
+                   success:function(response)
+                   {
+                       console.log(response) ;
+                       if(response.kdms.length)
+                       {
+                           result =
+                               '<div class="">'
+                                   +'<table class="table">'
+                                       +'<thead>'
+                                           +'<tr>'
+                                               +'<th>Screen</th>'
+                                               +'<th>Note Valide Before </th>'
+                                               +'<th>Note Valid After</th>'
+                                               +'<th>UUID</th>'
+                                           +'</tr>'
+                                       +'</thead>'
+                                       +'<tbody>'
+
+                           $.each(response.kdms, function( index, value ) {
+
+                           result = result
+                                           +'<tr>'
+                                               +'<th>'+value.screen.screen_name+'</th>'
+                                               +'<th>'+value.ContentKeysNotValidBefore+'</th>'
+                                               +'<th>'+value.ContentKeysNotValidAfter+'</th>'
+                                               +'<th>'+value.uuid+'</th>'
+
+                                           +'</tr>'
+                           });
+                           result = result
+                                       +'</tbody>'
+                                   +'</table>'
+                               +'</div>'
+                           $('#kdms').html(result)
+                       }
+                       else
+                       {
+                           $('#kdms').html('No data ')
+                       }
+
+
+
+                   },
+                   error: function(response) {
+
+                   }
+           })
+
+       });
+    </script>
+
 
     <script>
 
@@ -247,17 +1130,18 @@
 
                     }
 
+
                         box +=
                                 '   <div class="card rounded border mb-2 left-side-item"' +
                                 '       data-side="left"   ' +
                                 '       data-auditorium="' + value.id_auditorium +'" ' +
-                                '       data-uuid="'+value.cpl_uuid +'"' +
+                                '       data-uuid="'+value.uuid +'"' +
                                 '       data-title="'+value.contentTitleText+'"' +
-                                '       data-time="'+value.Duration +'"  ' +
-                                '       data-time_seconds="'+value.Duration_seconds+ '"  ' +
+                                '       data-time="'+value.duration +'"  ' +
+                                '       data-time_seconds="'+value.duration_seconds+ '"  ' +
                                 '       data-time_Duration_frames="'+value.Duration_frames+ '"  ' +
                                 '       data-type_component="cpl"'+
-                                '       data-id="'+value.id_dcp+'"'+
+                                '       data-id="'+value.id+'"'+
                                 '       data-version="left_tab"'+
                                 '       data-type="'+ value.contentKind+'"' +
                                 '       data-editRate_denominator="'+ value.editRate_denominator+'"' +
@@ -287,7 +1171,7 @@
                                 '                           </span>\n' +
                                 '                          <span class="flat">'+value.soundChannelCount+' </span>\n' +
                                 '                          <span class="flat"> ST  </span>\n' +
-                                '                          <span class="cpl-details" data-uuid="urn:uuid:e83235b4-f50d-4f46-906f-2ce2cca1ba52" class="flat"> <i class="mdi mdi-magnify"> </i></span>\n' +
+                                '                          <i class="cpl-details infos_modal" id="'+value.id+'" class="flat" data-bs-toggle="modal" data-bs-target="#infos_modal"> <i class="mdi mdi-magnify"> </i></i>\n' +
                                 '                       </p>\n' +
                                 '                   </div>\n' +
                                 '              </div>\n' +
@@ -372,6 +1256,74 @@
             });
         });
 
+        $(document).on('dblclick', '#dragula-left .left-side-item', function (e) {
+            var clonedElement = $(this).clone();
+            console.log(clonedElement.data('type'))
+            if (clonedElement.data('type') === "Macros") {
+                let check = getCplSelected();
+                if (check == 1) {
+                    $(this).data('type');
+                    $('#titl_macro').html($(this).parent().data('title'));
+                    $('#id_macro_item').html($(this).parent().data('id'));
+                    $('#id_macro_item').attr('data-id', $(this).parent().data('id'));
+                    resetMacroTimeInputs();
+                    $("#macro_modal").modal('show');
+                } else {
+                    $("#empty_properties_cpl_model").modal('show');
+                }
+            }
+            else if(clonedElement.data('type') === "Pattern"){
+                console.log($(this).parent().parent().data('title'));
+                $('#pattern_title').val($(this).parent().parent().data('title'));
+                $("#pattern_modal").modal('show');
+            }
+
+            else if(clonedElement.data('type') === "SPL"){
+
+            }
+            else{
+
+                console.log(clonedElement.get(0))
+                modifyContentBeforeDrop(clonedElement.get(0));
+                $('#dragula-right').append(clonedElement);
+
+                // re-order items
+                var items =  $('#dragula-right').find('.left-side-item');
+                var startTime = 0;
+
+                for (var i = 0; i < items.length; i++) {
+                    var duration = parseInt(items[i].getAttribute('data-time_seconds'));
+                    items[i].setAttribute('data-starttime',   formatTime(startTime));
+                    var composition_start_time=   items[i].getAttribute('data-starttime');
+                    items[i].querySelector('.mb-0.text-muted.float-left').innerText = formatTime(startTime);
+                    startTime += duration;
+                    var composition_end_time=   startTime;
+                    // Process the macro_list within the current item if it exists
+                    var macroItems = items[i].querySelectorAll('.macro_item');
+                    if (macroItems.length > 0) {
+                        for (var j = 0; j < macroItems.length; j++) {
+                            var macroTime = macroItems[j].getAttribute('data-time');
+                            var macroKind = macroItems[j].getAttribute('data-offset');
+                            // Calculate the macro start time based on Kind
+                            var macroStartTime;
+                            if (macroKind === "Start") {
+                                macroStartTime = convertHMSToSeconds(composition_start_time) + convertHMSToSeconds(macroTime);
+                            } else if (macroKind === "End") {
+                                macroStartTime = composition_end_time - convertHMSToSeconds(macroTime);
+                            } else {
+                                // Handle other cases if needed
+                                macroStartTime = 0;
+                            }
+                            // Update the macro_time div with the calculated start time
+                            macroItems[j].querySelector('#macro_time').innerText = convertSecondsToHMS(macroStartTime);
+                        }
+                    }
+                }
+            }
+
+        });
+
+
     </script>
 
 
@@ -395,10 +1347,106 @@
 
         $(this).toggleClass("selected");
         });
-
-
     </script>
 
+
+
+<script>
+
+
+    $(document).on('click', '#reset_spl_builder', function () {
+        //$('#actual_spl_title').text("No SPL Selected , Create New One");
+    //  $('#id_spl_opened').text(0);
+        $("#dragula-right").empty();
+        // $('#id_spl_opened').attr('data-hfr', 0 );
+        // $('#id_spl_opened').attr('data-mod', "" );
+        // $('#id_spl_opened').attr('data-spl_uuid', 0 );
+        // prepareSortablReorder();
+    });
+    // click open (display spls list
+    $(document).on('click', '#open_spl_list', function () {
+        $("#spl-list").modal('show');
+        $("#order-listing").dataTable().fnDestroy();
+        $('#order-listing').DataTable({
+            // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "responsive": true,
+            "processing": true,
+            "serverSide": true,
+            // "iDisplayLength": 20,
+            "scrollY": "600px", // Set the height of the scrolling area
+            "scrollCollapse": true, // Enable scroll collapse
+            "ajax": 'system/controller_playlist_builder.php?action_control=get_spl_available',
+            'columnDefs': [
+                {
+                    'targets': 3,
+                    'searchable': false,
+                    'orderable': false,
+
+                    'className': 'dt-body-center',
+                    'render': function (data, type, row) {
+                        //+row[1]+ for getting parameters by position
+                        return ' <i class="btn btn-primary mdi mdi-tooltip-edit open_spl" data-uuid="'+row[2]+'"></i>' +
+                            '    <i class="btn btn-danger mdi   mdi-delete-forever" data-uuid="'+row[2]+'"></i>     '    ;
+                    }
+                }],
+        });
+
+    });
+
+
+    $(document).on('click', '.open_spl', function () {
+        var action_control = "open_spl";
+        var id_spl= $(this).data("uuid");
+
+        openSpl(id_spl);
+    });
+    // remove cpl right list
+    $(document).on('click', '.remove-cpl', function () {
+
+        $(this).parent().parent().parent().parent().parent().parent().remove();
+        // re-order items
+        var items =  $('#dragula-right').find('.left-side-item');
+        var startTime = 0;
+
+        for (var i = 0; i < items.length; i++) {
+            var duration = parseInt(items[i].getAttribute('data-time_seconds'));
+            items[i].setAttribute('data-starttime',   formatTime(startTime));
+            var composition_start_time=   items[i].getAttribute('data-starttime');
+            items[i].querySelector('.mb-0.text-muted.float-left').innerText = formatTime(startTime);
+            startTime += duration;
+            var composition_end_time=   startTime;
+            // Process the macro_list within the current item if it exists
+            var macroItems = items[i].querySelectorAll('.macro_item');
+            if (macroItems.length > 0) {
+                for (var j = 0; j < macroItems.length; j++) {
+                    var macroTime = macroItems[j].getAttribute('data-time');
+                    var macroKind = macroItems[j].getAttribute('data-offset');
+                    // Calculate the macro start time based on Kind
+                    var macroStartTime;
+                    if (macroKind === "Start") {
+                        macroStartTime = convertHMSToSeconds(composition_start_time) + convertHMSToSeconds(macroTime);
+                    } else if (macroKind === "End") {
+                        macroStartTime = composition_end_time - convertHMSToSeconds(macroTime);
+                    } else {
+                        // Handle other cases if needed
+                        macroStartTime = 0;
+                    }
+                    // Update the macro_time div with the calculated start time
+                    macroItems[j].querySelector('#macro_time').innerText = convertSecondsToHMS(macroStartTime);
+                }
+            }
+        }
+
+    });
+
+
+</script>
 @endsection
 
 @section('custom_css')

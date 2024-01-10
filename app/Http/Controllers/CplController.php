@@ -95,7 +95,7 @@ class CplController extends Controller
         $playlist_builder= $request->playlist_builder ;
         $macros = null ;
 
-        if( $lms == 'true')
+        if( $lms == 'true' )
         {
             $cpls =Lmscpl::with('location');
         }
@@ -107,9 +107,13 @@ class CplController extends Controller
 
         if(isset($location) &&  $location != 'null' )
         {
-            $location = Location::find($location) ;
-            $screens =$location->screens ;
-            $cpls =$cpls->where('location_id',$location->id);
+            if($location != 'all')
+            {
+                $location = Location::find($location) ;
+                $screens =$location->screens ;
+                $cpls =$cpls->where('location_id',$location->id);
+            }
+
         }
         else
         {
@@ -125,10 +129,25 @@ class CplController extends Controller
             $cpls =$cpls->where('screen_id',$screen);
         }
 
-        if(isset($playlist_builder) && $screen != 'null')
+        if(isset($playlist_builder) && $playlist_builder != 'null')
         {
+
+            if($location == 'all')
+            {
+                $location = null ;
+                $screens =null ;
+                $cpls =Lmscpl::with('location')->groupBy('uuid');
+               // dd($cpls->get()) ;
+               $macros = Macro::get() ;
+            }
+            else
+            {
+                $macros = Macro::where('location_id',$location->id)->get() ;
+            }
+
+
             $cpls = $cpls->orderBy('contentKind', 'ASC')->orderBy('contentTitleText', 'ASC') ;
-            $macros = Macro::where('location_id',$location->id)->get() ;
+
 
         }
         $cpls = $cpls->get() ;
