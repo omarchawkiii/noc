@@ -23,7 +23,7 @@
                                 <div class="col-md-6">
                                     <div class="row mb-3">
                                         <div class="col-xl-3">
-                                            <div class="input-group mb-2 mr-sm-2">
+                                            <div class="input-group">
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text"><i class="mdi mdi-home-map-marker"></i></div>
                                                 </div>
@@ -53,7 +53,7 @@
                                     </div>
                                     <div class="row mb-2">
                                         <div class="col-xl-5">
-                                            <div class="input-group mb-2 mr-sm-2">
+                                            <div class="input-group">
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text"><i class="mdi mdi-monitor"></i></div>
                                                 </div>
@@ -76,7 +76,7 @@
                                         </div>
 
                                         <div class="col-xl-7 ">
-                                            <div class="input-group mb-2 mr-sm-2 palyback-form-text">
+                                            <div class="input-group palyback-form-text">
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text"><i class="mdi mdi-calendar-clock"></i>
                                                     </div>
@@ -94,7 +94,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-5">
-                                    <div class="row mb-3">
+                                    <div class="row mb-4">
                                         <div class="col-xl-12 ">
 
                                             <button type="button" class="btn btn-success btn-icon-text" id="reset_spl_builder">
@@ -118,14 +118,12 @@
 
                                     <div class="row mb-2">
                                         <div class="col-xl-12 ">
-                                            <div class="input-group mb-2 p-2 mr-sm-2 palyback-form-text">
-
-
+                                            <div class="input-group p-2 mr-sm-2 palyback-form-text">
                                                 <span class=" palyback-text">No Playlist Selected</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div id="dragula-right" class="py-2">
+                                    <div id="dragula-right" class="py-2  preview-list multiplex">
 
                                     </div>
                                 </div>
