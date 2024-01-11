@@ -38,9 +38,6 @@
                                             </div>
                                         </div>
                                         <div class="col-xl-9 ">
-                                            <button type="button" class="btn btn-success btn-icon-text">
-                                                <i class="mdi mdi-check-all btn-icon-prepend"></i> Display Multiplex
-                                            </button>
                                             <button type="button" class="btn btn-info btn-icon-text ">
                                                 <i class="mdi mdi-refresh btn-icon-prepend"></i> Refresh
                                             </button>
@@ -81,8 +78,7 @@
                                                     <div class="input-group-text"><i class="mdi mdi-calendar-clock"></i>
                                                     </div>
                                                 </div>
-                                                <input type="text" class="form-control" id=""
-                                                    placeholder="Search ">
+                                                <input type="text" class="form-control"  placeholder="Search" id="search-dragula-left">
 
                                             </div>
                                         </div>
@@ -255,6 +251,214 @@
                         </div>
                     </div>
                 <!--end modal-content-->
+                </div>
+            </div>
+            <div class="modal fade show" id="macro-modal" tabindex="-1" role="dialog" aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="ModalLabel">Edit Time Code   </h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <p class="text-center">The automation cue will be attached to the elements time code </p>
+                                <h3 class="text-center">PreShow2DFlat XYZ </h3>
+                                <p class="text-center">00 : 00 : 00</p>
+                            </div>
+
+                                <div class="row mt-2">
+                                    <div class="form-group">
+                                        <label>Offset </label>
+                                        <div class="form-check mt-0">
+                                            <label class="form-check-label">
+                                                <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios1" value=""> From the beginning of the clip  <i class="input-helper"></i><i class="input-helper"></i></label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios2" value="option2" checked=""> From the end of the clip <i class="input-helper"></i><i class="input-helper"></i></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="Hours">Hours</label>
+                                            <input type="number" class="form-control" id="Hours" placeholder="Hours">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="Minutes">Minutes</label>
+                                            <input type="number" class="form-control" id="Minutes" placeholder="Minutes">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="Seconds">Seconds</label>
+                                            <input type="number" class="form-control" id="Seconds" placeholder="Seconds">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-2">
+                                    <div class="col">
+
+                                        <button type="submit" class="btn btn-primary me-2" id="confirm_add_macro">Confirm</button>
+                                        <button class="btn btn-dark">Cancel</button>
+                                    </div>
+                                </div>
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!--    macro  modal -->
+            <div class="modal fade " id="no-cpl-selected"tabindex="-1" role="dialog"aria-labelledby="delete_client_modalLabel" aria-hidden="true">>
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="ModalLabel">Please Select Playlist Item   </h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <h4 class="text-center"> No CPL Selected!</h4>
+                        </div>
+                        <div class="modal-footer" >
+                            <button  type="button" style="margin: auto" class="btn btn-secondary btn-fw close" data-bs-dismiss="modal" aria-label="Close">OK</button>
+
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!--   macro modal-->
+            <div class="modal fade " id="macro_modal"  tabindex="-1" role="dialog"
+                aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="ModalLabel">Edit Time Code </h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <p class="text-center">The automation cue will be attached to the elements time code </p>
+                                <h3 class="text-center">PreShow2DFlat XYZ </h3>
+                                <p class="text-center">00 : 00 : 00</p>
+                            </div>
+                            <form>
+                                <div class="row mt-2">
+                                    <div class="form-group">
+                                        <label>Offset </label>
+                                        <div class="form-check mt-0">
+                                            <label class="form-check-label">
+                                                <input type="radio" class="form-check-input" name="optionsRadios"
+                                                    id="optionsRadios1" value=""> From the beginning of the clip <i
+                                                        class="input-helper"></i><i class="input-helper"></i></label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input type="radio" class="form-check-input" name="optionsRadios"
+                                                    id="optionsRadios2" value="option2" checked=""> From the end of the clip
+                                                <i class="input-helper"></i><i class="input-helper"></i></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="Hours">Hours</label>
+                                            <input type="number" class="form-control" id="Hours" placeholder="Hours">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="Minutes">Minutes</label>
+                                            <input type="number" class="form-control" id="Minutes" placeholder="Minutes">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="Seconds">Seconds</label>
+                                            <input type="number" class="form-control" id="Seconds" placeholder="Seconds">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-2">
+                                    <div class="col">
+
+                                        <button type="submit" class="btn btn-primary me-2">Submit</button>
+                                        <button class="btn btn-dark">Cancel</button>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!--    pattern modal -->
+            <div class="modal fade " id="pattern_modal"  tabindex="-1" role="dialog"
+                aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title font-weight-bold" id="ModalLabel">
+                            <i class="mdi mdi-format-indent-increase" style="position: relative;top: 3px;font-size: 22px;color: #4b99ff;"></i>
+                                Pattern Setup
+                            </h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <input type="hidden"     id="pattern_title"  >
+
+                                <h3 id="display_pattern_title" style="text-align: center"> </h3>
+                                <p class="text-center font-weight-bold" style="font-size: 16px!important;">Output pattern duration:  <span id="pattern_in_seconds"></span> seconds   </p>
+                            </div>
+
+                                <div class="row mt-2">
+                                    <div class="col">
+                                        <div class="form-group" >
+                                            <label for="pattern_Minutes"  class="font-weight-bold" style="font-size: 17px!important">Minutes</label>
+                                            <input type="number" class="form-control"  style="font-size: 17px!important" id="pattern_Minutes" value="0">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="pattern_Seconds" class="font-weight-bold" style="font-size: 17px!important">Seconds</label>
+                                            <input type="number" class="form-control" style="font-size: 17px!important"  id="pattern_Seconds" value="0">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-2" style="text-align: center">
+                                    <div class="col">
+                                        <button type="button" class="btn btn-primary btn-fw" id="confirm_add_pattern">Confirm</button>
+                                        <button  type="button" class="btn btn-secondary btn-fw close" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                                    </div>
+                                </div>
+
+                        </div>
+
+                    </div>
                 </div>
             </div>
 
@@ -1137,7 +1341,7 @@
                                 '       data-title="'+value.contentTitleText+'"' +
                                 '       data-time="'+value.duration +'"  ' +
                                 '       data-time_seconds="'+value.duration_seconds+ '"  ' +
-                                '       data-time_Duration_frames="'+value.Duration_frames+ '"  ' +
+                                '       data-time_Duration_frames="'+value.durationEdits+ '"  ' +
                                 '       data-type_component="cpl"'+
                                 '       data-id="'+value.id+'"'+
                                 '       data-version="left_tab"'+
@@ -1146,6 +1350,7 @@
                                 '       data-editRate_numerator="'+ value.editRate_numerator+'"' +
                                 '       data-id_server="'+ value.id_server+'"' +
                                 '       data-source="'+ value.source+'"' +
+                                '       data-need_kdm="'+ value.kdm_required+'"' +
                                 '>\n' +
                                 '       <div class="card-body  "  >\n' +
                                 '            <div>\n' +
@@ -1237,11 +1442,13 @@
 
         }
 
+        // filter files by kind
         $(document).on('change', '#filter_type', function (event) {
             var criteria = $(this).val();
 
             if (criteria == 'all') {
                 $('.left-side-item').show();
+                $('.title-kind').show();
                 return;
             }
             $('#dragula-left .left-side-item').each(function (i, option) {
@@ -1252,24 +1459,51 @@
                     $(this).hide();
                 }
             });
+            $('#dragula-left .title-kind').each(function (i, option) {
+                if ($(this).data("type") == criteria) {
+
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
         });
+        // search  content left side
+        var search_content = document.getElementById('search-dragula-left');
+
+        search_content.onkeyup = function () {
+            var searchTerms = $(this).val();
+            $('#dragula-left .left-side-item ').each(function () {
+
+                var hasMatch = searchTerms.length == 0 ||
+                    $(this).text().toLowerCase().indexOf(searchTerms.toLowerCase()) > 0;
+                $(this).toggle(hasMatch);
+
+            });
+        }
 
         $(document).on('dblclick', '#dragula-left .left-side-item', function (e) {
             var clonedElement = $(this).clone();
-            console.log(clonedElement.data('type'))
+
             if (clonedElement.data('type') === "Macros") {
-                let check = getCplSelected();
-                if (check == 1) {
-                    $(this).data('type');
-                    $('#titl_macro').html($(this).parent().data('title'));
-                    $('#id_macro_item').html($(this).parent().data('id'));
-                    $('#id_macro_item').attr('data-id', $(this).parent().data('id'));
-                    resetMacroTimeInputs();
-                    $("#macro_modal").modal('show');
+
+                var selected_item = $('#dragula-right .left-side-item.selected-item');
+                console.log(selected_item.length)
+                if (selected_item.length === 0) {
+                    $("#no-cpl-selected").modal('show');
                 } else {
-                    $("#empty_properties_cpl_model").modal('show');
+                    $("#macro-modal").modal('show');
                 }
-            }
+
+                // if (check == 1) {
+                //     $(this).data('type');
+                //     $('#titl_macro').html($(this).parent().data('title'));
+                //     $('#id_macro_item').html($(this).parent().data('id'));
+                //     $('#id_macro_item').attr('data-id', $(this).parent().data('id'));
+                //     resetMacroTimeInputs();
+                //     $("#macro_modal").modal('show');
+                // }
+                }
             else if(clonedElement.data('type') === "Pattern"){
                 console.log($(this).parent().parent().data('title'));
                 $('#pattern_title').val($(this).parent().parent().data('title'));
@@ -1443,7 +1677,75 @@
 
     });
 
+    // select item right side list
+    $('#dragula-right').on('click', '.left-side-item', function () {
+        // Remove 'selected' class from all items
+        $('.left-side-item').removeClass('selected-item');
+        $('.mb-0.text-muted.float-left').removeClass("color-white");
 
+        // Add 'selected' class to the clicked item
+        $(this).toggleClass('selected-item');
+        $(this).find('.mb-0.text-muted.float-left').addClass("color-white");
+
+    });
+
+    $(document).on('click', '#confirm_add_macro',function (){
+        var macro_box='<div class="card-body  " style="\n' +
+            '    margin-top: 40px;\n' +
+            '"><div class="media-body" style="\n' +
+            '    width: 100%;\n' +
+            '    height: 39px;\n' +
+            '    border: 1px solid #ffffff96;\n' +
+            '    margin: 4px;\n' +
+            '    padding: 3px;\n' +
+            '    padding-left: 14px;\n' +
+            '    font-size: 20px;\n' +
+            '    font-weight: bold;\n' +
+            '    line-height: 1;\n' +
+            '    background: black;\n' +
+            '">\n' +
+            '                       aaaa <p class="mb-0 text-muted float-right">\n' +
+            ' \n' +
+            '        <span class=" ">\n' +
+            '            <i class="btn btn-primary  mdi mdi-magnify custom-search  cpl-details" data-uuid="urn:uuid:e83235b4-f50d-4f46-906f-2ce2cca1ba52" data-need_kdm="0" style="\n' +
+            '    font-size: 18px;\n' +
+            '    /* padding: 2px; */\n' +
+            '"></i>\n' +
+            '            <i class="btn btn-danger mdi mdi-delete-forever remove-cpl custom-search" style="\n' +
+            '    font-size: 18px;\n' +
+            '"></i>\n' +
+            '        </span></p>\n' +
+            '                        </div>\n' +
+            '<div class="media-body" style="\n' +
+            '    width: 100%;\n' +
+            '    height: 30px;\n' +
+            '    margin: 4px;\n' +
+            '    border: 1px solid #ffffff96;\n' +
+            '    padding-left: 14px;\n' +
+            '">\n' +
+            '                       bbbbb\n' +
+            '                        </div>\n' +
+            '<div class="media-body" style="\n' +
+            '    width: 100%;\n' +
+            '    height: 30px;\n' +
+            '    border: 1px solid #ffffff96;\n' +
+            '    margin: 4px;\n' +
+            '    padding-left: 14px;\n' +
+            '">\n' +
+            '                       ccccc\n' +
+            '                        </div>\n' +
+            '                   </div>';
+        var selectedCard = $('#dragula-right .left-side-item.selected-item');
+        console.log(selectedCard);
+        // Check if selectedCard is not empty
+        if (selectedCard.length > 0) {
+            // Get the last .media-body element inside the selected item
+            var lastMediaBody = selectedCard.find('.media-body:last');
+
+            // Append the macro_box content after the last .media-body
+            lastMediaBody.after(macro_box);
+        }
+    });
 </script>
 @endsection
 
@@ -1474,30 +1776,39 @@
         }
 
         .flat {
-
+            background: radial-gradient(black, transparent);
             border: 1px solid #485968;
-            padding: 6px;
-            color: white;
+            padding: 7px;
+            color: #fff;
             border-radius: 5px;
             margin-right: 3px;
-            font-size: 12px;
+            font-family: sans-serif;
+            font-size: 16px;
+            font-weight: bold;
 
         }
-        .title-kind{
+
+        .custom-check {
+            cursor: pointer;
+        }
+
+        .title-kind {
             text-align: center;
             font-size: 17px;
             font-weight: bold;
             padding: 7px;
-            border: 1px solid white!important;
+
             background: black;
             margin-bottom: 7px;
         }
+
         .drag-over {
             border: 2px dashed #007BFF; /* Example: Add a dashed border when dragging over */
-            background-color: #f0f0f0;  /* Example: Add a light background color when dragging over */
+            background-color: #f0f0f0; /* Example: Add a light background color when dragging over */
             /* Add any other styling you want for the drop area */
         }
-        .cpl_need_kdm{
+
+        .cpl_need_kdm {
             font-size: 26px;
             color: #36ffb9;
             margin-left: 13px;
@@ -1507,6 +1818,67 @@
         {
             border : 1px solid #2c2e33 ;
         }
+        .cpl-details {
+            font-size: 22px;
+            color: white;
+            text-shadow: 0px 0px #ffffff;
+            font-weight: bold;
 
+            cursor: pointer;
+        }
+
+        .remove-cpl {
+            font-size: 22px;
+            color: white;
+            text-shadow: 0px 0px #ffffff;
+            font-weight: bold;
+
+
+            cursor: pointer;
+        }
+
+        .close-cpl-details {
+            border: solid #5f95cce0;
+            padding: 8px;
+            line-height: 0;
+        }
+
+        .custom-search {
+            font-size: 23px;
+
+            padding: 1px 4px 1px 4px;
+        }
+
+        .table th, .jsgrid .jsgrid-table th, .table td, .jsgrid .jsgrid-table td {
+            vertical-align: middle;
+
+            line-height: 1;
+            white-space: nowrap;
+            padding: 0.9375rem;
+
+
+            font-size: 16px;
+            color: white;
+        }
+
+        #Properties {
+            height: 500px;
+        }
+
+        #spls {
+            height: 500px;
+        }
+
+        #kdms {
+            height: 500px;
+        }
+        .selected-item{
+            background:  black;
+            box-shadow: 0 0 10px rgb(231 221 221 / 50%);
+            border: 3px solid #fff2f2!important;
+        }
+        .color-white{
+            color: white!important;
+        }
     </style>
 @endsection

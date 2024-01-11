@@ -58,6 +58,9 @@ class LmscplController extends Controller
                             'aspect_Ratio' => $cpl['type_ScreenAspectRatio']['Aspect_Ratio'],
                             'duration_seconds' => $cpl['Duration_seconds'],
                             'duration' => $cpl['Duration'],
+                            'editRate_numerator'=> $cpl['editRate_numerator'] ,
+                            'editRate_denominator' => $cpl['editRate_denominator'] ,
+                            'kdm_required' => $cpl['kdm_required'] ,
                             'location_id'=> $location->id,
 
                         ]);

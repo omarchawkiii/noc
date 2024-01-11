@@ -36,6 +36,9 @@ class Lmscpl extends Model
         'aspect_Ratio',
         'duration_seconds',
         'duration',
+        'editRate_numerator',
+        'editRate_denominator',
+        'kdm_required',
 
     ];
 
