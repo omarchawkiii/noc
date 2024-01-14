@@ -89,65 +89,47 @@
                                        <p class="text-center"> Please Select Location </p>
                                     </div>
                                 </div>
-                                <div class="col-md-5">
+                                <div class="col-md-6">
                                     <div class="row mb-4">
                                         <div class="col-xl-12 ">
 
                                             <button type="button" class="btn btn-success btn-icon-text" id="reset_spl_builder">
                                                 <i class="mdi mdi-plus btn-icon-prepend"></i> New
                                             </button>
-                                            <button type="button" class="btn btn-primary btn-icon-text">
+                                            <button type="button" class="btn btn-primary btn-icon-text"  id="display_spl_properties">
                                                 <i class="mdi mdi-content-save btn-icon-prepend"></i> Save
                                             </button>
 
-                                            <button type="button" class="btn btn-warning btn-icon-text">
+                                            <button type="button" class="btn btn-warning btn-icon-text" id="open_spl_list">
                                                 <i class="mdi mdi-new-box  btn-icon-prepend"></i> Open
                                             </button>
-                                            <button type="button" class="btn btn-info btn-icon-text">
+                                            <button type="button" class="btn btn-info btn-icon-text" id="edit_spl_properties">
                                                 <i class="mdi mdi-wrench btn-icon-prepend"></i> Propperties
                                             </button>
-                                            <button type="button" class="btn btn-danger btn-icon-text">
-                                                <i class="mdi mdi-delete-forever btn-icon-prepend"></i> Delete
-                                            </button>
+
                                         </div>
                                     </div>
 
                                     <div class="row mb-2">
-                                        <div class="col-xl-12 ">
-                                            <div class="input-group p-2 mr-sm-2 palyback-form-text">
-                                                <span class=" palyback-text">No Playlist Selected</span>
+                                        <div class="col-xl-10 ">
+                                            <div class="input-group mb-2 p-2 mr-sm-2 palyback-form-text">
+                                                <span class="palyback-text">No Playlist Selected</span>
                                             </div>
+                                        </div>
+                                        <div class="col-xl-2">
+                                            <a href="#" id="add_segment">
+                                                <i class="btn btn-inverse-warning  mdi mdi-cube-outline" style=" margin-top: 2px;"></i>
+                                            </a>
+                                            <a href="#" id="show_marker_modal">
+                                                <i class="btn btn-inverse-success  mdi mdi-map-marker" style=" margin-top: 2px;"></i>
+                                            </a>
                                         </div>
                                     </div>
                                     <div id="dragula-right" class="py-2  preview-list multiplex">
 
                                     </div>
                                 </div>
-                                <div class="col-md-1" style="padding-top: 29px;">
-                                    <ul class="right-list " style="    list-style: none;font-size: 21px;">
 
-                                        <li class="root-level right_icon tooltipIcons" style="margin-top: 10px;">
-                                            <a href="#" id="segment">
-
-                                                <i class="mdi mdi-cube-outline"></i>
-
-
-                                            </a>
-                                        </li>
-                                        <li class="root-level right_icon tooltipIcons" style="margin-top: 10px;">
-
-                                            <a href="#" id="show_marker_modal">
-
-                                                <i class="mdi mdi-map-marker"></i>
-
-
-                                            </a>
-                                        </li>
-
-
-                                    </ul>
-
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -343,8 +325,7 @@
             </div>
 
             <!--   macro modal-->
-            <div class="modal fade " id="macro_modal"  tabindex="-1" role="dialog"
-                aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+            <div class="modal fade show" id="macro-modal" tabindex="-1" role="dialog" aria-labelledby="delete_client_modalLabel"aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -355,58 +336,75 @@
                         </div>
                         <div class="modal-body">
                             <div class="row">
-                                <p class="text-center">The automation cue will be attached to the elements time code </p>
-                                <h3 class="text-center">PreShow2DFlat XYZ </h3>
-                                <p class="text-center">00 : 00 : 00</p>
+                                <p class="text-center" style="font-size: 17px;">The automation cue will be attached to theelements time code </p>
+                                <h3 class="text-center" id="macro_title" style="font-size: 17px;">PreShow2DFlat XYZ </h3>
+                                <input type="hidden" value="" id="macro_command">
+                                <input type="hidden" value="" id="macro_title_val">
+                                <p class="text-center" style="font-size: 17px;" id="macro_time_hms">00 : 00 : 00</p>
                             </div>
-                            <form>
-                                <div class="row mt-2">
+
+                            <div class="row mt-2">
+                                <div class="form-group">
+                                    <label style="font-size: 17px;">Offset </label>
+                                    <div class="form-check mt-0">
+                                        <label class="form-check-label" style="font-size: 17px;">
+                                            <input type="radio"
+                                                class="form-check-input Offset"
+                                                name="Offset_macro"
+                                                id="start_macro"
+                                                value="Start"> From the beginning of the clip
+                                            <i class="input-helper "></i><i class="input-helper"></i>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="form-check-label" style="font-size: 17px;">
+                                            <input type="radio"
+                                                class="form-check-input Offset"
+                                                name="Offset_macro"
+                                                id="end_macro"
+                                                value="End"
+                                                checked=""> From the end of the clip
+                                            <i class="input-helper "></i>
+                                            <i class="input-helper"></i>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col">
                                     <div class="form-group">
-                                        <label>Offset </label>
-                                        <div class="form-check mt-0">
-                                            <label class="form-check-label">
-                                                <input type="radio" class="form-check-input" name="optionsRadios"
-                                                    id="optionsRadios1" value=""> From the beginning of the clip <i
-                                                        class="input-helper"></i><i class="input-helper"></i></label>
-                                        </div>
-                                        <div class="form-check">
-                                            <label class="form-check-label">
-                                                <input type="radio" class="form-check-input" name="optionsRadios"
-                                                    id="optionsRadios2" value="option2" checked=""> From the end of the clip
-                                                <i class="input-helper"></i><i class="input-helper"></i></label>
-                                        </div>
+                                        <label for="Hours_macro" style="font-size: 17px;">Hours</label>
+                                        <input type="number" style="font-size: 17px;" class="form-control" id="Hours_macro"
+                                            value="0">
                                     </div>
                                 </div>
-                                <div class="row mt-2">
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <label for="Hours">Hours</label>
-                                            <input type="number" class="form-control" id="Hours" placeholder="Hours">
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <label for="Minutes">Minutes</label>
-                                            <input type="number" class="form-control" id="Minutes" placeholder="Minutes">
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <label for="Seconds">Seconds</label>
-                                            <input type="number" class="form-control" id="Seconds" placeholder="Seconds">
-                                        </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="Minutes_macro" style="font-size: 17px;">Minutes</label>
+                                        <input type="number" style="font-size: 17px;" class="form-control" id="Minutes_macro"
+                                            value="0">
                                     </div>
                                 </div>
-
-                                <div class="row mt-2">
-                                    <div class="col">
-
-                                        <button type="submit" class="btn btn-primary me-2">Submit</button>
-                                        <button class="btn btn-dark">Cancel</button>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="Seconds_macro" style="font-size: 17px;">Seconds</label>
+                                        <input type="number" style="font-size: 17px;" class="form-control" id="Seconds_macro"
+                                            value="0">
                                     </div>
                                 </div>
+                            </div>
 
-                            </form>
+                            <div class="row mt-2">
+                                <div class="col" style="text-align: center">
+
+                                    <button type="button" class="btn btn-primary btn-fw" id="confirm_add_macro">Confirm</button>
+                                    <button class="btn btn-secondary btn-fw close" data-bs-dismiss="modal"
+                                            aria-label="Close">Cancel
+                                    </button>
+                                </div>
+                            </div>
+
+
                         </div>
 
                     </div>
@@ -462,12 +460,99 @@
                 </div>
             </div>
 
+            <div class="modal fade show" id="spl-properties-modal" tabindex="-1" role="dialog" aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="ModalLabel">Save New Playlist Properties</h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="tab-pane fade active show" id="home-1" role="tabpanel" aria-labelledby="home-tab">
+                                <div class="row">
+                                    <div class="col-md-12 ">
+                                        <div class="form-group custom-form-group">
+                                            <label>SPL Title</label>
+                                            <input type="text" class="form-control" id="spl_title" aria-label="SPL Title">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12 ">
+                                        <div class="form-group custom-form-group">
+                                            <label>Display Mode</label>
+                                            <select class="form-control" id="display_mode">
+                                                <option>2D</option>
+                                                <option>3D</option>
+                                                <option>4K</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="form-check">
+                                            <label class="form-check-label hfr-label">
+                                                <input type="checkbox" style=" opacity: 2; font-size: 28px;"
+                                                    class="form-check-input " id="spl_properties_hfr"> HFR <i
+                                                        class="input-helper"></i><i class="input-helper"></i></label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col" style="text-align: center">
+                                    <button type="button" class="btn btn-primary btn-fw" id="save_new_spl">Confirm</button>
+                                    <button class="btn btn-secondary btn-fw close" data-bs-dismiss="modal"
+                                            aria-label="Close">Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class=" modal fade " id="spl-list" tabindex="-1" role="dialog"  aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered  modal-xl">
+                    <div class="modal-content border-0">
+                        <h5>Playlists Available on NOC</h5>
+                        <div class="modal-header p-4 pb-0">
+                            <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center p-4">
+                            <div class="" id="nocspls_content" >
+                                <div class="">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Title</th>
+                                                <th>Creation Date</th>
+                                                <th>UUID </th>
+                                                <th>Actions</th>
+
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                      </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <!--end modal-content-->
+                </div>
+            </div>
+
+
 @endsection
 
 @section('custom_script')
     <script src="{{ asset('assets/vendors/dragula/dragula.min.js') }}"></script>
     <script src="{{ asset('assets/js/dragula.js') }}"></script>
-
 
 
     <script>
@@ -893,7 +978,72 @@
             })
         }
 
+        function uuidv4()
+        {
+            return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+                (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+            );
+        }
 
+        function reorderMacroList(macroList)
+        {
+            // Get all the media-body elements within the container
+                var macroBoxes = Array.from(macroList.querySelectorAll('.media-body.macro-box'));
+
+            // Sort the media-body elements based on the text content of the target element
+                macroBoxes.sort(function(a, b) {
+                    var timeA = a.querySelector('.mb-0.text-muted.float-left').innerText;
+                    var timeB = b.querySelector('.mb-0.text-muted.float-left').innerText;
+                    // Assuming the time format is HH:mm:ss, you may need to modify the comparison logic accordingly
+                    return timeA.localeCompare(timeB);
+                });
+
+            // Clear the existing content in the container
+                macroList.innerHTML = '';
+
+            // Append the sorted media-body elements back to the container
+                macroBoxes.forEach(function(box) {
+                    macroList.appendChild(box);
+                });
+        }
+        function extractEditRateValues(editRate)
+        {
+            var editRateArray = editRate.split(" ");
+            var editRate_numerator = editRateArray[0];
+            var editRate_denominator = editRateArray[1];
+
+            return [editRate_numerator, editRate_denominator];
+        }
+
+        function setSplOpenedData(capabilities) {
+            const obj = { "capabilities": capabilities };
+            $('#id_spl_opened').attr('data-hfr', 0);
+            $('#id_spl_opened').attr('data-mod', "2D");
+            if (typeof obj.capabilities === 'object' && obj.capabilities.hasOwnProperty('capability1') && obj.capabilities.capability1 === null) {
+                $('#id_spl_opened').attr('data-mod', "2D");
+            } else if (Object.keys(obj.capabilities).length === 0) {
+
+                $('#id_spl_opened').attr('data-mod', "2D");
+            } else {
+                for (const key in obj.capabilities) {
+                    if (obj.capabilities.hasOwnProperty(key)) {
+                        const capability = obj.capabilities[key];
+
+                        if (capability[0] === "HFR_CONTENT") {
+                            $('#id_spl_opened').attr('data-hfr', 1);
+                        }
+                        if (capability[0] === "4K_CONTENT") {
+
+                            $('#id_spl_opened').attr('data-mod', "4k");
+                        }
+                        if (capability[0] === "STEREOSCOPIC_CONTENT") {
+                            $('#id_spl_opened').attr('data-mod', "3D");
+                            $("#spl_properties_display_mode").val("3D");
+                        }
+                    }
+                }
+            }
+        }
 
         $(document).on('click', '.infos_modal', function () {
 
@@ -1318,115 +1468,122 @@
                 method: 'GET',
                 success:function(response)
                 {
-
                     $.each(response.cpls, function( index, value ) {
 
                         if (value.contentKind.localeCompare(box_kind) == 0) {
-                        box_kind = value.contentKind;
-                    } else {
-                        box_kind = value.contentKind;
-                        box += '<div class=" filtered  div_list title-kind  "   ' +
-                            '        data-type="' + value.contentKind + '">' + value.contentKind + '  </div>';
-                    }
-                    if (value.contentKind.match(/^(SPL|Automation|Trigger|Cues|Pattern)$/)) {
+                                box_kind = value.contentKind;
+                            } else {
+                                box_kind = value.contentKind;
+                                box += '<div class=" filtered  div_list title-kind  "   ' +
+                                    '        data-type="' + value.contentKind + '">' + value.contentKind + '  </div>';
+                            }
+                            if (value.contentKind.match(/^(SPL|Automation|Trigger|Cues|Pattern)$/)) {
 
-                    }
-
-
-                        box +=
+                            }
+                            box +=
                                 '   <div class="card rounded border mb-2 left-side-item"' +
                                 '       data-side="left"   ' +
-                                '       data-auditorium="' + value.id_auditorium +'" ' +
-                                '       data-uuid="'+value.uuid +'"' +
-                                '       data-title="'+value.contentTitleText+'"' +
-                                '       data-time="'+value.duration +'"  ' +
-                                '       data-time_seconds="'+value.duration_seconds+ '"  ' +
-                                '       data-time_Duration_frames="'+value.durationEdits+ '"  ' +
-                                '       data-type_component="cpl"'+
-                                '       data-id="'+value.id+'"'+
-                                '       data-version="left_tab"'+
-                                '       data-type="'+ value.contentKind+'"' +
-                                '       data-editRate_denominator="'+ value.editRate_denominator+'"' +
-                                '       data-editRate_numerator="'+ value.editRate_numerator+'"' +
-                                '       data-id_server="'+ value.id_server+'"' +
-                                '       data-source="'+ value.source+'"' +
-                                '       data-need_kdm="'+ value.kdm_required+'"' +
-                                '>\n' +
+                                '       data-auditorium="' + value.id_auditorium + '" ' +
+                                '       data-uuid="' + value.cpl_uuid + '"' +
+                                '       data-title="' + value.contentTitleText + '"' +
+                                '       data-time="' + value.Duration + '"  ' +
+                                '       data-time_seconds="' + value.duration_seconds + '"  ' +
+                                '       data-time_Duration_frames="' + value.durationEdits + '"  ' +
+                                '       data-type_component="cpl"' +
+                                '       data-id="' + value.id_dcp + '"' +
+                                '       data-version="left_tab"' +
+                                '       data-type="' + value.contentKind + '"' +
+                                '       data-editRate_denominator="' + value.editRate_denominator + '"' +
+                                '       data-editRate_numerator="' + value.editRate_numerator + '"' +
+                                '       data-id_server="' + value.id_server + '"' +
+                                '       data-source="' + value.source + '"' +
+                                '       data-need_kdm="' + ((value.pictureEncryptionAlgorithm == "None" || value.pictureEncryptionAlgorithm == 0) ? 0 : 1) + '"' +
+                                '> ' +
                                 '       <div class="card-body  "  >\n' +
-                                '            <div>\n' +
+
                                 '                 <div class="media-body  ">\n' +
-                                '                      <h6 class="mb-1"  style="color:'+
-                                                        (value.type === "Flat" ? "#52d4f7" :
-                                                        (value.type === "Scope" ? "#00d25b" : "white"))
-                                +'">'+value.contentTitleText+
-                                ( (value.pictureEncryptionAlgorithm=="None" || value.pictureEncryptionAlgorithm== 0 ) ?" ": "<i class=\"mdi mdi-lock-outline  cpl_need_kdm\" aria-hidden=\"true\"></i>") +
+                                '                      <h6 class="mb-1"  style="font-size: 17px;color:' +
+                                (value.type === "Flat" ? "#52d4f7" :
+                                    (value.type === "Scope" ? "#00d25b" : "white"))
+                                + '">' + value.contentTitleText +
+                                ((value.pictureEncryptionAlgorithm == "None" || value.pictureEncryptionAlgorithm == 0) ? " " : "<i class=\"mdi mdi-lock-outline  cpl_need_kdm\" aria-hidden=\"true\"></i>") +
                                 '</h6>\n' +
                                 '                  </div>\n' +
                                 '                  <div class="media-body">\n' +
-                                '                       <p class="mb-0 text-muted float-left">'+ value.duration + ' Subtitle, VI, HI, DBox    </p>\n' +
+                                '                       <p class="mb-0 text-muted float-left">' + formatDurationToHMS(value.duration_seconds) + ' <span class="detail-cpl">  Subtitle, VI, HI, DBox </span>   </p>\n' +
                                 '                       <p class="mb-0 text-muted float-right">\n' +
                                 '                          <span class="icon-prop-cpl">' +
-                                                            (value.is_3D == 1?'3D':'2D')+
+                                (value.is_3D == 1 ? '3D' : '2D') +
                                 '                          </span>\n' +
                                 '                          <span class="flat">  ' +
-                                                            (value.aspect_Ratio=="unknown"? value.type
-                                                                : value.aspect_Ratio+' '+value.cinema_DCP  )+
+                                (value.Aspect_Ratio == "unknown" ? value.type
+                                    : value.Aspect_Ratio + ' ' + value.Cinema_DCP) +
                                 '                           </span>\n' +
-                                '                          <span class="flat">'+value.soundChannelCount+' </span>\n' +
+                                '                          <span class="flat">' + value.soundChannelCount + ' </span>\n' +
                                 '                          <span class="flat"> ST  </span>\n' +
-                                '                          <i class="cpl-details infos_modal" id="'+value.id+'" class="flat" data-bs-toggle="modal" data-bs-target="#infos_modal"> <i class="mdi mdi-magnify"> </i></i>\n' +
+                                '                          <span class="cpl-details"  ' +
+                                '                                data-uuid="' + value.cpl_uuid + '"' +
+                                '                                data-need_kdm="' + ((value.pictureEncryptionAlgorithm == "None" || value.pictureEncryptionAlgorithm == 0) ? 0 : 1) + '"' +
+                                '                            > <i class="btn btn-primary  custom-search mdi mdi-magnify"> </i></span>\n' +
                                 '                       </p>\n' +
-                                '                   </div>\n' +
+                                '                    </div> ' +
                                 '              </div>\n' +
-                                '       </div>\n' +
+                                '              <div class="card-body macro-list hide_div"></div> ' +
+                                '              <div class="card-body marker-list hide_div"></div>' +
+
                                 '   </div>';
-                            });
-
-                    box += '<div class=" filtered  div_list   title-kind  " data-type="Pattern "> Pattern   </div>';
-                        box += '' +
-                            '<div class="list-group-item div_list card rounded border mb-2 left-side-item" ' +
-                            '         data-side="left" ' +
-                            '         data-type="Pattern" ' +
-                            '         data-version="left_tab"'+
-                            '         data-title="Black"  >' +
-                            '        <span></span>'+
-                            '        <div class="title-content"> Black <i class="fa fa-arrow-circle-right icon_drag_to_left" aria-hidden="true"  ></i></div>' +
-                            '</div>';
-                        box +=
-                            '<div class="list-group-item div_list card rounded border mb-2 left-side-item " ' +
-                            '         data-side="left" ' +
-                            '         data-type="Pattern" ' +
-                            '         data-version="left_tab"'+
-                            '         data-title="Black 3D">' +
-                            '      <div class="title-content"> ' +
-                            '            <span class="icon_pattern">3D</span>' +
-                            '            Black 3D <i class="fa fa-arrow-circle-right icon_drag_to_left" aria-hidden="true"  ></i>' +
-                            '      </div>' +
-                            '</div>';
-                        box +=
-                            '<div class="list-group-item div_list card rounded border mb-2 left-side-item" ' +
-                            '         data-side="left" ' +
-                            '         data-type="Pattern" ' +
-                            '         data-version="left_tab"'+
-                            '         data-title="Black 3D 48"  >' +
-                            '   <div class="title-content"> ' +
-                            '       <span class="icon_pattern">3D</span>' +
-                            '       Black 3D 48 <i class="fa fa-arrow-circle-right icon_drag_to_left" aria-hidden="true"  ></i>' +
-                            '   </div>' +
-                            '</div>';
-                        // append macros
-                        box += '<div class=" filtered  div_list title_kind title-kind" data-type="Macros"> Macros  </div>';
-
-                        $.each(response.macros, function( index, value ) {
-                        box +=
-                        '<div  style="padding:5px" class="macro_item   div_list card rounded border mb-2 left-side-item" data-title="' + value.command + '" data-id="' + value.idmacro_config + '" data-type="Macros">' +
-                        '       <div class="card-body p-3">\n' +
-                        '                 <div class="media-body float-left">\n' +
-                        '                    <div class="title-content col-md-12"> <i class="mdi mdi-server-network"></i> ' + value.command + ' </div>' +
-                        '                       <i class="fa fa-arrow-circle-right icon_drag_to_left" aria-hidden="true"></i>' +
-                        '                 </div>'+
-                        '        </div>'+
+                    });
+                    // append pattern
+                    box += '<div class=" filtered  div_list   title-kind  " data-type="Pattern"> Pattern   </div>';
+                    box += '' +
+                        '<div class="list-group-item div_list card rounded border mb-2 left-side-item" ' +
+                        '         data-side="left" ' +
+                        '         data-type="Pattern" ' +
+                        '         data-version="left_tab"' +
+                        '         data-title="Black"  >' +
+                        '        <span></span>' +
+                        '        <div class="title-content"> ' +
+                        '          Black <i class="fa fa-arrow-circle-right icon_drag_to_left" aria-hidden="true"  ></i>' +
+                        '        </div>' +
+                        '        <div class="card-body macro-list hide_div"></div> ' +
                         '</div>';
+                    box +=
+                        '<div class="list-group-item div_list card rounded border mb-2 left-side-item " ' +
+                        '         data-side="left" ' +
+                        '         data-type="Pattern" ' +
+                        '         data-version="left_tab"' +
+                        '         data-title="Black 3D">' +
+                        '      <div class="title-content"> ' +
+                        '            <span class="icon_pattern">3D</span>' +
+                        '            Black 3D <i class="fa fa-arrow-circle-right icon_drag_to_left" aria-hidden="true"  ></i>' +
+                        '      </div>' +
+                        '      <div class="card-body macro-list hide_div"></div>' +
+                        '</div>';
+                    box +=
+                        '<div class="list-group-item div_list card rounded border mb-2 left-side-item" ' +
+                        '         data-side="left" ' +
+                        '         data-type="Pattern" ' +
+                        '         data-version="left_tab"' +
+                        '         data-title="Black 3D 48"  >' +
+                        '   <div class="title-content"> ' +
+                        '       <span class="icon_pattern">3D</span>' +
+                        '       Black 3D 48 <i class="fa fa-arrow-circle-right icon_drag_to_left" aria-hidden="true"  ></i>' +
+                        '   </div>' +
+                        '   <div class="card-body macro-list hide_div"></div>' +
+                        '</div>';
+                    // append macros
+                    box += '<div class=" filtered  div_list title_kind title-kind" data-type="Macros"> Macros  </div>';
+                        $.each(response.macros, function( index, value ) {
+                            box +=
+                            '<div  style="padding:5px" class="macro_item   div_list card rounded border mb-2 left-side-item" ' +
+                            '       data-command="' +value.command + '" data-title="' +value.title + '" data-id="' +value.idmacro_config + '" data-type="Macros">' +
+                            '       <div class="card-body p-3">\n' +
+                            '                 <div class="media-body float-left">\n' +
+                            '                    <div class="title-content col-md-12"> <i class="btn btn-inverse-primary  mdi mdi-server-network"></i> ' +value.title + ' </div>' +
+                            '                       <i class="fa fa-arrow-circle-right icon_drag_to_left" aria-hidden="true"></i>' +
+                            '                 </div>' +
+                            '        </div>' +
+                            '</div>';
                         });
 
                     $('#dragula-left').html(box);
@@ -1487,11 +1644,15 @@
 
             if (clonedElement.data('type') === "Macros") {
 
+
                 var selected_item = $('#dragula-right .left-side-item.selected-item');
-                console.log(selected_item.length)
                 if (selected_item.length === 0) {
                     $("#no-cpl-selected").modal('show');
                 } else {
+                    $("#macro_title").html(clonedElement.data('title'));
+                    $("#macro_command").val(clonedElement.data('command'));
+                    $("#macro_title_val").val(clonedElement.data('title'));
+
                     $("#macro-modal").modal('show');
                 }
 
@@ -1595,39 +1756,248 @@
         // $('#id_spl_opened').attr('data-spl_uuid', 0 );
         // prepareSortablReorder();
     });
-    // click open (display spls list
-    $(document).on('click', '#open_spl_list', function () {
-        $("#spl-list").modal('show');
-        $("#order-listing").dataTable().fnDestroy();
-        $('#order-listing').DataTable({
-            // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
-            "paging": true,
-            "lengthChange": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-            "processing": true,
-            "serverSide": true,
-            // "iDisplayLength": 20,
-            "scrollY": "600px", // Set the height of the scrolling area
-            "scrollCollapse": true, // Enable scroll collapse
-            "ajax": 'system/controller_playlist_builder.php?action_control=get_spl_available',
-            'columnDefs': [
-                {
-                    'targets': 3,
-                    'searchable': false,
-                    'orderable': false,
+    $(document).on('click', '#display_spl_properties', function () {
+        $("#spl-properties-modal").modal('show');
+    });
 
-                    'className': 'dt-body-center',
-                    'render': function (data, type, row) {
-                        //+row[1]+ for getting parameters by position
-                        return ' <i class="btn btn-primary mdi mdi-tooltip-edit open_spl" data-uuid="'+row[2]+'"></i>' +
-                            '    <i class="btn btn-danger mdi   mdi-delete-forever" data-uuid="'+row[2]+'"></i>     '    ;
+
+    $(document).on('click', '#save_new_spl', function () {
+        let array_spl = [];
+        let items_spl = [];
+        let items_macro = [];
+        let items_marker = [];
+        let items_intermission = [];
+        var title_spl = $('#spl_title').val();
+
+        if (title_spl == "") {
+            $("#spl-properties-modal").modal({"backdrop": "static"});
+        } else {
+            var display_mode = $('#display_mode').val();
+
+            var hfr = 0;
+            if ($('#spl_properties_hfr').is(":checked")) {
+                hfr = 1;
+            }
+            $('#dragula-right > .left-side-item').map(function () {
+                items_macro = [];
+                items_marker = [];
+                items_intermission = [];
+                var edit_rate_denominator = $(this).data('editrate_denominator');
+                var edit_rate_numerator = $(this).data('editrate_numerator');
+                var marco_divs = $(this).find('.macro-box');
+                var marker_divs = $(this).find('.marker-box');
+
+                let intermission_divs = $(this).children('.intermission_list').children('.intermission_style');
+                marco_divs.map(function () {
+                    console.log($(this).data('time'));
+                    console.log($(this));
+                    items_macro.push({
+                        'id': $(this).data('uuid'),
+                        'uuid': $(this).data('uuid'),
+                        'title': $(this).data('title'),
+                        'offset': $(this).data('offset'),
+                        'time': $(this).data('time'),
+                        'time_frames': convertStringToSeconds($(this).data('time')) * edit_rate_numerator / edit_rate_denominator
+                    });
+                });
+                if (items_macro.length == 0) {
+                    items_macro = null;
+                }
+                marker_divs.map(function () {
+                    items_marker.push({
+                        'uuid': $(this).data('uuid'),
+                        'title': $(this).data('title'),
+                        'offset': $(this).data('offset'),
+                        'time': $(this).data('time'),
+                        'time_frames': convertStringToSeconds($(this).data('time')) * edit_rate_numerator / edit_rate_denominator
+
+                    });
+                });
+                if (items_marker.length == 0) {
+                    items_marker = null;
+                }
+                intermission_divs.map(function () {
+                    items_intermission.push({
+                        'uuid': $(this).data('uuid'),
+                        'title': $(this).data('title'),
+                        'offset': $(this).data('offset'),
+                        'time': $(this).data('time'),
+                        'time_frames': convertStringToSeconds($(this).data('time')) * edit_rate_numerator / edit_rate_denominator
+                    });
+                });
+                if (items_intermission.length == 0) {
+                    items_intermission = null;
+                }
+                array_spl.push($(this).data('uuid'));
+                items_spl.push({
+                    'kind': $(this).data('type'),
+                    'id': $(this).data('id'),
+                    'uuid': $(this).data('uuid'),
+                    'source': $(this).data('source'),
+                    'title': $(this).data('title'),
+                    'IntrinsicDuration': $(this).data('time'),
+                    'start_time': $(this).data('starttime'),
+                    'time_seconds': $(this).data('time_seconds'),
+                    'editrate_denominator': $(this).data('editrate_denominator'),
+                    'editrate_numerator': $(this).data('editrate_numerator'),
+                    'id_server': $(this).data('id_server'),
+                    'macro_list': items_macro,
+                    'marker_list': items_marker,
+                    'items_intermission': items_intermission
+                });
+            });
+            var array_length = 0;
+            array_length = array_spl.length;
+
+
+            if (array_length > 0) {
+                var action_control = "save_new_spl";
+                var spl_title = $('#spl_title').val();
+                var file_name = $('#file_name').val();
+                var display_mode = $('#display_mode').val();
+                $('#id_spl_opened').attr('data-mod', display_mode);
+                var hfr = 0;
+                if ($('#insert_spl_properties_hfr').is(":checked")) {
+                    hfr = 1;
+                    $('#id_spl_opened').attr('data-hfr', 1);
+                } else {
+                    $('#id_spl_opened').attr('data-hfr', 0);
+                }
+                $('#actual_spl_title').text(spl_title);
+
+
+                $('#id_spl_opened').attr('data-title', spl_title);
+
+
+                //console.log(items_spl);
+                $.ajax({
+                    url:"{{  url('') }}"+ "/createlocalspl",
+                    type: 'post',
+                    cache: false,
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        array_spl: array_spl,
+                        title_spl: spl_title,
+                        display_mode: display_mode,
+
+                        hfr: hfr,
+                        action_control: action_control,
+                        items_spl: items_spl
+                    },
+                    success: function (response) {
+                        try {
+                            console.log(response);
+                            var obj = JSON.parse(response);
+                            $('#actual_spl_title').text(title_spl);
+                            $('#id_spl_opened').text(obj['uuid']);
+                            $('#id_spl_opened').attr('data-spl_uuid', obj['uuid']);
+                            $(jQuery.parseJSON(response)).each(function () {
+                                status = this.status;
+                            });
+
+                            if (status === "Failed") {
+                                $("#success_message_update").css("background-color", "rgb(224 114 114)");
+                                $('#success_message_update').fadeIn().html("Execution Failed");
+                                setTimeout(function () {
+                                    $('#success_message_update').fadeOut("slow");
+                                }, 2000);
+                            }
+                            if (status === "saved" ) {
+                                $('#container2 > .div_list').map(function () {
+                                    if ($(this).data('version') === "new_item") {
+                                        this.setAttribute('data-version', "old");
+                                    }
+                                });
+
+                                array_spl = [];
+                                array_length = 0;
+                                window.array_length = 0;
+
+                                $('#success_message_update').css({"background": "#CCF5CC"});
+                                $('#success_message_update').fadeIn().html("SPL saved successfully");
+                                setTimeout(function () {
+                                    $('#success_message_update').fadeOut("slow");
+                                }, 2000);
+                            }
+                        } catch (e) {
+                            console.log(e);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    },
+                    complete: function (jqXHR, textStatus) {
                     }
-                }],
-        });
+                });
+            }
+            array_spl = [];
+            window.array_length = 0;
+            $("#save_spl_form").trigger('reset');
+
+
+        }
+    });
+    // click open (display spls list
+    $(document).on('click', '#open_spl_list', function ()
+    {
+
+        $("#spl-list").modal('show');
+        var loader_content  =
+           '<div class="jumping-dots-loader">'
+               +'<span></span>'
+               +'<span></span>'
+               +'<span></span>'
+               +'</div>'
+       $('#nocspls_content').html(loader_content)
+
+       var url = "{{  url('') }}"+   "/get_nocspl/";
+       $.ajax({
+               url: url,
+               method: 'GET',
+               success:function(response)
+               {
+                   console.log(response.spls) ;
+                   result =
+                       '<div class="">'
+                           +'<table class="table">'
+                               +'<thead>'
+                                   +'<tr>'
+                                        +'<th>Title</th>'
+                                        +'<th>Creation Date</th>'
+                                        +'<th>UUID </th>'
+                                        +'<th>Actions</th>'
+                                   +'</tr>'
+                               +'</thead>'
+                               +'<tbody>'
+
+                   $.each(response.nocspls, function( index, value ) {
+
+                   result = result
+                                   +'<tr>'
+                                       +'<th>'+value.spl_title+'</th>'
+                                       +'<th>'+value.created_at+'</th>'
+                                       +'<th>'+value.id+'</th>'
+                                       +'<th>'+value.id+'</th>'
+
+                                   +'</tr>'
+                   });
+                   result = result
+                               +'</tbody>'
+                           +'</table>'
+                       +'</div>'
+                       console.log(result)
+                   $('#nocspls_content').html(result)
+
+
+
+
+
+               },
+               error: function(response) {
+
+               }
+       })
+
 
     });
 
@@ -1677,6 +2047,199 @@
 
     });
 
+    //remove macro right list
+    $(document).on('click', '.remove-macro', function () {
+
+        $(this).parent().parent().parent().remove();
+        // re-order items
+        var items = $('#dragula-right').find('.left-side-item');
+        var startTime = 0;
+
+        for (var i = 0; i < items.length; i++) {
+            var duration = parseInt(items[i].getAttribute('data-time_seconds'));
+            items[i].setAttribute('data-starttime', formatTime(startTime));
+            var composition_start_time = items[i].getAttribute('data-starttime');
+            items[i].querySelector('.mb-0.text-muted.float-left').innerText = formatTime(startTime);
+            startTime += duration;
+            var composition_end_time = startTime;
+            // Process the macro_list within the current item if it exists
+            var macroItems = items[i].querySelectorAll('.macro_item');
+            if (macroItems.length > 0) {
+                for (var j = 0; j < macroItems.length; j++) {
+                    var macroTime = macroItems[j].getAttribute('data-time');
+                    var macroKind = macroItems[j].getAttribute('data-offset');
+                    // Calculate the macro start time based on Kind
+                    var macroStartTime;
+                    if (macroKind === "Start") {
+                        macroStartTime = convertHMSToSeconds(composition_start_time) + convertHMSToSeconds(macroTime);
+                    } else if (macroKind === "End") {
+                        macroStartTime = composition_end_time - convertHMSToSeconds(macroTime);
+                    } else {
+                        // Handle other cases if needed
+                        macroStartTime = 0;
+                    }
+                    // Update the macro_time div with the calculated start time
+                    macroItems[j].querySelector('#macro_time').innerText = convertSecondsToHMS(macroStartTime);
+                }
+            }
+        }
+
+    });
+
+    $(document).on('click', '.remove-marker', function () {
+
+        $(this).parent().parent().parent().remove();
+        // re-order items
+        var items = $('#dragula-right').find('.left-side-item');
+        var startTime = 0;
+
+        for (var i = 0; i < items.length; i++) {
+            var duration = parseInt(items[i].getAttribute('data-time_seconds'));
+            items[i].setAttribute('data-starttime', formatTime(startTime));
+            var composition_start_time = items[i].getAttribute('data-starttime');
+            items[i].querySelector('.mb-0.text-muted.float-left').innerText = formatTime(startTime);
+            startTime += duration;
+            var composition_end_time = startTime;
+            // Process the macro_list within the current item if it exists
+            var macroItems = items[i].querySelectorAll('.macro_item');
+            if (macroItems.length > 0) {
+                for (var j = 0; j < macroItems.length; j++) {
+                    var macroTime = macroItems[j].getAttribute('data-time');
+                    var macroKind = macroItems[j].getAttribute('data-offset');
+                    // Calculate the macro start time based on Kind
+                    var macroStartTime;
+                    if (macroKind === "Start") {
+                        macroStartTime = convertHMSToSeconds(composition_start_time) + convertHMSToSeconds(macroTime);
+                    } else if (macroKind === "End") {
+                        macroStartTime = composition_end_time - convertHMSToSeconds(macroTime);
+                    } else {
+                        // Handle other cases if needed
+                        macroStartTime = 0;
+                    }
+                    // Update the macro_time div with the calculated start time
+                    macroItems[j].querySelector('#macro_time').innerText = convertSecondsToHMS(macroStartTime);
+                }
+            }
+        }
+
+    });
+        // click marker icon
+    $(document).on('click', '#show_marker_modal', function () {
+
+        var selectedCard = $('#dragula-right .left-side-item.selected-item');
+
+        // Check if selectedCard is not empty
+        if (selectedCard.length > 0) {
+            var dataTitleValue = selectedCard.data('title');
+            $("#title_selected_item").html(dataTitleValue);
+            // Get the last .media-body element inside the selected item
+            // var marker_body = selectedCard.find('.marker-list');
+            // marker_body.removeClass('hide_div');
+            $("#marker-modal").modal('show');
+        } else {
+            $("#no-cpl-selected").modal('show');
+        }
+
+    });
+
+        //confirm ad marker
+    $(document).on('click', '#confirm_add_marker', function () {
+
+        var marker_label = $('#marker_label').val();
+        var uuid=$.trim('urn:uuid:' + uuidv4()) ;
+        var Hours_marker = $('#Hours_marker').val();
+        var Minutes_marker = $('#Minutes_marker').val();
+        var Seconds_marker = $('#Seconds_marker').val();
+        var offset = $('input[name=Offset_marker]:checked').val();
+        var time_marker = Hours_marker + ' : ' + Minutes_marker + ' : ' + Seconds_marker;
+        var time_seconds = parseInt(Hours_marker) * 60 * 60 + parseInt(Minutes_marker) * 60 + parseInt(Seconds_marker);
+
+        var marker_box = '' +
+            '<div class="media-body marker-box col-md-8" data-title="' + $.trim(marker_label) + '"' +
+            '     data-offset="' + offset + '"  data-time="' + convertSecondsToHMS(time_seconds) + '"' +
+            '     data-uuid="' + uuid + '">' + marker_label +
+            '  <p class="mb-0 text-muted float-left"> ' + convertSecondsToHMS(time_seconds)  + ' </p> ' +
+            '   <span class="mb-0 text-muted float-left" style="margin: 0px 2px 0px 20px; ">  ---  </span>' +
+            '  <p class="mb-0 text-muted float-right">\n' +
+            '        <span class=" ">\n' +
+            '            <i class="btn btn-primary  mdi mdi-magnify custom-search  cpl-details" ' +
+            '               data-uuid="urn:uuid:e83235b4-f50d-4f46-906f-2ce2cca1ba52"' +
+            '                style="font-size: 18px; "></i>\n' +
+            '            <i class="btn btn-danger mdi mdi-delete-forever remove-marker custom-search" style="font-size: 18px;"></i>' +
+            '        </span>' +
+            '    </p>\n' +
+            '</div>';
+        var selectedCard = $('#dragula-right .left-side-item.selected-item');
+
+        // Check if selectedCard is not empty
+        if (selectedCard.length > 0) {
+            // Get the last .media-body element inside the selected item
+            var marker_body = selectedCard.find('.marker-list');
+            marker_body.removeClass('hide_div');
+
+            // Append the macro_box content after the last .media-body
+            marker_body.append(marker_box);
+        }
+
+    });
+
+    $(document).on('click', '#add_segment', function () {
+        var uuid_segment = 'urn:uuid:' + uuidv4();
+        var segment_box = '' +
+            '<div class="card rounded border mb-2  segment-style" data-side="right" ' +
+            '     data-uuid="'+uuid_segment+'" data-title="New Segment"  ' +
+            '     data-type_component="segment"    data-type="segment"   >   ' +
+            '     <div class="card-body  ">\n' +
+
+            '         <div class="media-body">\n' +
+            '              <p class="mb-0 text-muted float-left">' +
+            '                    <i class="btn btn-inverse-warning  mdi mdi-package-variant-closed"></i>  New Segment ' +
+
+            '              </p>\n' +
+            '              <p class="mb-0 text-muted float-right">\n' +
+            '                 <span class=" ">\n' +
+            '                    <i class="btn btn-primary  mdi mdi-magnify custom-search  segment-details" data-uuid="'+uuid_segment+'"  ></i>\n' +
+            '                    <i class="btn btn-danger mdi mdi-delete-forever remove-cpl custom-search"></i>\n' +
+            '                 </span>' +
+            '               </p>\n' +
+            '           </div>            ' +
+            '     </div>' +
+            '</div>' ;
+        $('#dragula-right').append(segment_box);
+    });
+
+
+        // segment details
+
+        $(document).on('click', '.segment-details', function () {
+        //let title = $(this).parent().parent().parent().parent().parent().data("title");
+        let title = $(this).closest('.card[data-title]').data("title");
+        let uuid = $(this).parent().parent().parent().parent().parent().data("uuid");
+
+        $("#pack_name").val(title);
+        $("#segment_uuid").val(uuid);
+
+        $("#segment-modal").modal('show');
+        });
+        $(document).on('click', '#confirm_add_segment', function () {
+        var title = $('#pack_name').val();
+        var uuid = $('#segment_uuid').val();
+        var type="segment";
+        var targetItem = $('#dragula-right .card[data-uuid="' + uuid + '"][data-type="' + type + '"]');
+        if (targetItem.length > 0) {
+            // Change the text inside mb-0 text-muted float-left
+
+            targetItem.attr('data-title', title).promise().done(function () {
+                // Retrieve the updated data-title value
+                var updatedTitle = targetItem.attr('data-title');
+
+            });
+            targetItem.find('.mb-0.text-muted.float-left').html('<i class="btn btn-inverse-warning  mdi mdi-package-variant-closed"></i> '+title);
+        }
+
+        });
+
+
     // select item right side list
     $('#dragula-right').on('click', '.left-side-item', function () {
         // Remove 'selected' class from all items
@@ -1689,61 +2252,84 @@
 
     });
 
-    $(document).on('click', '#confirm_add_macro',function (){
-        var macro_box='<div class="card-body  " style="\n' +
-            '    margin-top: 40px;\n' +
-            '"><div class="media-body" style="\n' +
-            '    width: 100%;\n' +
-            '    height: 39px;\n' +
-            '    border: 1px solid #ffffff96;\n' +
-            '    margin: 4px;\n' +
-            '    padding: 3px;\n' +
-            '    padding-left: 14px;\n' +
-            '    font-size: 20px;\n' +
-            '    font-weight: bold;\n' +
-            '    line-height: 1;\n' +
-            '    background: black;\n' +
-            '">\n' +
-            '                       aaaa <p class="mb-0 text-muted float-right">\n' +
-            ' \n' +
+    $(document).on('click', '#confirm_add_macro', function () {
+        var macro_command = $('#macro_command').val();
+        var macro_title = $('#macro_title_val').val();
+        var Hours_macro = $('#Hours_macro').val();
+        var Minutes_macro = $('#Minutes_macro').val();
+        var Seconds_macro = $('#Seconds_macro').val();
+        var offset = $('input[name=Offset_macro]:checked').val();
+        var time_macro = Hours_macro + ' : ' + Minutes_macro + ' : ' + Seconds_macro;
+        var time_seconds = parseInt(Hours_macro) * 60 * 60 + parseInt(Minutes_macro) * 60 + parseInt(Seconds_macro);
+        var macro_box = '' +
+            '<div class="media-body macro-box col-md-8" data-title="' + macro_title + '"' +
+            '      data-offset="' + offset + '" ' +
+            '      data-command="' + $.trim(macro_command) + '" ' +
+            '      data-time="' + convertSecondsToHMS(time_seconds) + '"  data-time_seconds="' + time_seconds + '"' +
+            '      data-Hours="' + Hours_macro + '" ' + 'data-Minutes="' + Minutes_macro + '" ' + 'data-Seconds="' + Seconds_macro + '" ' +
+            '      data-Uuid="urn:uuid:' + uuidv4() + '">' +
+            macro_title +
+            '  <p class="mb-0 text-muted float-left"> ' + convertSecondsToHMS(time_seconds) + ' </p> ' +
+            '   <span class="mb-0 text-muted float-left" style="margin: 0px 2px 0px 20px; ">  ---  </span>' +
+            '  <p class="mb-0 text-muted float-right">\n' +
             '        <span class=" ">\n' +
-            '            <i class="btn btn-primary  mdi mdi-magnify custom-search  cpl-details" data-uuid="urn:uuid:e83235b4-f50d-4f46-906f-2ce2cca1ba52" data-need_kdm="0" style="\n' +
-            '    font-size: 18px;\n' +
-            '    /* padding: 2px; */\n' +
-            '"></i>\n' +
-            '            <i class="btn btn-danger mdi mdi-delete-forever remove-cpl custom-search" style="\n' +
-            '    font-size: 18px;\n' +
-            '"></i>\n' +
-            '        </span></p>\n' +
-            '                        </div>\n' +
-            '<div class="media-body" style="\n' +
-            '    width: 100%;\n' +
-            '    height: 30px;\n' +
-            '    margin: 4px;\n' +
-            '    border: 1px solid #ffffff96;\n' +
-            '    padding-left: 14px;\n' +
-            '">\n' +
-            '                       bbbbb\n' +
-            '                        </div>\n' +
-            '<div class="media-body" style="\n' +
-            '    width: 100%;\n' +
-            '    height: 30px;\n' +
-            '    border: 1px solid #ffffff96;\n' +
-            '    margin: 4px;\n' +
-            '    padding-left: 14px;\n' +
-            '">\n' +
-            '                       ccccc\n' +
-            '                        </div>\n' +
-            '                   </div>';
+            '            <i class="btn btn-primary  mdi mdi-magnify custom-search  macro-details" ' +
+            '                style="font-size: 18px; "></i>\n' +
+            '            <i class="btn btn-danger mdi mdi-delete-forever remove-macro custom-search" style="font-size: 18px;"></i>' +
+            '        </span>' +
+            '    </p>\n' +
+            '</div>';
         var selectedCard = $('#dragula-right .left-side-item.selected-item');
-        console.log(selectedCard);
+
         // Check if selectedCard is not empty
         if (selectedCard.length > 0) {
             // Get the last .media-body element inside the selected item
-            var lastMediaBody = selectedCard.find('.media-body:last');
+            var macro_body = selectedCard.find('.macro-list');
+            macro_body.removeClass('hide_div');
 
             // Append the macro_box content after the last .media-body
-            lastMediaBody.after(macro_box);
+            macro_body.append(macro_box);
+        }
+        // reporder list items afetr append macro
+        var items = $('#dragula-right').find('.left-side-item');
+        var startTime = 0;
+        for (var i = 0; i < items.length; i++) {
+
+            var duration = parseInt(items[i].getAttribute('data-time_seconds'));
+            items[i].setAttribute('data-starttime',   formatTime(startTime));
+            var composition_start_time=   items[i].getAttribute('data-starttime');
+            startTime += duration;
+            var composition_end_time=   startTime;
+            // Process the macro_list within the current item if it exists
+            var macroItems = items[i].querySelectorAll('.macro-box ');
+
+            if (macroItems.length > 0)
+            {
+                for (var j = 0; j < macroItems.length; j++) {
+                    var macroTime = macroItems[j].getAttribute('data-time');
+                    var macroKind = macroItems[j].getAttribute('data-offset');
+                    // Calculate the macro start time based on Kind
+                    var macroStartTime;
+                    if (macroKind === "Start") {
+                        console.log(composition_start_time);
+                        console.log(macroTime);
+                        macroStartTime = convertHMSToSeconds(composition_start_time) + convertHMSToSeconds(macroTime);
+                    } else if (macroKind === "End") {
+                        console.log(composition_end_time);
+                        console.log(macroTime);
+                        macroStartTime = composition_end_time - convertHMSToSeconds(macroTime);
+                    } else {
+                        // Handle other cases if needed
+                        macroStartTime = 0;
+                    }
+
+                    // Update the macro_time div with the calculated start time
+                    macroItems[j].querySelector('.mb-0.text-muted.float-left').innerText = convertSecondsToHMS(macroStartTime);
+                }
+            }
+
+            var macroList = items[i].querySelector('.card-body.macro-list');
+            reorderMacroList(macroList);
         }
     });
 </script>
@@ -1813,12 +2399,25 @@
             color: #36ffb9;
             margin-left: 13px;
         }
-        #dragula-left ,
-        #dragula-right
-        {
-            border : 1px solid #2c2e33 ;
-        }
+
         .cpl-details {
+            font-size: 22px;
+            color: white;
+            text-shadow: 0px 0px #ffffff;
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+        .segment-details{
+            font-size: 22px;
+            color: white;
+            text-shadow: 0px 0px #ffffff;
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .macro-details {
             font-size: 22px;
             color: white;
             text-shadow: 0px 0px #ffffff;
@@ -1832,8 +2431,24 @@
             color: white;
             text-shadow: 0px 0px #ffffff;
             font-weight: bold;
-
-
+            cursor: pointer;
+        }
+        .segment-style{
+            border: 1px solid #b4ee29!important;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+        .remove-segment {
+            font-size: 22px;
+            color: white;
+            text-shadow: 0px 0px #ffffff;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .remove-macro {
+            font-size: 22px;
+            color: white;
+            text-shadow: 0px 0px #ffffff;
+            font-weight: bold;
             cursor: pointer;
         }
 
@@ -1872,13 +2487,73 @@
         #kdms {
             height: 500px;
         }
-        .selected-item{
-            background:  black;
+
+        .selected-item {
+            background: black;
             box-shadow: 0 0 10px rgb(231 221 221 / 50%);
-            border: 3px solid #fff2f2!important;
+            border: 3px solid #fff2f2 !important;
         }
-        .color-white{
-            color: white!important;
+
+        .color-white {
+            color: white !important;
+        }
+
+        .macro-box {
+
+            height: 37px;
+            border: 1px solid #297eee;
+            margin: 6px;
+            padding: 3px;
+            padding-top: 5px;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+            padding-left: 14px;
+            font-size: 18px;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .marker-box {
+
+            height: 37px;
+            border: 1px solid #29ee4c;
+            margin: 6px;
+            padding: 3px;
+            padding-top: 5px;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+            padding-left: 14px;
+            font-size: 18px;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .hide_div {
+            display: none;
+        }
+
+        #title_selected_item {
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .hfr-label {
+            color: white !important;
+            font-size: 21px !important;
+            margin-left: 6px !important;
+            cursor: pointer;
+        }
+
+        .custom-form-group label {
+            line-height: 1;
+            vertical-align: top;
+            font-size: 19px !important;
+        }
+        #order-listing{
+            height: 688px;
+        }
+        #dragula-left ,
+        #dragula-right
+        {
+            border : 1px solid #2c2e33 ;
         }
     </style>
 @endsection

@@ -53,6 +53,9 @@ Route::get('get_spl_with_filter', [App\Http\Controllers\SplController::class , '
 Route::get('get_spl_infos/{spl}', [App\Http\Controllers\SplController::class , 'get_spl_infos'])->name('spls.get_spl_infos');
 Route::get('spls/spl_builder', [App\Http\Controllers\SplController::class , 'spl_builder'])->name('spls.spl_builder');
 
+
+
+
 Route::get('cpls/{location}/{spls}/get_cpls', [App\Http\Controllers\CplController::class , 'getcpls'])->name('cpls.get_cpls');
 Route::get('cpls/screen/{screen}', [App\Http\Controllers\CplController::class , 'cpl_by_screen'])->name('cpls.cpls_by_screen');
 Route::get('get_cpl_with_filter', [App\Http\Controllers\CplController::class , 'get_cpl_with_filter'])->name('cpls.get_cpl_with_filter');
@@ -84,3 +87,7 @@ Route::get('getplayback/{location}', [App\Http\Controllers\PlaybackController::c
 Route::get('playback', [App\Http\Controllers\PlaybackController::class , 'index'])->name('playback.index');
 
 Route::get('getMacros/{location}', [App\Http\Controllers\MacroController::class , 'getMacros'])->name('macros.getMacros');
+
+Route::post('createlocalspl', [App\Http\Controllers\NocsplController::class , 'createlocalspl'])->name('nocspl.createlocalspl');
+Route::get('get_nocspl', [App\Http\Controllers\NocsplController::class , 'get_nocspl'])->name('nocspl.get_nocspl');
+

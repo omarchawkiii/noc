@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Lmsspl;
 use App\Models\Location;
+use App\Models\Nocspl;
 use App\Models\Schedule;
 use App\Models\Screen;
 use App\Models\Spl;
@@ -13,7 +14,6 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Input;
 use Symfony\Component\Console\Input\Input as InputInput;
 use Response ;
-use SoulDoit\DataTable\SSP;
 
 class SplController extends Controller
 {
@@ -124,6 +124,7 @@ class SplController extends Controller
         if(isset($screen) && $screen != 'null' )
         {
             $spls =$spls->where('screen_id',$screen);
+
         }
         return Response()->json(compact('spls','screens'));
     }
