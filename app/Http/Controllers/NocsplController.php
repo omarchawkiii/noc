@@ -37,16 +37,39 @@ class NocsplController extends Controller
         echo json_encode($response);
         //dd($new_nocspl);
     }
-    public function openlocalspl(Request $request)
+
+    public function updatelocalspl(Request $request)
     {
 
+        $localspl = Nocspl::where('uuid', $request->uuid)->first() ;
+        $uuid =   (string)Str::uuid();
+        $IssueDate = Carbon::now();
+
+        $file = $this->generateSplXml($uuid, $request->title_spl, $request->hfr, $request->display_mode, $request->items_spl, $IssueDate, 'add') ;
+
+        $file_name = "xml_file_$uuid.xml" ;
+        $file_url = Storage::disk('local')->put( $file_name, $file) ;
+        $duration = $this->calculateSplDuration(simplexml_load_string($file));
+        $new_nocspl = Nocspl::create([
+            'uuid' => $uuid ,
+            'spl_title' => $request->title_spl,
+            'display_mode'=>$request->display_mode,
+            'spl_properties_hfr'=>$request ,
+            'xmlpath'=>$file_name,
+            'duration'=> $duration,
+            'location_id'=> null,
+
+        ]) ;
+
+        $response = array("status" => "saved");
+        echo json_encode($response);
+        //dd($new_nocspl);
+    }
+    public function openlocalspl(Request $request)
+    {
             $spl_data = Nocspl::where('uuid',$_GET["id_spl"])->first() ;
-
-
             $path =  storage_path().'/app/xml_file/'.$spl_data->xmlpath ;
-
             $spl_file = simplexml_load_file($path);
-
             if (property_exists($spl_file, 'EventList')) {
                 foreach ($spl_file->EventList->Event as $event) {
                     if (isset($event->ElementList->AutomationCue)) {

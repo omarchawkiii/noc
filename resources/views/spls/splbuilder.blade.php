@@ -22,14 +22,14 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="row mb-3">
-                                        <div class="col-xl-3">
+                                        <div class="col-xl-5">
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text"><i class="mdi mdi-home-map-marker"></i></div>
                                                 </div>
-                                                <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="location">
-                                                    <option selected="">Locations</option>
-                                                    <option  value="all">All locations</option>
+                                                <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="location" name="location[]" multiple="multiple">
+
+
                                                     @foreach ($locations as $location )
 
                                                     <option  value="{{ $location->id }}">{{ $location->name }}</option>
@@ -37,7 +37,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-xl-9 ">
+                                        <div class="col-xl-7 ">
                                             <button type="button" class="btn btn-info btn-icon-text ">
                                                 <i class="mdi mdi-refresh btn-icon-prepend"></i> Refresh
                                             </button>
@@ -113,7 +113,8 @@
                                     <div class="row mb-2">
                                         <div class="col-xl-10 ">
                                             <div class="input-group mb-2 p-2 mr-sm-2 palyback-form-text">
-                                                <span class="palyback-text">No Playlist Selected</span>
+                                                <span class="palyback-text" id="opened_spl" data-uuid="" data-hfr="" data-mod="" data-opened_spl_status="0">No Playlist Selected</span>
+
                                             </div>
                                         </div>
                                         <div class="col-xl-2">
@@ -139,7 +140,7 @@
 
 
 
-            <div class=" modal fade " id="infos_modal" tabindex="-1" role="dialog"  aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+            <div class=" modal show " id="infos_modal" tabindex="-1" role="dialog"  aria-labelledby="delete_client_modalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered  modal-xl">
                     <div class="modal-content border-0">
                         <div class="modal-header p-4 pb-0">
@@ -755,14 +756,129 @@
                 </div>
             </div>
 
+            <!--    no spl opened -->
+            <div class="modal fade " id="no-spl-selected" tabindex="-1" role="dialog" aria-labelledby="delete_client_modalLabel" aria-hidden="true">>
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div class="badge badge-warning" style="font-size: 18px;">Warning</div>
+
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <h4 class="text-center"> No SPL Selected!</h4>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" style="margin: auto" class="btn btn-secondary btn-fw close"
+                                    data-bs-dismiss="modal" aria-label="Close">OK
+                            </button>
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade show" id="edit-spl-properties-modal" tabindex="-1" role="dialog" aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="ModalLabel">Save New Playlist Properties</h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="tab-pane fade active show" id="home-1" role="tabpanel" aria-labelledby="home-tab">
+                                <div class="row">
+                                    <div class="col-md-12 ">
+                                        <div class="form-group custom-form-group">
+                                            <label>SPL Title</label>
+                                            <input type="hidden" class="form-control" id="uuid_spl_edit"  value="" >
+                                            <input type="text" class="form-control" id="edit_spl_title" aria-label="SPL Title">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12 ">
+                                        <div class="form-group custom-form-group">
+                                            <label>Display Mode</label>
+                                            <select class="form-control" id="edit_display_mode">
+                                                <option>2D</option>
+                                                <option>3D</option>
+                                                <option>4K</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="form-check">
+                                            <label class="form-check-label hfr-label">
+                                                <input type="checkbox" style=" opacity: 2; font-size: 28px;"
+                                                    class="form-check-input "> HFR <i class="input-helper"></i><i
+                                                        class="input-helper"></i></label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col" style="text-align: center">
+                                    <button type="button" class="btn btn-primary btn-fw" id="confirm_edit_spl_properties">
+                                        Confirm
+                                    </button>
+                                    <button class="btn btn-secondary btn-fw close" data-bs-dismiss="modal"
+                                            aria-label="Close">Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--   delete spl -->
+            <div class="modal fade show" id="delete-spl" tabindex="-1" role="dialog" aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+                <div class="modal-dialog"   role="document">
+                    <div class="modal-content" style="background: #000000">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="">SPL Deletion</h5>
+                            <button type="button"  data-bs-dismiss="modal"
+                                    aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <input type="hidden" id="id_spl_delete">
+                        <div class="modal-body">
+                            <p id="spl_title_to_delete">You will not be able to recover this .</p>
+                            <p id="spl_uuid_to_delete">You will not be able to recover this .</p>
+                            <p>You will not be able to recover this .</p>
+                        </div>
+                        <div class="modal-footer" style="display: block;text-align: center">
+                            <button type="button" class="btn btn-success" id="confirm_delete_spl">Confirm</button>
+                            <button type="button" class="btn btn-light"  data-bs-dismiss="modal"
+                                    aria-label="Close">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
 @endsection
 
 @section('custom_script')
     <script src="{{ asset('assets/vendors/dragula/dragula.min.js') }}"></script>
     <script src="{{ asset('assets/js/dragula.js') }}"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script>
+$(document).ready(function() {
+    $('#location').select2();
+});
+
 
 // *********************** functions ***** */
 
@@ -946,6 +1062,16 @@ function reorderRightList(){
         reorderMacroList(macroList);
     }
 }
+function extractTimeComponents(timeString) {
+    // Split the time string into hours, minutes, and seconds
+    const [hours, minutes, seconds] = timeString.split(':').map(Number);
+
+    return {
+        hours,
+        minutes,
+        seconds
+    };
+}
 function setSplOpenedData(capabilities) {
     const obj = {"capabilities": capabilities};
     $('#id_spl_opened').attr('data-hfr', 0);
@@ -975,12 +1101,57 @@ function setSplOpenedData(capabilities) {
         }
     }
 }
+/*
+function deleteSplSelected(spl_uuid){
+
+    $.ajax({
+        url: 'system/controller_playlist_builder.php',
+        type: 'post',
+        cache: false,
+        data: {
+            spl_uuid: spl_uuid,
+            action_control: "delete_spl_selected"
+        },
+        success: function (response) {
+            try {
+                console.log(response);
+                var obj = JSON.parse(response);
+                if (obj['status'] === "Failed") {
+                    sweetAlert("Oops...", "Something went wrong!", "error");
+
+                }
+                if (obj['status'] === "success") {
+                    swal("Done!", "Playlist deleted successfully!", "success");
+                    $('#order-listing').DataTable().ajax.reload();
+
+                }
+            } catch (e) {
+                console.log(e);
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        },
+        complete: function (jqXHR, textStatus) {
+        }
+    });
+}*/
+
+
 $(document).on('click', '.open_spl', function () {
     var action_control = "open_spl";
-    var id_spl= $(this).data("uuid");
 
+    $('#opened_spl').attr('data-opened_spl_status', 1);
+    var id_spl = $(this).data("uuid");
+    var title = $(this).data("title");
     openSpl(id_spl);
+    $('#opened_spl').html(title);
+
+
+    $('#opened_spl').attr('data-opened_spl_status', 1);
 });
+
+
 function openSpl(id_spl) {
     $.ajax({
         url : "{{  url('') }}"+   "/open_nocspl",
@@ -1092,10 +1263,16 @@ function openSpl(id_spl) {
 
                                 if (macro_list.length > 0) {
                                     for (let i = 0; i < macro_list.length; i++) {
+                                        var macro_time=convertSecondsToHMS(macro_list[i].Offset * 1 / 24);
+                                        var components_time=  extractTimeComponents(macro_time);
                                         macro_box +=
                                             '   <div class="media-body macro-box col-md-8" data-title="' + macro_list[i].Action + '" ' +
                                             '        data-offset="' + macro_list[i].Kind + '"' +
                                             '        data-time="' + convertSecondsToHMS(macro_list[i].Offset * 1 / 24) + '"' +
+                                            '        data-time_seconds="'+macro_list[i].Offset * 1 / 24 +'"' +
+                                            '        data-hours="'+components_time.hours+'"' +
+                                            '        data-minutes="'+components_time.minutes+'"' +
+                                            '        data-seconds="'+components_time.seconds+'"' +
                                             '        data-uuid="' + macro_list[i].Id + '"' +
                                             '        data-idmacro="">' + macro_list[i].Action +
                                             '      <p class="mb-0 text-muted float-left">' + convertSecondsToHMS(macro_list[i].Offset * 1 / 24) + '</p> ' +
@@ -1123,18 +1300,38 @@ function openSpl(id_spl) {
 
                                 if (Marker_list.length > 0) {
                                     for (let i = 0; i < Marker_list.length; i++) {
+                                        var t=convertSecondsToHMS(Marker_list[i].Offset * 1 / 24);
+                                        var components_time=  extractTimeComponents(t);
                                         marker_box +=
-                                            '<div class="col-md-12 marker_item marker_style" style="margin-left: 0px!important;"' +
-                                            ' data-title="' + Marker_list[i].Label + '"' +
-                                            ' data-offset="' + Marker_list[i].Kind + '" ' +
-                                            ' data-time="' + convertSecondsToHMS(Marker_list[i].Offset * 1 / 24) + '"' +
-                                            ' data-uuid="16b06cf1-2e7b-40ef-9807-d22485bb7c36"> ' +
-                                            '   <div class="col-md-2" style="padding-left:12px;">|------</div> ' +
-                                            '   <div class="col-md-2" id="marker_time">' + convertSecondsToHMS(Marker_list[i].Offset * 1 / 24) + '</div>' +
-                                            '   <div class="col-md-6" id="macrker_title">' + Marker_list[i].Label + '</div>  ' +
-                                            '   <i class="fa fa-search col-sd-1 search-marker_item"></i>' +
-                                            '   <i class="fa fa-close col-sd-1  delete-marker_item"></i>' +
-                                            '</div>';
+                                            '<div class="media-body marker-box col-md-8"' +
+                                            '      data-title="' + Marker_list[i].Label + '" data-offset="' + Marker_list[i].Kind + '"' +
+                                            '      data-time="00:01:00" ' +
+                                            '      data-uuid="' + Marker_list[i].Id + '" ' +
+                                            '      data-hours="'+components_time.hours+'" ' +
+                                            '      data-minutes="'+components_time.minutes+'" ' +
+                                            '      data-seconds="'+components_time.seconds+'"> '   + Marker_list[i].Label +
+                                            '    <p class="mb-0 text-muted float-left"> ' + convertSecondsToHMS(Marker_list[i].Offset * 1 / 24) + '</p> ' +
+                                            '    <span class="mb-0 text-muted float-left" style="margin: 0px 2px 0px 20px; ">  ---  </span> ' +
+                                            '    <p class="mb-0 text-muted float-right">\n' +
+                                            '        <span class=" ">\n' +
+                                            '            <i class="btn btn-primary  mdi mdi-magnify custom-search  marker-details" ' +
+                                            '               data-uuid="' + Marker_list[i].Id + '" style="font-size: 18px; "></i>\n' +
+                                            '            <i class="btn btn-danger mdi mdi-delete-forever remove-marker custom-search" style="font-size: 18px;"></i>    ' +
+                                            '         </span>  ' +
+                                            '  </p>\n' +
+                                            '</div>' ;
+                                            //
+                                            // '<div class="col-md-12 marker_item marker_style" style="margin-left: 0px!important;"' +
+                                            // ' data-title="' + Marker_list[i].Label + '"' +
+                                            // ' data-offset="' + Marker_list[i].Kind + '" ' +
+                                            // ' data-time="' + convertSecondsToHMS(Marker_list[i].Offset * 1 / 24) + '"' +
+                                            // ' data-uuid="16b06cf1-2e7b-40ef-9807-d22485bb7c36"> ' +
+                                            // '   <div class="col-md-2" style="padding-left:12px;">|------</div> ' +
+                                            // '   <div class="col-md-2" id="marker_time">' + convertSecondsToHMS(Marker_list[i].Offset * 1 / 24) + '</div>' +
+                                            // '   <div class="col-md-6" id="macrker_title">' + Marker_list[i].Label + '</div>  ' +
+                                            // '   <i class="fa fa-search col-sd-1 search-marker_item"></i>' +
+                                            // '   <i class="fa fa-close col-sd-1  delete-marker_item"></i>' +
+                                            // '</div>';
                                     }
                                     list_marker_style = " "
                                 } else {
@@ -1260,12 +1457,12 @@ function openSpl(id_spl) {
                             // Calculate the macro start time based on Kind
                             var macroStartTime;
                             if (macroKind === "Start") {
-                                console.log(composition_start_time);
-                                console.log(macroTime);
+                                // console.log(composition_start_time);
+                                // console.log(macroTime);
                                 macroStartTime = convertHMSToSeconds(composition_start_time) + convertHMSToSeconds(macroTime);
                             } else if (macroKind === "End") {
-                                console.log(composition_end_time);
-                                console.log(macroTime);
+                                // console.log(composition_end_time);
+                                // console.log(macroTime);
                                 macroStartTime = composition_end_time - convertHMSToSeconds(macroTime);
                             } else {
                                 // Handle other cases if needed
@@ -1318,312 +1515,381 @@ function openSpl(id_spl) {
         }
     })
 }
-        $(document).on('click', '.infos_modal', function () {
-            alert('tet')
-           var loader_content  =
-               '<div class="jumping-dots-loader">'
-                   +'<span></span>'
-                   +'<span></span>'
-                   +'<span></span>'
-                +'</div>'
-           $('#Properties').html(loader_content)
 
-            $('#Properties-tab').addClass('active');
-            $('#spls-tab').removeClass('active');
-            $('#kdms-tab').removeClass('active');
-            $('#Properties').addClass('show active ');
-            $('#spls').removeClass('show active');
-            $('#kdms').removeClass('show active');
+    $(document).on('click', '.infos_modal', function () {
+        $(".infos_modal").modal('show');
 
-           window.cpl_id = $(this).attr("id") ;
-           window.location_id = $(this).attr("data-location")
+        var loader_content  =
+            '<div class="jumping-dots-loader">'
+                +'<span></span>'
+                +'<span></span>'
+                +'<span></span>'
+            +'</div>'
+        $('#Properties').html(loader_content)
 
-           if(true  )
-            {
-                var url = "{{  url('') }}"+   "/get_lmscpl_infos/"+cpl_id;
+        $('#Properties-tab').addClass('active');
+        $('#spls-tab').removeClass('active');
+        $('#kdms-tab').removeClass('active');
+        $('#Properties').addClass('show active ');
+        $('#spls').removeClass('show active');
+        $('#kdms').removeClass('show active');
 
-            }
+        window.cpl_id = $(this).attr("id") ;
+        window.location_id = $(this).attr("data-location")
 
-           $.ajax({
-                   url: url,
-                   method: 'GET',
-                   success:function(response)
+        if(lms == true )
+        {
+            var url = "{{  url('') }}"+   "/get_lmscpl_infos/"+cpl_id;
+            $('#kdms-tab').hide();
+        }
+        else
+        {
+            var url = "{{  url('') }}"+ "/get_cpl_infos/"+location_id+"/"+cpl_id ;
+            $('#kdms-tab').show();
+        }
+        $.ajax({
+                url: url,
+                method: 'GET',
+                success:function(response)
+                {
+                        result =
+                        '<div class="card rounded border mb-2">'
+                                +'<div class="card-body p-3">'
+                                    +'<div class="media  justify-content-start">'
+                                        +'<div class="media-body d-flex align-items-center">'
+                                            +'<i class=" mdi mdi-star icon-sm align-self-center me-3"></i>'
+                                            +'<h6 class="mb-1">Title :  </h6>'
+                                        +'</div>'
+                                        +'<div class="media-body">'
+                                            +'<p class="mb-0 text-muted m-1">   </p>'
+                                        +'</div>'
+                                        +'<div class="media-body">'
+                                            +'<p class="mb-0 text-muted"> '+ response.cpl.contentTitleText + ' </p>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>'
+                            +'<div class="card rounded border mb-2">'
+                                +'<div class="card-body p-3">'
+                                    +'<div class="media  d-flex justify-content-start">'
+                                        +'<div class="media-body d-flex align-items-center">'
+                                            +'<i class="mdi mdi-star icon-sm align-self-center me-3"></i>'
+                                            +'<h6 class="mb-1">UUID : </h6>'
+                                        +'</div>'
+                                        +'<div class="media-body">'
+                                            +'<p class="mb-0 text-muted m-1">   </p>'
+                                        +'</div>'
+                                        +'<div class="media-body">'
+                                            +'<p class="mb-0 text-muted"> '+ response.cpl.uuid + ' </p>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>'
+                            +'<div class="card rounded border mb-2">'
+                                +'<div class="card-body p-3">'
+                                    +'<div class="media  d-flex justify-content-start mr-5">'
+                                        +'<div class="media-body d-flex align-items-center">'
+                                            +'<i class="mdi mdi-timer icon-sm align-self-center me-3"></i>'
+                                            +'<h6 class="mb-1">Kind : </h6>'
+                                        +'</div>'
+                                        +'<div class="media-body">'
+                                            +'<p class="mb-0 text-muted m-1">   </p>'
+                                        +'</div>'
+                                        +'<div class="media-body">'
+                                            +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>'
+
+                            +'<div class="card rounded border mb-2">'
+                                +'<div class="card-body p-3">'
+                                    +'<div class="media  d-flex justify-content-start mr-5 row">'
+
+                                        +'<div class="col-md-4 text-center" >'
+                                            +'<div class="media-body ">'
+                                                +'<h6 class="mb-1">Duration   </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.cpl.durationEdits + '   </p>'
+                                            +'</div>'
+                                        +'</div>'
+
+                                        +'<div class="col-md-4 text-center" >'
+                                            +'<div class="media-body ">'
+                                                +'<h6 class="mb-1">Edit Rate   </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.cpl.EditRate + '   </p>'
+                                            +'</div>'
+                                        +'</div>'
+
+                                        +'<div class="col-md-4 text-center" >'
+                                            +'<div class="media-body ">'
+                                                +'<h6 class="mb-1">Disk size   </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.cpl.totalSize + '   </p>'
+                                            +'</div>'
+                                        +'</div>'
+
+
+
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>'
+
+
+
+                            +'<div class="card rounded border mb-2">'
+                                +'<div class="card-body p-3">'
+                                    +'<div class="media  d-flex justify-content-start mr-5 row">'
+
+                                        +'<div class="col-md-3 text-center" >'
+                                            +'<div class="media-body ">'
+                                                +'<h6 class="mb-1">Picture Height  </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                            +'</div>'
+                                        +'</div>'
+
+                                        +'<div class="col-md-3 text-center" >'
+                                            +'<div class="media-body ">'
+                                                +'<h6 class="mb-1">Picture width  </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                            +'</div>'
+                                        +'</div>'
+
+                                        +'<div class="col-md-3 text-center" >'
+                                            +'<div class="media-body ">'
+                                                +'<h6 class="mb-1">Picture Encoding Algorithm   </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                            +'</div>'
+                                        +'</div>'
+
+                                        +'<div class="col-md-3 text-center" >'
+                                            +'<div class="media-body ">'
+                                                +'<h6 class="mb-1">Picture Encryption Algorithm  </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                            +'</div>'
+                                        +'</div>'
+
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>'
+
+                            +'<div class="card rounded border mb-2">'
+                                +'<div class="card-body p-3">'
+                                    +'<div class="media  d-flex justify-content-start mr-5 row">'
+
+                                        +'<div class="col-md-3 text-center" >'
+                                            +'<div class="media-body ">'
+                                                +'<h6 class="mb-1">Sound Channel Count  </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.cpl.soundChannelCount + '   </p>'
+                                            +'</div>'
+                                        +'</div>'
+
+                                        +'<div class="col-md-3 text-center" >'
+                                            +'<div class="media-body ">'
+                                                +'<h6 class="mb-1">Sound Encoding Algorithm </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                            +'</div>'
+                                        +'</div>'
+
+                                        +'<div class="col-md-3 text-center" >'
+                                            +'<div class="media-body ">'
+                                                +'<h6 class="mb-1">Sound Encryption   </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                            +'</div>'
+                                        +'</div>'
+
+                                        +'<div class="col-md-3 text-center" >'
+                                            +'<div class="media-body ">'
+                                                +'<h6 class="mb-1"> Algorithm  </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                            +'</div>'
+                                        +'</div>'
+
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>'
+
+
+
+                    $('#Properties').html(result)
+
+
+
+
+
+                },
+                error: function(response) {
+
+                }
+        })
+
+    });
+
+    $(document).on('click', '#spls-tab', function () {
+
+       var loader_content  =
+           '<div class="jumping-dots-loader">'
+               +'<span></span>'
+               +'<span></span>'
+               +'<span></span>'
+               +'</div>'
+       $('#spls').html(loader_content)
+
+
+       if(lms == true )
+        {
+            var url = "{{  url('') }}"+   "/get_lmscpl_infos/"+cpl_id;
+            $('#kdms-tab').hide();
+        }
+        else
+        {
+            var url = "{{  url('') }}"+ "/get_cpl_infos/"+location_id+"/"+cpl_id ;
+            $('#kdms-tab').show();
+        }
+
+
+
+
+       $.ajax({
+               url: url,
+               method: 'GET',
+               success:function(response)
+               {
+                   console.log(response.spls) ;
+                   result =
+                       '<div class="">'
+                           +'<table class="table">'
+                               +'<thead>'
+                                   +'<tr>'
+                                       +'<th>UUID</th>'
+                                       +'<th>CPL Name</th>'
+
+                                   +'</tr>'
+                               +'</thead>'
+                               +'<tbody>'
+
+                   $.each(response.spls, function( index, value ) {
+
+                   result = result
+                                   +'<tr>'
+                                       +'<th>'+value.uuid+'</th>'
+                                       +'<th>'+value.name+'</th>'
+
+                                   +'</tr>'
+                   });
+                   result = result
+                               +'</tbody>'
+                           +'</table>'
+                       +'</div>'
+                   $('#spls').html(result)
+
+
+
+
+
+               },
+               error: function(response) {
+
+               }
+       })
+
+   });
+
+   $(document).on('click', '#kdms-tab', function () {
+
+       var loader_content  =
+           '<div class="jumping-dots-loader">'
+               +'<span></span>'
+               +'<span></span>'
+               +'<span></span>'
+               +'</div>'
+       $('#kdms').html(loader_content)
+
+       var url = "{{  url('') }}"+ "/get_cpl_infos/"+location_id+"/"+cpl_id ;
+
+
+       $.ajax({
+               url: url,
+               method: 'GET',
+               success:function(response)
+               {
+                   console.log(response) ;
+                   if(response.kdms.length)
                    {
-                           result =
-                           '<div class="card rounded border mb-2">'
-                                   +'<div class="card-body p-3">'
-                                       +'<div class="media  justify-content-start">'
-                                           +'<div class="media-body d-flex align-items-center">'
-                                               +'<i class=" mdi mdi-star icon-sm align-self-center me-3"></i>'
-                                               +'<h6 class="mb-1">Title :  </h6>'
-                                           +'</div>'
-                                           +'<div class="media-body">'
-                                               +'<p class="mb-0 text-muted m-1">   </p>'
-                                           +'</div>'
-                                           +'<div class="media-body">'
-                                               +'<p class="mb-0 text-muted"> '+ response.cpl.contentTitleText + ' </p>'
-                                           +'</div>'
-                                       +'</div>'
-                                   +'</div>'
-                               +'</div>'
-                               +'<div class="card rounded border mb-2">'
-                                   +'<div class="card-body p-3">'
-                                       +'<div class="media  d-flex justify-content-start">'
-                                           +'<div class="media-body d-flex align-items-center">'
-                                               +'<i class="mdi mdi-star icon-sm align-self-center me-3"></i>'
-                                               +'<h6 class="mb-1">UUID : </h6>'
-                                           +'</div>'
-                                           +'<div class="media-body">'
-                                               +'<p class="mb-0 text-muted m-1">   </p>'
-                                           +'</div>'
-                                           +'<div class="media-body">'
-                                               +'<p class="mb-0 text-muted"> '+ response.cpl.uuid + ' </p>'
-                                           +'</div>'
-                                       +'</div>'
-                                   +'</div>'
-                               +'</div>'
-                               +'<div class="card rounded border mb-2">'
-                                   +'<div class="card-body p-3">'
-                                       +'<div class="media  d-flex justify-content-start mr-5">'
-                                           +'<div class="media-body d-flex align-items-center">'
-                                               +'<i class="mdi mdi-timer icon-sm align-self-center me-3"></i>'
-                                               +'<h6 class="mb-1">Kind : </h6>'
-                                           +'</div>'
-                                           +'<div class="media-body">'
-                                               +'<p class="mb-0 text-muted m-1">   </p>'
-                                           +'</div>'
-                                           +'<div class="media-body">'
-                                               +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
-                                           +'</div>'
-                                       +'</div>'
-                                   +'</div>'
-                               +'</div>'
-
-                               +'<div class="card rounded border mb-2">'
-                                   +'<div class="card-body p-3">'
-                                       +'<div class="media  d-flex justify-content-start mr-5 row">'
-
-                                            +'<div class="col-md-4 text-center" >'
-                                                +'<div class="media-body ">'
-                                                    +'<h6 class="mb-1">Duration   </h6>'
-                                                +'</div>'
-                                                +'<div class="media-body">'
-                                                    +'<p class="mb-0 text-muted m-1">   </p>'
-                                                +'</div>'
-                                                +'<div class="media-body">'
-                                                    +'<p class="mb-0 text-muted"> '+ response.cpl.durationEdits + '   </p>'
-                                                +'</div>'
-                                            +'</div>'
-
-                                            +'<div class="col-md-4 text-center" >'
-                                                +'<div class="media-body ">'
-                                                    +'<h6 class="mb-1">Edit Rate   </h6>'
-                                                +'</div>'
-                                                +'<div class="media-body">'
-                                                    +'<p class="mb-0 text-muted m-1">   </p>'
-                                                +'</div>'
-                                                +'<div class="media-body">'
-                                                    +'<p class="mb-0 text-muted"> '+ response.cpl.EditRate + '   </p>'
-                                                +'</div>'
-                                            +'</div>'
-
-                                            +'<div class="col-md-4 text-center" >'
-                                                +'<div class="media-body ">'
-                                                    +'<h6 class="mb-1">Disk size   </h6>'
-                                                +'</div>'
-                                                +'<div class="media-body">'
-                                                    +'<p class="mb-0 text-muted m-1">   </p>'
-                                                +'</div>'
-                                                +'<div class="media-body">'
-                                                    +'<p class="mb-0 text-muted"> '+ response.cpl.totalSize + '   </p>'
-                                                +'</div>'
-                                            +'</div>'
-
-
-
-                                       +'</div>'
-                                   +'</div>'
-                               +'</div>'
-
-
-
-                               +'<div class="card rounded border mb-2">'
-                                   +'<div class="card-body p-3">'
-                                       +'<div class="media  d-flex justify-content-start mr-5 row">'
-
-                                            +'<div class="col-md-3 text-center" >'
-                                                +'<div class="media-body ">'
-                                                    +'<h6 class="mb-1">Picture Height  </h6>'
-                                                +'</div>'
-                                                +'<div class="media-body">'
-                                                    +'<p class="mb-0 text-muted m-1">   </p>'
-                                                +'</div>'
-                                                +'<div class="media-body">'
-                                                    +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
-                                                +'</div>'
-                                            +'</div>'
-
-                                            +'<div class="col-md-3 text-center" >'
-                                                +'<div class="media-body ">'
-                                                    +'<h6 class="mb-1">Picture width  </h6>'
-                                                +'</div>'
-                                                +'<div class="media-body">'
-                                                    +'<p class="mb-0 text-muted m-1">   </p>'
-                                                +'</div>'
-                                                +'<div class="media-body">'
-                                                    +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
-                                                +'</div>'
-                                            +'</div>'
-
-                                            +'<div class="col-md-3 text-center" >'
-                                                +'<div class="media-body ">'
-                                                    +'<h6 class="mb-1">Picture Encoding Algorithm   </h6>'
-                                                +'</div>'
-                                                +'<div class="media-body">'
-                                                    +'<p class="mb-0 text-muted m-1">   </p>'
-                                                +'</div>'
-                                                +'<div class="media-body">'
-                                                    +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
-                                                +'</div>'
-                                            +'</div>'
-
-                                            +'<div class="col-md-3 text-center" >'
-                                                +'<div class="media-body ">'
-                                                    +'<h6 class="mb-1">Picture Encryption Algorithm  </h6>'
-                                                +'</div>'
-                                                +'<div class="media-body">'
-                                                    +'<p class="mb-0 text-muted m-1">   </p>'
-                                                +'</div>'
-                                                +'<div class="media-body">'
-                                                    +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
-                                                +'</div>'
-                                            +'</div>'
-
-                                       +'</div>'
-                                   +'</div>'
-                               +'</div>'
-
-                               +'<div class="card rounded border mb-2">'
-                                   +'<div class="card-body p-3">'
-                                       +'<div class="media  d-flex justify-content-start mr-5 row">'
-
-                                            +'<div class="col-md-3 text-center" >'
-                                                +'<div class="media-body ">'
-                                                    +'<h6 class="mb-1">Sound Channel Count  </h6>'
-                                                +'</div>'
-                                                +'<div class="media-body">'
-                                                    +'<p class="mb-0 text-muted m-1">   </p>'
-                                                +'</div>'
-                                                +'<div class="media-body">'
-                                                    +'<p class="mb-0 text-muted"> '+ response.cpl.soundChannelCount + '   </p>'
-                                                +'</div>'
-                                            +'</div>'
-
-                                            +'<div class="col-md-3 text-center" >'
-                                                +'<div class="media-body ">'
-                                                    +'<h6 class="mb-1">Sound Encoding Algorithm </h6>'
-                                                +'</div>'
-                                                +'<div class="media-body">'
-                                                    +'<p class="mb-0 text-muted m-1">   </p>'
-                                                +'</div>'
-                                                +'<div class="media-body">'
-                                                    +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
-                                                +'</div>'
-                                            +'</div>'
-
-                                            +'<div class="col-md-3 text-center" >'
-                                                +'<div class="media-body ">'
-                                                    +'<h6 class="mb-1">Sound Encryption   </h6>'
-                                                +'</div>'
-                                                +'<div class="media-body">'
-                                                    +'<p class="mb-0 text-muted m-1">   </p>'
-                                                +'</div>'
-                                                +'<div class="media-body">'
-                                                    +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
-                                                +'</div>'
-                                            +'</div>'
-
-                                            +'<div class="col-md-3 text-center" >'
-                                                +'<div class="media-body ">'
-                                                    +'<h6 class="mb-1"> Algorithm  </h6>'
-                                                +'</div>'
-                                                +'<div class="media-body">'
-                                                    +'<p class="mb-0 text-muted m-1">   </p>'
-                                                +'</div>'
-                                                +'<div class="media-body">'
-                                                    +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
-                                                +'</div>'
-                                            +'</div>'
-
-                                       +'</div>'
-                                   +'</div>'
-                               +'</div>'
-
-
-
-                       $('#Properties').html(result)
-
-
-
-
-
-                   },
-                   error: function(response) {
-
-                   }
-           })
-
-        });
-
-        $(document).on('click', '#spls-tab', function () {
-
-           var loader_content  =
-               '<div class="jumping-dots-loader">'
-                   +'<span></span>'
-                   +'<span></span>'
-                   +'<span></span>'
-                   +'</div>'
-           $('#spls').html(loader_content)
-
-
-           if(true )
-            {
-                var url = "{{  url('') }}"+   "/get_lmscpl_infos/"+cpl_id;
-                $('#kdms-tab').hide();
-            }
-            else
-            {
-                var url = "{{  url('') }}"+ "/get_cpl_infos/"+location_id+"/"+cpl_id ;
-                $('#kdms-tab').show();
-            }
-
-
-
-
-           $.ajax({
-                   url: url,
-                   method: 'GET',
-                   success:function(response)
-                   {
-                       console.log(response.spls) ;
                        result =
                            '<div class="">'
                                +'<table class="table">'
                                    +'<thead>'
                                        +'<tr>'
+                                           +'<th>Screen</th>'
+                                           +'<th>Note Valide Before </th>'
+                                           +'<th>Note Valid After</th>'
                                            +'<th>UUID</th>'
-                                           +'<th>CPL Name</th>'
-
                                        +'</tr>'
                                    +'</thead>'
                                    +'<tbody>'
 
-                       $.each(response.spls, function( index, value ) {
+                       $.each(response.kdms, function( index, value ) {
 
                        result = result
                                        +'<tr>'
+                                           +'<th>'+value.screen.screen_name+'</th>'
+                                           +'<th>'+value.ContentKeysNotValidBefore+'</th>'
+                                           +'<th>'+value.ContentKeysNotValidAfter+'</th>'
                                            +'<th>'+value.uuid+'</th>'
-                                           +'<th>'+value.name+'</th>'
 
                                        +'</tr>'
                        });
@@ -1631,85 +1897,23 @@ function openSpl(id_spl) {
                                    +'</tbody>'
                                +'</table>'
                            +'</div>'
-                       $('#spls').html(result)
-
-
-
-
-
-                   },
-                   error: function(response) {
-
+                       $('#kdms').html(result)
                    }
-           })
-
-       });
-
-       $(document).on('click', '#kdms-tab', function () {
-
-           var loader_content  =
-               '<div class="jumping-dots-loader">'
-                   +'<span></span>'
-                   +'<span></span>'
-                   +'<span></span>'
-                   +'</div>'
-           $('#kdms').html(loader_content)
-
-           var url = "{{  url('') }}"+ "/get_cpl_infos/"+location_id+"/"+cpl_id ;
-
-
-           $.ajax({
-                   url: url,
-                   method: 'GET',
-                   success:function(response)
+                   else
                    {
-                       console.log(response) ;
-                       if(response.kdms.length)
-                       {
-                           result =
-                               '<div class="">'
-                                   +'<table class="table">'
-                                       +'<thead>'
-                                           +'<tr>'
-                                               +'<th>Screen</th>'
-                                               +'<th>Note Valide Before </th>'
-                                               +'<th>Note Valid After</th>'
-                                               +'<th>UUID</th>'
-                                           +'</tr>'
-                                       +'</thead>'
-                                       +'<tbody>'
-
-                           $.each(response.kdms, function( index, value ) {
-
-                           result = result
-                                           +'<tr>'
-                                               +'<th>'+value.screen.screen_name+'</th>'
-                                               +'<th>'+value.ContentKeysNotValidBefore+'</th>'
-                                               +'<th>'+value.ContentKeysNotValidAfter+'</th>'
-                                               +'<th>'+value.uuid+'</th>'
-
-                                           +'</tr>'
-                           });
-                           result = result
-                                       +'</tbody>'
-                                   +'</table>'
-                               +'</div>'
-                           $('#kdms').html(result)
-                       }
-                       else
-                       {
-                           $('#kdms').html('No data ')
-                       }
-
-
-
-                   },
-                   error: function(response) {
-
+                       $('#kdms').html('No data ')
                    }
-           })
 
-       });
+
+
+               },
+               error: function(response) {
+
+               }
+       })
+
+   });
+
     </script>
 
 
@@ -1729,8 +1933,10 @@ function openSpl(id_spl) {
                 +'</div>'
             $('#dragula-left').html(loader_content)
 
-            var location =  $('#location').val();
-            var url = "{{  url('') }}"+ '/get_cpl_with_filter/?location=' + location+'&lms=true&playlist_builder=true' ;
+
+            var  location =  $('#location').val();
+
+            var url = "{{  url('') }}"+ '/get_cpl_with_filter_for_noc/?location=' + location+'&lms=true&playlist_builder=true' ;
 
             $.ajax({
                 url: url,
@@ -1790,9 +1996,7 @@ function openSpl(id_spl) {
                                 '                           </span>\n' +
                                 '                          <span class="flat">' + value.soundChannelCount + ' </span>\n' +
                                 '                          <span class="flat"> ST  </span>\n' +
-                                '                          <span data-bs-toggle="modal" data-bs-target="#infos_modal" class="cpl-details infos_modal"  ' +
-
-
+                                '                          <span data-bs-toggle="modal" data-bs-target="#infos_modal" class=" infos_modal" href="#" ' +
                                 '                                data-uuid="' + value.uuid + '"' +
                                 '                                 id="' + value.id + '"' +
                                 '                                data-need_kdm="' + ((value.pictureEncryptionAlgorithm == "None" || value.pictureEncryptionAlgorithm == 0) ? 0 : 1) + '"' +
@@ -1987,7 +2191,29 @@ function openSpl(id_spl) {
             }
 
         });
+        $(document).on('click', '#edit_spl_properties', function () {
 
+            var opened_spl_status = $('#opened_spl').data("opened_spl_status");
+            console.log(opened_spl_status)
+            if (opened_spl_status == 1) {
+                var id_spl = $('#opened_spl').data("uuid");
+
+
+                var title = $('#opened_spl').text();
+
+                var mod = $('#opened_spl').data("mod");
+
+                var hfr = $('#opened_spl').data("hfr");
+                $('#uuid_spl_edit').val(id_spl);
+                $('#edit_spl_title').val(title);
+                $('#edit_display_mode').val(mod);
+                $("#edit-spl-properties-modal").modal('show');
+            } else {
+                $("#no-spl-selected").modal('show');
+
+            }
+
+        });
 
     </script>
 
@@ -2020,13 +2246,7 @@ function openSpl(id_spl) {
 
 
     $(document).on('click', '#reset_spl_builder', function () {
-        //$('#actual_spl_title').text("No SPL Selected , Create New One");
-    //  $('#id_spl_opened').text(0);
         $("#dragula-right").empty();
-        // $('#id_spl_opened').attr('data-hfr', 0 );
-        // $('#id_spl_opened').attr('data-mod', "" );
-        // $('#id_spl_opened').attr('data-spl_uuid', 0 );
-        // prepareSortablReorder();
     });
     $(document).on('click', '#display_spl_properties', function () {
         $("#spl-properties-modal").modal('show');
@@ -2249,9 +2469,10 @@ function openSpl(id_spl) {
                                        +'<th>'+value.spl_title+'</th>'
                                        +'<th>'+value.created_at+'</th>'
                                        +'<th>'+value.uuid+'</th>'
-                                       +'<th> <i class="btn btn-primary mdi mdi-tooltip-edit open_spl" data-title="'+value.spl_title+'" data-uuid="'+value.uuid+'"></i> <i class="btn btn-danger mdi   mdi-delete-forever" data-uuid="'+value.uuid+'"></i>   </th>'
-
-
+                                       +'<th> '
+                                        +'<i class="btn btn-primary mdi mdi-tooltip-edit open_spl" data-title="'+value.spl_title+'" data-uuid="'+value.uuid+'"></i> '
+                                        +'<i class="btn btn-danger mdi   mdi-delete-forever delete_spl" data-title="'+value.spl_title+'" data-uuid="'+value.uuid+'"></i>'
+                                       +'</th>'
 
                                    +'</tr>'
                    });
@@ -2665,13 +2886,129 @@ function openSpl(id_spl) {
             reorderMacroList(macroList);
         }
     });
+
+    $(document).on('click', '#confirm_edit_spl_properties', function () {
+        var title_spl = $('#spl_title').val();
+        var uuid = $('#uuid_spl_edit').val();
+        var display_mode = $('#display_mode').val();
+        var hfr = 0;
+        if ($('#spl_properties_hfr').is(":checked")) {
+            hfr = 1;
+        }
+        $.ajax({
+            url:"{{  url('') }}"+ "/editlocalspl",
+            type: 'post',
+            cache: false,
+            data: {
+                "_token": "{{ csrf_token() }}",
+
+                title_spl: spl_title,
+                display_mode: display_mode,
+                hfr: hfr,
+                uuid: uuid ,
+            },
+            success: function (response) {
+                try {
+                    if (status === "saved" ) {
+                        $('#container2 > .div_list').map(function () {
+                            if ($(this).data('version') === "new_item") {
+                                this.setAttribute('data-version', "old");
+                            }
+                        });
+
+                        array_spl = [];
+                        array_length = 0;
+                        window.array_length = 0;
+
+                        $('#success_message_update').css({"background": "#CCF5CC"});
+                        $('#success_message_update').fadeIn().html("SPL saved successfully");
+                        setTimeout(function () {
+                            $('#success_message_update').fadeOut("slow");
+                        }, 2000);
+                    }
+                } catch (e) {
+                    console.log(e);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(errorThrown);
+            },
+            complete: function (jqXHR, textStatus) {
+            }
+        });
+    });
+
+    $(document).ready(function () {
+        $(document).on('click', '.delete_spl', function () {
+
+            var spl_uuid = $(this).data('uuid');
+            var title = $(this).data('title');
+
+            $("#spl_title_to_delete").html(title);
+            $("#spl_uuid_to_delete").html(spl_uuid);
+            $("#id_spl_delete").val(spl_uuid);
+            $("#delete-spl").modal('show');
+
+        //  deleteSplSelected(spl_uuid);
+        });
+    });
+    $(document).ready(function () {
+        $(document).on('click', '#confirm_delete_spl', function () {
+            var spl_uuid =     $("#id_spl_delete").val();
+        deleteSplSelected(spl_uuid);
+        });
+    });
+
 </script>
 @endsection
 
 @section('custom_css')
 
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('assets/vendors/dragula/dragula.min.css') }}">
     <style>
+
+
+        /* ** custom ****/
+        #dragula-left ,
+        #dragula-right
+        {
+            border : 1px solid #2c2e33 ;
+        }
+        .select2.select2-container.select2-container--default
+        {
+            width : 80% !important ;
+            background: #2a3038 ;
+        }
+        .select2-container--default .select2-selection--multiple
+        {
+            border : none ;
+            background: #2a3038 ;
+        }
+        .select2-container--default .select2-selection--multiple .select2-selection__choice,
+        .select2-container--default .select2-selection--multiple .select2-selection__choice:nth-child(5n+1)
+        {
+            font-size: 14px ;
+            background: #2a3038 ;
+        }
+        .select2-container--default .select2-results__option--selected
+        {
+            background-color :#297eee ;
+        }
+        .select2-container--default .select2-selection--multiple .select2-selection__choice
+        {
+            padding: 5px;
+            padding-left: 21px ;
+
+        }
+        .select2-container--default .select2-selection--multiple .select2-selection__choice__remove
+        {
+            padding: 5px;
+        }
+
+
+        /** *************** **/
+
         .float-left {
             float: left;
         }
@@ -2734,6 +3071,22 @@ function openSpl(id_spl) {
         }
 
         .cpl-details {
+            font-size: 22px;
+            color: white;
+            text-shadow: 0px 0px #ffffff;
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+        .pattern-details{
+            font-size: 22px;
+            color: white;
+            text-shadow: 0px 0px #ffffff;
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+        .marker-details{
             font-size: 22px;
             color: white;
             text-shadow: 0px 0px #ffffff;
@@ -2859,7 +3212,7 @@ function openSpl(id_spl) {
             line-height: 1;
         }
 
-        .hide_div {
+     .hide_div {
             display: none;
         }
 
@@ -2883,10 +3236,6 @@ function openSpl(id_spl) {
         #order-listing{
             height: 688px;
         }
-        #dragula-left ,
-        #dragula-right
-        {
-            border : 1px solid #2c2e33 ;
-        }
+
     </style>
 @endsection

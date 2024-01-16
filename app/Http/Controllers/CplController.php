@@ -155,6 +155,26 @@ class CplController extends Controller
 
     }
 
+    public function get_cpl_with_filter_for_noc(Request $request )
+    {
+
+        $location = $request->location;
+        $country = $request->country;
+        $screen = $request->screen;
+        $lms= $request->lms ;
+        $playlist_builder= $request->playlist_builder ;
+        $macros = null ;
+        $locations= explode(',', $location);
+
+        $screens=null ;
+        $cpls =Lmscpl::with('location')->whereIn('location_id',$locations)->groupBy('uuid');
+
+        $cpls = $cpls->orderBy('contentKind', 'ASC')->orderBy('contentTitleText', 'ASC') ;
+        $cpls = $cpls->get() ;
+        $macros = Macro::whereIn('location_id',$locations)->groupBy('idmacro_config')->orderBy('section_title', 'ASC')->get() ;
+        return Response()->json(compact('cpls','screens','macros'));
+
+    }
     public function get_cpl_infos($location , $cpl )
     {
         $cpl = Cpl::where('id',$cpl)->where('location_id',$location)->first() ;
