@@ -546,7 +546,214 @@
                 <!--end modal-content-->
                 </div>
             </div>
+            <div class="modal fade show" id="marker-modal" tabindex="-1" role="dialog" aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="ModalLabel">Edit Marker Time Code </h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <p class="text-center" style="font-size: 17px;">The Marker will be attached to the elements time
+                                    code : <span id="title_selected_item"></span></p>
+                                <p class="text-center" style="font-size: 17px;">00 : 00 : 00</p>
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+                                    <label style="font-size: 17px;">Marker Label </label>
+                                    <input type="text" id="marker_label" value=""/>
+                                </div>
+                            </div>
 
+                            <div class="row mt-2">
+                                <div class="form-group">
+                                    <label style="font-size: 17px;">Offset </label>
+                                    <div class="form-check mt-0">
+                                        <label class="form-check-label" style="font-size: 17px;">
+                                            <input type="radio"
+                                                class="form-check-input Offset"
+                                                name="Offset_marker"
+                                                id="start_marker"
+                                                value="Start"> From the beginning of the clip
+                                            <i class="input-helper "></i><i class="input-helper"></i>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="form-check-label" style="font-size: 17px;">
+                                            <input type="radio"
+                                                class="form-check-input Offset"
+                                                name="Offset_marker"
+                                                id="end_marker"
+                                                value="End"
+                                                checked=""> From the end of the clip
+                                            <i class="input-helper "></i>
+                                            <i class="input-helper"></i>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="Hours_marker" style="font-size: 17px;">Hours</label>
+                                        <input type="number" style="font-size: 17px;" class="form-control" id="Hours_marker"
+                                            value="0">
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="Minutes_marker" style="font-size: 17px;">Minutes</label>
+                                        <input type="number" style="font-size: 17px;" class="form-control" id="Minutes_marker"
+                                            value="0">
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="Seconds_marker" style="font-size: 17px;">Seconds</label>
+                                        <input type="number" style="font-size: 17px;" class="form-control" id="Seconds_marker"
+                                            value="0">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col" style="text-align: center">
+                                    <button type="button" class="btn btn-primary btn-fw" id="confirm_add_marker">Confirm
+                                    </button>
+                                    <button class="btn btn-secondary btn-fw close" data-bs-dismiss="modal"
+                                            aria-label="Close">Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--      segment modal -->
+            <div class="modal fade show" id="segment-modal" tabindex="-1" role="dialog" aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="ModalLabel">
+                                <i class="btn btn-inverse-warning  mdi mdi-cube-outline"  style="margin-right: 7px;"></i>Edit Pack Information </h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="row">
+                                <div class="form-group">
+                                    <label for="pack_name">Pack Name</label>
+                                    <input type="text" class="form-control" id="pack_name" value="">
+                                    <input type="hidden" class="form-control" id="segment_uuid" value="">
+                                </div>
+
+                            </div>
+
+                            <div class="row mt-2">
+                                <div class="col" style="text-align: center">
+                                    <button type="button" class="btn btn-primary btn-fw" id="confirm_add_segment">Confirm
+                                    </button>
+                                    <button class="btn btn-secondary btn-fw close" data-bs-dismiss="modal"
+                                            aria-label="Close">Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade show" id="edit-marker-modal" tabindex="-1" role="dialog"  aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="ModalLabel">Edit Marker Time Code </h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <p class="text-center" style="font-size: 17px;">The Marker will be attached to the elements time
+                                    code : <span id="edit_title_selected_item"></span></p>
+                                <p class="text-center" style="font-size: 17px;" id="edit_marker_time_hms">00 : 00 : 00</p>
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+                                    <label style="font-size: 17px;">Marker Label </label>
+                                    <input type="text" id="edit_marker_label" value=""/>
+                                </div>
+                            </div>
+
+                            <div class="row mt-2">
+                                <div class="form-group">
+                                    <label style="font-size: 17px;">Offset </label>
+                                    <div class="form-check mt-0">
+                                        <label class="form-check-label" style="font-size: 17px;">
+                                            <input type="radio"
+                                                class="form-check-input Offset"
+                                                name="edit_Offset_marker"
+                                                id="edit_start_marker"
+                                                value="Start"> From the beginning of the clip
+                                            <i class="input-helper "></i><i class="input-helper"></i>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="form-check-label" style="font-size: 17px;">
+                                            <input type="radio"
+                                                class="form-check-input Offset"
+                                                name="edit_Offset_marker"
+                                                id="edit_end_marker"
+                                                value="End"
+                                                checked=""> From the end of the clip
+                                            <i class="input-helper "></i>
+                                            <i class="input-helper"></i>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="edit_Hours_marker" style="font-size: 17px;">Hours</label>
+                                        <input type="number" style="font-size: 17px;" class="form-control" id="edit_Hours_marker"
+                                            value="0" min="0">
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="edit_Minutes_marker" style="font-size: 17px;">Minutes</label>
+                                        <input type="number" style="font-size: 17px;" class="form-control" id="edit_Minutes_marker"
+                                            value="0" min="0">
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="edit_Seconds_marker" style="font-size: 17px;">Seconds</label>
+                                        <input type="number" style="font-size: 17px;" class="form-control" id="edit_Seconds_marker"
+                                            value="0" min="0">
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="parent_uuid" value="">
+                            <input type="hidden" id="marker_uuid" value="">
+                            <div class="row mt-2">
+
+                                <div class="col" style="text-align: center">
+                                    <button type="button" class="btn btn-primary btn-fw" id="confirm_edit_marker">Confirm
+                                    </button>
+                                    <button class="btn btn-secondary btn-fw close" data-bs-dismiss="modal"
+                                            aria-label="Close">Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 @endsection
 
@@ -557,496 +764,562 @@
 
     <script>
 
-// *********************** functions
-        function formatDurationToHMS(duration){
-            //  console.log(new Date(duration  * 1000).toISOString().slice(11, 19));
-            return   new Date(duration  * 1000).toISOString().slice(11, 19);
+// *********************** functions ***** */
 
+function formatDurationToHMS(duration) {
+    //  console.log(new Date(duration  * 1000).toISOString().slice(11, 19));
+    return new Date(duration * 1000).toISOString().slice(11, 19);
+
+}
+function convertHMSToSeconds(time) {
+    var parts = time.split(":");
+    var hours = parseInt(parts[0]);
+    var minutes = parseInt(parts[1]);
+    var seconds = parseInt(parts[2]);
+    return hours * 3600 + minutes * 60 + seconds;
+}
+
+function convertSecondsToHMS(seconds) {
+    var hours = Math.floor(seconds / 3600);
+    var minutes = Math.floor((seconds % 3600) / 60);
+    var remainingSeconds = seconds % 60;
+
+    // Add leading zeros if necessary
+    hours = String(hours).padStart(2, '0');
+    minutes = String(minutes).padStart(2, '0');
+    remainingSeconds = String(remainingSeconds).padStart(2, '0');
+
+    return hours + ':' + minutes + ':' + remainingSeconds;
+}
+
+function convertStringToSeconds(timeString) {
+
+    var timeParts = timeString.split(':');
+    var hours = parseInt(timeParts[0], 10);
+    var minutes = parseInt(timeParts[1], 10);
+    var seconds = parseInt(timeParts[2], 10);
+    return (hours * 3600) + (minutes * 60) + seconds;
+
+}
+
+function formatSize(sizeInBytes) {
+    if (sizeInBytes >= 1024 * 1024 * 1024) {
+        return (sizeInBytes / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
+    } else if (sizeInBytes >= 1024 * 1024) {
+        return (sizeInBytes / (1024 * 1024)).toFixed(2) + ' MB';
+    } else {
+        return sizeInBytes + ' Bytes';
+    }
+}
+
+function formatTime(seconds) {
+    var hours = Math.floor(seconds / 3600);
+    var minutes = Math.floor((seconds - (hours * 3600)) / 60);
+    var secs = Math.floor(seconds - (hours * 3600) - (minutes * 60));
+    return (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (secs < 10 ? "0" + secs : secs);
+}
+
+function uuidv4() {
+    return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    );
+}
+
+function getCplDetails(id_cpl, need_kdm) {
+    $.ajax({
+        url: 'system/controller_playlist_builder.php',
+        type: 'post',
+
+        data: {
+            action_control: "get_cpl_details_left_sid",
+            id_cpl: id_cpl,
+            need_kdm: need_kdm
+        },
+
+        success: function (response) {
+
+            var obj = JSON.parse(response);
+            var detail_cpl = obj.details_cpl;
+            if (detail_cpl == false) {
+
+            }
+
+            var details_spl_contains_cpl = obj.details_spl_contains_cpl;
+            $('#date_create_ingest_details').html("Creation Date :" + detail_cpl.date_create_ingest);
+            $('#details_title').html(detail_cpl.contentTitleText);
+            $('#details_uuid').html(detail_cpl.uuid);
+            $('#details_kind').html(detail_cpl.contentKind);
+            let duration_Seconds = detail_cpl.durationEdits * detail_cpl.editRate_denominator / detail_cpl.editRate_numerator;
+
+            duration_Seconds = convertSecondsToHMS(Math.round(duration_Seconds));
+            $('#details_duration').html(duration_Seconds);
+            $('#details_edit_rate').html(detail_cpl.editRate_numerator + " " + detail_cpl.editRate_denominator);
+            $('#details_dcp_size').html(formatSize(detail_cpl.packageSizeInBytes));
+            $('#details_pictureHeight').html(detail_cpl.pictureHeight);
+            $('#details_pictureWidth').html(detail_cpl.pictureWidth);
+            $('#details_pictureEncodingAlgorithm').html(detail_cpl.pictureEncodingAlgorithm);
+            $('#details_pictureEncryptionAlgorithm').html(detail_cpl.pictureEncryptionAlgorithm);
+            $('#details_soundChannelCount').html(detail_cpl.soundChannelCount);
+            $('#details_soundEncodingAlgorithm').html(detail_cpl.soundEncodingAlgorithm);
+            $('#details_soundEncryptionAlgorithm').html(detail_cpl.soundEncryptionAlgorithm);
+            $("#cpl_detail_model_left").modal('show');
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        },
+        complete: function (jqXHR, textStatus) {
         }
+    });
+}
 
-        function convertHMSToSeconds(time) {
-            var parts = time.split(":");
-            var hours = parseInt(parts[0]);
-            var minutes = parseInt(parts[1]);
-            var seconds = parseInt(parts[2]);
-            return hours * 3600 + minutes * 60 + seconds;
-        }
+// open selected spl
 
-        function convertSecondsToHMS(seconds) {
-            var hours = Math.floor(seconds / 3600);
-            var minutes = Math.floor((seconds % 3600) / 60);
-            var remainingSeconds = seconds % 60;
+function reorderMacroList(macroList) {
 
-            // Add leading zeros if necessary
-            hours = String(hours).padStart(2, '0');
-            minutes = String(minutes).padStart(2, '0');
-            remainingSeconds = String(remainingSeconds).padStart(2, '0');
 
-            return hours + ':' + minutes + ':' + remainingSeconds;
-        }
+    // Get all the media-body elements within the container
+    var macroBoxes = Array.from(macroList.querySelectorAll('.media-body.macro-box'));
 
-        function formatSize(sizeInBytes) {
-            if (sizeInBytes >= 1024 * 1024 * 1024) {
-                return (sizeInBytes / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
-            } else if (sizeInBytes >= 1024 * 1024) {
-                return (sizeInBytes / (1024 * 1024)).toFixed(2) + ' MB';
-            } else {
-                return sizeInBytes + ' Bytes';
+    // Sort the media-body elements based on the text content of the target element
+    macroBoxes.sort(function (a, b) {
+        var timeA = a.querySelector('.mb-0.text-muted.float-left').innerText;
+        var timeB = b.querySelector('.mb-0.text-muted.float-left').innerText;
+        // Assuming the time format is HH:mm:ss, you may need to modify the comparison logic accordingly
+        return timeA.localeCompare(timeB);
+    });
+
+    // Clear the existing content in the container
+    macroList.innerHTML = '';
+
+    // Append the sorted media-body elements back to the container
+    macroBoxes.forEach(function (box) {
+        macroList.appendChild(box);
+    });
+}
+
+function extractEditRateValues(editRate) {
+    var editRateArray = editRate.split(" ");
+    var editRate_numerator = editRateArray[0];
+    var editRate_denominator = editRateArray[1];
+
+    return [editRate_numerator, editRate_denominator];
+}
+
+function reorderRightList(){
+    var items = $('#dragula-right').find('.left-side-item');
+    var startTime = 0;
+    for (var i = 0; i < items.length; i++) {
+
+        var duration = parseInt(items[i].getAttribute('data-time_seconds'));
+        items[i].setAttribute('data-starttime', formatTime(startTime));
+        var composition_start_time = items[i].getAttribute('data-starttime');
+        startTime += duration;
+        var composition_end_time = startTime;
+        // Process the macro_list within the current item if it exists
+        var macroItems = items[i].querySelectorAll('.macro-box ');
+
+        if (macroItems.length > 0) {
+            for (var j = 0; j < macroItems.length; j++) {
+                var macroTime = macroItems[j].getAttribute('data-time');
+                var macroKind = macroItems[j].getAttribute('data-offset');
+                // Calculate the macro start time based on Kind
+                var macroStartTime;
+                if (macroKind === "Start") {
+                    console.log(composition_start_time);
+                    console.log(macroTime);
+                    macroStartTime = convertHMSToSeconds(composition_start_time) + convertHMSToSeconds(macroTime);
+                } else if (macroKind === "End") {
+                    console.log(composition_end_time);
+                    console.log(macroTime);
+                    macroStartTime = composition_end_time - convertHMSToSeconds(macroTime);
+                } else {
+                    // Handle other cases if needed
+                    macroStartTime = 0;
+                }
+
+                // Update the macro_time div with the calculated start time
+                macroItems[j].querySelector('.mb-0.text-muted.float-left').innerText = convertSecondsToHMS(macroStartTime);
             }
         }
 
-        function formatTime(seconds) {
-            var hours = Math.floor(seconds / 3600);
-            var minutes = Math.floor((seconds - (hours * 3600)) / 60);
-            var secs = Math.floor(seconds - (hours * 3600) - (minutes * 60));
-            return (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (secs < 10 ? "0" + secs : secs);
+        var macroList = items[i].querySelector('.card-body.macro-list');
+        reorderMacroList(macroList);
+    }
+}
+function setSplOpenedData(capabilities) {
+    const obj = {"capabilities": capabilities};
+    $('#id_spl_opened').attr('data-hfr', 0);
+    $('#id_spl_opened').attr('data-mod', "2D");
+    if (typeof obj.capabilities === 'object' && obj.capabilities.hasOwnProperty('capability1') && obj.capabilities.capability1 === null) {
+        $('#opened_spl').attr('data-mod', "2D");
+    } else if (Object.keys(obj.capabilities).length === 0) {
+
+        $('#opened_spl').attr('data-mod', "2D");
+    } else {
+        for (const key in obj.capabilities) {
+            if (obj.capabilities.hasOwnProperty(key)) {
+                const capability = obj.capabilities[key];
+
+                if (capability[0] === "HFR_CONTENT") {
+                    $('#opened_spl').attr('data-hfr', 1);
+                }
+                if (capability[0] === "4K_CONTENT") {
+
+                    $('#opened_spl').attr('data-mod', "4k");
+                }
+                if (capability[0] === "STEREOSCOPIC_CONTENT") {
+                    $('#opened_spl').attr('data-mod', "3D");
+                    $("#spl_properties_display_mode").val("3D");
+                }
+            }
         }
+    }
+}
+$(document).on('click', '.open_spl', function () {
+    var action_control = "open_spl";
+    var id_spl= $(this).data("uuid");
 
-        function getCplDetails(id_cpl,need_kdm){
-            $.ajax({
-                url: 'system/controller_playlist_builder.php',
-                type: 'post',
+    openSpl(id_spl);
+});
+function openSpl(id_spl) {
+    $.ajax({
+        url : "{{  url('') }}"+   "/open_nocspl",
+        type: 'get',
+        data: {
+            action_control: "open_spl",
+            id_spl: id_spl ,
+            "_token": "{{ csrf_token() }}",
+        },
+        success: function (response) {
+            var response = JSON.parse(response);
+            var obj = response.spl_file;
+            var capabilities = response.capabilities;
+            let box = "";
 
-                data: {
-                    action_control: "get_cpl_details_left_sid",
-                    id_cpl: id_cpl,
-                    need_kdm:need_kdm
-                },
+            try {
 
-                success: function (response) {
 
-                    var obj = JSON.parse(response);
-                    var detail_cpl=obj.details_cpl;
-                    if(detail_cpl==false){
+                $('#opened_spl').attr('data-uuid', obj.Id);
+
+
+                setSplOpenedData(capabilities);
+
+
+                if (obj.hasOwnProperty('EventList') && !obj.hasOwnProperty('PackList')) {
+                    var pack = [obj.EventList];
+                    var obj = {
+                        "EventList": obj.EventList
+                    };
+                    var packList = [obj];
+
+                } else {
+                    var packList = obj.PackList;
+
+                    if (Array.isArray(packList.Pack)) {
+                        packList = obj.PackList.Pack;
+
+                    } else if (typeof packList.Pack === 'object') {
+
+                        var packList = [packList.Pack];
 
                     }
-
-                    var details_spl_contains_cpl=obj.details_spl_contains_cpl;
-                    $('#date_create_ingest_details').html("Creation Date :"+detail_cpl.date_create_ingest);
-                    $('#details_title').html(detail_cpl.contentTitleText);
-                    $('#details_uuid').html(detail_cpl.uuid);
-                    $('#details_kind').html(detail_cpl.contentKind);
-                    let duration_Seconds= detail_cpl.durationEdits *detail_cpl.editRate_denominator/detail_cpl.editRate_numerator;
-
-                    duration_Seconds=convertSecondsToHMS(Math.round(duration_Seconds));
-                    $('#details_duration').html(duration_Seconds);
-                    $('#details_edit_rate').html(detail_cpl.editRate_numerator+" "+detail_cpl.editRate_denominator);
-                    $('#details_dcp_size').html( formatSize(detail_cpl.packageSizeInBytes)  );
-                    $('#details_pictureHeight').html(detail_cpl.pictureHeight);
-                    $('#details_pictureWidth').html(detail_cpl.pictureWidth);
-                    $('#details_pictureEncodingAlgorithm').html(detail_cpl.pictureEncodingAlgorithm);
-                    $('#details_pictureEncryptionAlgorithm').html(detail_cpl.pictureEncryptionAlgorithm);
-                    $('#details_soundChannelCount').html(detail_cpl.soundChannelCount);
-                    $('#details_soundEncodingAlgorithm').html(detail_cpl.soundEncodingAlgorithm);
-                    $('#details_soundEncryptionAlgorithm').html(detail_cpl.soundEncryptionAlgorithm);
-                    $("#cpl_detail_model_left").modal('show');
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.log(errorThrown);
-                },
-                complete: function (jqXHR, textStatus) {
                 }
-            });
-        }
 
-        // open selected spl
+                for (var packId in packList) {
+                    var pack = packList[packId];
 
-        function openSpl(id_spl) {
-            $.ajax({
-                url: 'system/controller_playlist_builder.php',
-                type: 'post',
-                data: {
-                    action_control: "open_spl",
-                    id_spl: id_spl
-                },
-                success: function (response) {
-                    var response = JSON.parse(response);
-                    var obj= response.spl_file;
-                    var capabilities= response.capabilities;
-                    let box = "";
+                    if (Object.keys(pack.EventList).length === 0) {
+                        box +=
+                            '<div class="card rounded border mb-2  segment-style"' +
+                            '    data-uuid="' + pack.Id + '"' +
+                            '    data-title="' + pack.PackName + '" ' +
+                            '    data-type="segment" data-type_component="segment"' +
+                            '    data-action="add"> ' +
+                            '    <div class="card-body"  > ' +
+                            '      <div class="media-body">' +
+                            '            <p class="mb-0 text-muted float-left">  ' +
+                            '                <i class="btn btn-inverse-warning  mdi mdi-package-variant-closed"></i> ' +
+                            pack.PackName +
+                            '            </p>' +
+                            '            <p class="mb-0 text-muted float-right">\n' +
+                            '                 <span class=" ">\n' +
+                            '                    <i class="btn btn-primary  mdi mdi-magnify custom-search  segment-details" data-uuid="' + pack.Id + '"></i>\n' +
+                            '                    <i class="btn btn-danger mdi mdi-delete-forever remove-cpl custom-search"></i>\n' +
+                            '                 </span>   ' +
+                            '            </p>' +
+                            '      </div>' +
+                            '    </div>' +
+                            '</div>';
+                    } else {
 
-                    try {
-                        $('#actual_spl_title').text(obj.AnnotationText);
-                        $('#id_spl_opened').text(obj.Id);
-                        $('#id_spl_opened').attr('data-spl_uuid', obj.Id );
-                        $('#id_spl_opened').attr('data-title', obj.AnnotationText);
+                        var events = pack.EventList.Event;
+                        // if (Array.isArray(pack.EventList.Event)) {
+                        //     var events = pack.EventList.Event;
+                        //
+                        // }
+                        //
+                        // if (typeof pack.EventList.Event === 'object'){
+                        //     var  events =[  pack.EventList.Event]  ;
+                        //
+                        // }
+                        // if (typeof events === 'object'){
+                        //       events =[events]  ;
+                        //
+                        // }else{
+                        //      events = pack.EventList.Event;
+                        // }
+                        console.log(events);
+                        for (var i = 0; i < events.length; i++) {
 
-                        setSplOpenedData(capabilities);
+                            console.log(events[i]);
+                            var macro_box = '';
+                            var marker_box = '';
+                            var event = events[i];
 
+                            // Access event properties
+                            var eventId = event.Id;
+                            var ElementList = event.ElementList;
+                            var mainElement = event.ElementList.MainElement;
+                            var list_macro_style = " hide_div ";
+                            var list_marker_style = " hide_div "
+                            // check macro
+                            if (ElementList.hasOwnProperty('AutomationCue')) {
+                                if (Array.isArray(ElementList.AutomationCue)) {
+                                    var macro_list = ElementList.AutomationCue;
+                                } else {
+                                    var macro_list = [ElementList.AutomationCue];
+                                }
 
+                                if (macro_list.length > 0) {
+                                    for (let i = 0; i < macro_list.length; i++) {
+                                        macro_box +=
+                                            '   <div class="media-body macro-box col-md-8" data-title="' + macro_list[i].Action + '" ' +
+                                            '        data-offset="' + macro_list[i].Kind + '"' +
+                                            '        data-time="' + convertSecondsToHMS(macro_list[i].Offset * 1 / 24) + '"' +
+                                            '        data-uuid="' + macro_list[i].Id + '"' +
+                                            '        data-idmacro="">' + macro_list[i].Action +
+                                            '      <p class="mb-0 text-muted float-left">' + convertSecondsToHMS(macro_list[i].Offset * 1 / 24) + '</p> ' +
+                                            '      <span class="mb-0 text-muted float-left" style="margin: 0px 2px 0px 20px; ">  ---  </span>' +
+                                            '      <p class="mb-0 text-muted float-right">\n' +
+                                            '        <span class=" ">\n' +
+                                            '            <i class="btn btn-primary  mdi mdi-magnify custom-search  macro-details" style="font-size: 18px; "></i>\n' +
+                                            '            <i class="btn btn-danger mdi mdi-delete-forever remove-macro custom-search" style="font-size: 18px;"></i>    ' +
+                                            '         </span>   ' +
+                                            '       </p>' +
+                                            '    </div>';
+                                    }
+                                    list_macro_style = " "
+                                } else {
 
-
-
-                        if (obj.hasOwnProperty('EventList') && !obj.hasOwnProperty('PackList') ) {
-                            var pack =[obj.EventList]  ;
-                            var obj = {
-                                "EventList": obj.EventList
-                            };
-                            var packList=[obj];
-
-                        }
-                        else{
-                            var packList = obj.PackList;
-
-                            if (Array.isArray(packList.Pack)) {
-                                packList = obj.PackList.Pack;
-
-                            }else if (typeof packList.Pack === 'object'){
-
-                                var packList =[packList.Pack]  ;
-
+                                }
                             }
-                        }
+                            // check markers
+                            if (ElementList.hasOwnProperty('Marker')) {
+                                if (Array.isArray(ElementList.Marker)) {
+                                    var Marker_list = ElementList.Marker;
+                                } else {
+                                    var Marker_list = [ElementList.Marker];
+                                }
 
-                        for (var packId in packList) {
-                            var pack = packList[packId];
+                                if (Marker_list.length > 0) {
+                                    for (let i = 0; i < Marker_list.length; i++) {
+                                        marker_box +=
+                                            '<div class="col-md-12 marker_item marker_style" style="margin-left: 0px!important;"' +
+                                            ' data-title="' + Marker_list[i].Label + '"' +
+                                            ' data-offset="' + Marker_list[i].Kind + '" ' +
+                                            ' data-time="' + convertSecondsToHMS(Marker_list[i].Offset * 1 / 24) + '"' +
+                                            ' data-uuid="16b06cf1-2e7b-40ef-9807-d22485bb7c36"> ' +
+                                            '   <div class="col-md-2" style="padding-left:12px;">|------</div> ' +
+                                            '   <div class="col-md-2" id="marker_time">' + convertSecondsToHMS(Marker_list[i].Offset * 1 / 24) + '</div>' +
+                                            '   <div class="col-md-6" id="macrker_title">' + Marker_list[i].Label + '</div>  ' +
+                                            '   <i class="fa fa-search col-sd-1 search-marker_item"></i>' +
+                                            '   <i class="fa fa-close col-sd-1  delete-marker_item"></i>' +
+                                            '</div>';
+                                    }
+                                    list_marker_style = " "
+                                } else {
 
-                            if( Object.keys(pack.EventList).length === 0){
-                                console.log(pack);
-                                box +='<div class="list-group-item div_list segment_list row segment"' +
-                                    '  data-id="'+pack.Id+'"' +
-                                    '  data-title="'+pack.PackName+'" ' +
-                                    '  data-type="segment" ' +
-                                    '  data-action="add" draggable="false"> ' +
-                                    '   <div class="title-content col-md-7" style="font-size: 12px;"> ' +
-                                    '      <i class="fa fa-link" aria-hidden="true" style="color:#a2b927;"></i> ' +
-                                    pack.PackName +
-                                    '   </div>   ' +
-                                    '    <div class="details-content col-md-3" style=""> ' +
-                                    '       <div class="col-12 col-md-7">  </div>  ' +
-                                    '    </div>  ' +
-                                    '    <i class="fa fa-search  segment_properties"></i>  ' +
-                                    '    <i class="fa fa-close delete-spl_item"></i> ' +
+                                }
+                                console.log(marker_box);
+                            }
+                            if (mainElement.hasOwnProperty('Composition')) {
+
+                                var Composition = mainElement.Composition;
+
+                                var IntrinsicDuration = Composition.IntrinsicDuration;
+                                var EditRate = extractEditRateValues(Composition.EditRate);
+                                var editRate_numerator = EditRate[0];
+                                var editRate_denominator = EditRate[1];
+                                var duration_seconds = Composition.IntrinsicDuration * editRate_denominator / editRate_numerator;
+                                var hms_time = convertSecondsToHMS(duration_seconds);
+                                console.log("composition");
+                                box +=
+                                    '<div class="card rounded border mb-2 left-side-item"' +
+                                    '      data-type="Composition"' +
+                                    '      data-id="' + eventId + '"' +
+                                    '      data-uuid="' + Composition.CompositionPlaylistId + '" ' +
+                                    '      data-source="undefined"' +
+                                    '      data-title="' + Composition.AnnotationText + '"' +
+                                    '      data-editrate_denominator="' + editRate_denominator + '" ' +
+                                    '      data-editrate_numerator="' + editRate_numerator + '"' +
+                                    '      data-id_server="undefined"' +
+                                    '      data-version="new_item" data-time_seconds="' + duration_seconds + '"' +
+                                    '      data-time="' + hms_time + '" data-starttime="00:00:00" ' +
+                                    '      draggable="false" style=""> ' +
+                                    '    <div class="card-body  ">\n' +
+                                    '       <div class="media-body  ">\n' +
+                                    '            <h6 class="mb-1" style="font-size: 17px;color:#52d4f7">' + Composition.AnnotationText + ' </h6>\n' +
+                                    '       </div>\n' +
+                                    '      <div class="media-body">\n' +
+                                    '            <p class="mb-0 text-muted float-left">00:00:00</p>\n' +
+                                    '            <p class="mb-0 text-muted float-right">\n' +
+                                    '              <span class=" ">\n' +
+                                    '                <i class="btn btn-primary  mdi mdi-magnify custom-search  cpl-details" data-uuid="' + Composition.CompositionPlaylistId + '"  ></i>\n' +
+                                    '                <i class="btn btn-danger mdi mdi-delete-forever remove-cpl custom-search"></i>\n' +
+                                    '              </span>' +
+                                    '             </p>\n' +
+                                    '       </div>' +
+                                    '    </div>' +
+                                    '    <div class="card-body macro-list ' + list_macro_style + '">' + macro_box + '</div> ' +
+                                    '    <div class="card-body marker-list  ' + list_marker_style + '">' + marker_box + '</div> ' +
+                                    '    <div class="col-md-10 intermission_list"></div>' +
                                     '</div>';
+                            } else if (mainElement.hasOwnProperty('Pattern')) {
+                                var Pattern = mainElement.Pattern;
+                                var IntrinsicDuration = Pattern.Duration;
+                                var EditRate = extractEditRateValues(Pattern.EditRate);
+                                var editRate_numerator = EditRate[0];
+                                var editRate_denominator = EditRate[1];
+                                var duration_seconds = Pattern.Duration * editRate_denominator / editRate_numerator;
+                                var hms_time = convertSecondsToHMS(duration_seconds);
+
+                                box +=
+                                    '<div class="macro_list_sortable list-group-item div_list row cpl_component_to_select cpl_component component"' +
+                                    '      data-type="pattern" ' +
+                                    '      data-id="' + eventId + '"' +
+                                    '      data-uuid="' + Pattern.Id + '" ' +
+                                    '      data-source="undefined"' +
+                                    '      data-title="' + Pattern.AnnotationText + '"' +
+                                    '      data-editrate_denominator="' + editRate_denominator + '" ' +
+                                    '      data-editrate_numerator="' + editRate_numerator + '" data-id_server="undefined"' +
+                                    '      data-version="new_item" data-time_seconds="' + duration_seconds + '"' +
+                                    '      data-time="' + hms_time + '" data-starttime="00:00:00" ' +
+                                    '      draggable="false" style=""> ' +
+                                    '   <div class="title-content col-md-7 left_panel_title">' +
+
+                                    (Pattern.AnnotationText == "Black 3D" || Pattern.AnnotationText == "Black 3D 48" ? '<span class="icon_pattern">3D</span> '
+                                        : "") +
+                                    Pattern.AnnotationText +
+                                    '   </div>  ' +
+                                    '   <div class="details-content col-md-3" style="">      ' +
+                                    '      <div class=" ">          ' +
+                                    '          <i class="fa fa-clock-o" aria-hidden="true"></i>         ' +
+                                    '         <span class="start_time">00:00:00</span>       ' +
+                                    '      </div> ' +
+                                    '  </div>\n' +
+                                    '  <i class="fa fa-search col-sd-1 search-spl_item"></i>  ' +
+                                    '  <i class="fa fa-close col-sd-1  delete-spl_item"></i>  ' +
+                                    '    <div class="col-md-12 macro_list" style="padding :0px"> ' +
+                                    macro_box +
+                                    '    </div>   ' +
+                                    '    <div class="col-md-10 marker_list">' +
+                                    marker_box +
+                                    '    </div>   ' +
+                                    '    <div class="col-md-10 intermission_list"></div>' +
+                                    '</div>';
+                                console.log(marker_box);
                             }
-                            else{
-
-                                var events = pack.EventList.Event;
-                                // if (Array.isArray(pack.EventList.Event)) {
-                                //     var events = pack.EventList.Event;
-                                //
-                                // }
-                                //
-                                // if (typeof pack.EventList.Event === 'object'){
-                                //     var  events =[  pack.EventList.Event]  ;
-                                //
-                                // }
-                                // if (typeof events === 'object'){
-                                //       events =[events]  ;
-                                //
-                                // }else{
-                                //      events = pack.EventList.Event;
-                                // }
-                                console.log(events);
-                                for (var i = 0; i < events.length; i++) {
-
-                                    console.log(events[i]);
-                                    var macro_box='';
-                                    var marker_box='';
-                                    var event = events[i];
-
-                                    // Access event properties
-                                    var eventId = event.Id;
-                                    var ElementList = event.ElementList ;
-                                    var mainElement = event.ElementList.MainElement;
-
-                                    // check macro
-                                    if(ElementList.hasOwnProperty('AutomationCue')){
-                                        if (Array.isArray(ElementList.AutomationCue)) {
-                                            var macro_list = ElementList.AutomationCue;
-                                        }else  {
-                                            var macro_list  =[ElementList.AutomationCue]  ;
-                                        }
-                                        for (let i=0;i<  macro_list.length;i++) {
-                                            macro_box+=
-                                                '   <div class="col-md-10 macro_item macro_style" data-title="'+macro_list[i].Action+'" ' +
-                                                'data-offset="'+macro_list[i].Kind+'"' +
-                                                ' data-time="'+convertSecondsToHMS(macro_list[i].Offset*1/24)+'"' +
-                                                ' data-uuid="'+macro_list[i].Id+'"' +
-                                                ' data-idmacro="">' +
-                                                '         <div class="col-md-2" style="padding-left:12px;">|------</div>' +
-                                                '         <div class="col-md-2" id="macro_time">'+convertSecondsToHMS(macro_list[i].Offset*1/24)+'</div>' +
-                                                '         <div class="col-md-6" id="macro_title">'+macro_list[i].Action+'</div>' +
-                                                '         <i class="fa fa-search col-sd-1 search-macro_item"></i>' +
-                                                '         <i class="fa fa-close col-sd-1  delete-macro_item"></i>' +
-                                                '   </div>   ';
-                                        }
-                                    }
-                                    // check markers
-                                    if(ElementList.hasOwnProperty('Marker')){
-                                        if (Array.isArray(ElementList.Marker)) {
-                                            var Marker_list = ElementList.Marker;
-                                        }else  {
-                                            var Marker_list  =[ElementList.Marker]  ;
-                                        }
-                                        for (let i=0;i<  Marker_list.length;i++) {
-                                            marker_box+=
-                                                '<div class="col-md-12 marker_item marker_style" style="margin-left: 0px!important;"' +
-                                                ' data-title="'+Marker_list[i].Label+'"' +
-                                                ' data-offset="'+Marker_list[i].Kind+'" ' +
-                                                ' data-time="'+convertSecondsToHMS(Marker_list[i].Offset*1/24)+'"' +
-                                                ' data-uuid="16b06cf1-2e7b-40ef-9807-d22485bb7c36"> ' +
-                                                '   <div class="col-md-2" style="padding-left:12px;">|------</div> ' +
-                                                '   <div class="col-md-2" id="marker_time">'+convertSecondsToHMS(Marker_list[i].Offset*1/24)+'</div>' +
-                                                '   <div class="col-md-6" id="macrker_title">'+Marker_list[i].Label+'</div>  ' +
-                                                '   <i class="fa fa-search col-sd-1 search-marker_item"></i>' +
-                                                '   <i class="fa fa-close col-sd-1  delete-marker_item"></i>' +
-                                                '</div>';
-                                        }
-                                        console.log(marker_box);
-                                    }
-                                    if(mainElement.hasOwnProperty('Composition')){
-
-                                        var Composition=mainElement.Composition;
-
-                                        var IntrinsicDuration=Composition.IntrinsicDuration;
-                                        var EditRate= extractEditRateValues(Composition.EditRate);
-                                        var editRate_numerator =EditRate[0];
-                                        var editRate_denominator  =EditRate[1];
-                                        var duration_seconds=Composition.IntrinsicDuration*editRate_denominator/editRate_numerator;
-                                        var hms_time= convertSecondsToHMS(duration_seconds);
-                                        console.log("composition");
-                                        box +=
-                                            '<div class="macro_list_sortable list-group-item div_list row cpl_component_to_select cpl_component component"' +
-                                            '      data-type="Composition"' +
-                                            '      data-id="'+eventId+'"' +
-                                            '      data-uuid="'+Composition.CompositionPlaylistId+'" ' +
-                                            '      data-source="undefined"' +
-                                            '      data-title="'+Composition.AnnotationText+'"' +
-                                            '      data-editrate_denominator="'+editRate_denominator+'" ' +
-                                            '      data-editrate_numerator="'+editRate_numerator+'"' +
-                                            '      data-id_server="undefined"' +
-                                            '      data-version="new_item" data-time_seconds="'+duration_seconds+'"' +
-                                            '      data-time="'+hms_time+'" data-starttime="00:00:00" ' +
-                                            '      draggable="false" style=""> ' +
-                                            '   <div class="title-content col-md-7 left_panel_title">' +
-                                            '     <i class="fa fa-list content_pack" aria-hidden="true"></i> ' +
-                                            Composition.AnnotationText +
-                                            '   </div>  ' +
-                                            '   <div class="details-content col-md-3" style="">      ' +
-                                            '      <div class=" ">          ' +
-                                            '          <i class="fa fa-clock-o" aria-hidden="true"></i>         ' +
-                                            '         <span class="start_time">00:00:00</span>       ' +
-                                            '      </div> ' +
-                                            '  </div>\n' +
-                                            '  <i class="fa fa-search col-sd-1 search-spl_item"></i>  ' +
-                                            '  <i class="fa fa-close col-sd-1  delete-spl_item"></i>  ' +
-
-                                            '   <div class="col-md-12 macro_list" style="padding :0px"> ' +
-                                            macro_box+
-                                            '   </div>   ' +
-                                            '   <div class="col-md-10 marker_list">' +
-                                            marker_box+
-                                            '   </div>   ' +
-                                            '   <div class="col-md-10 intermission_list"></div>' +
-                                            '</div>';
-                                    }
-                                    else if(mainElement.hasOwnProperty('Pattern')){
-                                        console.log("Pattern");
-
-                                        var Pattern=mainElement.Pattern;
-                                        console.log(Pattern);
-
-                                        var IntrinsicDuration=Pattern.Duration;
-                                        var EditRate= extractEditRateValues(Pattern.EditRate);
-                                        var editRate_numerator =EditRate[0];
-                                        var editRate_denominator  =EditRate[1];
-                                        var duration_seconds=Pattern.Duration*editRate_denominator/editRate_numerator;
-                                        var hms_time= convertSecondsToHMS(duration_seconds);
-
-                                        box +=
-                                            '<div class="macro_list_sortable list-group-item div_list row cpl_component_to_select cpl_component component"' +
-                                            '      data-type="pattern" ' +
-                                            '      data-id="'+eventId+'"' +
-                                            '      data-uuid="'+Pattern.Id+'" ' +
-                                            '      data-source="undefined"' +
-                                            '      data-title="'+Pattern.AnnotationText+'"' +
-                                            '      data-editrate_denominator="'+editRate_denominator+'" ' +
-                                            '      data-editrate_numerator="'+editRate_numerator+'" data-id_server="undefined"' +
-                                            '      data-version="new_item" data-time_seconds="'+duration_seconds+'"' +
-                                            '      data-time="'+hms_time+'" data-starttime="00:00:00" ' +
-                                            '      draggable="false" style=""> ' +
-                                            '   <div class="title-content col-md-7 left_panel_title">' +
-
-                                            (Pattern.AnnotationText=="Black 3D" || Pattern.AnnotationText=="Black 3D 48"?'<span class="icon_pattern">3D</span> '
-                                                :  "")+
-                                            Pattern.AnnotationText +
-                                            '   </div>  ' +
-                                            '   <div class="details-content col-md-3" style="">      ' +
-                                            '      <div class=" ">          ' +
-                                            '          <i class="fa fa-clock-o" aria-hidden="true"></i>         ' +
-                                            '         <span class="start_time">00:00:00</span>       ' +
-                                            '      </div> ' +
-                                            '  </div>\n' +
-                                            '  <i class="fa fa-search col-sd-1 search-spl_item"></i>  ' +
-                                            '  <i class="fa fa-close col-sd-1  delete-spl_item"></i>  ' +
-                                            '    <div class="col-md-12 macro_list" style="padding :0px"> ' +
-                                            macro_box+
-                                            '    </div>   ' +
-                                            '    <div class="col-md-10 marker_list">' +
-                                            marker_box+
-                                            '    </div>   ' +
-                                            '    <div class="col-md-10 intermission_list"></div>' +
-                                            '</div>';
-                                        console.log(marker_box);
-                                    }
-                                    macro_box="";
-                                    marker_box="";
-                                }
-                            }
-
+                            macro_box = "";
+                            marker_box = "";
                         }
-
-                        $('#dragula-right').html(box);
-                        var items = container2.querySelectorAll('.component');
-                        var startTime = 0;
-                        for (var i = 0; i < items.length; i++) {
-                            console.log(items[i]);
-                            var duration = parseInt(items[i].getAttribute('data-time_seconds'));
-
-                            items[i].setAttribute('data-starttime',   formatTime(startTime));
-                            var composition_start_time=   items[i].getAttribute('data-starttime');
-
-                            $(items[i]).find('div:nth-child(2) span').html(formatTime(startTime));
-                            startTime += duration;
-                            var composition_end_time=   startTime;
-                            // Process the macro_list within the current item if it exists
-                            var macroItems = items[i].querySelectorAll('.macro_item');
-                            if (macroItems.length > 0) {
-                                for (var j = 0; j < macroItems.length; j++) {
-                                    var macroTime = macroItems[j].getAttribute('data-time');
-                                    var macroKind = macroItems[j].getAttribute('data-offset');
-
-                                    // Calculate the macro start time based on Kind
-                                    var macroStartTime;
-                                    if (macroKind === "Start") {
-                                        console.log(composition_start_time);
-                                        console.log(macroTime);
-                                        macroStartTime = convertHMSToSeconds(composition_start_time) + convertHMSToSeconds(macroTime);
-                                    } else if (macroKind === "End") {
-                                        console.log(composition_end_time);
-                                        console.log(macroTime);
-                                        macroStartTime = composition_end_time - convertHMSToSeconds(macroTime);
-                                    } else {
-                                        // Handle other cases if needed
-                                        macroStartTime = 0;
-                                    }
-
-                                    // Update the macro_time div with the calculated start time
-                                    macroItems[j].querySelector('#macro_time').innerText = convertSecondsToHMS(macroStartTime);
-                                }
-                            }
-
-
-                            var markerItems = items[i].querySelectorAll('.marker_item');
-
-                            if (markerItems.length > 0) {
-                                for (var j = 0; j < markerItems.length; j++) {
-                                    var markerTime = markerItems[j].getAttribute('data-time');
-                                    var markerKind = markerItems[j].getAttribute('data-offset');
-
-                                    // Calculate the macro start time based on Kind
-                                    var markerStartTime;
-                                    if (markerKind === "Start") {
-
-                                        markerStartTime = convertHMSToSeconds(composition_start_time) + convertHMSToSeconds(markerTime);
-
-                                    } else if (markerKind === "End") {
-                                        console.log(composition_end_time);
-                                        console.log(markerTime);
-                                        markerStartTime = composition_end_time - convertHMSToSeconds(markerTime);
-                                    } else {
-                                        // Handle other cases if needed
-                                        markerTime = 0;d
-                                    }
-
-                                    // Update the macro_time div with the calculated start time
-                                    markerItems[j].querySelector('#marker_time').innerText = convertSecondsToHMS(markerStartTime);
-                                }
-                            }
-                        }
-
-                    } catch (e) {
-                        console.log(e);
                     }
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.log(errorThrown);
-                },
-                complete: function (jqXHR, textStatus) {
+
                 }
-            })
-        }
 
-        function uuidv4()
-        {
-            return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
-                (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-            );
-        }
+                $('#dragula-right').html(box);
+                var items = $('#dragula-right').find('.left-side-item');
 
-        function reorderMacroList(macroList)
-        {
-            // Get all the media-body elements within the container
-                var macroBoxes = Array.from(macroList.querySelectorAll('.media-body.macro-box'));
+                var startTime = 0;
+                for (var i = 0; i < items.length; i++) {
+                    console.log(items[i]);
+                    var duration = parseInt(items[i].getAttribute('data-time_seconds'));
 
-            // Sort the media-body elements based on the text content of the target element
-                macroBoxes.sort(function(a, b) {
-                    var timeA = a.querySelector('.mb-0.text-muted.float-left').innerText;
-                    var timeB = b.querySelector('.mb-0.text-muted.float-left').innerText;
-                    // Assuming the time format is HH:mm:ss, you may need to modify the comparison logic accordingly
-                    return timeA.localeCompare(timeB);
-                });
+                    items[i].setAttribute('data-starttime', formatTime(startTime));
+                    var composition_start_time = items[i].getAttribute('data-starttime');
+                    items[i].querySelector('.mb-0.text-muted.float-left').innerText = formatTime(startTime);
+                    // $(items[i]).find('div:nth-child(2) span').html(formatTime(startTime));
+                    startTime += duration;
+                    var composition_end_time = startTime;
+                    // Process the macro_list within the current item if it exists
+                    var macroItems = items[i].querySelectorAll('.macro_item');
+                    if (macroItems.length > 0) {
+                        for (var j = 0; j < macroItems.length; j++) {
+                            var macroTime = macroItems[j].getAttribute('data-time');
+                            var macroKind = macroItems[j].getAttribute('data-offset');
 
-            // Clear the existing content in the container
-                macroList.innerHTML = '';
+                            // Calculate the macro start time based on Kind
+                            var macroStartTime;
+                            if (macroKind === "Start") {
+                                console.log(composition_start_time);
+                                console.log(macroTime);
+                                macroStartTime = convertHMSToSeconds(composition_start_time) + convertHMSToSeconds(macroTime);
+                            } else if (macroKind === "End") {
+                                console.log(composition_end_time);
+                                console.log(macroTime);
+                                macroStartTime = composition_end_time - convertHMSToSeconds(macroTime);
+                            } else {
+                                // Handle other cases if needed
+                                macroStartTime = 0;
+                            }
 
-            // Append the sorted media-body elements back to the container
-                macroBoxes.forEach(function(box) {
-                    macroList.appendChild(box);
-                });
-        }
-        function extractEditRateValues(editRate)
-        {
-            var editRateArray = editRate.split(" ");
-            var editRate_numerator = editRateArray[0];
-            var editRate_denominator = editRateArray[1];
-
-            return [editRate_numerator, editRate_denominator];
-        }
-
-        function setSplOpenedData(capabilities) {
-            const obj = { "capabilities": capabilities };
-            $('#id_spl_opened').attr('data-hfr', 0);
-            $('#id_spl_opened').attr('data-mod', "2D");
-            if (typeof obj.capabilities === 'object' && obj.capabilities.hasOwnProperty('capability1') && obj.capabilities.capability1 === null) {
-                $('#id_spl_opened').attr('data-mod', "2D");
-            } else if (Object.keys(obj.capabilities).length === 0) {
-
-                $('#id_spl_opened').attr('data-mod', "2D");
-            } else {
-                for (const key in obj.capabilities) {
-                    if (obj.capabilities.hasOwnProperty(key)) {
-                        const capability = obj.capabilities[key];
-
-                        if (capability[0] === "HFR_CONTENT") {
-                            $('#id_spl_opened').attr('data-hfr', 1);
+                            // Update the macro_time div with the calculated start time
+                            macroItems[j].querySelector('#macro_time').innerText = convertSecondsToHMS(macroStartTime);
                         }
-                        if (capability[0] === "4K_CONTENT") {
+                    }
 
-                            $('#id_spl_opened').attr('data-mod', "4k");
-                        }
-                        if (capability[0] === "STEREOSCOPIC_CONTENT") {
-                            $('#id_spl_opened').attr('data-mod', "3D");
-                            $("#spl_properties_display_mode").val("3D");
+
+                    var markerItems = items[i].querySelectorAll('.marker_item');
+
+                    if (markerItems.length > 0) {
+                        for (var j = 0; j < markerItems.length; j++) {
+                            var markerTime = markerItems[j].getAttribute('data-time');
+                            var markerKind = markerItems[j].getAttribute('data-offset');
+
+                            // Calculate the macro start time based on Kind
+                            var markerStartTime;
+                            if (markerKind === "Start") {
+
+                                markerStartTime = convertHMSToSeconds(composition_start_time) + convertHMSToSeconds(markerTime);
+
+                            } else if (markerKind === "End") {
+                                console.log(composition_end_time);
+                                console.log(markerTime);
+                                markerStartTime = composition_end_time - convertHMSToSeconds(markerTime);
+                            } else {
+                                // Handle other cases if needed
+                                markerTime = 0;
+                                d
+                            }
+
+                            // Update the macro_time div with the calculated start time
+                            markerItems[j].querySelector('#marker_time').innerText = convertSecondsToHMS(markerStartTime);
                         }
                     }
                 }
+
+            } catch (e) {
+                console.log(e);
             }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        },
+        complete: function (jqXHR, textStatus) {
         }
-
+    })
+}
         $(document).on('click', '.infos_modal', function () {
-
+            alert('tet')
            var loader_content  =
                '<div class="jumping-dots-loader">'
                    +'<span></span>'
@@ -1068,13 +1341,9 @@
            if(true  )
             {
                 var url = "{{  url('') }}"+   "/get_lmscpl_infos/"+cpl_id;
-                $('#kdms-tab').hide();
+
             }
-            else
-            {
-                var url = "{{  url('') }}"+ "/get_cpl_infos/"+location_id+"/"+cpl_id ;
-                $('#kdms-tab').show();
-            }
+
            $.ajax({
                    url: url,
                    method: 'GET',
@@ -1484,7 +1753,7 @@
                                 '   <div class="card rounded border mb-2 left-side-item"' +
                                 '       data-side="left"   ' +
                                 '       data-auditorium="' + value.id_auditorium + '" ' +
-                                '       data-uuid="' + value.cpl_uuid + '"' +
+                                '       data-uuid="' + value.uuid + '"' +
                                 '       data-title="' + value.contentTitleText + '"' +
                                 '       data-time="' + value.Duration + '"  ' +
                                 '       data-time_seconds="' + value.duration_seconds + '"  ' +
@@ -1516,13 +1785,16 @@
                                 (value.is_3D == 1 ? '3D' : '2D') +
                                 '                          </span>\n' +
                                 '                          <span class="flat">  ' +
-                                (value.Aspect_Ratio == "unknown" ? value.type
-                                    : value.Aspect_Ratio + ' ' + value.Cinema_DCP) +
+                                (value.ScreenAspectRatio == "unknown" ? value.type
+                                    : value.ScreenAspectRatio + ' ' + value.cinema_DCP) +
                                 '                           </span>\n' +
                                 '                          <span class="flat">' + value.soundChannelCount + ' </span>\n' +
                                 '                          <span class="flat"> ST  </span>\n' +
-                                '                          <span class="cpl-details"  ' +
-                                '                                data-uuid="' + value.cpl_uuid + '"' +
+                                '                          <span data-bs-toggle="modal" data-bs-target="#infos_modal" class="cpl-details infos_modal"  ' +
+
+
+                                '                                data-uuid="' + value.uuid + '"' +
+                                '                                 id="' + value.id + '"' +
                                 '                                data-need_kdm="' + ((value.pictureEncryptionAlgorithm == "None" || value.pictureEncryptionAlgorithm == 0) ? 0 : 1) + '"' +
                                 '                            > <i class="btn btn-primary  custom-search mdi mdi-magnify"> </i></span>\n' +
                                 '                       </p>\n' +
@@ -1976,8 +2248,10 @@
                                    +'<tr>'
                                        +'<th>'+value.spl_title+'</th>'
                                        +'<th>'+value.created_at+'</th>'
-                                       +'<th>'+value.id+'</th>'
-                                       +'<th>'+value.id+'</th>'
+                                       +'<th>'+value.uuid+'</th>'
+                                       +'<th> <i class="btn btn-primary mdi mdi-tooltip-edit open_spl" data-title="'+value.spl_title+'" data-uuid="'+value.uuid+'"></i> <i class="btn btn-danger mdi   mdi-delete-forever" data-uuid="'+value.uuid+'"></i>   </th>'
+
+
 
                                    +'</tr>'
                    });
@@ -2002,27 +2276,22 @@
     });
 
 
-    $(document).on('click', '.open_spl', function () {
-        var action_control = "open_spl";
-        var id_spl= $(this).data("uuid");
 
-        openSpl(id_spl);
-    });
     // remove cpl right list
     $(document).on('click', '.remove-cpl', function () {
 
-        $(this).parent().parent().parent().parent().parent().parent().remove();
+        $(this).parent().parent().parent().parent().parent().remove();
         // re-order items
-        var items =  $('#dragula-right').find('.left-side-item');
+        var items = $('#dragula-right').find('.left-side-item');
         var startTime = 0;
 
         for (var i = 0; i < items.length; i++) {
             var duration = parseInt(items[i].getAttribute('data-time_seconds'));
-            items[i].setAttribute('data-starttime',   formatTime(startTime));
-            var composition_start_time=   items[i].getAttribute('data-starttime');
+            items[i].setAttribute('data-starttime', formatTime(startTime));
+            var composition_start_time = items[i].getAttribute('data-starttime');
             items[i].querySelector('.mb-0.text-muted.float-left').innerText = formatTime(startTime);
             startTime += duration;
-            var composition_end_time=   startTime;
+            var composition_end_time = startTime;
             // Process the macro_list within the current item if it exists
             var macroItems = items[i].querySelectorAll('.macro_item');
             if (macroItems.length > 0) {
@@ -2045,7 +2314,7 @@
             }
         }
 
-    });
+        });
 
     //remove macro right list
     $(document).on('click', '.remove-macro', function () {
@@ -2084,163 +2353,227 @@
             }
         }
 
-    });
+        });
 
-    $(document).on('click', '.remove-marker', function () {
+        $(document).on('click', '.remove-marker', function () {
 
-        $(this).parent().parent().parent().remove();
-        // re-order items
-        var items = $('#dragula-right').find('.left-side-item');
-        var startTime = 0;
+            $(this).parent().parent().parent().remove();
+            // re-order items
+            var items = $('#dragula-right').find('.left-side-item');
+            var startTime = 0;
 
-        for (var i = 0; i < items.length; i++) {
-            var duration = parseInt(items[i].getAttribute('data-time_seconds'));
-            items[i].setAttribute('data-starttime', formatTime(startTime));
-            var composition_start_time = items[i].getAttribute('data-starttime');
-            items[i].querySelector('.mb-0.text-muted.float-left').innerText = formatTime(startTime);
-            startTime += duration;
-            var composition_end_time = startTime;
-            // Process the macro_list within the current item if it exists
-            var macroItems = items[i].querySelectorAll('.macro_item');
-            if (macroItems.length > 0) {
-                for (var j = 0; j < macroItems.length; j++) {
-                    var macroTime = macroItems[j].getAttribute('data-time');
-                    var macroKind = macroItems[j].getAttribute('data-offset');
-                    // Calculate the macro start time based on Kind
-                    var macroStartTime;
-                    if (macroKind === "Start") {
-                        macroStartTime = convertHMSToSeconds(composition_start_time) + convertHMSToSeconds(macroTime);
-                    } else if (macroKind === "End") {
-                        macroStartTime = composition_end_time - convertHMSToSeconds(macroTime);
-                    } else {
-                        // Handle other cases if needed
-                        macroStartTime = 0;
+            for (var i = 0; i < items.length; i++) {
+                var duration = parseInt(items[i].getAttribute('data-time_seconds'));
+                items[i].setAttribute('data-starttime', formatTime(startTime));
+                var composition_start_time = items[i].getAttribute('data-starttime');
+                items[i].querySelector('.mb-0.text-muted.float-left').innerText = formatTime(startTime);
+                startTime += duration;
+                var composition_end_time = startTime;
+                // Process the macro_list within the current item if it exists
+                var macroItems = items[i].querySelectorAll('.macro_item');
+                if (macroItems.length > 0) {
+                    for (var j = 0; j < macroItems.length; j++) {
+                        var macroTime = macroItems[j].getAttribute('data-time');
+                        var macroKind = macroItems[j].getAttribute('data-offset');
+                        // Calculate the macro start time based on Kind
+                        var macroStartTime;
+                        if (macroKind === "Start") {
+                            macroStartTime = convertHMSToSeconds(composition_start_time) + convertHMSToSeconds(macroTime);
+                        } else if (macroKind === "End") {
+                            macroStartTime = composition_end_time - convertHMSToSeconds(macroTime);
+                        } else {
+                            // Handle other cases if needed
+                            macroStartTime = 0;
+                        }
+                        // Update the macro_time div with the calculated start time
+                        macroItems[j].querySelector('#macro_time').innerText = convertSecondsToHMS(macroStartTime);
                     }
-                    // Update the macro_time div with the calculated start time
-                    macroItems[j].querySelector('#macro_time').innerText = convertSecondsToHMS(macroStartTime);
                 }
             }
-        }
-
-    });
-        // click marker icon
-    $(document).on('click', '#show_marker_modal', function () {
-
-        var selectedCard = $('#dragula-right .left-side-item.selected-item');
-
-        // Check if selectedCard is not empty
-        if (selectedCard.length > 0) {
-            var dataTitleValue = selectedCard.data('title');
-            $("#title_selected_item").html(dataTitleValue);
-            // Get the last .media-body element inside the selected item
-            // var marker_body = selectedCard.find('.marker-list');
-            // marker_body.removeClass('hide_div');
-            $("#marker-modal").modal('show');
-        } else {
-            $("#no-cpl-selected").modal('show');
-        }
-
-    });
-
-        //confirm ad marker
-    $(document).on('click', '#confirm_add_marker', function () {
-
-        var marker_label = $('#marker_label').val();
-        var uuid=$.trim('urn:uuid:' + uuidv4()) ;
-        var Hours_marker = $('#Hours_marker').val();
-        var Minutes_marker = $('#Minutes_marker').val();
-        var Seconds_marker = $('#Seconds_marker').val();
-        var offset = $('input[name=Offset_marker]:checked').val();
-        var time_marker = Hours_marker + ' : ' + Minutes_marker + ' : ' + Seconds_marker;
-        var time_seconds = parseInt(Hours_marker) * 60 * 60 + parseInt(Minutes_marker) * 60 + parseInt(Seconds_marker);
-
-        var marker_box = '' +
-            '<div class="media-body marker-box col-md-8" data-title="' + $.trim(marker_label) + '"' +
-            '     data-offset="' + offset + '"  data-time="' + convertSecondsToHMS(time_seconds) + '"' +
-            '     data-uuid="' + uuid + '">' + marker_label +
-            '  <p class="mb-0 text-muted float-left"> ' + convertSecondsToHMS(time_seconds)  + ' </p> ' +
-            '   <span class="mb-0 text-muted float-left" style="margin: 0px 2px 0px 20px; ">  ---  </span>' +
-            '  <p class="mb-0 text-muted float-right">\n' +
-            '        <span class=" ">\n' +
-            '            <i class="btn btn-primary  mdi mdi-magnify custom-search  cpl-details" ' +
-            '               data-uuid="urn:uuid:e83235b4-f50d-4f46-906f-2ce2cca1ba52"' +
-            '                style="font-size: 18px; "></i>\n' +
-            '            <i class="btn btn-danger mdi mdi-delete-forever remove-marker custom-search" style="font-size: 18px;"></i>' +
-            '        </span>' +
-            '    </p>\n' +
-            '</div>';
-        var selectedCard = $('#dragula-right .left-side-item.selected-item');
-
-        // Check if selectedCard is not empty
-        if (selectedCard.length > 0) {
-            // Get the last .media-body element inside the selected item
-            var marker_body = selectedCard.find('.marker-list');
-            marker_body.removeClass('hide_div');
-
-            // Append the macro_box content after the last .media-body
-            marker_body.append(marker_box);
-        }
-
-    });
-
-    $(document).on('click', '#add_segment', function () {
-        var uuid_segment = 'urn:uuid:' + uuidv4();
-        var segment_box = '' +
-            '<div class="card rounded border mb-2  segment-style" data-side="right" ' +
-            '     data-uuid="'+uuid_segment+'" data-title="New Segment"  ' +
-            '     data-type_component="segment"    data-type="segment"   >   ' +
-            '     <div class="card-body  ">\n' +
-
-            '         <div class="media-body">\n' +
-            '              <p class="mb-0 text-muted float-left">' +
-            '                    <i class="btn btn-inverse-warning  mdi mdi-package-variant-closed"></i>  New Segment ' +
-
-            '              </p>\n' +
-            '              <p class="mb-0 text-muted float-right">\n' +
-            '                 <span class=" ">\n' +
-            '                    <i class="btn btn-primary  mdi mdi-magnify custom-search  segment-details" data-uuid="'+uuid_segment+'"  ></i>\n' +
-            '                    <i class="btn btn-danger mdi mdi-delete-forever remove-cpl custom-search"></i>\n' +
-            '                 </span>' +
-            '               </p>\n' +
-            '           </div>            ' +
-            '     </div>' +
-            '</div>' ;
-        $('#dragula-right').append(segment_box);
-    });
-
-
-        // segment details
-
-        $(document).on('click', '.segment-details', function () {
-        //let title = $(this).parent().parent().parent().parent().parent().data("title");
-        let title = $(this).closest('.card[data-title]').data("title");
-        let uuid = $(this).parent().parent().parent().parent().parent().data("uuid");
-
-        $("#pack_name").val(title);
-        $("#segment_uuid").val(uuid);
-
-        $("#segment-modal").modal('show');
-        });
-        $(document).on('click', '#confirm_add_segment', function () {
-        var title = $('#pack_name').val();
-        var uuid = $('#segment_uuid').val();
-        var type="segment";
-        var targetItem = $('#dragula-right .card[data-uuid="' + uuid + '"][data-type="' + type + '"]');
-        if (targetItem.length > 0) {
-            // Change the text inside mb-0 text-muted float-left
-
-            targetItem.attr('data-title', title).promise().done(function () {
-                // Retrieve the updated data-title value
-                var updatedTitle = targetItem.attr('data-title');
 
             });
-            targetItem.find('.mb-0.text-muted.float-left').html('<i class="btn btn-inverse-warning  mdi mdi-package-variant-closed"></i> '+title);
-        }
+            $(document).on('click', '.marker-details', function () {
+            let marker_uuid = $(this).data("uuid");
+
+            let data_hours = this.closest('.marker-box').getAttribute("data-hours");
+            let data_minutes = this.closest('.marker-box').getAttribute("data-minutes");
+            let data_seconds = this.closest('.marker-box').getAttribute("data-seconds");
+            let data_time = this.closest('.marker-box').getAttribute("data-time");
+            let title = this.closest('.marker-box').getAttribute("data-title");
+            let offset = this.closest('.marker-box').getAttribute("data-offset");
+
+            // get uuid parent cpl/pattern
+            var leftSideItem = $(this).closest('.left-side-item');
+            var parent_uuid = leftSideItem.data('uuid');
+            var parent_title = leftSideItem.data('title');
+            $("#edit_title_selected_item").html(parent_title);
+            $("#edit_marker_label").val(title);
+            $("#parent_uuid").val(parent_uuid);
+            $("#marker_uuid").val(marker_uuid);
+
+            $("#edit_marker_time_hms").html(data_time);
+            $("#edit_Hours_marker").val(parseInt(data_hours));
+            $("#edit_Minutes_marker").val(parseInt(data_minutes));
+            $("#edit_Seconds_marker").val(parseInt(data_seconds));
+            $("#edit_Offset_marker").val(offset);
+            $("#edit-marker-modal").modal('show');
+            });
+            $(document).on('click', '#confirm_edit_marker', function () {
+
+            var marker_label = $('#edit_marker_label').val();
+            var uuid = $('#marker_uuid').val();
+            var parent_id = $('#parent_uuid').val();
+            var Hours_marker = $('#edit_Hours_marker').val();
+            var Minutes_marker = $('#edit_Minutes_marker').val();
+            var Seconds_marker = $('#edit_Seconds_marker').val();
+            var offset = $('input[name=edit_Offset_marker]:checked').val();
+            var time_seconds = parseInt(Hours_marker) * 60 * 60 + parseInt(Minutes_marker) * 60 + parseInt(Seconds_marker);
+
+
+            var parentItem = $('#dragula-right .left-side-item[data-uuid="' + parent_id + '"]');
+
+            var markerBox = parentItem.find('.marker-list .marker-box[data-uuid="' + uuid + '"]');
+
+            var marker_box = marker_label +
+                '<p class="mb-0 text-muted float-left">' + convertSecondsToHMS(time_seconds) + ' </p>' +
+                '<span class="mb-0 text-muted float-left" style="margin: 0px 2px 0px 20px; ">  ---  </span> ' +
+                ' <p class="mb-0 text-muted float-right">' +
+                '  <span class=" ">' +
+                '       <i class="btn btn-primary  mdi mdi-magnify custom-search  marker-details" data-uuid="' + uuid + '" style="font-size: 18px; "></i>' +
+                '       <i class="btn btn-danger mdi mdi-delete-forever remove-marker custom-search" style="font-size: 18px;"></i>  ' +
+                '  </span>' +
+                ' </p> ';
+            markerBox.html(marker_box);
+            markerBox.attr('data-title', marker_label);
+            markerBox.attr('data-time', convertSecondsToHMS(time_seconds));
+            markerBox.attr('data-offset', offset);
+            markerBox.attr('data-uuid', uuid);
+            markerBox.attr('data-hours', Hours_marker);
+            markerBox.attr('data-minutes', Minutes_marker);
+            markerBox.attr('data-seconds', Seconds_marker);
+
+            $("#edit-marker-modald").modal('hide');
+
+            });
+        // click marker icon
+        $(document).on('click', '#show_marker_modal', function () {
+
+            var selectedCard = $('#dragula-right .left-side-item.selected-item');
+
+            // Check if selectedCard is not empty
+            if (selectedCard.length > 0) {
+                var dataTitleValue = selectedCard.data('title');
+                $("#title_selected_item").html(dataTitleValue);
+                // Get the last .media-body element inside the selected item
+                // var marker_body = selectedCard.find('.marker-list');
+                // marker_body.removeClass('hide_div');
+                $("#marker-modal").modal('show');
+            } else {
+                $("#no-cpl-selected").modal('show');
+            }
+
+        });
+
+        //confirm ad marker
+        $(document).on('click', '#confirm_add_marker', function () {
+
+            var marker_label = $('#marker_label').val();
+            var uuid = $.trim('urn:uuid:' + uuidv4());
+            var Hours_marker = $('#Hours_marker').val();
+            var Minutes_marker = $('#Minutes_marker').val();
+            var Seconds_marker = $('#Seconds_marker').val();
+            var offset = $('input[name=Offset_marker]:checked').val();
+            var time_marker = Hours_marker + ' : ' + Minutes_marker + ' : ' + Seconds_marker;
+            var time_seconds = parseInt(Hours_marker) * 60 * 60 + parseInt(Minutes_marker) * 60 + parseInt(Seconds_marker);
+
+            var marker_box = '' +
+                '<div class="media-body marker-box col-md-8" data-title="' + $.trim(marker_label) + '"' +
+                '     data-offset="' + offset + '" ' +
+                '     data-time="' + convertSecondsToHMS(time_seconds) + '"' +
+                '     data-uuid="' + uuid + '"' +
+                '     data-hours="' + Hours_marker + '"' +
+                '     data-minutes="' + Minutes_marker + '"' +
+                '     data-seconds="' + Seconds_marker + '">' + marker_label +
+                '  <p class="mb-0 text-muted float-left"> ' + convertSecondsToHMS(time_seconds) + ' </p> ' +
+                '   <span class="mb-0 text-muted float-left" style="margin: 0px 2px 0px 20px; ">  ---  </span>' +
+                '  <p class="mb-0 text-muted float-right">\n' +
+                '        <span class=" ">\n' +
+                '            <i class="btn btn-primary  mdi mdi-magnify custom-search  marker-details" ' +
+                '               data-uuid="' + uuid + '"' +
+                '                style="font-size: 18px; "></i>\n' +
+                '            <i class="btn btn-danger mdi mdi-delete-forever remove-marker custom-search" style="font-size: 18px;"></i>' +
+                '        </span>' +
+                '    </p>\n' +
+                '</div>';
+            var selectedCard = $('#dragula-right .left-side-item.selected-item');
+
+            // Check if selectedCard is not empty
+            if (selectedCard.length > 0) {
+                // Get the last .media-body element inside the selected item
+                var marker_body = selectedCard.find('.marker-list');
+                marker_body.removeClass('hide_div');
+
+                // Append the macro_box content after the last .media-body
+                marker_body.append(marker_box);
+
+            }
+
+
+        });
+
+        $(document).on('click', '#add_segment', function () {
+            var uuid_segment = 'urn:uuid:' + uuidv4();
+            var segment_box = '' +
+                '<div class="card rounded border mb-2  segment-style" data-side="right" ' +
+                '     data-uuid="' + uuid_segment + '" data-title="New Segment"  ' +
+                '     data-type_component="segment"    data-type="segment"   >   ' +
+                '     <div class="card-body  ">\n' +
+
+                '         <div class="media-body">\n' +
+                '              <p class="mb-0 text-muted float-left">' +
+                '                    <i class="btn btn-inverse-warning  mdi mdi-package-variant-closed"></i>  New Segment ' +
+
+                '              </p>\n' +
+                '              <p class="mb-0 text-muted float-right">\n' +
+                '                 <span class=" ">\n' +
+                '                    <i class="btn btn-primary  mdi mdi-magnify custom-search  segment-details" data-uuid="' + uuid_segment + '"  ></i>\n' +
+                '                    <i class="btn btn-danger mdi mdi-delete-forever remove-cpl custom-search"></i>\n' +
+                '                 </span>' +
+                '               </p>\n' +
+                '           </div>            ' +
+                '     </div>' +
+                '</div>';
+            $('#dragula-right').append(segment_box);
+        });
+        $(document).on('click', '.segment-details', function () {
+            //let title = $(this).parent().parent().parent().parent().parent().data("title");
+            let title = $(this).closest('.card[data-title]').data("title");
+            let uuid = $(this).parent().parent().parent().parent().parent().data("uuid");
+
+            $("#pack_name").val(title);
+            $("#segment_uuid").val(uuid);
+
+            $("#segment-modal").modal('show');
+        });
+        $(document).on('click', '#confirm_add_segment', function () {
+            var title = $('#pack_name').val();
+            var uuid = $('#segment_uuid').val();
+            var type = "segment";
+            var targetItem = $('#dragula-right .card[data-uuid="' + uuid + '"][data-type="' + type + '"]');
+            if (targetItem.length > 0) {
+                // Change the text inside mb-0 text-muted float-left
+
+                targetItem.attr('data-title', title).promise().done(function () {
+                    // Retrieve the updated data-title value
+                    var updatedTitle = targetItem.attr('data-title');
+
+                });
+                targetItem.find('.mb-0.text-muted.float-left').html('<i class="btn btn-inverse-warning  mdi mdi-package-variant-closed"></i> ' + title);
+            }
 
         });
 
 
-    // select item right side list
     $('#dragula-right').on('click', '.left-side-item', function () {
         // Remove 'selected' class from all items
         $('.left-side-item').removeClass('selected-item');

@@ -15,6 +15,7 @@ class Nocspl extends Model
         'xmlpath',
         'duration',
         'location_id',
+        'uuid',
     ];
 
 

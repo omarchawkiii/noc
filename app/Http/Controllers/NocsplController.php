@@ -23,6 +23,7 @@ class NocsplController extends Controller
         $file_url = Storage::disk('local')->put( $file_name, $file) ;
         $duration = $this->calculateSplDuration(simplexml_load_string($file));
         $new_nocspl = Nocspl::create([
+            'uuid' => $uuid ,
             'spl_title' => $request->title_spl,
             'display_mode'=>$request->display_mode,
             'spl_properties_hfr'=>$request ,
@@ -36,6 +37,104 @@ class NocsplController extends Controller
         echo json_encode($response);
         //dd($new_nocspl);
     }
+    public function openlocalspl(Request $request)
+    {
+
+            $spl_data = Nocspl::where('uuid',$_GET["id_spl"])->first() ;
+
+
+            $path =  storage_path().'/app/xml_file/'.$spl_data->xmlpath ;
+
+            $spl_file = simplexml_load_file($path);
+
+            if (property_exists($spl_file, 'EventList')) {
+                foreach ($spl_file->EventList->Event as $event) {
+                    if (isset($event->ElementList->AutomationCue)) {
+                        $automationCues = $event->ElementList->AutomationCue;
+                        $ElementList = $event->ElementList;
+                        for ($i = 0; $i < count($automationCues); $i++) {
+                            $offset = $automationCues[$i]->Offset;
+                            $kind = (string)$offset->attributes()->Kind;
+                            $event->ElementList->AutomationCue[$i]->addChild('Kind', $kind);
+                        }
+                    }
+                    if (isset($event->ElementList->Marker)) {
+                        $Markers = $event->ElementList->Marker;
+                        $ElementList = $event->ElementList;
+                        for ($i = 0; $i < count($Markers); $i++) {
+                            $offset = $Markers[$i]->Offset;
+                            $kind = (string)$offset->attributes()->Kind;
+                            $event->ElementList->Marker[$i]->addChild('Kind', $kind);
+                        }
+                    }
+
+                }
+            }
+            elseif (property_exists($spl_file, 'PackList')) {
+
+                foreach ($spl_file->PackList->Pack as $pack) {
+                    foreach ($pack->EventList->Event as $event) {
+                        if (isset($event->ElementList->AutomationCue)) {
+                            $automationCues = $event->ElementList->AutomationCue;
+                            $ElementList = $event->ElementList;
+                            for ($i = 0; $i < count($automationCues); $i++) {
+                                $offset = $automationCues[$i]->Offset;
+                                $kind = (string)$offset->attributes()->Kind;
+                                $event->ElementList->AutomationCue[$i]->addChild('Kind', $kind);
+                            }
+                        }
+                        if (isset($event->ElementList->Marker)) {
+                            $Markers = $event->ElementList->Marker;
+                            $ElementList = $event->ElementList;
+                            for ($i = 0; $i < count($Markers); $i++) {
+                                $offset = $Markers[$i]->Offset;
+                                $kind = (string)$offset->attributes()->Kind;
+                                $event->ElementList->Marker[$i]->addChild('Kind', $kind);
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            $capabilities = array();
+            if (property_exists($spl_file, 'PlaybackEnvironment')) {
+                $playbackEnvironment = $spl_file->PlaybackEnvironment;
+
+                if (is_array($playbackEnvironment->EnvironmentCapability)) {
+                    // Multiple capabilities
+                    $i = 1;
+
+                    foreach ($playbackEnvironment->EnvironmentCapability as $capability) {
+
+                        $capabilities["capability" . $i] = $capability->Capability;
+                        $i++;
+                    }
+                } elseif (is_object($playbackEnvironment->EnvironmentCapability)) {
+                    // Multiple capabilities
+
+                    $i = 1;
+
+                    foreach ($playbackEnvironment->EnvironmentCapability as $capability) {
+
+                        $capabilities["capability" . $i] = $capability->Capability;
+                        $i++;
+                    }
+                } elseif (is_object($playbackEnvironment->EnvironmentCapability)) {
+                    // Single capability
+                    $capabilities["capability1"] = $playbackEnvironment->EnvironmentCapability->Capability;
+                }
+            }
+
+            $response = array("spl_file" => $spl_file, "capabilities" => $capabilities);
+
+            $json_data = json_encode($response);
+            // echo $json_data;
+            echo $json_data;
+            // $playlist_builder_manager->getPlayList($_POST["id_spl"]);
+
+    }
+
     public function generateSplXml($uuid, $ShowTitleText, $HFR, $display_mode, $array_cpl, $IssueDate, $action)
     {
 
