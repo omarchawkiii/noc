@@ -2246,7 +2246,15 @@ function openSpl(id_spl) {
 
 
     $(document).on('click', '#reset_spl_builder', function () {
+        //$('#actual_spl_title').text("No SPL Selected , Create New One");
+        //  $('#id_spl_opened').text(0);
+        $('#opened_spl').attr('data-opened_spl_status', 0);
         $("#dragula-right").empty();
+        $('#opened_spl').html('No Playlist Selected');
+        // $('#id_spl_opened').attr('data-hfr', 0 );
+        // $('#id_spl_opened').attr('data-mod', "" );
+        // $('#id_spl_opened').attr('data-spl_uuid', 0 );
+        // prepareSortablReorder();
     });
     $(document).on('click', '#display_spl_properties', function () {
         $("#spl-properties-modal").modal('show');
