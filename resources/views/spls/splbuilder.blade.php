@@ -1101,16 +1101,18 @@ function setSplOpenedData(capabilities) {
         }
     }
 }
-/*
+
 function deleteSplSelected(spl_uuid){
 
     $.ajax({
-        url: 'system/controller_playlist_builder.php',
-        type: 'post',
+        url : "{{  url('') }}"+   "/delete_nocspl",
+        type: 'get',
         cache: false,
+
         data: {
             spl_uuid: spl_uuid,
-            action_control: "delete_spl_selected"
+            action_control: "delete_spl_selected",
+            "_token": "{{ csrf_token() }}",
         },
         success: function (response) {
             try {
@@ -1121,6 +1123,7 @@ function deleteSplSelected(spl_uuid){
 
                 }
                 if (obj['status'] === "success") {
+                    $('#'+spl_uuid).remove();
                     swal("Done!", "Playlist deleted successfully!", "success");
                     $('#order-listing').DataTable().ajax.reload();
 
@@ -1135,7 +1138,7 @@ function deleteSplSelected(spl_uuid){
         complete: function (jqXHR, textStatus) {
         }
     });
-}*/
+}
 
 
 $(document).on('click', '.open_spl', function () {
@@ -2194,7 +2197,6 @@ function openSpl(id_spl) {
         $(document).on('click', '#edit_spl_properties', function () {
 
             var opened_spl_status = $('#opened_spl').data("opened_spl_status");
-            console.log(opened_spl_status)
             if (opened_spl_status == 1) {
                 var id_spl = $('#opened_spl').data("uuid");
 
@@ -2473,7 +2475,7 @@ function openSpl(id_spl) {
                    $.each(response.nocspls, function( index, value ) {
 
                    result = result
-                                   +'<tr>'
+                                   +'<tr id="'+value.uuid+'">'
                                        +'<th>'+value.spl_title+'</th>'
                                        +'<th>'+value.created_at+'</th>'
                                        +'<th>'+value.uuid+'</th>'

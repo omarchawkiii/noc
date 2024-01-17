@@ -8,6 +8,7 @@ use SoulDoit\DataTable\SSP;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class NocsplController extends Controller
 {
@@ -155,6 +156,24 @@ class NocsplController extends Controller
             // echo $json_data;
             echo $json_data;
             // $playlist_builder_manager->getPlayList($_POST["id_spl"]);
+
+    }
+    public function delete_nocspl(Request $request)
+    {
+        $spl_data = Nocspl::where('uuid',$_GET["spl_uuid"])->first() ;
+        $path =  storage_path().'/app/xml_file/'.$spl_data->xmlpath ;
+        File::delete($path);
+        if($spl_data->delete())
+        {
+            $response = array("status" => "success");
+            echo json_encode($response);
+        }
+        else
+        {
+            $response = array("status" => "failed");
+            echo json_encode($response);
+        }
+
 
     }
 
