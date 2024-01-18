@@ -17,6 +17,7 @@ use Illuminate\Http\Response;
 use Illuminate\View\View;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Redirect;
+use Carbon\Carbon;
 ini_set('max_execution_time', 600);
 
 class LocationController extends Controller
@@ -191,6 +192,10 @@ class LocationController extends Controller
 
     public function refresh_content_of_location( $location)
     {
+
+        $start_time = Carbon::now();
+        echo $start_time->toDateTimeString();
+
         $location = Location::find($location);
 
         echo "Start Import Spls <br />" ;

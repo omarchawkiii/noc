@@ -42,7 +42,7 @@
                                                 <i class="mdi mdi-refresh btn-icon-prepend"></i> Refresh
                                             </button>
 
-                                            <button type="button" class="btn btn-warning btn-icon-text">
+                                            <button type="button" class="btn btn-warning btn-icon-text" id="ingest-spl">
                                                 <i class="mdi mdi-grease-pencil  btn-icon-prepend"></i> Ingest SPL
                                             </button>
 
@@ -518,8 +518,9 @@
             <div class=" modal fade " id="spl-list" tabindex="-1" role="dialog"  aria-labelledby="delete_client_modalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered  modal-xl">
                     <div class="modal-content border-0">
-                        <h5>Playlists Available on NOC</h5>
+
                         <div class="modal-header p-4 pb-0">
+                            <h5>Playlists Available on NOC</h5>
                             <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body text-center p-4">
@@ -840,6 +841,7 @@
                 </div>
             </div>
 
+
             <!--   delete spl -->
             <div class="modal fade show" id="delete-spl" tabindex="-1" role="dialog" aria-labelledby="delete_client_modalLabel" aria-hidden="true">
                 <div class="modal-dialog"   role="document">
@@ -867,6 +869,42 @@
 
             </div>
 
+            <!-- Ingest Modal -->
+
+            <div class=" modal fade " id="ingest-modal"  role="dialog"  aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered  modal-xl">
+                    <div class="modal-content border-0">
+
+                        <div class="modal-header p-4 pb-0">
+                            <h5>Playlists Available on NOC</h5>
+                            <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center p-4">
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h3>SPL List </h3>
+                                    <div id="ingest-spl-list"></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h3>Locations </h3>
+                                    <div id="ingest-spl-location"></div>
+
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col" style="text-align: center">
+                                    <button type="button" class="btn btn-primary btn-fw" id="">Ingest</button>
+                                    <button class="btn btn-secondary btn-fw close" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <!--end modal-content-->
+                </div>
+            </div>
+
+
 @endsection
 
 @section('custom_script')
@@ -875,9 +913,12 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script>
+
+        // Init multi select
 $(document).ready(function() {
     $('#location').select2();
 });
+
 
 
 // *********************** functions ***** */
@@ -2508,6 +2549,8 @@ function openSpl(id_spl) {
 
 
 
+
+
     // remove cpl right list
     $(document).on('click', '.remove-cpl', function () {
 
@@ -2969,6 +3012,65 @@ function openSpl(id_spl) {
         });
     });
 
+
+    $(document).on('click', '#ingest-spl', function ()
+    {
+
+        $("#ingest-modal").modal('show');
+        var loader_content  =
+           '<div class="jumping-dots-loader">'
+               +'<span></span>'
+               +'<span></span>'
+               +'<span></span>'
+               +'</div>'
+               $('#ingest-spl-list').html(loader_content)
+               $('#ingest-spl-location').html(loader_content)
+
+       var url = "{{  url('') }}"+   "/get_nocspl/";
+       $.ajax({
+               url: url,
+               method: 'GET',
+               success:function(response)
+               {
+                   console.log(response.spls) ;
+
+                    locations =
+                        '<select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="ingest-location" name="location"  >'
+
+                    $.each(response.locations, function( index, location ) {
+
+                        locations = locations
+                        +'<option  value="'+location.id+'">'+location.name+'</option>'
+                    });
+                    locations = locations
+                    +'</select>'
+
+                    $('#ingest-spl-location').html(locations)
+                    /*$('#ingest-spl-location').select2({
+                        dropdownParent: $("#ingest-modal")
+                    });*/
+                   spl =
+                   '<select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="nos-spl" name="nos-spl" >'
+
+                   $.each(response.nocspls, function( index, value ) {
+
+                    spl = spl
+                    +'<option  value="'+value.uuid+'">'+value.spl_title+'</option>'
+
+                   });
+                   spl = spl
+                    +'</select>'
+                   $('#ingest-spl-list').html(spl)
+
+
+               },
+               error: function(response) {
+
+               }
+       })
+
+
+    });
 </script>
 @endsection
 

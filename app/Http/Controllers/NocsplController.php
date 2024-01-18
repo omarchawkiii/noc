@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Location;
 use App\Models\Nocspl;
 use Illuminate\Http\Request;
 use SoulDoit\DataTable\SSP;
@@ -572,7 +573,7 @@ class NocsplController extends Controller
     public function get_nocspl()
     {
         $nocspls = Nocspl::all() ;
-
-        return Response()->json(compact('nocspls'));
+        $locations =Location::all() ;
+        return Response()->json(compact('nocspls','locations'));
     }
 }
