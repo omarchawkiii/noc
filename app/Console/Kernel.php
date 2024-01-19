@@ -12,7 +12,12 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->command('refreshcontentdata')->everyFiveMinutes();
+        $schedule->command('refreshlmsdata')->everyFiveMinutes();
+        $schedule->command('refreshscheduledata')->everyFiveMinutes();
+
+        $schedule->command('refreshplaybackdata')->everyFiveMinutes();
+        $schedule->command('refreshsnmpdata')->everyFiveMinutes();
     }
 
     /**

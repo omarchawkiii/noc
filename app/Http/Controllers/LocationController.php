@@ -190,6 +190,8 @@ class LocationController extends Controller
     }
 
 
+
+
     public function refresh_content_of_location( $location)
     {
 
@@ -247,6 +249,66 @@ class LocationController extends Controller
         echo "All KDMs imported<br />" ;
     }
 
+    public function refresh_content_all_location( )
+    {
+
+        $start_time = Carbon::now();
+            echo $start_time->toDateTimeString();
+
+        $locations = Location::all() ;
+        foreach($locations as $location)
+        {
+            echo "Start Import Spls <br />" ;
+            //  $location = Location::find($location->id);
+                foreach($location->screens as $screen)
+                {
+                    echo "Screen : " . $screen->screen_name ." location : $location->id <br />";
+                    app(\App\Http\Controllers\SplController::class)->getspls($location->id,$screen->id);
+                }
+                echo "spls of location $location->name imported <br />" ;
+
+            echo "All spls imported<br />" ;
+            // get all cpls
+            echo "<br />------------------------<br />" ;
+
+
+            echo "Start Import CPLs <br />" ;
+
+            //$location = Location::find($location->id);
+
+
+            foreach($location->screens as $screen)
+            {
+                echo "Screen : " . $screen->screen_name ." location : $location->id <br />";
+                app(\App\Http\Controllers\CplController::class)->getcpls($location->id,$screen->id);
+            }
+            echo "cpls of location $location->name imported <br />" ;
+
+            echo "All cpls imported<br />" ;
+
+            //sync cpls with spls
+            echo "<br />------------------------<br />" ;
+
+            echo "Start Sync SPLs and CPLs   <br />" ;
+                //$location = Location::find($location->id);
+                $this->sync_spl_cpl($location->id );
+
+            echo "All SPls and CPLs sync" ;
+
+
+            // get all KDMs
+            echo "<br />------------------------<br />" ;
+            echo "Start import  KDMs  <br />" ;
+            //$location = Location::find($location->id);
+            foreach($location->screens as $screen)
+            {
+                app(\App\Http\Controllers\KdmController::class)->getkdms($location->id,$screen->id);
+            }
+            echo "All KDMs imported<br />" ;
+
+        }
+    }
+
     public function refresh_lms_data_of_location( $location)
     {
         $start_time = Carbon::now();
@@ -288,6 +350,47 @@ class LocationController extends Controller
          echo "<br />------------------------<br />" ;
 
          echo "All LMS KDms imported<br />" ;
+    }
+
+    public function refresh_lms_data_all_location()
+    {
+        $start_time = Carbon::now();
+        echo $start_time->toDateTimeString();
+        $locations = Location::all() ;
+        foreach($locations as $location)
+        {
+
+            echo "Start Import LMS Spls <br />" ;
+                app(\App\Http\Controllers\LmssplController::class)->getlmsspls($location->id);
+                echo "spls of location $location->name imported <br />" ;
+
+            echo "All LMS spls imported<br />" ;
+
+            // get all LMS cpls
+            echo "<br />------------------------<br />" ;
+
+            echo "Start Import LMS CPLs <br />" ;
+            app(\App\Http\Controllers\LmscplController::class)->getlmscpls($location->id);
+            echo "All LMS cpls imported<br />" ;
+            //sync cpls with spls
+            echo "<br />------------------------<br />" ;
+
+            echo "Start Sync LMS SPLs and CPLs   <br />" ;
+                $this->sync_lms_spl_cpl($location->id );
+
+            echo "All LMS  SPls and CPLs sync" ;
+
+
+            echo "<br />------------------------<br />" ;
+
+            echo "Start Import LMS KDMs <br />" ;
+            app(\App\Http\Controllers\LmskdmController::class)->getlmskdms($location->id);
+            echo "All LMS KDMs imported<br />" ;
+            //sync cpls with spls
+            echo "<br />------------------------<br />" ;
+
+            echo "All LMS KDms imported<br />" ;
+        }
     }
 
 
@@ -435,6 +538,17 @@ class LocationController extends Controller
         app(\App\Http\Controllers\ScheduleContoller::class)->getschedules($location->id);
     }
 
+    public function refresh_schedule_all_location()
+    {
+        $start_time = Carbon::now();
+        echo $start_time->toDateTimeString();
+        $locations = Location::all() ;
+        foreach($locations as $location)
+        {
+            app(\App\Http\Controllers\ScheduleContoller::class)->getschedules($location->id);
+        }
+    }
+
 
 
 
@@ -517,6 +631,30 @@ class LocationController extends Controller
 
 
         }
+    }
+
+    public function refresh_playback_data()
+    {
+        $start_time = Carbon::now();
+        echo $start_time->toDateTimeString();
+        $locations = Location::all() ;
+        foreach($locations as $location)
+        {
+            app(\App\Http\Controllers\PlaybackController::class)->getplayback($location->id);
+        }
+
+    }
+
+    public function refresh_snmp_data()
+    {
+        $start_time = Carbon::now();
+        echo $start_time->toDateTimeString();
+        $locations = Location::all() ;
+        foreach($locations as $location)
+        {
+            app(\App\Http\Controllers\SnmpController::class)->getsnmp($location->id);
+        }
+
     }
 
 
