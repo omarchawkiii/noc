@@ -249,6 +249,9 @@ class LocationController extends Controller
 
     public function refresh_lms_data_of_location( $location)
     {
+        $start_time = Carbon::now();
+        echo $start_time->toDateTimeString();
+
         $location = Location::find($location);
 
         echo "Start Import LMS Spls <br />" ;
@@ -424,6 +427,9 @@ class LocationController extends Controller
 
     public function refresh_schedule_content($location)
     {
+        $start_time = Carbon::now();
+        echo $start_time->toDateTimeString();
+
         $location = Location::find($location)->first();
         dd($location) ;
         app(\App\Http\Controllers\ScheduleContoller::class)->getschedules($location->id);
