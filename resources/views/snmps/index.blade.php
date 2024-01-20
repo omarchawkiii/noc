@@ -79,10 +79,6 @@
 <script src="{{asset('/assets/vendors/jquery-toast-plugin/jquery.toast.min.js')}}"></script>
 <script>
 
-setTimeout(function(){
-   window.location.reload();
-}, 5000);
-
     (function($) {
     @if (session('message'))
         $.toast({

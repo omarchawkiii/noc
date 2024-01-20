@@ -894,7 +894,7 @@
                             </div>
                             <div class="row mt-2">
                                 <div class="col" style="text-align: center">
-                                    <button type="button" class="btn btn-primary btn-fw" id="">Ingest</button>
+                                    <button type="button" class="btn btn-primary btn-fw" id="submit-ingest-form">Ingest</button>
                                     <button class="btn btn-secondary btn-fw close" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
                                 </div>
                             </div>
@@ -3046,16 +3046,14 @@ function openSpl(id_spl) {
                     +'</select>'
 
                     $('#ingest-spl-location').html(locations)
-                    /*$('#ingest-spl-location').select2({
-                        dropdownParent: $("#ingest-modal")
-                    });*/
+
                    spl =
                    '<select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="nos-spl" name="nos-spl" >'
 
                    $.each(response.nocspls, function( index, value ) {
 
                     spl = spl
-                    +'<option  value="'+value.uuid+'">'+value.spl_title+'</option>'
+                    +'<option  value="'+value.uuid+'" data-title="'+value.spl_title+'"  data-duration="'+value.duration+'">'+value.spl_title+'</option>'
 
                    });
                    spl = spl
@@ -3071,6 +3069,48 @@ function openSpl(id_spl) {
 
 
     });
+
+    $(document).on('click', '#submit-ingest-form', function ()
+    {
+
+        var uuid =  $('#nos-spl').val();
+        var ingest_location =  $('#ingest-location').val();
+        var duration = $('#nos-spl option').data('duration');
+        var title = $('#nos-spl option').data('title');
+        var url = "http://localhost/tms_front/system/api3.php";
+
+        $.ajax({
+            url:url,
+            type: 'post',
+            cache: false,
+            data: {
+                uuid: uuid,
+                ingest_location: uuid,
+                duration: duration,
+                title: title,
+            },
+            success: function (response) {
+                try {
+                    console.log(response)
+
+                } catch (e) {
+                    console.log(e);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(errorThrown);
+            },
+            complete: function (jqXHR, textStatus) {
+            }
+        });
+
+
+
+
+
+
+    });
+
 </script>
 @endsection
 
