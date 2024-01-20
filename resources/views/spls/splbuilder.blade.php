@@ -3040,7 +3040,7 @@ function openSpl(id_spl) {
                     $.each(response.locations, function( index, location ) {
 
                         locations = locations
-                        +'<option  value="'+location.id+'">'+location.name+'</option>'
+                        +'<option  value="'+location.id+'" data-locationip="'+location.connection_ip+'">'+location.name+'</option>'
                     });
                     locations = locations
                     +'</select>'
@@ -3053,7 +3053,7 @@ function openSpl(id_spl) {
                    $.each(response.nocspls, function( index, value ) {
 
                     spl = spl
-                    +'<option  value="'+value.uuid+'" data-title="'+value.spl_title+'"  data-duration="'+value.duration+'">'+value.spl_title+'</option>'
+                    +'<option  value="'+value.uuid+'" data-title="'+value.spl_title+'"  data-duration="'+value.duration+'"  data-filepath="'+value.xmlpath+'">'+value.spl_title+'</option>'
 
                    });
                    spl = spl
@@ -3072,22 +3072,28 @@ function openSpl(id_spl) {
 
     $(document).on('click', '#submit-ingest-form', function ()
     {
-
         var uuid =  $('#nos-spl').val();
         var ingest_location =  $('#ingest-location').val();
         var duration = $('#nos-spl option').data('duration');
         var title = $('#nos-spl option').data('title');
-        var url = "http://localhost/tms_front/system/api3.php";
+        //var url = $('#ingest-location option').data('locationip');
+        //var url = "http://localhost/tms_front/system/api3.php";
+        var url = "{{  url('') }}"+   "/sendXmlFileToApi/";
+        var apiUrl = "http://localhost/tms_front/system/api3.php" ;
+        path = $('#nos-spl option').data('filepath');  ;
 
         $.ajax({
             url:url,
-            type: 'post',
+            type: 'get',
             cache: false,
             data: {
                 uuid: uuid,
                 ingest_location: uuid,
                 duration: duration,
                 title: title,
+                path: path,
+                apiUrl : apiUrl,
+                "_token": "{{ csrf_token() }}",
             },
             success: function (response) {
                 try {

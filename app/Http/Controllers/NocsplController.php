@@ -576,4 +576,51 @@ class NocsplController extends Controller
         $locations =Location::all() ;
         return Response()->json(compact('nocspls','locations'));
     }
+
+
+        public function sendXmlFileToApi(Request $request)
+    {
+        // Check if the file exists
+        $xmlFilePath =    storage_path().'/app/xml_file/'.$request->path ;
+        if (!file_exists($xmlFilePath)) {
+            return ['error' => 'File not found.'];
+        }
+
+        // Read XML content from the file
+        $xmlData = file_get_contents($xmlFilePath);
+
+        // Initialize cURL session
+        $ch = curl_init($request->apiUrl);
+
+        // Set cURL options
+        $postData = [
+            'xmlData' => $xmlData,
+            'uuid' => $request->uuid,
+            'duration' => $request->duration,
+            'title' => $request->title
+        ];
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/x-www-form-urlencoded']);
+
+        // Execute cURL session and get the response
+        $response = curl_exec($ch);
+        print_r($response);
+        // Check for cURL errors
+        if (curl_errno($ch)) {
+            return ['error' => 'Curl error: ' . curl_error($ch)];
+        }
+
+        // Close cURL session
+        curl_close($ch);
+
+        // Process the API response
+        if ($response === false) {
+            return ['error' => 'Error occurred while sending the request.'];
+        } else {
+            // Assuming the API returns JSON response
+            return json_decode($response, true);
+        }
+    }
 }

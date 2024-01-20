@@ -93,4 +93,5 @@ Route::post('createlocalspl', [App\Http\Controllers\NocsplController::class , 'c
 Route::get('get_nocspl', [App\Http\Controllers\NocsplController::class , 'get_nocspl'])->name('nocspl.get_nocspl');
 Route::get('open_nocspl', [App\Http\Controllers\NocsplController::class , 'openlocalspl'])->name('nocspl.openlocalspl');
 Route::get('delete_nocspl', [App\Http\Controllers\NocsplController::class , 'delete_nocspl'])->name('nocspl.delete_nocspl');
+Route::get('sendXmlFileToApi', [App\Http\Controllers\NocsplController::class , 'sendXmlFileToApi'])->name('nocspl.sendXmlFileToApi');
 
