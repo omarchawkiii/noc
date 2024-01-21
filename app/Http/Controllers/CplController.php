@@ -35,13 +35,13 @@ class CplController extends Controller
                 {
                     foreach($content as $cpl)
                     {
-
+                        $id = $cpl["uuid"] ."-".$location->id.'-'.$screen->id ;
 
                         Cpl::updateOrCreate([
-                            'id' => $cpl["uuid"],
+                            'id' => $id ,
                             'location_id' => $location->id
                         ],[
-                            'id' => $cpl["uuid"],
+                            'id' => $id,
                             'id_dcp' => $cpl["id_dcp"],
                             'contentTitleText' => $cpl["contentTitleText"],
                             'contentKind' => $cpl["contentKind"],

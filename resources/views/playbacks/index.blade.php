@@ -67,7 +67,7 @@
                                                     @endif
                                                     @if ($playback->playback_status == 'Unknown' )
                                                         <div class="icon icon-box-warning " style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="{{$playback->playback_status}}">
-                                                            <span class="mdi mdi-lightbulb  "></span>
+                                                            <span class="mdi mdi-comment-question-outline  "></span>
                                                         </div>
                                                     @endif
                                                     @if ($playback->playback_status == 'Play')
@@ -486,4 +486,5 @@
 
 <link rel="stylesheet" href="{{asset('/assets/vendors/datatables.net-bs4/dataTables.bootstrap4.css')}}">
 <link rel="stylesheet" href="{{asset('/assets/vendors/jquery-toast-plugin/jquery.toast.min.css')}}">
+
 @endsection

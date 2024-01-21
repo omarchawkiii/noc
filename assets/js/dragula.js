@@ -134,7 +134,7 @@ function modifyContentBeforeDrop(el) {
     // Add new content
     floatRightElement.innerHTML = `
         <span class=" ">
-            <i class="btn btn-primary  mdi mdi-magnify custom-search  cpl-details" data-uuid="`+el.getAttribute('data-id')+`" data-need_kdm="`+el.getAttribute('data-need_kdm')+`"></i>
+            <i class="btn btn-primary  mdi mdi-magnify custom-search  cpl-details" data-uuid="`+el.getAttribute('data-uuid')+`" data-need_kdm="`+el.getAttribute('data-need_kdm')+`"></i>
             <i class="btn btn-danger mdi mdi-delete-forever remove-cpl custom-search"></i>
         </span>`;
 

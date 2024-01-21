@@ -181,13 +181,14 @@ class NocsplController extends Controller
     public function generateSplXml($uuid, $ShowTitleText, $HFR, $display_mode, $array_cpl, $IssueDate, $action)
     {
 
+
         $file = '<?xml version="1.0" encoding="UTF-8" ?>
                 <ShowPlaylist xmlns:spl="http://doremilabs.com/schemas/1.0/SPL" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
                     <Id>' . $uuid . '</Id>
                     <ShowTitleText>' . $ShowTitleText . '</ShowTitleText>
                     <AnnotationText>' . $ShowTitleText . '</AnnotationText>
                     <IssueDate>' . $IssueDate . '</IssueDate>
-                    <Creator>TMS</Creator>
+                    <Creator>Expersys NOC</Creator>
                     <TriggerCueList/> ';
         // Check if the conditions are met to include the PlaybackEnvironment section
         if ($HFR == 1 || $display_mode == "3D" || $display_mode == "4k") {
@@ -214,6 +215,7 @@ class NocsplController extends Controller
 
         return $file;
     }
+
     public function generatePacks($array_cpl)
     {
         // print_r($array_cpl);
@@ -578,7 +580,7 @@ class NocsplController extends Controller
     }
 
 
-        public function sendXmlFileToApi(Request $request)
+    public function sendXmlFileToApi(Request $request)
     {
         // Check if the file exists
         $xmlFilePath =    storage_path().'/app/xml_file/'.$request->path ;
@@ -616,11 +618,28 @@ class NocsplController extends Controller
         curl_close($ch);
 
         // Process the API response
-        if ($response === false) {
+        if ($response == 0 ) {
             return ['error' => 'Error occurred while sending the request.'];
         } else {
             // Assuming the API returns JSON response
             return json_decode($response, true);
+        }
+    }
+
+
+
+    public function checkAvailability(Request $request)
+    {
+        $spl_title = $request->spl_title ;
+        $nos_spls = Nocspl::where('spl_title' ,$spl_title)->get() ;
+
+        if(count($nos_spls)>0)
+        {
+            echo "taken" ;
+        }
+        else
+        {
+            echo "not_taken" ;
         }
     }
 }

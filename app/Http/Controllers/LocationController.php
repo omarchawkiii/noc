@@ -71,13 +71,12 @@ class LocationController extends Controller
         // get all screen
         foreach($locations as $location)
         {
-
             $this->getscreens($location->id);
             echo "screens of location $location->name imported <br />" ;
         }
 
         echo "screen imported <br />" ;
-        // get all spls
+
         foreach($locations as $location)
         {
             foreach($location->screens as $screen)
@@ -194,7 +193,6 @@ class LocationController extends Controller
 
     public function refresh_content_of_location( $location)
     {
-
         $start_time = Carbon::now();
         echo $start_time->toDateTimeString();
 
@@ -224,6 +222,7 @@ class LocationController extends Controller
             echo "Screen : " . $screen->screen_name ." location : $location->id <br />";
             app(\App\Http\Controllers\CplController::class)->getcpls($location->id,$screen->id);
         }
+
         echo "cpls of location $location->name imported <br />" ;
 
         echo "All cpls imported<br />" ;
@@ -232,7 +231,7 @@ class LocationController extends Controller
          echo "<br />------------------------<br />" ;
 
          echo "Start Sync SPLs and CPLs   <br />" ;
-            $location = Location::find($location->id);
+           $location = Location::find($location->id);
             $this->sync_spl_cpl($location->id );
 
         echo "All SPls and CPLs sync" ;
@@ -253,58 +252,35 @@ class LocationController extends Controller
     {
 
         $start_time = Carbon::now();
-            echo $start_time->toDateTimeString();
+        echo $start_time->toDateTimeString();
 
         $locations = Location::all() ;
         foreach($locations as $location)
         {
-            echo "Start Import Spls <br />" ;
             //  $location = Location::find($location->id);
-                foreach($location->screens as $screen)
-                {
-                    echo "Screen : " . $screen->screen_name ." location : $location->id <br />";
-                    app(\App\Http\Controllers\SplController::class)->getspls($location->id,$screen->id);
-                }
-                echo "spls of location $location->name imported <br />" ;
-
-            echo "All spls imported<br />" ;
-            // get all cpls
-            echo "<br />------------------------<br />" ;
-
-
-            echo "Start Import CPLs <br />" ;
+            foreach($location->screens as $screen)
+            {
+                app(\App\Http\Controllers\SplController::class)->getspls($location->id,$screen->id);
+            }
 
             //$location = Location::find($location->id);
 
 
             foreach($location->screens as $screen)
             {
-                echo "Screen : " . $screen->screen_name ." location : $location->id <br />";
                 app(\App\Http\Controllers\CplController::class)->getcpls($location->id,$screen->id);
             }
-            echo "cpls of location $location->name imported <br />" ;
 
-            echo "All cpls imported<br />" ;
-
-            //sync cpls with spls
-            echo "<br />------------------------<br />" ;
-
-            echo "Start Sync SPLs and CPLs   <br />" ;
                 //$location = Location::find($location->id);
                 $this->sync_spl_cpl($location->id );
-
-            echo "All SPls and CPLs sync" ;
-
-
             // get all KDMs
-            echo "<br />------------------------<br />" ;
-            echo "Start import  KDMs  <br />" ;
+
             //$location = Location::find($location->id);
             foreach($location->screens as $screen)
             {
                 app(\App\Http\Controllers\KdmController::class)->getkdms($location->id,$screen->id);
             }
-            echo "All KDMs imported<br />" ;
+
 
         }
     }
@@ -359,37 +335,10 @@ class LocationController extends Controller
         $locations = Location::all() ;
         foreach($locations as $location)
         {
-
-            echo "Start Import LMS Spls <br />" ;
-                app(\App\Http\Controllers\LmssplController::class)->getlmsspls($location->id);
-                echo "spls of location $location->name imported <br />" ;
-
-            echo "All LMS spls imported<br />" ;
-
-            // get all LMS cpls
-            echo "<br />------------------------<br />" ;
-
-            echo "Start Import LMS CPLs <br />" ;
+            app(\App\Http\Controllers\LmssplController::class)->getlmsspls($location->id);
             app(\App\Http\Controllers\LmscplController::class)->getlmscpls($location->id);
-            echo "All LMS cpls imported<br />" ;
-            //sync cpls with spls
-            echo "<br />------------------------<br />" ;
-
-            echo "Start Sync LMS SPLs and CPLs   <br />" ;
-                $this->sync_lms_spl_cpl($location->id );
-
-            echo "All LMS  SPls and CPLs sync" ;
-
-
-            echo "<br />------------------------<br />" ;
-
-            echo "Start Import LMS KDMs <br />" ;
+            $this->sync_lms_spl_cpl($location->id );
             app(\App\Http\Controllers\LmskdmController::class)->getlmskdms($location->id);
-            echo "All LMS KDMs imported<br />" ;
-            //sync cpls with spls
-            echo "<br />------------------------<br />" ;
-
-            echo "All LMS KDms imported<br />" ;
         }
     }
 
@@ -560,8 +509,8 @@ class LocationController extends Controller
 
         foreach($spls as $spl)
         {
-
             $url = $location->connection_ip."?request=getCplsBySpl&spl_uuid=".$spl->uuid;
+
 
             $client = new Client();
             $response = $client->request('GET', $url);
@@ -575,19 +524,15 @@ class LocationController extends Controller
                     {
                         foreach($content as $cpl_content)
                         {
-
                             $cpl = Cpl::where('id','=',$cpl_content['CompositionPlaylistId'])->where('location_id','=',$location->id)->first() ;
                             if($cpl)
                             {
-                                $spl->cpls()->syncWithoutDetaching([$cpl->id]);
+                               $spl->cpls()->syncWithoutDetaching([$cpl->id]);
                             }
                         }
                     }
                 }
             }
-
-
-
         }
     }
 
@@ -653,6 +598,18 @@ class LocationController extends Controller
         foreach($locations as $location)
         {
             app(\App\Http\Controllers\SnmpController::class)->getsnmp($location->id);
+        }
+
+    }
+
+    public function refresh_macro_data()
+    {
+        $start_time = Carbon::now();
+        echo $start_time->toDateTimeString();
+        $locations = Location::all() ;
+        foreach($locations as $location)
+        {
+            app(\App\Http\Controllers\MacroController::class)->getMacros($location->id);
         }
 
     }

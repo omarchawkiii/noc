@@ -18,6 +18,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('refreshplaybackdata')->everyFiveMinutes();
         $schedule->command('refreshsnmpdata')->everyFiveMinutes();
+        $schedule->command('refreshmacrosdata')->everyFiveMinutes();
     }
 
     /**
