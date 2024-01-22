@@ -273,7 +273,7 @@
             var country =  $('#country').val();
             var screen =  $('#screen').val();
             var date = new Date($('#scheduleDatePicker').val());
-
+            var location =  $('#location').val();
             if(screen == 'null')
             {
                 var location =  $('#location').val();
@@ -293,14 +293,12 @@
                 method: 'GET',
                 success:function(response)
                 {
-
                     $.each(response.schedules, function( index, value ) {
                         bg_status="" ;
                         if(value.status !="linked" )
                         {
                             bg_status = "bg-danger"
                         }
-
                         icon_spl = ""
                         icon_cpl = ""
                         icon_kdm = ""
@@ -891,13 +889,7 @@
                 success:function(response)
                 {
 
-                    screens = '<option value="null" selected>All Screens</option>';
-                    $.each(response.screens, function( index_screen, screen ) {
 
-                        screens = screens
-                            +'<option  value="'+screen.id+'">'+screen.screen_name+'</option>';
-                    });
-                        $('#screen').html(screens)
 
                     $.each(response.schedules, function( index, value ) {
                         bg_status="" ;

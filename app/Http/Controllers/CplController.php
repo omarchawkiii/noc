@@ -42,6 +42,7 @@ class CplController extends Controller
                             'location_id' => $location->id
                         ],[
                             'id' => $id,
+                            'uuid' => $cpl["uuid"],
                             'id_dcp' => $cpl["id_dcp"],
                             'contentTitleText' => $cpl["contentTitleText"],
                             'contentKind' => $cpl["contentKind"],

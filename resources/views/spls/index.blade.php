@@ -671,7 +671,7 @@
                 method: 'GET',
                 success:function(response)
                 {
-                    //console.log(response.spl.name) ;
+                    console.log(response.spl) ;
                     result =
                         '<div class="">'
                             +'<table class="table">'
@@ -688,7 +688,7 @@
 
                     result = result
                                     +'<tr>'
-                                        +'<th>'+value.uuid+'</th>'
+                                        +'<th>'+value.id+'</th>'
                                         +'<th>'+value.contentTitleText+'</th>'
 
                                     +'</tr>'

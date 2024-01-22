@@ -335,6 +335,7 @@ class LocationController extends Controller
         $locations = Location::all() ;
         foreach($locations as $location)
         {
+
             app(\App\Http\Controllers\LmssplController::class)->getlmsspls($location->id);
             app(\App\Http\Controllers\LmscplController::class)->getlmscpls($location->id);
             $this->sync_lms_spl_cpl($location->id );
