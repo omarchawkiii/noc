@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Lmscpl;
 use App\Models\Location;
 use App\Models\Nocspl;
 use Illuminate\Http\Request;
@@ -32,8 +33,14 @@ class NocsplController extends Controller
             'xmlpath'=>$file_name,
             'duration'=> $duration,
             'location_id'=> null,
-
         ]) ;
+
+        foreach($request->items_spl as $noccpl)
+        {
+            $cpl = Lmscpl::where('uuid', $noccpl['uuid'] )->first() ;
+            $new_nocspl->lmscpls()->syncWithoutDetaching([$cpl->id]);
+        }
+
 
         $response = array("status" => "saved");
         echo json_encode($response);
@@ -65,7 +72,6 @@ class NocsplController extends Controller
 
         $response = array("status" => "saved");
         echo json_encode($response);
-        //dd($new_nocspl);
     }
     public function openlocalspl(Request $request)
     {
@@ -212,7 +218,6 @@ class NocsplController extends Controller
             '</PackList>
         </ShowPlaylist>';
 
-
         return $file;
     }
 
@@ -233,7 +238,7 @@ class NocsplController extends Controller
                                  <Id>' . $this->generateUuid() . '</Id>
                                  <ElementList>
                                    <MainElement>' .
-                ($array_cpl[0]['kind'] == "pattern" ? $this->generatePattern($array_cpl[0]) : $this->generateComposition($array_cpl[0]))
+                ($array_cpl[0]['kind'] == "Pattern" ? $this->generatePattern($array_cpl[0]) : $this->generateComposition($array_cpl[0]))
 
                 . '</MainElement>' .
                 ($array_cpl[0]['marker_list'] != null ?
@@ -284,7 +289,6 @@ class NocsplController extends Controller
 
                     if ($array_cpl[$i]['items_intermission'] != null) {
                         $intermissions = $array_cpl[$i]['items_intermission'];
-
                         for ($j = 0; $j < count($intermissions); $j++) {
                             $packs = $packs .
                                 '<Pack>
@@ -367,7 +371,7 @@ class NocsplController extends Controller
                                  <Id>' . $this->generateUuid() . '</Id>
                                  <ElementList>
                                    <MainElement>' .
-                                ($array_cpl[$i]['kind'] == "pattern" ? $this->generatePattern($array_cpl[$i]) : $this->generateComposition($array_cpl[$i]))
+                                ($array_cpl[$i]['kind'] == "Pattern" ? $this->generatePattern($array_cpl[$i]) : $this->generateComposition($array_cpl[$i]))
 
                                 . '</MainElement>' .
                                 ($array_cpl[$i]['marker_list'] != null ?
@@ -397,11 +401,11 @@ class NocsplController extends Controller
                             } else if (($i < (count($array_cpl) - 1) and ($array_cpl[$next_position]["kind"] == "SPL" or $array_cpl[$next_position]["kind"] == "segment"))) {
                                 $packs .= $packs . "</EventList></Pack>";
                             }
-                                    //. (
-                                    //($i == (count($array_cpl) - 1)) ? "</EventList></Pack>"
-                                    //? ($i < (count($array_cpl) - 1) and ($array_cpl[$next_position]["kind"] == "SPL" or $array_cpl[$next_position]["kind"] == "segment"))
-                                    //: "</EventList></Pack>"
-                                    //: "");
+                            //                            . (
+                            //                            ($i == (count($array_cpl) - 1)) ? "</EventList></Pack>"
+                            //                                ? ($i < (count($array_cpl) - 1) and ($array_cpl[$next_position]["kind"] == "SPL" or $array_cpl[$next_position]["kind"] == "segment"))
+                            //                                : "</EventList></Pack>"
+                            //                                : "");
                         } else {
 
                             if ($array_cpl[$previous_position]['kind'] == "SPL" or $array_cpl[$previous_position]['kind'] == "segment" or ($array_cpl[$previous_position]['items_intermission'] != null)) {
@@ -415,7 +419,7 @@ class NocsplController extends Controller
                                  <Id>' . $this->generateUuid() . '</Id>
                                  <ElementList>
                                    <MainElement>' .
-                                    ($array_cpl[$i]['kind'] == "pattern" ? $this->generatePattern($array_cpl[$i]) : $this->generateComposition($array_cpl[$i]))
+                                    ($array_cpl[$i]['kind'] == "Pattern" ? $this->generatePattern($array_cpl[$i]) : $this->generateComposition($array_cpl[$i]))
 
                                     . '</MainElement>' .
                                     ($array_cpl[$i]['marker_list'] != null ?
@@ -451,15 +455,15 @@ class NocsplController extends Controller
                                  <Id>' . $this->generateUuid() . '</Id>
                                  <ElementList>
                                    <MainElement>' .
-                                    ($array_cpl[$i]['kind'] == "pattern" ? $this->generatePattern($array_cpl[$i]) : $this->generateComposition($array_cpl[$i]))
+                                    ($array_cpl[$i]['kind'] == "Pattern" ? $this->generatePattern($array_cpl[$i]) : $this->generateComposition($array_cpl[$i]))
 
-                                            // .'   <Composition>
-                                            //            <Id>urn:uuid:' . $array_cpl[$i]['id'] . '</Id>
-                                            // <CompositionPlaylistId>' . $array_cpl[$i]['uuid'] . '</CompositionPlaylistId>
-                                            // <AnnotationText>' . $array_cpl[$i]['title'] . '</AnnotationText>
-                                            //<IntrinsicDuration>' . $array_cpl[$i]['time_seconds'] * $array_cpl[$i]['editrate_numerator'] . '</IntrinsicDuration>
-                                            // <EditRate>' . $array_cpl[$i]['editrate_numerator'] . ' ' . $array_cpl[$i]['editrate_denominator'] . '</EditRate>
-                                            // </Composition>
+                                    //                                   .'   <Composition>
+                                    //                                          <Id>urn:uuid:' . $array_cpl[$i]['id'] . '</Id>
+                                    //                                          <CompositionPlaylistId>' . $array_cpl[$i]['uuid'] . '</CompositionPlaylistId>
+                                    //                                          <AnnotationText>' . $array_cpl[$i]['title'] . '</AnnotationText>
+                                    //                                          <IntrinsicDuration>' . $array_cpl[$i]['time_seconds'] * $array_cpl[$i]['editrate_numerator'] . '</IntrinsicDuration>
+                                    //                                         <EditRate>' . $array_cpl[$i]['editrate_numerator'] . ' ' . $array_cpl[$i]['editrate_denominator'] . '</EditRate>
+                                    //                                      </Composition>
                                     . '   </MainElement>' .
                                     ($array_cpl[$i]['marker_list'] != null ?
                                         implode('', array_map(function ($marker) {
@@ -580,6 +584,7 @@ class NocsplController extends Controller
     }
 
 
+
     public function sendXmlFileToApi(Request $request)
     {
         // Check if the file exists
@@ -587,7 +592,6 @@ class NocsplController extends Controller
         if (!file_exists($xmlFilePath)) {
             return ['error' => 'File not found.'];
         }
-
         // Read XML content from the file
         $xmlData = file_get_contents($xmlFilePath);
 
@@ -596,10 +600,7 @@ class NocsplController extends Controller
 
         // Set cURL options
         $postData = [
-            'xmlData' => $xmlData,
-            'uuid' => $request->uuid,
-            'duration' => $request->duration,
-            'title' => $request->title
+            'xmlData' => $xmlData
         ];
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
@@ -626,8 +627,6 @@ class NocsplController extends Controller
         }
     }
 
-
-
     public function checkAvailability(Request $request)
     {
         $spl_title = $request->spl_title ;
@@ -641,5 +640,28 @@ class NocsplController extends Controller
         {
             echo "not_taken" ;
         }
+    }
+
+    public function checkCplsInLocation(Request $request)
+    {
+        $location = $request->ingest_location ;
+        $nos_spl_uuid = $request->uuid ;
+        $nocspl = Nocspl::where('uuid', $nos_spl_uuid)->first() ;
+        $cpls = $nocspl->lmscpls ;
+
+        //$cpls_location_id = array_column($cpls, 'location_id');
+        foreach($cpls as $cpl)
+        {
+            if ($cpl != $location)
+            {
+                return ['checkcplsinlocation' => 'There are CPLs that do not exist in this location.'];
+
+               // return json_encode($response, true);
+            }
+        }
+        return ['checkcplsinlocation' => 'All CPls exist in this location.'];
+        //$response = array("checkcplsinlocation" => "All CPls exist in this location");
+        //return json_encode($response);
+
     }
 }

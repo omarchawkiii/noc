@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Nocspl extends Model
 {
@@ -17,6 +18,9 @@ class Nocspl extends Model
         'location_id',
         'uuid',
     ];
-
+    public function lmscpls(): BelongsToMany
+    {
+        return $this->belongsToMany(Lmscpl::class,'lmscpls_nocspls');
+    }
 
 }

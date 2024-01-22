@@ -55,5 +55,9 @@ class Lmscpl extends Model
     {
         return $this->belongsTo(Screen::class);
     }
+    public function nosspls(): BelongsToMany
+    {
+        return $this->belongsToMany(Nocspl::class,'lmscpls_nocspls');
+    }
 
 }

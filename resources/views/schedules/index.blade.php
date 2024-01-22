@@ -259,7 +259,7 @@
         });
 
         $('#screen').change(function(){
-
+            alert('test') ;
             $("#location-listing").dataTable().fnDestroy();
             $('#location-listing tbody').html('')
             var loader_content  =
@@ -274,15 +274,7 @@
             var screen =  $('#screen').val();
             var date = new Date($('#scheduleDatePicker').val());
             var location =  $('#location').val();
-            if(screen == 'null')
-            {
-                var location =  $('#location').val();
 
-            }
-            else
-            {
-                var location =  null;
-            }
 
             var url = "{{  url('') }}"+ '/get_schedules_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen+'&date='+ date.toLocaleDateString('en-GB')+' 00';
 

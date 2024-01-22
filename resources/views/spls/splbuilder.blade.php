@@ -1063,6 +1063,35 @@
         </div>
     </div>
 
+    <div class=" modal fade " id="ingest-response" role="dialog" aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered  modal-xl">
+            <div class="modal-content border-0">
+
+                <div class="modal-header p-4 pb-0">
+                    <h5></h5>
+                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center p-4">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 id="ingest-response-save-file"></h3>
+                        </div>
+                        <div class="col-md-12">
+                            <h3 id="ingest-response-cpls-in-location"></h3>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col" style="text-align: center">
+                            <button class="btn btn-secondary btn-fw close" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--end modal-content-->
+        </div>
+    </div>
+
     <!--   delete spl -->
     <div class="modal fade show" id="delete-spl" tabindex="-1" role="dialog" aria-labelledby="delete_client_modalLabel" aria-hidden="true">
         <div class="modal-dialog"   role="document">
@@ -1106,12 +1135,11 @@
     <script>
         let content_height = document.querySelector('.content-wrapper').offsetHeight;
         let navbar_height = document.querySelector('.navbar').offsetHeight;
-        let footer_height = document.querySelector('.footer').offsetHeight;
+        //let footer_height = document.querySelector('.footer').offsetHeight;
         let page_header_height = document.querySelector('.page-header ').offsetHeight;
-        let content_max_height = content_height - navbar_height - footer_height - page_header_height - 450;
+        let content_max_height = content_height - navbar_height - page_header_height - 200;
 
         $(".multiplex").height(content_max_height);
-
 
         $(function() {
             $('[data-toggle="tooltip"]').tooltip()
@@ -1160,58 +1188,48 @@
                             /^(SPL|Automation|Trigger|Cues|Pattern)$/)) {
 
                         }
+
                         box +=
                             '   <div class="card rounded border mb-2 left-side-item"' +
                             '       data-side="left"   ' +
                             '       data-auditorium="' + value.id_auditorium + '" ' +
                             '       data-uuid="' + value.uuid + '"' +
                             '       data-title="' + value.contentTitleText + '"' +
-                            '       data-time="' + value.Duration + '"  ' +
+                            '       data-time="' + value.duration + '"  ' +
                             '       data-time_seconds="' + value.duration_seconds + '"  ' +
                             '       data-time_Duration_frames="' + value.durationEdits + '"  ' +
                             '       data-type_component="cpl"' +
                             '       data-id="' + value.id_dcp + '"' +
                             '       data-version="left_tab"' +
                             '       data-type="' + value.contentKind + '"' +
-                            '       data-editRate_denominator="' + value.editRate_denominator +
-                            '"' +
-                            '       data-editRate_numerator="' + value.editRate_numerator +
-                            '"' +
+                            '       data-editRate_denominator="' + value.editRate_denominator + '"' +
+                            '       data-editRate_numerator="' + value.editRate_numerator + '"' +
                             '       data-id_server="' + value.id_server + '"' +
                             '       data-source="' + value.source + '"' +
-                            '       data-need_kdm="' + ((value.pictureEncryptionAlgorithm ==
-                                "None" || value.pictureEncryptionAlgorithm == 0) ? 0 : 1) +
-                            '"' +
+                            '       data-need_kdm="' + ((value.pictureEncryptionAlgorithm == "None" || value.pictureEncryptionAlgorithm == 0) ? 0 : 1) + '"' +
                             '> ' +
                             '       <div class="card-body  "  >\n' +
 
                             '                 <div class="media-body  ">\n' +
                             '                      <h6 class="mb-1"  style="font-size: 17px;color:' +
                             (value.type === "Flat" ? "#52d4f7" :
-                                (value.type === "Scope" ? "#00d25b" : "white")) +
-                            '">' + value.contentTitleText +
-                            ((value.pictureEncryptionAlgorithm == "None" || value
-                                    .pictureEncryptionAlgorithm == 0) ? " " :
-                                "<i class=\"mdi mdi-lock-outline  cpl_need_kdm\" aria-hidden=\"true\"></i>"
-                                ) +
+                                (value.type === "Scope" ? "#00d25b" : "white"))
+                            + '">' + value.contentTitleText +
+                            ((value.pictureEncryptionAlgorithm == "None" || value.pictureEncryptionAlgorithm == 0) ? " " : "<i class=\"mdi mdi-lock-outline  cpl_need_kdm\" aria-hidden=\"true\"></i>") +
                             '</h6>\n' +
                             '                  </div>\n' +
                             '                  <div class="media-body">\n' +
-                            '                       <p class="mb-0 text-muted float-left">' +
-                            formatDurationToHMS(value.duration_seconds) +
-                            ' <span class="detail-cpl">  Subtitle, VI, HI, DBox </span>   </p>\n' +
+                            '                       <p class="mb-0 text-muted float-left">' + formatDurationToHMS(value.duration_seconds) + ' <span class="detail-cpl">  Subtitle, VI, HI, DBox </span>   </p>\n' +
                             '                       <p class="mb-0 text-muted float-right">\n' +
                             '                          <span class="icon-prop-cpl">' +
                             (value.is_3D == 1 ? '3D' : '2D') +
                             '                          </span>\n' +
                             '                          <span class="flat">  ' +
-                            (value.ScreenAspectRatio == "unknown" ? value.type :
-                                value.ScreenAspectRatio + ' ' + value.cinema_DCP) +
+                            (value.aspect_Ratio == "unknown" ? value.type
+                                : value.aspect_Ratio + ' ' + value.cinema_DCP) +
                             '                           </span>\n' +
-                            '                          <span class="flat">' + value
-                            .soundChannelCount + ' </span>\n' +
+                            '                          <span class="flat">' + value.soundChannelCount + ' </span>\n' +
                             '                          <span class="flat"> ST  </span>\n' +
-
                             '                          <span  class=" infos_modal" href="#" ' +
                             '                                data-uuid="' + value.uuid + '"' +
                             '                                 id="' + value.id + '"' +
@@ -1219,7 +1237,6 @@
                                 .pictureEncryptionAlgorithm == "None" || value
                                 .pictureEncryptionAlgorithm == 0) ? 0 : 1) + '"' +
                             '                            > <i class="btn btn-primary  custom-search mdi mdi-magnify"> </i></span>\n' +
-
                             '                       </p>\n' +
                             '                    </div> ' +
                             '              </div>\n' +
@@ -1229,8 +1246,7 @@
                             '   </div>';
                     });
                     // append pattern
-                    box +=
-                        '<div class=" filtered  div_list   title-kind  " data-type="Pattern"> Pattern   </div>';
+                    box += '<div class=" filtered  div_list   title-kind  " data-type="Pattern"> Pattern   </div>';
                     box += '' +
                         '<div class="list-group-item div_list card rounded border mb-2 left-side-item" ' +
                         '         data-side="left" ' +
@@ -1268,22 +1284,18 @@
                         '   <div class="card-body macro-list hide_div"></div>' +
                         '</div>';
                     // append macros
-                    box +=
-                        '<div class=" filtered  div_list title_kind title-kind" data-type="Macros"> Macros  </div>';
+                    box += '<div class=" filtered  div_list title_kind title-kind" data-type="Macros"> Macros  </div>';
                     $.each(response.macros, function(index, value) {
                         box +=
-                            '<div  style="padding:5px" class="macro_item   div_list card rounded border mb-2 left-side-item" ' +
-                            '       data-command="' + value.command + '" data-title="' + value
-                            .title + '" data-id="' + value.idmacro_config +
-                            '" data-type="Macros">' +
-                            '       <div class="card-body p-3">\n' +
-                            '                 <div class="media-body float-left">\n' +
-                            '                    <div class="title-content col-md-12"> <i class="btn btn-inverse-primary  mdi mdi-server-network"></i> ' +
-                            value.title + ' </div>' +
-                            '                       <i class="fa fa-arrow-circle-right icon_drag_to_left" aria-hidden="true"></i>' +
-                            '                 </div>' +
-                            '        </div>' +
-                            '</div>';
+                        '<div  style="padding:5px" class="macro_item   div_list card rounded border mb-2 left-side-item" ' +
+                        '       data-command="' + value.command + '" data-title="' + value.title + '" data-id="' + value.idmacro_config + '" data-type="Macros">' +
+                        '       <div class="card-body p-3">\n' +
+                        '                 <div class="media-body float-left">\n' +
+                        '                    <div class="title-content col-md-12"> <i class="btn btn-inverse-primary  mdi mdi-server-network"></i> ' + value.title + ' </div>' +
+                        '                       <i class="fa fa-arrow-circle-right icon_drag_to_left" aria-hidden="true"></i>' +
+                        '                 </div>' +
+                        '        </div>' +
+                        '</div>';
                     });
 
                     $('#dragula-left').html(box);
@@ -1972,10 +1984,10 @@
 
         // **************************  segment
 
-        $(document).on('click', '#add_segment', function() {
+        $(document).on('click', '#add_segment', function () {
             var uuid_segment = 'urn:uuid:' + uuidv4();
             var segment_box = '' +
-                '<div class="card rounded border mb-2 left-side-item  segment-style" data-side="right" ' +
+                '<div class="card rounded border mb-2  segment-style" data-side="right" ' +
                 '     data-uuid="' + uuid_segment + '" data-title="New Segment"  ' +
                 '     data-type_component="segment"    data-type="segment"   >   ' +
                 '     <div class="card-body  ">\n' +
@@ -1987,8 +1999,7 @@
                 '              </p>\n' +
                 '              <p class="mb-0 text-muted float-right">\n' +
                 '                 <span class=" ">\n' +
-                '                    <i class="btn btn-primary  mdi mdi-magnify custom-search  segment-details" data-uuid="' +
-                uuid_segment + '"  ></i>\n' +
+                '                    <i class="btn btn-primary  mdi mdi-magnify custom-search  segment-details" data-uuid="' + uuid_segment + '"  ></i>\n' +
                 '                    <i class="btn btn-danger mdi mdi-delete-forever remove-cpl custom-search"></i>\n' +
                 '                 </span>' +
                 '               </p>\n' +
@@ -2788,10 +2799,10 @@
                                 (cpls[i].is_3D == 1 ? '3D' : '2D') +
                                 '                          </span>\n' +
                                 '                          <span class="flat">  ' +
-                                (cpls[i].type_ScreenAspectRatio.Aspect_Ratio == "unknown" ? cpls[i]
+                                (cpls[i].type_ScreenAspectRatio.aspect_Ratio == "unknown" ? cpls[i]
                                     .type_ScreenAspectRatio.type :
-                                    cpls[i].type_ScreenAspectRatio.Aspect_Ratio + ' ' + cpls[i]
-                                    .type_ScreenAspectRatio.Cinema_DCP) +
+                                    cpls[i].type_ScreenAspectRatio.aspect_Ratio + ' ' + cpls[i]
+                                    .type_ScreenAspectRatio.cinema_DCP) +
                                 '                           </span>\n' +
                                 '                          <span class="flat">' + cpls[i].soundChannelCount +
                                 ' </span>\n' +
@@ -4149,6 +4160,8 @@
         //var url = "http://localhost/tms_front/system/api3.php";
         var url = "{{  url('') }}"+   "/sendXmlFileToApi";
 
+        var apiUrl = "http://localhost/tms/system/api2.php";
+
 
         path = $('#nos-spl option').data('filepath');  ;
 
@@ -4158,16 +4171,46 @@
             method: 'POST',
             cache: false,
             data: {
-                uuid: uuid,
-                ingest_location: uuid,
-                duration: duration,
-                title: title,
                 path: path,
                 apiUrl : apiUrl,
                 "_token": "{{ csrf_token() }}",
             },
             success: function (response) {
                 try {
+
+                    var uuid =  $('#nos-spl').val();
+                    var ingest_location =  $('#ingest-location').val();
+                    $.ajax({
+                        url: "{{  url('') }}"+   "/checkCplsInLocation",
+
+                        method: 'POST',
+                        cache: false,
+                        data: {
+                            uuid: uuid,
+                            ingest_location : ingest_location,
+                            "_token": "{{ csrf_token() }}",
+                        },
+                        success: function (response_cpls_in_location) {
+                            try {
+
+                                $("#ingest-modal").modal('hide');
+                                $("#ingest-response").modal('show');
+                                $('#ingest-response-save-file').html(response.message);
+                                $('#ingest-response-cpls-in-location').html(response_cpls_in_location.checkcplsinlocation);
+
+                                console.log(response_cpls_in_location.checkcplsinlocation)
+
+                            } catch (e) {
+                                console.log(e);
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.log(errorThrown);
+                        },
+                        complete: function (jqXHR, textStatus) {
+                        }
+                    });
+
                     console.log(response)
 
                 } catch (e) {
