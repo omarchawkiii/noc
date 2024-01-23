@@ -92,6 +92,7 @@
                                                     <a class="btn btn-outline-primary dropdown-item" href="{{ route('schedules.getschedules',$location->id) }}">Refreesh Schedule Content</a>
                                                     <a class="btn btn-outline-primary dropdown-item" href="{{ route('snmp.getsnmp',$location->id) }}">Refreesh SNMP Content</a>
                                                     <a class="btn btn-outline-primary dropdown-item" href="{{ route('playback.getplayback',$location->id) }}">Refreesh Playback </a>
+                                                    <a class="btn btn-outline-primary dropdown-item" href="{{ route('refresh_macro_data_by_location',$location->id) }}">Refreesh Macros </a>
 
                                                 </div>
                                               </div>

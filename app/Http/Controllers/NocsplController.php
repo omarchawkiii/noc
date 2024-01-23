@@ -17,12 +17,13 @@ class NocsplController extends Controller
 
     public function createlocalspl(Request $request)
     {
-        $uuid =   (string)Str::uuid();
+        $uuid =  $this->generateUuid();
+
         $IssueDate = Carbon::now();
 
         $file = $this->generateSplXml($uuid, $request->title_spl, $request->hfr, $request->display_mode, $request->items_spl, $IssueDate, 'add') ;
 
-        $file_name = "xml_file_$uuid.xml" ;
+        $file_name = "$uuid.xml" ;
         $file_url = Storage::disk('local')->put( $file_name, $file) ;
         $duration = $this->calculateSplDuration(simplexml_load_string($file));
         $new_nocspl = Nocspl::create([
@@ -38,13 +39,13 @@ class NocsplController extends Controller
         foreach($request->items_spl as $noccpl)
         {
             $cpl = Lmscpl::where('uuid', $noccpl['uuid'] )->first() ;
+
             $new_nocspl->lmscpls()->syncWithoutDetaching([$cpl->id]);
         }
 
-
         $response = array("status" => "saved");
         echo json_encode($response);
-        //dd($new_nocspl);
+
     }
 
     public function updatelocalspl(Request $request)
@@ -78,6 +79,7 @@ class NocsplController extends Controller
             $spl_data = Nocspl::where('uuid',$_GET["id_spl"])->first() ;
             $path =  storage_path().'/app/xml_file/'.$spl_data->xmlpath ;
             $spl_file = simplexml_load_file($path);
+
             if (property_exists($spl_file, 'EventList')) {
                 foreach ($spl_file->EventList->Event as $event) {
                     if (isset($event->ElementList->AutomationCue)) {
@@ -184,6 +186,61 @@ class NocsplController extends Controller
 
     }
 
+
+
+
+    public function uniqueMultidimArray($array, $key): array
+    {
+        $uniq_array = array();
+        $dup_array = array();
+        $key_array = array();
+        if (!empty($array)) {
+            foreach ($array as $val) {
+                if (!in_array($val[$key], $key_array)) {
+                    $key_array[] = $val[$key];
+                    $uniq_array[] = $val;
+                    /*
+                                # 1st list to check:
+                                # echo "ID or sth: " . $val['building_id'] . "; Something else: " . $val['nodes_name'] . (...) "\n";
+                    */
+                } else {
+                    $dup_array[] = $val;
+                    /*
+                                # 2nd list to check:
+                                # echo "ID or sth: " . $val['building_id'] . "; Something else: " . $val['nodes_name'] . (...) "\n";
+                    */
+                }
+            }
+        }
+
+
+        // return array($uniq_array, $dup_array, /* $key_array */);
+        return $uniq_array;
+    }
+
+    public function generateUuid()
+    {
+        $data = openssl_random_pseudo_bytes(16);
+
+        $data[6] = chr(ord($data[6]) & 0x0F | 0x40); // Set version (4 bits)
+        $data[8] = chr(ord($data[8]) & 0x3F | 0x80); // Set bits 6-7 to 10
+
+        $uuid = vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+        return 'urn:uuid:' . $uuid;
+    }
+
+    public function convertStringToSeconds($timeString)
+    {
+
+        $timeString = str_replace(' ', '', $timeString); // Remove spaces from the time string
+        $timeInSeconds = strtotime($timeString) - strtotime('TODAY');
+        $timeInSecondsFormatted = date('H:i:s', $timeInSeconds);
+
+        //echo $timeInSecondsFormatted; // Output: 00:03:03
+        return $timeInSeconds; // Output: 183
+
+    }
+
     public function generateSplXml($uuid, $ShowTitleText, $HFR, $display_mode, $array_cpl, $IssueDate, $action)
     {
 
@@ -194,7 +251,7 @@ class NocsplController extends Controller
                     <ShowTitleText>' . $ShowTitleText . '</ShowTitleText>
                     <AnnotationText>' . $ShowTitleText . '</AnnotationText>
                     <IssueDate>' . $IssueDate . '</IssueDate>
-                    <Creator>Expersys NOC</Creator>
+                    <Creator>Expersys TMS</Creator>
                     <TriggerCueList/> ';
         // Check if the conditions are met to include the PlaybackEnvironment section
         if ($HFR == 1 || $display_mode == "3D" || $display_mode == "4k") {
@@ -218,7 +275,290 @@ class NocsplController extends Controller
             '</PackList>
         </ShowPlaylist>';
 
+
         return $file;
+    }
+
+    public function updateGeneratedSplXml($uuid, $ShowTitleText, $HFR, $display_mode, $array_cpl, $IssueDate, $action)
+    {
+
+
+        $file = '<?xml version="1.0" encoding="UTF-8" ?>
+                <ShowPlaylist xmlns:spl="http://doremilabs.com/schemas/1.0/SPL" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+                    <Id>' . $uuid . '</Id>
+                    <ShowTitleText>' . $ShowTitleText . '</ShowTitleText>
+                    <AnnotationText>' . $ShowTitleText . '</AnnotationText>
+                    <IssueDate>' . $IssueDate . '</IssueDate>
+                    <Creator>TMS</Creator>
+                    <TriggerCueList/> ';
+        // Check if the conditions are met to include the PlaybackEnvironment section
+        if ($HFR == 1 || $display_mode == "3D" || $display_mode == "4k") {
+            $file .= '<PlaybackEnvironment>';
+            // Include the relevant EnvironmentCapability sections based on the conditions
+            if ($HFR == 1) {
+                $file .= '<EnvironmentCapability><Capability>HFR_CONTENT</Capability></EnvironmentCapability>';
+            }
+
+            if ($display_mode == "3D") {
+                $file .= '<EnvironmentCapability><Capability>STEREOSCOPIC_CONTENT</Capability></EnvironmentCapability>';
+            } elseif ($display_mode == "4k") {
+                $file .= '<EnvironmentCapability><Capability>4K_CONTENT</Capability></EnvironmentCapability>';
+            }
+
+            $file .= '</PlaybackEnvironment>';
+        }
+        $file .= '<PackList>' .
+            $this->updateGeneratePacks($array_cpl) .
+            '</PackList>
+        </ShowPlaylist>';
+
+
+        return $file;
+    }
+
+    public function updateGeneratePacks($array_cpl)
+    {
+        // print_r($array_cpl);
+        $packs = "";
+        $keys = array_keys($array_cpl);
+        $duration = 0;
+        for ($i = 0; $i < count($array_cpl); $i++) {
+            $previous_position = $i - 1;
+            $next_position = $i + 1;
+            if ($array_cpl[$i]['kind'] == "segment") {
+                $packs = $packs .
+                    '<Pack>
+                      <Id>' . $array_cpl[$i]['id'] . '</Id>
+                      <PackName>' . htmlspecialchars($array_cpl[$i]['title'], ENT_XML1 | ENT_QUOTES, 'UTF-8') . '</PackName>
+                      <AnnotationText>' . htmlspecialchars($array_cpl[$i]['title'], ENT_XML1 | ENT_QUOTES, 'UTF-8') . '</AnnotationText>
+                      <EventList/>
+                    </Pack>';
+            } else if ($array_cpl[$i]['kind'] == "SPL") {
+                $packs = $packs .
+                    '<ExternalPack>
+                             <Id>' . $array_cpl[$i]['id'] . '</Id>
+                             <PackName>' . htmlspecialchars($array_cpl[$i]['title'], ENT_XML1 | ENT_QUOTES, 'UTF-8') . '</PackName>
+                             <AnnotationText>' . htmlspecialchars($array_cpl[$i]['title'], ENT_XML1 | ENT_QUOTES, 'UTF-8') . '</AnnotationText>
+                             <External refid="ShowPlaylistId">' . $array_cpl[$i]['uuid'] . '</External>
+                        </ExternalPack>';
+            } else {
+                if ($array_cpl[$i]['items_intermission'] != null) {
+                    $intermissions = $array_cpl[$i]['items_intermission'];
+                    for ($j = 0; $j < count($intermissions); $j++) {
+                        $packs = $packs .
+                            '<Pack>
+                                <Id>' . $array_cpl[$i] ['id'] . '</Id>
+                                <Intermission/>
+                                  <EventList>
+                                    <Event>
+                                       <Id>' . $array_cpl[$i] ['id'] . '</Id>
+                                       <ElementList>
+                                       <MainElement>
+                                          <Composition>
+                                             <Id>' . $array_cpl[$i]['id'] . '</Id>
+                                             <CompositionPlaylistId>' . $array_cpl[$i]['uuid'] . '</CompositionPlaylistId>
+                                             <AnnotationText>' . htmlspecialchars($array_cpl[$i]['title'], ENT_XML1 | ENT_QUOTES, 'UTF-8') . '</AnnotationText>
+                                             <IntrinsicDuration>' . $array_cpl[$i]['time_seconds'] * $array_cpl[$i]['editrate_numerator'] . '</IntrinsicDuration>
+                                             <EditRate>' . $array_cpl[$i]['editrate_numerator'] . ' ' . $array_cpl[$i]['editrate_denominator'] . '</EditRate>
+                                          </Composition>
+                                       </MainElement>' .
+                            '          </ElementList>
+                                    </Event>
+                                 </EventList>
+                             </Pack>' .
+                            '<ExternalPack>
+                               <Id>' . $intermissions[$j]['uuid'] . '</Id>
+                               <Intermission/>
+                               <External refid="ShowPlaylistId">' . $intermissions[$j]['uuid'] . '</External>
+                             </ExternalPack>';
+                    }
+                    $packs = $packs .
+                        '<Pack>
+                           <Id>' . $array_cpl[$i] ['id'] . '</Id>
+                            <Intermission/>
+                           <EventList>
+                             <Event>
+                                 <Id>' . $array_cpl[$i] ['id'] . '</Id>
+                                 <ElementList>
+                                   <MainElement>
+                                      <Composition>
+                                          <Id>' . $array_cpl[$i]['id'] . '</Id>
+                                          <CompositionPlaylistId>' . $array_cpl[$i]['uuid'] . '</CompositionPlaylistId>
+                                          <AnnotationText>' . htmlspecialchars($array_cpl[$i]['title'], ENT_XML1 | ENT_QUOTES, 'UTF-8') . '</AnnotationText>
+                                          <IntrinsicDuration>' . $array_cpl[$i]['time_seconds'] * $array_cpl[$i]['editrate_numerator'] . '</IntrinsicDuration>
+                                         <EditRate>' . $array_cpl[$i]['editrate_numerator'] . ' ' . $array_cpl[$i]['editrate_denominator'] . '</EditRate>
+                                      </Composition>
+                                   </MainElement>' .
+                        ($array_cpl[$i]['marker_list'] != null ?
+                            implode('', array_map(function ($marker) {
+                                return '   <Marker>
+                                         <Id>' . $marker['uuid'] . '</Id>
+                                         <Label>' . $marker['title'] . '</Label>
+                                         <Offset Kind="' . $marker['offset'] . '">' . $marker['time_frames'] . '</Offset>
+                                       </Marker>';
+                            }, $array_cpl[$i]['marker_list']))
+                            : ''
+                        ) .
+                        ($array_cpl[$i]['macro_list'] != null ?
+                            implode('', array_map(function ($macro) {
+                                return '   <AutomationCue>
+                                         <Id>' . $macro['uuid'] . '</Id>
+                                         <Action>' . $macro['title'] . '</Action>
+                                         <Offset Kind="' . $macro['offset'] . '">' . $macro['time_frames'] . '</Offset>
+                                       </AutomationCue>';
+                            }, $array_cpl[$i]['macro_list']))
+                            : ''
+                        ) .
+                        '          </ElementList>
+                                 </Event>
+                               </EventList>
+                             </Pack>';
+                } else {
+                    $duration = $duration + $array_cpl[$i]['time_seconds'];
+                    if ($i == 0) {
+                        $packs = $packs .
+                            '<Pack>
+                           <Id>' . $this->generateUuid() . '</Id>
+                           <PackName/>
+                           <AnnotationText/>
+                           <EventList>
+                             <Event>
+                                 <Id>' . $this->generateUuid() . '</Id>
+                                 <ElementList>
+                                   <MainElement>' .
+                            ($array_cpl[$i]['kind'] == "Pattern" ? $this->updateGeneratedPattern($array_cpl[$i]) : $this->updateGeneratedComposition($array_cpl[$i]))
+                            //                                      .'<Composition>
+                            //                                          <Id>urn:uuid:' . $array_cpl[$i]['id'] . '</Id>
+                            //                                          <CompositionPlaylistId>' . $array_cpl[$i]['uuid'] . '</CompositionPlaylistId>
+                            //                                          <AnnotationText>' . $array_cpl[$i]['title'] . '</AnnotationText>
+                            //                                          <IntrinsicDuration>' . $array_cpl[$i]['time_seconds'] * $array_cpl[$i]['editrate_numerator'] . '</IntrinsicDuration>
+                            //                                         <EditRate>' . $array_cpl[$i]['editrate_numerator'] . ' ' . $array_cpl[$i]['editrate_denominator'] . '</EditRate>
+                            //                                      </Composition>
+                            . '</MainElement>' .
+                            ($array_cpl[$i]['marker_list'] != null ?
+                                implode('', array_map(function ($marker) {
+                                    return '   <Marker>
+                                         <Id>' . $marker['uuid'] . '</Id>
+                                         <Label>' . $marker['title'] . '</Label>
+                                         <Offset Kind="' . $marker['offset'] . '">' . $marker['time_frames'] . '</Offset>
+                                       </Marker>';
+                                }, $array_cpl[$i]['marker_list']))
+                                : ''
+                            ) .
+                            ($array_cpl[$i]['macro_list'] != null ?
+                                implode('', array_map(function ($macro) {
+                                    return '   <AutomationCue>
+                                         <Id>' . $macro['uuid'] . '</Id>
+                                         <Action>' . $macro['title'] . '</Action>
+                                         <Offset Kind="' . $macro['offset'] . '">' . $macro['time_frames'] . '</Offset>
+                                       </AutomationCue>';
+                                }, $array_cpl[$i]['macro_list']))
+                                : ''
+                            ) .
+                            '     </ElementList>
+                             </Event>'
+                            . (
+                            ($i == (count($array_cpl) - 1)) ? "</EventList></Pack>"
+                                ? ($i < (count($array_cpl) - 1) and ($array_cpl[$next_position]["kind"] == "SPL" or $array_cpl[$next_position]["kind"] == "segment"))
+                                : "</EventList></Pack>"
+                                : "");
+                    } else {
+                        if ($array_cpl[$previous_position]['kind'] == "SPL" or $array_cpl[$previous_position]['kind'] == "segment" or ($array_cpl[$previous_position]['items_intermission'] != null)) {
+                            $packs = $packs .
+                                '<Pack>
+                           <Id>' . $this->generateUuid() . '</Id>
+                           <PackName/>
+                           <AnnotationText/>
+                           <EventList>
+                             <Event>
+                                 <Id>' . $this->generateUuid() . '</Id>
+                                 <ElementList>
+                                   <MainElement>' .
+                                ($array_cpl[$i]['kind'] == "Pattern" ? $this->updateGeneratedPattern($array_cpl[$i]) : $this->updateGeneratedComposition($array_cpl[$i]))
+                            //                                      <Composition>
+                            //                                          <Id>urn:uuid:' . $array_cpl[$i]['id'] . '</Id>
+                            //                                          <CompositionPlaylistId>' . $array_cpl[$i]['uuid'] . '</CompositionPlaylistId>
+                            //                                          <AnnotationText>' . $array_cpl[$i]['title'] . '</AnnotationText>
+                            //                                          <IntrinsicDuration>' . $array_cpl[$i]['time_seconds'] * $array_cpl[$i]['editrate_numerator'] . '</IntrinsicDuration>
+                            //                                         <EditRate>' . $array_cpl[$i]['editrate_numerator'] . ' ' . $array_cpl[$i]['editrate_denominator'] . '</EditRate>
+                            //                                      </Composition>
+                                . '</MainElement>' .
+                                ($array_cpl[$i]['marker_list'] != null ?
+                                    implode('', array_map(function ($marker) {
+                                        return '   <Marker>
+                                         <Id>' . $marker['uuid'] . '</Id>
+                                         <Label>' . $marker['title'] . '</Label>
+                                         <Offset Kind="' . $marker['offset'] . '">' . $marker['time_frames'] . '</Offset>
+                                       </Marker>';
+                                    }, $array_cpl[$i]['marker_list']))
+                                    : ''
+                                ) .
+                                ($array_cpl[$i]['macro_list'] != null ?
+                                    implode('', array_map(function ($macro) {
+                                        return '   <AutomationCue>
+                                         <Id>' . $macro['uuid'] . '</Id>
+                                         <Action>' . $macro['title'] . '</Action>
+                                         <Offset Kind="' . $macro['offset'] . '">' . $macro['time_frames'] . '</Offset>
+                                       </AutomationCue>';
+                                    }, $array_cpl[$i]['macro_list']))
+                                    : ''
+                                ) .
+                                '     </ElementList>
+                             </Event>'
+                                . (
+                                ($i == (count($array_cpl) - 1) or $array_cpl[$next_position]["kind"] == "SPL" or $array_cpl[$next_position]["kind"] == "segment") ? "</EventList></Pack>"
+
+                                    : ""
+                                );
+                        } else if ($array_cpl[$previous_position]['kind'] != "SPL" and $array_cpl[$previous_position]['kind'] != "segment") {
+                            $packs = $packs .
+                                '  <Event>
+                                 <Id>' . $this->generateUuid() . '</Id>
+                                 <ElementList>
+                                   <MainElement>' .
+                                ($array_cpl[$i]['kind'] == "Pattern" ? $this->updateGeneratedPattern($array_cpl[$i]) : $this->updateGeneratedComposition($array_cpl[$i]))
+
+                            //                                   .'   <Composition>
+                            //                                          <Id>urn:uuid:' . $array_cpl[$i]['id'] . '</Id>
+                            //                                          <CompositionPlaylistId>' . $array_cpl[$i]['uuid'] . '</CompositionPlaylistId>
+                            //                                          <AnnotationText>' . $array_cpl[$i]['title'] . '</AnnotationText>
+                            //                                          <IntrinsicDuration>' . $array_cpl[$i]['time_seconds'] * $array_cpl[$i]['editrate_numerator'] . '</IntrinsicDuration>
+                            //                                         <EditRate>' . $array_cpl[$i]['editrate_numerator'] . ' ' . $array_cpl[$i]['editrate_denominator'] . '</EditRate>
+                            //                                      </Composition>
+                                . '   </MainElement>' .
+                                ($array_cpl[$i]['marker_list'] != null ?
+                                    implode('', array_map(function ($marker) {
+                                        return '<Marker>
+                                                <Id>' . $marker['uuid'] . '</Id>
+                                                <Label>' . $marker['title'] . '</Label>
+                                                <Offset Kind="' . $marker['offset'] . '">' . $marker['time_frames'] . '</Offset>
+                                            </Marker>';
+                                    }, $array_cpl[$i]['marker_list']))
+                                    : ''
+                                ) .
+                                ($array_cpl[$i]['macro_list'] != null ?
+                                    implode('', array_map(function ($macro) {
+                                        return '   <AutomationCue>
+                                         <Id>' . $macro['uuid'] . '</Id>
+                                         <Action>' . $macro['title'] . '</Action>
+                                         <Offset Kind="' . $macro['offset'] . '">' . $macro['time_frames'] . '</Offset>
+                                       </AutomationCue>';
+                                    }, $array_cpl[$i]['macro_list']))
+                                    : ''
+                                ) .
+                                '     </ElementList>
+                             </Event>'
+                                . (
+                                ($i == (count($array_cpl) - 1) or $array_cpl[$next_position]["kind"] == "SPL" or $array_cpl[$next_position]["kind"] == "segment") ? "</EventList></Pack>"
+                                    : ""
+                                );
+
+                        }
+                    }
+                }
+            }
+        }
+        return $packs;
     }
 
     public function generatePacks($array_cpl)
@@ -501,16 +841,7 @@ class NocsplController extends Controller
 
         return $packs;
     }
-    public function generateUuid()
-    {
-        $data = openssl_random_pseudo_bytes(16);
 
-        $data[6] = chr(ord($data[6]) & 0x0F | 0x40); // Set version (4 bits)
-        $data[8] = chr(ord($data[8]) & 0x3F | 0x80); // Set bits 6-7 to 10
-
-        $uuid = vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
-        return 'urn:uuid:' . $uuid;
-    }
     public function generateComposition($cpl_item)
     {
         $composition = ' <Composition>
@@ -522,6 +853,47 @@ class NocsplController extends Controller
                         </Composition>';
         return $composition;
     }
+
+    public function updateGeneratedComposition($cpl_item)
+    {
+        $composition = ' <Composition>
+                        <Id>' . $cpl_item['id'] . '</Id>
+                        <CompositionPlaylistId>' . $cpl_item['uuid'] . '</CompositionPlaylistId>
+                        <AnnotationText>' . htmlspecialchars($cpl_item['title'], ENT_XML1 | ENT_QUOTES, 'UTF-8') . '</AnnotationText>
+                        <IntrinsicDuration>' . $cpl_item['time_seconds'] * $cpl_item['editrate_numerator'] / $cpl_item['editrate_denominator'] . '</IntrinsicDuration>
+                        <EditRate>' . $cpl_item['editrate_numerator'] . ' ' . $cpl_item['editrate_denominator'] . '</EditRate>
+                        </Composition>';
+        return $composition;
+    }
+
+    public function generatePattern($cpl_item)
+    {
+        $pattern = ' <Pattern>
+
+                        <Id>' . $cpl_item['uuid'] . '</Id>
+                        <AnnotationText>' . $cpl_item['title'] . '</AnnotationText>
+                        <Duration>' . $cpl_item['time_seconds'] * $cpl_item['editrate_numerator'] / $cpl_item['editrate_denominator'] . '</Duration>
+                        <EditRate>' . $cpl_item['editrate_numerator'] . ' ' . $cpl_item['editrate_denominator'] . '</EditRate>
+                        <FrameRate>' . $cpl_item['editrate_numerator'] . ' ' . $cpl_item['editrate_denominator'] . '</FrameRate>
+                        </Pattern>';
+
+        return $pattern;
+    }
+
+    public function updateGeneratedPattern($cpl_item)
+    {
+        $pattern = ' <Pattern>
+
+                        <Id>' . $cpl_item['uuid'] . '</Id>
+                        <AnnotationText>' . $cpl_item['title'] . '</AnnotationText>
+                        <Duration>' . $cpl_item['time_seconds'] * $cpl_item['editrate_numerator'] / $cpl_item['editrate_denominator'] . '</Duration>
+                        <EditRate>' . $cpl_item['editrate_numerator'] . ' ' . $cpl_item['editrate_denominator'] . '</EditRate>
+                        <FrameRate>' . $cpl_item['editrate_numerator'] . ' ' . $cpl_item['editrate_denominator'] . '</FrameRate>
+                        </Pattern>';
+
+        return $pattern;
+    }
+
     public function calculateSplDuration($simpleXml)
     {
 
@@ -576,6 +948,8 @@ class NocsplController extends Controller
 
         return $totalDuration;
     }
+
+
     public function get_nocspl()
     {
         $nocspls = Nocspl::all() ;
@@ -602,6 +976,8 @@ class NocsplController extends Controller
         $postData = [
             'xmlData' => $xmlData
         ];
+
+
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -609,7 +985,6 @@ class NocsplController extends Controller
 
         // Execute cURL session and get the response
         $response = curl_exec($ch);
-        print_r($response);
         // Check for cURL errors
         if (curl_errno($ch)) {
             return ['error' => 'Curl error: ' . curl_error($ch)];
@@ -655,13 +1030,9 @@ class NocsplController extends Controller
             if ($cpl != $location)
             {
                 return ['checkcplsinlocation' => 'There are CPLs that do not exist in this location.'];
-
-               // return json_encode($response, true);
             }
         }
         return ['checkcplsinlocation' => 'All CPls exist in this location.'];
-        //$response = array("checkcplsinlocation" => "All CPls exist in this location");
-        //return json_encode($response);
 
     }
 }

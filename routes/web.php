@@ -42,6 +42,7 @@ Route::get('refresh_lms_data_of_location/{location}', [App\Http\Controllers\Loca
 Route::get('refresh_spl_content/{location}', [App\Http\Controllers\LocationController::class , 'refresh_spl_content'])->name('refresh_spl_content');
 Route::get('refresh_cpl_content/{location}', [App\Http\Controllers\LocationController::class , 'refresh_cpl_content'])->name('refresh_cpl_content');
 Route::get('refresh_kdm_content/{location}', [App\Http\Controllers\LocationController::class , 'refresh_kdm_content'])->name('refresh_kdm_content');
+Route::get('refresh_macro_data_by_location/{location}', [App\Http\Controllers\LocationController::class , 'refresh_macro_data_by_location'])->name('refresh_macro_data_by_location');
 
 
 

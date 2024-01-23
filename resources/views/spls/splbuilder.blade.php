@@ -1199,7 +1199,8 @@
                             '       data-time_seconds="' + value.duration_seconds + '"  ' +
                             '       data-time_Duration_frames="' + value.durationEdits + '"  ' +
                             '       data-type_component="cpl"' +
-                            '       data-id="' + value.id_dcp + '"' +
+                            '       data-id="' + value.id + '"' +
+                            '       data-idcpl="' + value.id + '"' +
                             '       data-version="left_tab"' +
                             '       data-type="' + value.contentKind + '"' +
                             '       data-editRate_denominator="' + value.editRate_denominator + '"' +
@@ -1349,16 +1350,16 @@
         // display cpl details
 
         // get cpl details left/right sides
-        $(document).on('click', '#dragula-left .cpl-details', function() {
+        /*$(document).on('click', '#dragula-left .cpl-details', function() {
             let id_cpl = $(this).data("uuid");
             let need_kdm = $(this).data("need_kdm");
             getCplDetails(id_cpl, need_kdm);
-        });
-        $(document).on('click', '#dragula-right .cpl-details', function() {
+        }); */
+        /*$(document).on('click', '#dragula-right .cpl-details', function() {
             let id_cpl = $(this).data("uuid");
 
             getCplDetails(id_cpl, 0);
-        });
+        });*/
         //  *****************************   macros
         $(document).on('click', '.macro-details', function() {
 
@@ -3128,6 +3129,8 @@
 
 
 
+
+
         function openSpl(id_spl) {
             $.ajax({
                 url : "{{  url('') }}"+   "/open_nocspl",
@@ -3215,9 +3218,10 @@
                                 // }else{
                                 //      events = pack.EventList.Event;
                                 // }
-
+                                console.log(events);
                                 for (var i = 0; i < events.length; i++) {
 
+                                    console.log(events[i]);
                                     var macro_box = '';
                                     var marker_box = '';
                                     var event = events[i];
@@ -3238,16 +3242,16 @@
 
                                         if (macro_list.length > 0) {
                                             for (let i = 0; i < macro_list.length; i++) {
-                                                var macro_time = convertSecondsToHMS(macro_list[i].Offset * 1 / 24);
-                                                var components_time = extractTimeComponents(macro_time);
+                                                var macro_time=convertSecondsToHMS(macro_list[i].Offset * 1 / 24);
+                                                var components_time=  extractTimeComponents(macro_time);
                                                 macro_box +=
                                                     '   <div class="media-body macro-box col-md-8" data-title="' + macro_list[i].Action + '" ' +
                                                     '        data-offset="' + macro_list[i].Kind + '"' +
                                                     '        data-time="' + convertSecondsToHMS(macro_list[i].Offset * 1 / 24) + '"' +
-                                                    '        data-time_seconds="' + macro_list[i].Offset * 1 / 24 + '"' +
-                                                    '        data-hours="' + components_time.hours + '"' +
-                                                    '        data-minutes="' + components_time.minutes + '"' +
-                                                    '        data-seconds="' + components_time.seconds + '"' +
+                                                    '        data-time_seconds="'+macro_list[i].Offset * 1 / 24 +'"' +
+                                                    '        data-hours="'+components_time.hours+'"' +
+                                                    '        data-minutes="'+components_time.minutes+'"' +
+                                                    '        data-seconds="'+components_time.seconds+'"' +
                                                     '        data-uuid="' + macro_list[i].Id + '"' +
                                                     '        data-idmacro="">' + macro_list[i].Action +
                                                     '      <p class="mb-0 text-muted float-left">' + convertSecondsToHMS(macro_list[i].Offset * 1 / 24) + '</p> ' +
@@ -3275,16 +3279,16 @@
 
                                         if (Marker_list.length > 0) {
                                             for (let i = 0; i < Marker_list.length; i++) {
-                                                var t = convertSecondsToHMS(Marker_list[i].Offset * 1 / 24);
-                                                var components_time = extractTimeComponents(t);
+                                                var t=convertSecondsToHMS(Marker_list[i].Offset * 1 / 24);
+                                                var components_time=  extractTimeComponents(t);
                                                 marker_box +=
                                                     '<div class="media-body marker-box col-md-8"' +
                                                     '      data-title="' + Marker_list[i].Label + '" data-offset="' + Marker_list[i].Kind + '"' +
                                                     '      data-time="00:01:00" ' +
                                                     '      data-uuid="' + Marker_list[i].Id + '" ' +
-                                                    '      data-hours="' + components_time.hours + '" ' +
-                                                    '      data-minutes="' + components_time.minutes + '" ' +
-                                                    '      data-seconds="' + components_time.seconds + '"> ' + Marker_list[i].Label +
+                                                    '      data-hours="'+components_time.hours+'" ' +
+                                                    '      data-minutes="'+components_time.minutes+'" ' +
+                                                    '      data-seconds="'+components_time.seconds+'"> '   + Marker_list[i].Label +
                                                     '    <p class="mb-0 text-muted float-left"> ' + convertSecondsToHMS(Marker_list[i].Offset * 1 / 24) + '</p> ' +
                                                     '    <span class="mb-0 text-muted float-left" style="margin: 0px 2px 0px 20px; ">  ---  </span> ' +
                                                     '    <p class="mb-0 text-muted float-right">\n' +
@@ -3294,19 +3298,19 @@
                                                     '            <i class="btn btn-danger mdi mdi-delete-forever remove-marker custom-search" style="font-size: 18px;"></i>    ' +
                                                     '         </span>  ' +
                                                     '  </p>\n' +
-                                                    '</div>';
-                                                //
-                                                // '<div class="col-md-12 marker_item marker_style" style="margin-left: 0px!important;"' +
-                                                // ' data-title="' + Marker_list[i].Label + '"' +
-                                                // ' data-offset="' + Marker_list[i].Kind + '" ' +
-                                                // ' data-time="' + convertSecondsToHMS(Marker_list[i].Offset * 1 / 24) + '"' +
-                                                // ' data-uuid="16b06cf1-2e7b-40ef-9807-d22485bb7c36"> ' +
-                                                // '   <div class="col-md-2" style="padding-left:12px;">|------</div> ' +
-                                                // '   <div class="col-md-2" id="marker_time">' + convertSecondsToHMS(Marker_list[i].Offset * 1 / 24) + '</div>' +
-                                                // '   <div class="col-md-6" id="macrker_title">' + Marker_list[i].Label + '</div>  ' +
-                                                // '   <i class="fa fa-search col-sd-1 search-marker_item"></i>' +
-                                                // '   <i class="fa fa-close col-sd-1  delete-marker_item"></i>' +
-                                                // '</div>';
+                                                    '</div>' ;
+                                                    //
+                                                    // '<div class="col-md-12 marker_item marker_style" style="margin-left: 0px!important;"' +
+                                                    // ' data-title="' + Marker_list[i].Label + '"' +
+                                                    // ' data-offset="' + Marker_list[i].Kind + '" ' +
+                                                    // ' data-time="' + convertSecondsToHMS(Marker_list[i].Offset * 1 / 24) + '"' +
+                                                    // ' data-uuid="16b06cf1-2e7b-40ef-9807-d22485bb7c36"> ' +
+                                                    // '   <div class="col-md-2" style="padding-left:12px;">|------</div> ' +
+                                                    // '   <div class="col-md-2" id="marker_time">' + convertSecondsToHMS(Marker_list[i].Offset * 1 / 24) + '</div>' +
+                                                    // '   <div class="col-md-6" id="macrker_title">' + Marker_list[i].Label + '</div>  ' +
+                                                    // '   <i class="fa fa-search col-sd-1 search-marker_item"></i>' +
+                                                    // '   <i class="fa fa-close col-sd-1  delete-marker_item"></i>' +
+                                                    // '</div>';
                                             }
                                             list_marker_style = " "
                                         } else {
@@ -3364,74 +3368,42 @@
                                         var editRate_denominator = EditRate[1];
                                         var duration_seconds = Pattern.Duration * editRate_denominator / editRate_numerator;
                                         var hms_time = convertSecondsToHMS(duration_seconds);
-                                        var components_time = secondsToMinutesAndSeconds(duration_seconds);
 
                                         box +=
-                                            '<div class="card rounded border mb-2 left-side-item "' +
-                                            '      data-side="left" data-type="Pattern" ' +
+                                            '<div class="macro_list_sortable list-group-item div_list row cpl_component_to_select cpl_component component"' +
+                                            '      data-type="pattern" ' +
                                             '      data-id="' + eventId + '"' +
                                             '      data-uuid="' + Pattern.Id + '" ' +
+                                            '      data-source="undefined"' +
                                             '      data-title="' + Pattern.AnnotationText + '"' +
-                                            '      data-editrate_denominator="' + editRate_denominator + '" data-editrate_numerator="' + editRate_numerator + '"' +
-                                            '        data-minutes="' + components_time.minutes + '"' +
-                                            '        data-seconds="' + components_time.seconds + '"' +
-                                            '      data-version="new_item" ' +
-                                            '      data-time_seconds="' + duration_seconds + '"' +
-                                            '      data-time="' + hms_time + '"' +
-                                            '      data-starttime="00:00:00">     ' +
-                                            '    <div class="card-body  ">\n' +
-                                            '       <div class="media-body  ">\n' +
-                                            '          <h6 class="mb-1" style=" font-size: 18px">' + Pattern.AnnotationText + '</h6>\n' +
-                                            '       </div>\n' +
-                                            '       <div class="media-body">\n' +
-                                            '         <p class="mb-0 text-muted float-left color-white">00:00:00</p>\n' +
-                                            '         <p class="mb-0 text-muted float-right">\n' +
-                                            '            <span class=" ">\n' +
-                                            '              <i class="btn btn-primary  mdi mdi-magnify custom-search  pattern-details" data-uuid="urn:uuid:e83235b4-f50d-4f46-906f-2ce2cca1ba52"></i>\n' +
-                                            '              <i class="btn btn-danger mdi mdi-delete-forever remove-cpl custom-search"></i>\n' +
-                                            '            </span>       ' +
-                                            '           </p>\n' +
-                                            '       </div>\n' +
-                                            '   </div>\n' +
-                                            '    <div class="card-body macro-list  ' + list_macro_style + ' ">' + macro_box + '</div> ' +
-                                            '    <div class="card-body marker-list   ' + list_marker_style + '">' + marker_box + '</div>' +
+                                            '      data-editrate_denominator="' + editRate_denominator + '" ' +
+                                            '      data-editrate_numerator="' + editRate_numerator + '" data-id_server="undefined"' +
+                                            '      data-version="new_item" data-time_seconds="' + duration_seconds + '"' +
+                                            '      data-time="' + hms_time + '" data-starttime="00:00:00" ' +
+                                            '      draggable="false" style=""> ' +
+                                            '   <div class="title-content col-md-7 left_panel_title">' +
+
+                                            (Pattern.AnnotationText == "Black 3D" || Pattern.AnnotationText == "Black 3D 48" ? '<span class="icon_pattern">3D</span> '
+                                                : "") +
+                                            Pattern.AnnotationText +
+                                            '   </div>  ' +
+                                            '   <div class="details-content col-md-3" style="">      ' +
+                                            '      <div class=" ">          ' +
+                                            '          <i class="fa fa-clock-o" aria-hidden="true"></i>         ' +
+                                            '         <span class="start_time">00:00:00</span>       ' +
+                                            '      </div> ' +
+                                            '  </div>\n' +
+                                            '  <i class="fa fa-search col-sd-1 search-spl_item"></i>  ' +
+                                            '  <i class="fa fa-close col-sd-1  delete-spl_item"></i>  ' +
+                                            '    <div class="col-md-12 macro_list" style="padding :0px"> ' +
+                                            macro_box +
+                                            '    </div>   ' +
+                                            '    <div class="col-md-10 marker_list">' +
+                                            marker_box +
+                                            '    </div>   ' +
+                                            '    <div class="col-md-10 intermission_list"></div>' +
                                             '</div>';
-
-                                        // '' +
-                                        // '<div class="card rounded border mb-2 left-side-item "' +
-                                        // '      data-type="Pattern" ' +
-                                        // '      data-id="' + eventId + '"' +
-                                        // '      data-uuid="' + Pattern.Id + '" ' +
-                                        // '      data-source="undefined"' +
-                                        // '      data-title="' + Pattern.AnnotationText + '"' +
-                                        // '      data-editrate_denominator="' + editRate_denominator + '" ' +
-                                        // '      data-editrate_numerator="' + editRate_numerator + '" data-id_server="undefined"' +
-                                        // '      data-version="new_item" data-time_seconds="' + duration_seconds + '"' +
-                                        // '      data-time="' + hms_time + '" data-starttime="00:00:00" ' +
-                                        // '      draggable="false" style=""> ' +
-                                        // '   <div class="card-body  ">' +
-                                        //
-                                        // (Pattern.AnnotationText == "Black 3D" || Pattern.AnnotationText == "Black 3D 48" ? '<span class="icon_pattern">3D</span> '
-                                        //     : "") +
-                                        // Pattern.AnnotationText +
-                                        // '   </div>  ' +
-                                        // '   <div class="details-content col-md-3" style="">      ' +
-                                        // '      <div class=" ">          ' +
-                                        // '          <i class="fa fa-clock-o" aria-hidden="true"></i>         ' +
-                                        // '         <span class="start_time">00:00:00</span>       ' +
-                                        // '      </div> ' +
-                                        // '  </div>\n' +
-                                        // '  <i class="fa fa-search col-sd-1 search-spl_item"></i>  ' +
-                                        // '  <i class="fa fa-close col-sd-1  delete-spl_item"></i>  ' +
-                                        // '    <div class="col-md-12 macro_list" style="padding :0px"> ' +
-                                        // macro_box +
-                                        // '    </div>   ' +
-                                        // '    <div class="col-md-10 marker_list">' +
-                                        // marker_box +
-                                        // '    </div>   ' +
-                                        // '    <div class="col-md-10 intermission_list"></div>' +
-                                        // '</div>';
-
+                                        console.log(marker_box);
                                     }
                                     macro_box = "";
                                     marker_box = "";
@@ -3441,84 +3413,17 @@
                         }
 
                         $('#dragula-right').html(box);
-                        // var items = $('#dragula-right').find('.left-side-item');
-                        //
-                        // var startTime = 0;
-                        // for (var i = 0; i < items.length; i++) {
-                        //     console.log(items[i]);
-                        //     var duration = parseInt(items[i].getAttribute('data-time_seconds'));
-                        //
-                        //     items[i].setAttribute('data-starttime', formatTime(startTime));
-                        //     var composition_start_time = items[i].getAttribute('data-starttime');
-                        //     items[i].querySelector('.mb-0.text-muted.float-left').innerText = formatTime(startTime);
-                        //     // $(items[i]).find('div:nth-child(2) span').html(formatTime(startTime));
-                        //     startTime += duration;
-                        //     var composition_end_time = startTime;
-                        //     // Process the macro_list within the current item if it exists
-                        //     var macroItems = items[i].querySelectorAll('.macro_item');
-                        //     if (macroItems.length > 0) {
-                        //         for (var j = 0; j < macroItems.length; j++) {
-                        //             var macroTime = macroItems[j].getAttribute('data-time');
-                        //             var macroKind = macroItems[j].getAttribute('data-offset');
-                        //
-                        //             // Calculate the macro start time based on Kind
-                        //             var macroStartTime;
-                        //             if (macroKind === "Start") {
-                        //                 // console.log(composition_start_time);
-                        //                 // console.log(macroTime);
-                        //                 macroStartTime = convertHMSToSeconds(composition_start_time) + convertHMSToSeconds(macroTime);
-                        //             } else if (macroKind === "End") {
-                        //                 // console.log(composition_end_time);
-                        //                 // console.log(macroTime);
-                        //                 macroStartTime = composition_end_time - convertHMSToSeconds(macroTime);
-                        //             } else {
-                        //                 // Handle other cases if needed
-                        //                 macroStartTime = 0;
-                        //             }
-                        //
-                        //             // Update the macro_time div with the calculated start time
-                        //             macroItems[j].querySelector('#macro_time').innerText = convertSecondsToHMS(macroStartTime);
-                        //         }
-                        //     }
-                        //
-                        //
-                        //     var markerItems = items[i].querySelectorAll('.marker_item');
-                        //
-                        //     if (markerItems.length > 0) {
-                        //         for (var j = 0; j < markerItems.length; j++) {
-                        //             var markerTime = markerItems[j].getAttribute('data-time');
-                        //             var markerKind = markerItems[j].getAttribute('data-offset');
-                        //
-                        //             // Calculate the macro start time based on Kind
-                        //             var markerStartTime;
-                        //             if (markerKind === "Start") {
-                        //
-                        //                 markerStartTime = convertHMSToSeconds(composition_start_time) + convertHMSToSeconds(markerTime);
-                        //
-                        //             } else if (markerKind === "End") {
-                        //                 console.log(composition_end_time);
-                        //                 console.log(markerTime);
-                        //                 markerStartTime = composition_end_time - convertHMSToSeconds(markerTime);
-                        //             } else {
-                        //                 // Handle other cases if needed
-                        //                 markerTime = 0;
-                        //                 d
-                        //             }
-                        //
-                        //             // Update the macro_time div with the calculated start time
-                        //             markerItems[j].querySelector('#marker_time').innerText = convertSecondsToHMS(markerStartTime);
-                        //         }
-                        //     }
-                        // }
+                        var items = $('#dragula-right').find('.left-side-item');
 
-                        var items = $('#dragula-right').find('.left-side-item:not([data-type="segment"])');
                         var startTime = 0;
-
                         for (var i = 0; i < items.length; i++) {
+                            console.log(items[i]);
                             var duration = parseInt(items[i].getAttribute('data-time_seconds'));
+
                             items[i].setAttribute('data-starttime', formatTime(startTime));
                             var composition_start_time = items[i].getAttribute('data-starttime');
                             items[i].querySelector('.mb-0.text-muted.float-left').innerText = formatTime(startTime);
+                            // $(items[i]).find('div:nth-child(2) span').html(formatTime(startTime));
                             startTime += duration;
                             var composition_end_time = startTime;
                             // Process the macro_list within the current item if it exists
@@ -3527,22 +3432,57 @@
                                 for (var j = 0; j < macroItems.length; j++) {
                                     var macroTime = macroItems[j].getAttribute('data-time');
                                     var macroKind = macroItems[j].getAttribute('data-offset');
+
                                     // Calculate the macro start time based on Kind
                                     var macroStartTime;
                                     if (macroKind === "Start") {
+                                        // console.log(composition_start_time);
+                                        // console.log(macroTime);
                                         macroStartTime = convertHMSToSeconds(composition_start_time) + convertHMSToSeconds(macroTime);
                                     } else if (macroKind === "End") {
+                                        // console.log(composition_end_time);
+                                        // console.log(macroTime);
                                         macroStartTime = composition_end_time - convertHMSToSeconds(macroTime);
                                     } else {
                                         // Handle other cases if needed
                                         macroStartTime = 0;
                                     }
+
                                     // Update the macro_time div with the calculated start time
                                     macroItems[j].querySelector('#macro_time').innerText = convertSecondsToHMS(macroStartTime);
                                 }
                             }
+
+
+                            var markerItems = items[i].querySelectorAll('.marker_item');
+
+                            if (markerItems.length > 0) {
+                                for (var j = 0; j < markerItems.length; j++) {
+                                    var markerTime = markerItems[j].getAttribute('data-time');
+                                    var markerKind = markerItems[j].getAttribute('data-offset');
+
+                                    // Calculate the macro start time based on Kind
+                                    var markerStartTime;
+                                    if (markerKind === "Start") {
+
+                                        markerStartTime = convertHMSToSeconds(composition_start_time) + convertHMSToSeconds(markerTime);
+
+                                    } else if (markerKind === "End") {
+                                        console.log(composition_end_time);
+                                        console.log(markerTime);
+                                        markerStartTime = composition_end_time - convertHMSToSeconds(markerTime);
+                                    } else {
+                                        // Handle other cases if needed
+                                        markerTime = 0;
+                                        d
+                                    }
+
+                                    // Update the macro_time div with the calculated start time
+                                    markerItems[j].querySelector('#marker_time').innerText = convertSecondsToHMS(markerStartTime);
+                                }
+                            }
                         }
-                        reorderRightList();
+
                     } catch (e) {
                         console.log(e);
                     }
@@ -3776,11 +3716,7 @@
             var url = "{{  url('') }}"+   "/get_lmscpl_infos/"+cpl_id;
             $('#kdms-tab').hide();
         }
-        else
-        {
-            var url = "{{  url('') }}"+ "/get_cpl_infos/"+location_id+"/"+cpl_id ;
-            $('#kdms-tab').show();
-        }
+
 
        $.ajax({
                url: url,
@@ -4157,14 +4093,12 @@
         var title = $('#nos-spl option').data('title');
         var apiUrl = $('#ingest-location option').data('locationip');
 
-        //var url = "http://localhost/tms_front/system/api3.php";
+       // var url = "http://localhost/tms/system/api2.php";
         var url = "{{  url('') }}"+   "/sendXmlFileToApi";
-
-        var apiUrl = "http://localhost/tms/system/api2.php";
-
-
-        path = $('#nos-spl option').data('filepath');  ;
-
+        var apiUrl ="http://localhost/tms/system/api2.php" ;
+        //var apiUrl = "http://localhost/tms/system/api2.php";
+        path = $('#nos-spl option:selected').data('filepath');  ;
+        alert(path) ;
         $.ajax({
             url:url,
 
@@ -4177,42 +4111,7 @@
             },
             success: function (response) {
                 try {
-
-                    var uuid =  $('#nos-spl').val();
-                    var ingest_location =  $('#ingest-location').val();
-                    $.ajax({
-                        url: "{{  url('') }}"+   "/checkCplsInLocation",
-
-                        method: 'POST',
-                        cache: false,
-                        data: {
-                            uuid: uuid,
-                            ingest_location : ingest_location,
-                            "_token": "{{ csrf_token() }}",
-                        },
-                        success: function (response_cpls_in_location) {
-                            try {
-
-                                $("#ingest-modal").modal('hide');
-                                $("#ingest-response").modal('show');
-                                $('#ingest-response-save-file').html(response.message);
-                                $('#ingest-response-cpls-in-location').html(response_cpls_in_location.checkcplsinlocation);
-
-                                console.log(response_cpls_in_location.checkcplsinlocation)
-
-                            } catch (e) {
-                                console.log(e);
-                            }
-                        },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            console.log(errorThrown);
-                        },
-                        complete: function (jqXHR, textStatus) {
-                        }
-                    });
-
-                    console.log(response)
-
+                    console.log(response) ;
                 } catch (e) {
                     console.log(e);
                 }

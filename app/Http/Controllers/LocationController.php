@@ -603,6 +603,15 @@ class LocationController extends Controller
 
     }
 
+    public function refresh_macro_data_by_location($location)
+    {
+        $start_time = Carbon::now();
+        echo $start_time->toDateTimeString();
+        $location = Location::find($location)->first() ;
+        app(\App\Http\Controllers\MacroController::class)->getMacros($location->id);
+    }
+
+
     public function refresh_macro_data()
     {
         $start_time = Carbon::now();

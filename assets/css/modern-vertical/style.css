@@ -23806,8 +23806,8 @@ footer .footer-box
 
 .modal-body
 {
-    max-height: 60vh;
-    overflow-y: auto;
+    /*max-height: 60vh;
+    overflow-y: auto; */
 }
 
 .tab-content .card
