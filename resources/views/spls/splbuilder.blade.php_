@@ -1983,7 +1983,7 @@
         $(document).on('click', '#add_segment', function () {
             var uuid_segment = 'urn:uuid:' + uuidv4();
             var segment_box = '' +
-                '<div class="card rounded border mb-2  left-side-item   segment-style" data-side="right" ' +
+                '<div class="card rounded border mb-2  segment-style" data-side="right" ' +
                 '     data-uuid="' + uuid_segment + '" data-title="New Segment"  ' +
                 '     data-type_component="segment"    data-type="segment"   >   ' +
                 '     <div class="card-body  ">\n' +
@@ -3185,9 +3185,7 @@
                                     '</div>';
                             } else {
 
-                               // var events = pack.EventList.Event;
-                              var events = Array.isArray(pack.EventList.Event) ? pack.EventList.Event : [pack.EventList.Event];
-
+                                var events = pack.EventList.Event;
                                 // if (Array.isArray(pack.EventList.Event)) {
                                 //     var events = pack.EventList.Event;
                                 //
@@ -3345,47 +3343,50 @@
                                             '    <div class="card-body marker-list  ' + list_marker_style + '">' + marker_box + '</div> ' +
                                             '    <div class="col-md-10 intermission_list"></div>' +
                                             '</div>';
-                                    }
-                                    else if (mainElement.hasOwnProperty('Pattern')) {
+                                    } else if (mainElement.hasOwnProperty('Pattern')) {
                                         var Pattern = mainElement.Pattern;
                                         var IntrinsicDuration = Pattern.Duration;
                                         var EditRate = extractEditRateValues(Pattern.EditRate);
                                         var editRate_numerator = EditRate[0];
                                         var editRate_denominator = EditRate[1];
-                                          var duration_seconds = Pattern.Duration * editRate_denominator / editRate_numerator;
-                                var hms_time = convertSecondsToHMS(duration_seconds);
-                                var components_time = secondsToMinutesAndSeconds(duration_seconds);
+                                        var duration_seconds = Pattern.Duration * editRate_denominator / editRate_numerator;
+                                        var hms_time = convertSecondsToHMS(duration_seconds);
 
                                         box +=
-                                                '<div class="card rounded border mb-2 left-side-item "' +
-                                    '      data-side="left" data-type="Pattern" ' +
-                                    '      data-id="' + eventId + '"' +
-                                    '      data-uuid="' + Pattern.Id + '" ' +
-                                    '      data-title="' + Pattern.AnnotationText + '"' +
-                                    '      data-editrate_denominator="' + editRate_denominator + '" data-editrate_numerator="' + editRate_numerator + '"' +
-                                    '        data-minutes="' + components_time.minutes + '"' +
-                                    '        data-seconds="' + components_time.seconds + '"' +
-                                    '      data-version="new_item" ' +
-                                    '      data-time_seconds="' + duration_seconds + '"' +
-                                    '      data-time="' + hms_time + '"' +
-                                    '      data-starttime="00:00:00">     ' +
-                                    '    <div class="card-body  ">\n' +
-                                    '       <div class="media-body  ">\n' +
-                                    '          <h6 class="mb-1" style=" font-size: 18px">' + Pattern.AnnotationText + '</h6>\n' +
-                                    '       </div>\n' +
-                                    '       <div class="media-body">\n' +
-                                    '         <p class="mb-0 text-muted float-left color-white">00:00:00</p>\n' +
-                                    '         <p class="mb-0 text-muted float-right">\n' +
-                                    '            <span class=" ">\n' +
-                                    '              <i class="btn btn-primary  mdi mdi-magnify custom-search  pattern-details"' + Pattern.Id + '"></i>\n' +
-                                    '              <i class="btn btn-danger mdi mdi-delete-forever remove-cpl custom-search"></i>\n' +
-                                    '            </span>       ' +
-                                    '           </p>\n' +
-                                    '       </div>\n' +
-                                    '   </div>\n' +
-                                    '    <div class="card-body macro-list  ' + list_macro_style + ' ">' + macro_box + '</div> ' +
-                                    '    <div class="card-body marker-list   ' + list_marker_style + '">' + marker_box + '</div>' +
-                                    '</div>';
+                                            '<div class="macro_list_sortable list-group-item div_list row cpl_component_to_select cpl_component component"' +
+                                            '      data-type="pattern" ' +
+                                            '      data-id="' + eventId + '"' +
+                                            '      data-uuid="' + Pattern.Id + '" ' +
+                                            '      data-source="undefined"' +
+                                            '      data-title="' + Pattern.AnnotationText + '"' +
+                                            '      data-editrate_denominator="' + editRate_denominator + '" ' +
+                                            '      data-editrate_numerator="' + editRate_numerator + '" data-id_server="undefined"' +
+                                            '      data-version="new_item" data-time_seconds="' + duration_seconds + '"' +
+                                            '      data-time="' + hms_time + '" data-starttime="00:00:00" ' +
+                                            '      draggable="false" style=""> ' +
+                                            '   <div class="title-content col-md-7 left_panel_title">' +
+
+                                            (Pattern.AnnotationText == "Black 3D" || Pattern.AnnotationText == "Black 3D 48" ? '<span class="icon_pattern">3D</span> '
+                                                : "") +
+                                            Pattern.AnnotationText +
+                                            '   </div>  ' +
+                                            '   <div class="details-content col-md-3" style="">      ' +
+                                            '      <div class=" ">          ' +
+                                            '          <i class="fa fa-clock-o" aria-hidden="true"></i>         ' +
+                                            '         <span class="start_time">00:00:00</span>       ' +
+                                            '      </div> ' +
+                                            '  </div>\n' +
+                                            '  <i class="fa fa-search col-sd-1 search-spl_item"></i>  ' +
+                                            '  <i class="fa fa-close col-sd-1  delete-spl_item"></i>  ' +
+                                            '    <div class="col-md-12 macro_list" style="padding :0px"> ' +
+                                            macro_box +
+                                            '    </div>   ' +
+                                            '    <div class="col-md-10 marker_list">' +
+                                            marker_box +
+                                            '    </div>   ' +
+                                            '    <div class="col-md-10 intermission_list"></div>' +
+                                            '</div>';
+                                        console.log(marker_box);
                                     }
                                     macro_box = "";
                                     marker_box = "";
@@ -3464,7 +3465,6 @@
                                 }
                             }
                         }
-                           reorderRightList();
 
                     } catch (e) {
                         console.log(e);
@@ -3527,8 +3527,6 @@
         }
 
         function secondsToMinutesAndSeconds(totalSeconds) {
-
-
             const minutes = Math.floor(totalSeconds / 60);
             const seconds = totalSeconds % 60;
 

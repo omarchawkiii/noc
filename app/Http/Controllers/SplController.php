@@ -137,5 +137,10 @@ class SplController extends Controller
         return view('spls.splbuilder', compact('locations'));
     }
 
+    public function upload_spl()
+    {
+        return view('spls.uploadspl');
+    }
+
 
 }

@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use SoulDoit\DataTable\SSP;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
-use Exception;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 
@@ -26,7 +25,6 @@ class NocsplController extends Controller
 
         $file_name = "$uuid.xml" ;
         $file_url = Storage::disk('local')->put( $file_name, $file) ;
-
         $duration = $this->calculateSplDuration(simplexml_load_string($file));
         $new_nocspl = Nocspl::create([
             'uuid' => $uuid ,
@@ -37,15 +35,13 @@ class NocsplController extends Controller
             'duration'=> $duration,
             'location_id'=> null,
         ]) ;
-/*
+
         foreach($request->items_spl as $noccpl)
         {
             $cpl = Lmscpl::where('uuid', $noccpl['uuid'] )->first() ;
-                if($noccpl['kind']!="segment" OR $noccpl['kind']!="Pattern"){
-                 $new_nocspl->lmscpls()->syncWithoutDetaching([$cpl->id]);
-                }
 
-        }*/
+            $new_nocspl->lmscpls()->syncWithoutDetaching([$cpl->id]);
+        }
 
         $response = array("status" => "saved");
         echo json_encode($response);
@@ -245,7 +241,7 @@ class NocsplController extends Controller
 
     }
 
-     public function generateSplXml($uuid, $ShowTitleText, $HFR, $display_mode, $array_cpl, $IssueDate, $action)
+    public function generateSplXml($uuid, $ShowTitleText, $HFR, $display_mode, $array_cpl, $IssueDate, $action)
     {
 
 
@@ -277,7 +273,7 @@ class NocsplController extends Controller
         $file .= '<PackList>' .
             $this->generatePacks($array_cpl) .
             '</PackList>
-</ShowPlaylist>';
+        </ShowPlaylist>';
 
 
         return $file;
@@ -332,7 +328,7 @@ class NocsplController extends Controller
             if ($array_cpl[$i]['kind'] == "segment") {
                 $packs = $packs .
                     '<Pack>
-                      <Id>' . $array_cpl[$i]['uuid'] . '</Id>
+                      <Id>' . $array_cpl[$i]['id'] . '</Id>
                       <PackName>' . htmlspecialchars($array_cpl[$i]['title'], ENT_XML1 | ENT_QUOTES, 'UTF-8') . '</PackName>
                       <AnnotationText>' . htmlspecialchars($array_cpl[$i]['title'], ENT_XML1 | ENT_QUOTES, 'UTF-8') . '</AnnotationText>
                       <EventList/>
@@ -565,7 +561,7 @@ class NocsplController extends Controller
         return $packs;
     }
 
-     public function generatePacks($array_cpl)
+    public function generatePacks($array_cpl)
     {
         // print_r($array_cpl);
         $packs = "";
@@ -616,7 +612,7 @@ class NocsplController extends Controller
                 if ($array_cpl[$i]['kind'] == "segment") {
                     $packs = $packs .
                         '<Pack>
-                      <Id>' . $array_cpl[$i]['uuid'] . '</Id>
+                      <Id>' . $array_cpl[$i]['id'] . '</Id>
                       <PackName>' . $array_cpl[$i]['title'] . '</PackName>
                       <AnnotationText>' . $array_cpl[$i]['title'] . '</AnnotationText>
                       <EventList/>
@@ -745,11 +741,11 @@ class NocsplController extends Controller
                             } else if (($i < (count($array_cpl) - 1) and ($array_cpl[$next_position]["kind"] == "SPL" or $array_cpl[$next_position]["kind"] == "segment"))) {
                                 $packs .= $packs . "</EventList></Pack>";
                             }
-//                            . (
-//                            ($i == (count($array_cpl) - 1)) ? "</EventList></Pack>"
-//                                ? ($i < (count($array_cpl) - 1) and ($array_cpl[$next_position]["kind"] == "SPL" or $array_cpl[$next_position]["kind"] == "segment"))
-//                                : "</EventList></Pack>"
-//                                : "");
+                            //                            . (
+                            //                            ($i == (count($array_cpl) - 1)) ? "</EventList></Pack>"
+                            //                                ? ($i < (count($array_cpl) - 1) and ($array_cpl[$next_position]["kind"] == "SPL" or $array_cpl[$next_position]["kind"] == "segment"))
+                            //                                : "</EventList></Pack>"
+                            //                                : "");
                         } else {
 
                             if ($array_cpl[$previous_position]['kind'] == "SPL" or $array_cpl[$previous_position]['kind'] == "segment" or ($array_cpl[$previous_position]['items_intermission'] != null)) {
@@ -801,13 +797,13 @@ class NocsplController extends Controller
                                    <MainElement>' .
                                     ($array_cpl[$i]['kind'] == "Pattern" ? $this->generatePattern($array_cpl[$i]) : $this->generateComposition($array_cpl[$i]))
 
-//                                   .'   <Composition>
-//                                          <Id>urn:uuid:' . $array_cpl[$i]['id'] . '</Id>
-//                                          <CompositionPlaylistId>' . $array_cpl[$i]['uuid'] . '</CompositionPlaylistId>
-//                                          <AnnotationText>' . $array_cpl[$i]['title'] . '</AnnotationText>
-//                                          <IntrinsicDuration>' . $array_cpl[$i]['time_seconds'] * $array_cpl[$i]['editrate_numerator'] . '</IntrinsicDuration>
-//                                         <EditRate>' . $array_cpl[$i]['editrate_numerator'] . ' ' . $array_cpl[$i]['editrate_denominator'] . '</EditRate>
-//                                      </Composition>
+                                    //                                   .'   <Composition>
+                                    //                                          <Id>urn:uuid:' . $array_cpl[$i]['id'] . '</Id>
+                                    //                                          <CompositionPlaylistId>' . $array_cpl[$i]['uuid'] . '</CompositionPlaylistId>
+                                    //                                          <AnnotationText>' . $array_cpl[$i]['title'] . '</AnnotationText>
+                                    //                                          <IntrinsicDuration>' . $array_cpl[$i]['time_seconds'] * $array_cpl[$i]['editrate_numerator'] . '</IntrinsicDuration>
+                                    //                                         <EditRate>' . $array_cpl[$i]['editrate_numerator'] . ' ' . $array_cpl[$i]['editrate_denominator'] . '</EditRate>
+                                    //                                      </Composition>
                                     . '   </MainElement>' .
                                     ($array_cpl[$i]['marker_list'] != null ?
                                         implode('', array_map(function ($marker) {
@@ -989,8 +985,6 @@ class NocsplController extends Controller
 
         // Execute cURL session and get the response
         $response = curl_exec($ch);
-
-        //print_r($response);
         // Check for cURL errors
         if (curl_errno($ch)) {
             return ['error' => 'Curl error: ' . curl_error($ch)];
@@ -1040,35 +1034,6 @@ class NocsplController extends Controller
             }
         }
         return ['checkcplsinlocation' => 'All CPls exist in this location.'];
-
-    }
-
-    public function uploadlocalspl(Request $request)
-    {
-        try {
-
-            foreach ($request->splfiles as $splfiles )
-            {
-                $spl_file_content = simplexml_load_file($splfiles);
-                $file_name = "$spl_file_content->Id.xml" ;
-                $file_url = Storage::disk('local')->put( $file_name, $splfiles) ;
-                $duration = $this->calculateSplDuration($spl_file_content);
-                $new_nocspl = Nocspl::create([
-                    'uuid' => $spl_file_content->Id ,
-                    'spl_title' => $spl_file_content->ShowTitleText,
-                    'display_mode'=>null,
-                    'spl_properties_hfr'=>null ,
-                    'xmlpath'=>$file_name,
-                    'duration'=> $duration,
-                    'location_id'=> null,
-                ]) ;
-            }
-            echo "Success" ;
-
-        } catch (Exception $e) {
-            echo "Failed" ;
-            return $e;
-        }
 
     }
 }

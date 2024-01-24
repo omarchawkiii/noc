@@ -52,7 +52,8 @@ Route::get('spls/{location}/{spls}/get_spls', [App\Http\Controllers\SplControlle
 Route::get('spls/screen/{screen}', [App\Http\Controllers\SplController::class , 'spl_by_screen'])->name('spls.spls_by_screen');
 Route::get('get_spl_with_filter', [App\Http\Controllers\SplController::class , 'get_spl_with_filter'])->name('spls.get_spl_with_filter');
 Route::get('get_spl_infos/{spl}', [App\Http\Controllers\SplController::class , 'get_spl_infos'])->name('spls.get_spl_infos');
-Route::get('spls/spl_builder', [App\Http\Controllers\SplController::class , 'spl_builder'])->name('spls.spl_builder');
+Route::get('spl_builder', [App\Http\Controllers\SplController::class , 'spl_builder'])->name('spls.spl_builder');
+Route::get('upload_spl', [App\Http\Controllers\SplController::class , 'upload_spl'])->name('spls.upload_spl');
 
 
 
@@ -98,3 +99,4 @@ Route::post('sendXmlFileToApi', [App\Http\Controllers\NocsplController::class , 
 Route::post('checkAvailability', [App\Http\Controllers\NocsplController::class , 'checkAvailability'])->name('nocspl.checkAvailability');
 
 Route::post('checkCplsInLocation', [App\Http\Controllers\NocsplController::class , 'checkCplsInLocation'])->name('nocspl.checkCplsInLocation');
+Route::post('uploadlocalspl', [App\Http\Controllers\NocsplController::class , 'uploadlocalspl'])->name('nocspl.uploadlocalspl');
