@@ -1073,13 +1073,8 @@
                         aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-center p-4">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h3 id="ingest-response-save-file"></h3>
-                        </div>
-                        <div class="col-md-12">
-                            <h3 id="ingest-response-cpls-in-location"></h3>
-                        </div>
+                    <div class="" id="ingest-response-content" >
+
                     </div>
                     <div class="row mt-2">
                         <div class="col" style="text-align: center">
@@ -2275,7 +2270,6 @@
 
         });
 
-
         // *************************  Top menu Right Side
 
         //click btn new spl
@@ -2331,21 +2325,20 @@
 
                         result = result
                                         +'<tr id="'+value.uuid+'">'
-                                            +'<th>'+value.spl_title+'</th>'
-                                            +'<th>'+value.created_at+'</th>'
-                                            +'<th>'+value.uuid+'</th>'
-                                            +'<th> '
+                                            +'<td style="font-size: 14px; line-height: 22px; width: 12vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.spl_title+'</td>'
+                                            +'<td style="font-size: 14px;">'+value.created_at+'</td>'
+                                            +'<td style="font-size: 14px; line-height: 22px; width: 18vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.uuid+'</td>'
+                                            +'<td> '
                                                 +'<i class="btn btn-primary mdi mdi-tooltip-edit open_spl" data-title="'+value.spl_title+'" data-uuid="'+value.uuid+'"></i> '
                                                 +'<i class="btn btn-danger mdi   mdi-delete-forever delete_spl" data-title="'+value.spl_title+'" data-uuid="'+value.uuid+'"></i>'
-                                            +'</th>'
-
+                                            +'</td>'
                                         +'</tr>'
                         });
                         result = result
                                     +'</tbody>'
                                 +'</table>'
                             +'</div>'
-                            console.log(result)
+
                         $('#nocspls_content').html(result)
 
 
@@ -3127,10 +3120,6 @@
         }
 
 
-
-
-
-
         function openSpl(id_spl) {
             $.ajax({
                 url : "{{  url('') }}"+   "/open_nocspl",
@@ -3147,14 +3136,8 @@
                     let box = "";
 
                     try {
-
-
                         $('#opened_spl').attr('data-uuid', obj.Id);
-
-
                         setSplOpenedData(capabilities);
-
-
                         if (obj.hasOwnProperty('EventList') && !obj.hasOwnProperty('PackList')) {
                             var pack = [obj.EventList];
                             var obj = {
@@ -4098,7 +4081,6 @@
         var apiUrl ="http://localhost/tms/system/api2.php" ;
         //var apiUrl = "http://localhost/tms/system/api2.php";
         path = $('#nos-spl option:selected').data('filepath');  ;
-        alert(path) ;
         $.ajax({
             url:url,
 
@@ -4111,7 +4093,47 @@
             },
             success: function (response) {
                 try {
-                    console.log(response) ;
+                    var missing_cpls  ;
+                    $("#ingest-modal").modal('hide');
+                    if(response.status == 1)
+                    {
+                        missing_cpls ='<p class="text-success">'+response.success+'</p>' ;
+                        if(response.missing_cpls.length > 0)
+                        {
+                            missing_cpls +=
+                                '<p> there are CPLs missing in this location</p>'
+                                +'<table class="table">'
+                                    +'<thead>'
+                                        +'<tr>'
+                                            +'<th>UUID </th>'
+                                            +'<th>Title</th>'
+                                        +'</tr>'
+                                    +'</thead>'
+                                    +'<tbody>'
+
+
+                            $.each(response.missing_cpls, function(index, value) {
+                                missing_cpls +=
+                                        '<tr>'
+                                            +'<td style="font-size: 14px;">'+value.CPLId+'</td>'
+                                            +'<td style="font-size: 14px;">'+value.AnnotationText+'</td>'
+                                        +'</tr>' ;
+
+                            })
+                            missing_cpls +=
+                                '</tbody>'
+                                +'</table>' ;
+
+                        }
+                        $("#ingest-response").modal('show');
+                            $('#ingest-response #ingest-response-content ').html(missing_cpls)
+                    }
+                    else
+                    {
+                        $("#ingest-response").modal('show');
+                        $('#ingest-response #ingest-response-content ').html('<p class="text-danger">Error occurred while sending the request.</p>')
+                    }
+
                 } catch (e) {
                     console.log(e);
                 }

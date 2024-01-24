@@ -993,6 +993,7 @@ class NocsplController extends Controller
         // Close cURL session
         curl_close($ch);
 
+
         // Process the API response
         if ($response == 0 ) {
             return ['error' => 'Error occurred while sending the request.'];

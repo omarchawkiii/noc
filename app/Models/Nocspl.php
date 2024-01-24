@@ -18,6 +18,12 @@ class Nocspl extends Model
         'location_id',
         'uuid',
     ];
+
+    protected $casts = [
+        'created_at'  => 'datetime:Y-m-d H:00',
+       // 'joined_at' => 'datetime:Y-m-d H:00',
+    ];
+
     public function lmscpls(): BelongsToMany
     {
         return $this->belongsToMany(Lmscpl::class,'lmscpls_nocspls');
