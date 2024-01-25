@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title') Upload SPL  @endsection
 @section('content')
-    <div class="page-header playlistbuilder-shadow">
+    <div class="page-header library-shadow">
         <h3 class="page-title">Upload SPL </h3>
         <nav aria-label="breadcrumb">
         <ol class="breadcrumb">

@@ -36,6 +36,7 @@ class NocsplController extends Controller
             'xmlpath'=>$file_name,
             'duration'=> $duration,
             'location_id'=> null,
+            'source'=> "NOC",
         ]) ;
 /*
         foreach($request->items_spl as $noccpl)
@@ -1060,6 +1061,7 @@ class NocsplController extends Controller
                     'spl_properties_hfr'=>null ,
                     'xmlpath'=>$file_name,
                     'duration'=> $duration,
+                    'source'=> "flash disk",
                     'location_id'=> null,
                 ]) ;
             }

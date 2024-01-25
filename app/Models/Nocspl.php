@@ -17,6 +17,7 @@ class Nocspl extends Model
         'duration',
         'location_id',
         'uuid',
+        "source" ,
     ];
 
     protected $casts = [

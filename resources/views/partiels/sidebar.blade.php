@@ -62,6 +62,15 @@
           <span class="menu-title">Playlist Builder</span>
         </a>
       </li>
+
+      <li class="nav-item menu-items">
+        <a class="nav-link" href="{{ route('nocspl.uploadlocalspl') }}">
+          <span class="menu-icon icon-box-success">
+            <i class="mdi mdi-upload "></i>
+          </span>
+          <span class="menu-title">Upload Playlist</span>
+        </a>
+      </li>
       <li>
         <br />
         <br /><br /><br /><br /><br /> <br /><br /><br /><br /><br />
