@@ -326,7 +326,30 @@
         </div>
     </div>
 
+    <!--   delete spl -->
+    <div class="modal fade show" id="unlink-spl" tabindex="-1" role="dialog" aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+        <div class="modal-dialog"   role="document">
+            <div class="modal-content" style="background: #000000">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="">Unlink</h5>
+                    <button type="button"  data-bs-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <input type="hidden" id="id-mivie-to-unlink">
+                <div class="modal-body">
 
+                </div>
+                <div class="modal-footer" style="display: block;text-align: center">
+                    <button type="button" class="btn btn-success" id="confirm_inlink">Confirm</button>
+                    <button type="button" class="btn btn-light"  data-bs-dismiss="modal"
+                            aria-label="Close">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
 
 
 @endsection
@@ -348,7 +371,7 @@
         if (type === 'success-message') {
             swal({
                 title: 'Congratulations!',
-                text: 'SPL and movie are linked',
+                //text: 'SPL and movie are linked',
                 icon: 'success',
                 button: {
                 text: "Continue",
@@ -712,7 +735,7 @@
                         //console.log(response.spl.name) ;
                         $.each(response.movies, function( index, value ) {
                             movies_table +=
-                            '<tr>'
+                            '<tr id="'+value.id+'">'
                                 +'<td class="text-body align-middle fw-medium text-decoration-none" data-id="'+ value.id+'"  >'+ value.title+' </td>'
                                 +'<td class="text-body align-middle fw-medium text-decoration-none" data-id="'+ value.nocspl.id+'"  >'+ value.nocspl.spl_title+' </td>'
                             '</tr >'
@@ -790,12 +813,65 @@
             });
 
 
-            console.log(spl_id)
-            console.log(movie_id)
 
 
         })
 
+        $(document).on('click', '#linked_movies_spl_table tbody tr', function () {
+            movie_id = $(this).attr("id") ;
+            movie_title = $(this).children('td:first-child').text()
+            spl_title = $(this).children('td:nth-child(2)').text()
+
+
+            $('#unlink-spl .modal-body').html('<p> Do you want to unlink '+movie_title+' from '+spl_title+'</p>')
+            $('#id-mivie-to-unlink').val(movie_id) ;
+            $('#unlink-spl').modal('show')
+            console.log(movie_title)
+            console.log(spl_title)
+
+
+        })
+
+        $(document).on('click', '#confirm_inlink', function () {
+            movie_id = $('#id-mivie-to-unlink').val() ; ;
+            $.ajax({
+                url:"{{  url('') }}"+ "/unlink_spl_movie",
+                type: 'post',
+                cache: false,
+                data: {
+                    movie_id: movie_id,
+                    "_token": "{{ csrf_token() }}",
+                },
+                beforeSend: function() {
+                    swal({
+                        title: 'Refreshing',
+                        allowEscapeKey: false,
+                        allowOutsideClick: true,
+                        onOpen: () => {
+                            swal.showLoading();
+                        }
+                    });
+                },
+                success: function(response) {
+                    if(response == "Success")
+                    {
+                        swal.close();
+                        $('#unlink-spl').modal('hide')
+                        $('#'+movie_id+'').remove() ;
+                        showSwal('success-message') ;
+                    }
+                    else
+                    {
+                        swal.close();
+                        showSwal('warning-message-and-cancel')
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                },
+                complete: function(jqXHR, textStatus) {}
+            });
+        })
 
     })(jQuery);
 

@@ -106,3 +106,4 @@ Route::get('getMoviesCods/{location}', [App\Http\Controllers\MoviescodController
 Route::get('get_spl_and_movies/{location}', [App\Http\Controllers\MoviescodController::class , 'get_spl_and_movies'])->name('moviescod.get_spl_and_movies');
 Route::post('add_movies_to_spls', [App\Http\Controllers\MoviescodController::class , 'add_movies_to_spls'])->name('moviescod.MoviescodController');
 Route::get('get_spl_and_movies_linked/{location}', [App\Http\Controllers\MoviescodController::class , 'get_spl_and_movies_linked'])->name('moviescod.get_spl_and_movies_linked');
+Route::post('unlink_spl_movie', [App\Http\Controllers\MoviescodController::class , 'unlink_spl_movie'])->name('moviescod.unlink_spl_movie');

@@ -84,5 +84,22 @@ class MoviescodController extends Controller
 
     }
 
+    public function unlink_spl_movie(Request $request)
+    {
+        $moviescod = Moviescod::findOrFail($request->movie_id)->update([
+        'nocspl_id' => null,
+        'status' => "unlinked"
+        ]);
+
+        if($moviescod)
+        {
+            echo "Success" ;
+        }
+        else
+        {
+            echo "Failed" ;
+        }
+    }
+
 
 }
