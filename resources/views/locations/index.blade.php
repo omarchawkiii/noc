@@ -93,6 +93,7 @@
                                                     <a class="btn btn-outline-primary dropdown-item" href="{{ route('snmp.getsnmp',$location->id) }}">Refreesh SNMP Content</a>
                                                     <a class="btn btn-outline-primary dropdown-item" href="{{ route('playback.getplayback',$location->id) }}">Refreesh Playback </a>
                                                     <a class="btn btn-outline-primary dropdown-item" href="{{ route('refresh_macro_data_by_location',$location->id) }}">Refreesh Macros </a>
+                                                    <a class="btn btn-outline-primary dropdown-item" href="{{ route('moviescod.getmoviescods',$location->id) }}">Refreesh MoviesCods </a>
 
                                                 </div>
                                               </div>

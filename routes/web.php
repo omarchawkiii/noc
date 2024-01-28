@@ -100,3 +100,9 @@ Route::post('checkAvailability', [App\Http\Controllers\NocsplController::class ,
 
 Route::post('checkCplsInLocation', [App\Http\Controllers\NocsplController::class , 'checkCplsInLocation'])->name('nocspl.checkCplsInLocation');
 Route::post('uploadlocalspl', [App\Http\Controllers\NocsplController::class , 'uploadlocalspl'])->name('nocspl.uploadlocalspl');
+
+
+Route::get('getMoviesCods/{location}', [App\Http\Controllers\MoviescodController::class , 'getMoviesCods'])->name('moviescod.getmoviescods');
+Route::get('get_spl_and_movies/{location}', [App\Http\Controllers\MoviescodController::class , 'get_spl_and_movies'])->name('moviescod.get_spl_and_movies');
+Route::post('add_movies_to_spls', [App\Http\Controllers\MoviescodController::class , 'add_movies_to_spls'])->name('moviescod.MoviescodController');
+Route::get('get_spl_and_movies_linked/{location}', [App\Http\Controllers\MoviescodController::class , 'get_spl_and_movies_linked'])->name('moviescod.get_spl_and_movies_linked');

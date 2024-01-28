@@ -116,4 +116,9 @@ class Location extends Model
         return $this->hasMany(Macro::class);
     }
 
+    public function moviescod(): HasMany
+    {
+        return $this->hasMany(Moviescod::class);
+    }
+
 }

@@ -61,7 +61,7 @@
         if (type === 'success-message') {
             swal({
                 title: 'Congratulations!',
-                text: 'You entered the correct answer',
+                text: '',
                 icon: 'success',
                 button: {
                 text: "Continue",
@@ -96,9 +96,6 @@
         }
 
         }
-
-
-
 
     })(jQuery);
 

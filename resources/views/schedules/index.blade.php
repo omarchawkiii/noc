@@ -51,6 +51,10 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="col-xl-4">
+                            <button type="button" id="linking_btn" class=" btn btn-primary btn-icon-text" >
+                                <i class="mdi mdi-link-variant "></i> Linking </button>
+                        </div>
                     </div>
                     <div class="col-md-6 row " id="scheduleDate" style="display: none">
 
@@ -215,6 +219,115 @@
         </div>
     </div>
 
+    <div class=" modal fade " id="linking_modal" tabindex="-1" role="dialog"  aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered  modal-xl">
+            <div class="modal-content border-0">
+                <div class="modal-header p-4 pb-0">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                          <a class="nav-link active" id="no_linked_spls_movies_tab" data-bs-toggle="tab" href="#no_linked_spls_movies" role="tab" aria-controls="home" aria-selected="true">No linked</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" id="linked_spls_movies_tab" data-bs-toggle="tab" href="#linked_spls_movies" role="tab" aria-controls="Content CPLs" aria-selected="false">Linked </a>
+                        </li>
+
+                      </ul>
+                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center p-4">
+                    <div class="tab-content border-0">
+                        <div class="tab-pane fade show active" id="no_linked_spls_movies" role="tabpanel" aria-labelledby="no_linked_spls_movies_tab-tab">
+                            <div class="row " >
+                                <div class="col-md-6  preview-list multiplex" >
+                                    <table class="table" id="movies_table">
+                                        <thead>
+                                            <tr>
+                                                <th>Movies</th>
+
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                    </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-md-6  preview-list multiplex">
+                                    <table class="table" id="spls_table">
+                                        <thead>
+                                            <tr>
+                                                <th>SPL</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                    </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row " >
+                                <div class="col-md-12 " >
+                                    <button type="button" id="link_spl_movies_btn" class=" btn btn-primary btn-icon-text " style="float: right">
+                                    <i class="mdi mdi-check "></i> Link </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="linked_spls_movies" role="tabpanel" aria-labelledby="linked_spls_movies-tab">
+                            <div class="row " >
+                                <div class="col-md-12  preview-list multiplex" >
+                                    <table class="table" id="linked_movies_spl_table">
+                                        <thead>
+                                            <tr>
+                                                <th>Movies</th>
+                                                <th>SPL</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                    </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+        <!--end modal-content-->
+        </div>
+    </div>
+
+    <div class="modal fade " id="no-location-selected" tabindex="-1" role="dialog" aria-labelledby="delete_client_modalLabel" aria-hidden="true">>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ModalLabel">Please Select Location </h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h4 class="text-center"> No Location Selected!</h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" style="margin: auto" class="btn btn-secondary btn-fw close"
+                            data-bs-dismiss="modal" aria-label="Close">OK
+                    </button>
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
 
 @endsection
 
@@ -226,24 +339,53 @@
 <!-- -------END  DATA TABLE ---- -->
 <script src="https://kendo.cdn.telerik.com/2021.2.616/js/kendo.all.min.js"></script>
 
-<script src="{{asset('/assets/vendors/jquery-toast-plugin/jquery.toast.min.js')}}"></script>
-<script>
-    (function($) {
-    @if (session('message'))
-        $.toast({
-            heading: 'Success',
-            text: '{{ session("message") }}',
-            showHideTransition: 'slide',
-            icon: 'success',
-            loaderBg: '#f96868',
-            position: 'top-right',
-            timeout: 5000
-        })
-    @endif
-})(jQuery);
-</script>
+<script src="{{asset('/assets/vendors/sweetalert/sweetalert.min.js')}}"></script>
 
 <script>
+
+(function($) {
+        showSwal = function(type) {
+        if (type === 'success-message') {
+            swal({
+                title: 'Congratulations!',
+                text: 'SPL and movie are linked',
+                icon: 'success',
+                button: {
+                text: "Continue",
+                value: true,
+                visible: true,
+                className: "btn btn-primary"
+                }
+            })
+
+        }
+
+        if (type === 'warning-message-and-cancel') {
+            swal({
+                title: 'Failed',
+                text: "Error occurred while sending the request.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3f51b5',
+                cancelButtonColor: '#ff4081',
+                confirmButtonText: 'Great ',
+                buttons: {
+                cancel: {
+                    text: "Cancel",
+                    value: null,
+                    visible: true,
+                    className: "btn btn-danger",
+                    closeModal: true,
+                },
+
+                }
+            })
+        }
+
+        }
+
+    })(jQuery);
+
 
     (function($) {
 
@@ -259,7 +401,7 @@
         });
 
         $('#screen').change(function(){
-            alert('test') ;
+
             $("#location-listing").dataTable().fnDestroy();
             $('#location-listing tbody').html('')
             var loader_content  =
@@ -483,6 +625,176 @@
             })
 
         });
+        $(document).on('click', '#linking_btn', function () {
+
+            var location =  $('#location').val();
+            if(location == 'Locations')
+            {
+                $('#no-location-selected').modal('show');
+            }
+            else
+            {
+                $('#linking_modal').modal('show');
+
+                var loader_content  =
+                '<div class="jumping-dots-loader">'
+                    +'<span></span>'
+                    +'<span></span>'
+                    +'<span></span>'
+                    +'</div>'
+                $('#movies_table tbody').html(loader_content)
+                $('#spls_table tbody').html(loader_content)
+
+            var url = "{{  url('') }}"+ "/get_spl_and_movies/"+location ;
+                var movies_table="" ;
+                var noc_spl_table="";
+
+            $.ajax({
+                    url: url,
+                    method: 'GET',
+
+                    success:function(response)
+                    {
+                        //console.log(response.spl.name) ;
+                        $.each(response.movies, function( index, value ) {
+                            movies_table +=
+                            '<tr>'
+                                +'<td class="text-body align-middle fw-medium text-decoration-none" data-id="'+ value.id+'"  >'+ value.title+' </td>'
+                            '</tr >'
+                        });
+                        $('#movies_table tbody').html(movies_table)
+
+                        $.each(response.nos_spls, function( index, value ) {
+                            noc_spl_table +=
+                            '<tr>'
+                                +'<td class="text-body align-middle fw-medium text-decoration-none" data-id="'+ value.id+'"  >'+ value.spl_title+' </td>'
+                            '</tr >'
+
+                        });
+                        $('#spls_table tbody').html(noc_spl_table)
+
+                    },
+                    error: function(response) {
+
+                    }
+            })
+            }
+
+
+
+
+
+        });
+
+        $(document).on('click', '#linked_spls_movies_tab', function () {
+
+            var location =  $('#location').val();
+                var loader_content  =
+                '<div class="jumping-dots-loader">'
+                    +'<span></span>'
+                    +'<span></span>'
+                    +'<span></span>'
+                    +'</div>'
+                $('#linked_movies_spl_table tbody').html(loader_content)
+
+            var url = " {{  url('') }}"+ "/get_spl_and_movies_linked/"+location ;
+
+                var movies_table="" ;
+
+                    console.log(url)
+            $.ajax({
+                    url: url,
+                    method: 'GET',
+
+                    success:function(response)
+                    {
+                        console.log(response)
+                        //console.log(response.spl.name) ;
+                        $.each(response.movies, function( index, value ) {
+                            movies_table +=
+                            '<tr>'
+                                +'<td class="text-body align-middle fw-medium text-decoration-none" data-id="'+ value.id+'"  >'+ value.title+' </td>'
+                                +'<td class="text-body align-middle fw-medium text-decoration-none" data-id="'+ value.nocspl.id+'"  >'+ value.nocspl.spl_title+' </td>'
+                            '</tr >'
+                        });
+                        $('#linked_movies_spl_table tbody').html(movies_table)
+
+
+
+                    },
+                    error: function(response) {
+
+                    }
+            })
+
+
+
+
+
+
+        });
+
+
+        $(document).on('click', '#movies_table td', function () {
+            $('#movies_table td').removeClass('selected') ;
+            $(this).addClass('selected') ;
+        })
+
+        $(document).on('click', '#spls_table td', function () {
+            $('#spls_table td').removeClass('selected') ;
+            $(this).addClass('selected') ;
+        })
+
+        $(document).on('click', '#link_spl_movies_btn', function () {
+
+            var spl_id = $('#spls_table td.selected').attr('data-id') ;
+            var movie_id = $('#movies_table td.selected').attr('data-id') ;
+
+            $.ajax({
+                url:"{{  url('') }}"+ "/add_movies_to_spls",
+                type: 'post',
+                cache: false,
+                data: {
+                    movie_id: movie_id,
+                    spl_id: spl_id,
+                    "_token": "{{ csrf_token() }}",
+                },
+                beforeSend: function() {
+                    swal({
+                        title: 'Refreshing',
+                        allowEscapeKey: false,
+                        allowOutsideClick: true,
+                        onOpen: () => {
+                            swal.showLoading();
+                        }
+                    });
+                },
+                success: function(response) {
+                    if(response == "Success")
+                    {
+                        swal.close();
+                        $('#spls_table td').removeClass('selected') ;
+                        $('#movies_table td.selected').remove() ;
+                        showSwal('success-message') ;
+                    }
+                    else
+                    {
+                        swal.close();
+                        showSwal('warning-message-and-cancel')
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                },
+                complete: function(jqXHR, textStatus) {}
+            });
+
+
+            console.log(spl_id)
+            console.log(movie_id)
+
+
+        })
 
 
     })(jQuery);

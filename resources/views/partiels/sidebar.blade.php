@@ -64,7 +64,7 @@
       </li>
 
       <li class="nav-item menu-items">
-        <a class="nav-link" href="{{ route('nocspl.uploadlocalspl') }}">
+        <a class="nav-link" href="{{ route('spls.upload_spl') }}">
           <span class="menu-icon icon-box-success">
             <i class="mdi mdi-upload "></i>
           </span>
