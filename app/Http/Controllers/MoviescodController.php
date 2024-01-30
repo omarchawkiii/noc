@@ -59,14 +59,30 @@ class MoviescodController extends Controller
     public function add_movies_to_spls(Request $request)
     {
 
-        $moviescod = Moviescod::findOrFail($request->movie_id)->update([
-        'nocspl_id' => $request->spl_id,
-        'status' => "linked"
-        ]);
+        $apiUrl = 'http://localhost/tms_front/system/api2.php';
 
-        if($moviescod)
+        $moviescod = Moviescod::findOrFail($request->movie_id) ;
+        $splnoc= Nocspl::findOrFail($request->spl_id) ;
+        //$location = Location::findOrFail($splnoc->location_id) ;
+
+        //$this->sendUpdateLinksRequest($location->connection_ip, $moviescod->moviescods_id, $splnoc->uuid);
+        $response = $this->sendUpdateLinksRequest($apiUrl, $moviescod->moviescods_id, $splnoc->uuid);
+
+        if($response['result'] === 1 )
         {
-            echo "Success" ;
+            $moviescod = Moviescod::findOrFail($request->movie_id)->update([
+            'nocspl_id' => $request->spl_id,
+            'status' => "linked"
+            ]);
+
+            if($moviescod)
+            {
+                echo "Success" ;
+            }
+            else
+            {
+                echo "Failed" ;
+            }
         }
         else
         {
@@ -101,5 +117,43 @@ class MoviescodController extends Controller
         }
     }
 
+
+    function sendUpdateLinksRequest($apiUrl, $cod, $uuid) {
+
+
+        // Prepare the request data
+        $requestData = [
+            'action' => 'updateLinks',
+            'movie_code' => $cod,
+            'spl_uuid' => $uuid
+        ];
+
+        // Initialize cURL session
+        $ch = curl_init($apiUrl);
+
+        // Set cURL options
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($requestData));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        // Execute cURL session and get the response
+        $response = curl_exec($ch);
+        //print_r($response);
+
+        // Check for cURL errors
+        if (curl_errno($ch)) {
+            return ['error' => 'Curl error: ' . curl_error($ch)];
+        }
+
+        // Close cURL session
+        curl_close($ch);
+
+        // Process the API response
+        if (!$response) {
+            return ['error' => 'Error occurred while sending the request.'];
+        } else {
+            return json_decode($response, true);
+        }
+    }
 
 }

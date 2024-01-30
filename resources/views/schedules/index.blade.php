@@ -724,14 +724,14 @@
 
                 var movies_table="" ;
 
-                    console.log(url)
+
             $.ajax({
                     url: url,
                     method: 'GET',
 
                     success:function(response)
                     {
-                        console.log(response)
+                        //console.log(response)
                         //console.log(response.spl.name) ;
                         $.each(response.movies, function( index, value ) {
                             movies_table +=
@@ -793,6 +793,7 @@
                     });
                 },
                 success: function(response) {
+
                     if(response == "Success")
                     {
                         swal.close();

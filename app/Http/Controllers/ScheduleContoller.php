@@ -21,10 +21,6 @@ class ScheduleContoller extends Controller
             $client = new Client();
             $response = $client->request('GET', $url);
             $contents = json_decode($response->getBody(), true);
-            echo "url : $url <br />" ;
-
-
-
             if($contents)
             {
                 foreach($contents as $content)
