@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Lmscpl;
+use App\Models\Lmsspl;
 use App\Models\Location;
 use App\Models\Nocspl;
+use App\Models\Spl;
 use Illuminate\Http\Request;
 use SoulDoit\DataTable\SSP;
 use Illuminate\Support\Str;
@@ -38,7 +39,7 @@ class NocsplController extends Controller
             'location_id'=> null,
             'source'=> "NOC",
         ]) ;
-/*
+        /*
         foreach($request->items_spl as $noccpl)
         {
             $cpl = Lmscpl::where('uuid', $noccpl['uuid'] )->first() ;
@@ -746,11 +747,11 @@ class NocsplController extends Controller
                             } else if (($i < (count($array_cpl) - 1) and ($array_cpl[$next_position]["kind"] == "SPL" or $array_cpl[$next_position]["kind"] == "segment"))) {
                                 $packs .= $packs . "</EventList></Pack>";
                             }
-//                            . (
-//                            ($i == (count($array_cpl) - 1)) ? "</EventList></Pack>"
-//                                ? ($i < (count($array_cpl) - 1) and ($array_cpl[$next_position]["kind"] == "SPL" or $array_cpl[$next_position]["kind"] == "segment"))
-//                                : "</EventList></Pack>"
-//                                : "");
+        //                            . (
+        //                            ($i == (count($array_cpl) - 1)) ? "</EventList></Pack>"
+        //                                ? ($i < (count($array_cpl) - 1) and ($array_cpl[$next_position]["kind"] == "SPL" or $array_cpl[$next_position]["kind"] == "segment"))
+        //                                : "</EventList></Pack>"
+        //                                : "");
                         } else {
 
                             if ($array_cpl[$previous_position]['kind'] == "SPL" or $array_cpl[$previous_position]['kind'] == "segment" or ($array_cpl[$previous_position]['items_intermission'] != null)) {
@@ -802,13 +803,13 @@ class NocsplController extends Controller
                                    <MainElement>' .
                                     ($array_cpl[$i]['kind'] == "Pattern" ? $this->generatePattern($array_cpl[$i]) : $this->generateComposition($array_cpl[$i]))
 
-//                                   .'   <Composition>
-//                                          <Id>urn:uuid:' . $array_cpl[$i]['id'] . '</Id>
-//                                          <CompositionPlaylistId>' . $array_cpl[$i]['uuid'] . '</CompositionPlaylistId>
-//                                          <AnnotationText>' . $array_cpl[$i]['title'] . '</AnnotationText>
-//                                          <IntrinsicDuration>' . $array_cpl[$i]['time_seconds'] * $array_cpl[$i]['editrate_numerator'] . '</IntrinsicDuration>
-//                                         <EditRate>' . $array_cpl[$i]['editrate_numerator'] . ' ' . $array_cpl[$i]['editrate_denominator'] . '</EditRate>
-//                                      </Composition>
+        //                                   .'   <Composition>
+        //                                          <Id>urn:uuid:' . $array_cpl[$i]['id'] . '</Id>
+        //                                          <CompositionPlaylistId>' . $array_cpl[$i]['uuid'] . '</CompositionPlaylistId>
+        //                                          <AnnotationText>' . $array_cpl[$i]['title'] . '</AnnotationText>
+        //                                          <IntrinsicDuration>' . $array_cpl[$i]['time_seconds'] * $array_cpl[$i]['editrate_numerator'] . '</IntrinsicDuration>
+        //                                         <EditRate>' . $array_cpl[$i]['editrate_numerator'] . ' ' . $array_cpl[$i]['editrate_denominator'] . '</EditRate>
+        //                                      </Composition>
                                     . '   </MainElement>' .
                                     ($array_cpl[$i]['marker_list'] != null ?
                                         implode('', array_map(function ($marker) {
@@ -966,50 +967,73 @@ class NocsplController extends Controller
 
     public function sendXmlFileToApi(Request $request)
     {
+
+        $nos_pls = Nocspl::where('id',$request->spl_id)->first() ;
+        $location = Location::where('id',$request->location)->first() ;
+
+
         // Check if the file exists
-        $xmlFilePath =    storage_path().'/app/xml_file/'.$request->path ;
-        if (!file_exists($xmlFilePath)) {
-            return ['error' => 'File not found.'];
-        }
-        // Read XML content from the file
-        $xmlData = file_get_contents($xmlFilePath);
+        $xmlFilePath =    storage_path().'/app/xml_file/'.$nos_pls->path ;
 
-        // Initialize cURL session
-        $ch = curl_init($request->apiUrl);
+         if (!file_exists($xmlFilePath)) {
+                return ['error' => 'File not found.'];
+            }
 
-        // Set cURL options
-        $postData = [
-            'xmlData' => $xmlData
-        ];
+            // Read XML content from the file
+            $xmlData = file_get_contents($xmlFilePath);
 
+            // Prepare the request data
+            $requestData = [
+                'action' => 'updateSpl',
+                'xmlData' => $xmlData
+            ];
 
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/x-www-form-urlencoded']);
+            // Initialize cURL session
+            $ch = curl_init("http://localhost/tms/system/api2.php");
 
-        // Execute cURL session and get the response
-        $response = curl_exec($ch);
+            // Set cURL options
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($requestData));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        //print_r($response);
-        // Check for cURL errors
-        if (curl_errno($ch)) {
-            return ['error' => 'Curl error: ' . curl_error($ch)];
-        }
-
-        // Close cURL session
-        curl_close($ch);
+            // Execute cURL session and get the response
+            $response = curl_exec($ch);
 
 
-        // Process the API response
-        if ($response == 0 ) {
-            return ['error' => 'Error occurred while sending the request.'];
-        } else {
-            // Assuming the API returns JSON response
-            return json_decode($response, true);
-        }
+            if($response['status']== 1 )
+            {
+               Lmsspl::updateOrCreate([
+                    'uuid' =>$nos_pls->uuid,
+                    'location_id'     =>$request->ingest_location,
+                    ],[
+                    'uuid'     => $nos_pls->uuid,
+                    'name'     =>$nos_pls->spl_title,
+                    'duration'     => gmdate("H:i:s", $nos_pls->duration) ,
+                    'available_on'     => 'null',
+                    'location_id'     =>$request->ingest_location,
+                ]);
+
+            }
+            return $response;
+            // Check for cURL errors
+
+
+            if (curl_errno($ch)) {
+                return ['error' => 'Curl error: ' . curl_error($ch)];
+
+            }
+
+            // Close cURL session
+            curl_close($ch);
+
+            // Process the API response
+            if (!$response) {
+                return ['error' => 'Error occurred while sending the request.'];
+            } else {
+                return json_decode($response, true);
+            }
+
     }
-
     public function checkAvailability(Request $request)
     {
         $spl_title = $request->spl_title ;

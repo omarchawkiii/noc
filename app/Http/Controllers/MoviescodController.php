@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Lmscpl;
 use App\Models\Location;
 use App\Models\Moviescod;
 use App\Models\Nocspl;
@@ -58,26 +59,34 @@ class MoviescodController extends Controller
     }
     public function add_movies_to_spls(Request $request)
     {
-
         $apiUrl = 'http://localhost/tms_front/system/api2.php';
-
         $moviescod = Moviescod::findOrFail($request->movie_id) ;
         $splnoc= Nocspl::findOrFail($request->spl_id) ;
-        //$location = Location::findOrFail($splnoc->location_id) ;
 
-        //$this->sendUpdateLinksRequest($location->connection_ip, $moviescod->moviescods_id, $splnoc->uuid);
-        $response = $this->sendUpdateLinksRequest($apiUrl, $moviescod->moviescods_id, $splnoc->uuid);
+        $check_lms_spl = Lmscpl::where('uuid' , $splnoc->uuid)->where('location_id',$moviescod->location_id)->first() ;
 
-        if($response['result'] === 1 )
+
+        if($check_lms_spl)
         {
-            $moviescod = Moviescod::findOrFail($request->movie_id)->update([
-            'nocspl_id' => $request->spl_id,
-            'status' => "linked"
-            ]);
+            //$location = Location::findOrFail($splnoc->location_id) ;
+            //$this->sendUpdateLinksRequest($location->connection_ip, $moviescod->moviescods_id, $splnoc->uuid);
+            $response = $this->sendUpdateLinksRequest($apiUrl, $moviescod->moviescods_id, $splnoc->uuid);
 
-            if($moviescod)
+            if($response['result'] === 1 )
             {
-                echo "Success" ;
+                $moviescod = Moviescod::findOrFail($request->movie_id)->update([
+                'nocspl_id' => $request->spl_id,
+                'status' => "linked"
+                ]);
+
+                if($moviescod)
+                {
+                    echo "Success" ;
+                }
+                else
+                {
+                    echo "Failed" ;
+                }
             }
             else
             {
@@ -86,7 +95,7 @@ class MoviescodController extends Controller
         }
         else
         {
-            echo "Failed" ;
+            echo "missing" ;
         }
     }
 
@@ -118,9 +127,8 @@ class MoviescodController extends Controller
     }
 
 
-    function sendUpdateLinksRequest($apiUrl, $cod, $uuid) {
-
-
+    function sendUpdateLinksRequest($apiUrl, $cod, $uuid)
+    {
         // Prepare the request data
         $requestData = [
             'action' => 'updateLinks',

@@ -4070,89 +4070,89 @@
 
 
    $(document).on('click', '#submit-ingest-form', function ()
-    {
+        {
+            var spl_id = $('#spls_table td.selected').attr('data-id') ;
+            var location =  $('#location').val();
+            var url = "{{  url('') }}"+   "/sendXmlFileToApi";
 
-        var uuid =  $('#nos-spl').val();
-        var ingest_location =  $('#ingest-location').val();
-        var duration = $('#nos-spl option').data('duration');
-        var title = $('#nos-spl option').data('title');
-        var apiUrl = $('#ingest-location option').data('locationip');
 
-       // var url = "http://localhost/tms/system/api2.php";
-        var url = "{{  url('') }}"+   "/sendXmlFileToApi";
-        var apiUrl ="http://localhost/tms/system/api2.php" ;
-        //var apiUrl = "http://localhost/tms/system/api2.php";
-        path = $('#nos-spl option:selected').data('filepath');  ;
-        $.ajax({
-            url:url,
+            /*var uuid =  $('#nos-spl').val();
+            var ingest_location =  $('#ingest-location').val();
+            var duration = $('#nos-spl option').data('duration');
+            var title = $('#nos-spl option').data('title');
+            var apiUrl = $('#ingest-location option').data('locationip');*/
 
-            method: 'POST',
-            cache: false,
-            data: {
-                path: path,
-                apiUrl : apiUrl,
-                "_token": "{{ csrf_token() }}",
-            },
-            success: function (response) {
-                try {
-                    var missing_cpls  ;
-                    $("#ingest-modal").modal('hide');
-                    if(response.status == 1)
-                    {
-                        missing_cpls ='<p class="text-success">'+response.success+'</p>' ;
-                        if(response.missing_cpls.length > 0)
+
+           // var apiUrl ="http://localhost/tms/system/api2.php" ;
+            //path = $('#nos-spl option:selected').data('filepath');
+
+            $.ajax({
+                url:url,
+
+                method: 'POST',
+                cache: false,
+                data: {
+                    spl_id: spl_id,
+                    location:location,
+                    "_token": "{{ csrf_token() }}",
+                },
+                success: function (response) {
+
+                    try {
+                        var missing_cpls  ;
+                        $("#ingest-modal").modal('hide');
+                        if(response.status == 1)
                         {
-                            missing_cpls +=
-                                '<p> there are CPLs missing in this location</p>'
-                                +'<table class="table">'
-                                    +'<thead>'
-                                        +'<tr>'
-                                            +'<th>UUID </th>'
-                                            +'<th>Title</th>'
-                                        +'</tr>'
-                                    +'</thead>'
-                                    +'<tbody>'
-
-
-                            $.each(response.missing_cpls, function(index, value) {
+                            missing_cpls ='<p class="text-success">'+response.success+'</p>' ;
+                            if(response.missing_cpls.length > 0)
+                            {
                                 missing_cpls +=
-                                        '<tr>'
-                                            +'<td style="font-size: 14px;">'+value.CPLId+'</td>'
-                                            +'<td style="font-size: 14px;">'+value.AnnotationText+'</td>'
-                                        +'</tr>' ;
+                                    '<p> there are CPLs missing in this location</p>'
+                                    +'<table class="table">'
+                                        +'<thead>'
+                                            +'<tr>'
+                                                +'<th>UUID </th>'
+                                                +'<th>Title</th>'
+                                            +'</tr>'
+                                        +'</thead>'
+                                        +'<tbody>'
 
-                            })
-                            missing_cpls +=
-                                '</tbody>'
-                                +'</table>' ;
 
+                                $.each(response.missing_cpls, function(index, value) {
+                                    missing_cpls +=
+                                            '<tr>'
+                                                +'<td style="font-size: 14px;">'+value.CPLId+'</td>'
+                                                +'<td style="font-size: 14px;">'+value.AnnotationText+'</td>'
+                                            +'</tr>' ;
+
+                                })
+                                missing_cpls +=
+                                    '</tbody>'
+                                    +'</table>' ;
+
+                            }
+                            $("#ingest-response").modal('show');
+                                $('#ingest-response #ingest-response-content ').html(missing_cpls)
                         }
-                        $("#ingest-response").modal('show');
-                            $('#ingest-response #ingest-response-content ').html(missing_cpls)
-                    }
-                    else
-                    {
-                        $("#ingest-response").modal('show');
-                        $('#ingest-response #ingest-response-content ').html('<p class="text-danger">Error occurred while sending the request.</p>')
-                    }
+                        else
+                        {
+                            $("#ingest-response").modal('show');
+                            $('#ingest-response #ingest-response-content ').html('<p class="text-danger">Error occurred while sending the request.</p>')
+                        }
 
-                } catch (e) {
-                    console.log(e);
+                    } catch (e) {
+                        console.log(e);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                },
+                complete: function (jqXHR, textStatus) {
                 }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log(errorThrown);
-            },
-            complete: function (jqXHR, textStatus) {
-            }
+            });
+
+
         });
-
-
-
-
-
-
-    });
 </script>
 
 @endsection

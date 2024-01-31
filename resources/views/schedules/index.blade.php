@@ -326,6 +326,54 @@
         </div>
     </div>
 
+    <div class="modal fade " id="ingest_spl" tabindex="-1" role="dialog" aria-labelledby="delete_client_modalLabel" aria-hidden="true">>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ModalLabel">Please Select Location </h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h4 class="text-center"> No Location Selected!</h4>
+                </div>
+                <div class="modal-footer">
+                    <button id="submit-ingest-form" type="button" style="margin: auto" class="btn btn-secondary btn-fw "
+                            >OK
+                    </button>
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class=" modal fade " id="ingest-response" role="dialog" aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered  modal-xl">
+            <div class="modal-content border-0">
+
+                <div class="modal-header p-4 pb-0">
+                    <h5></h5>
+                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center p-4">
+                    <div class="" id="ingest-response-content" >
+
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col" style="text-align: center">
+                            <button class="btn btn-secondary btn-fw close" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--end modal-content-->
+        </div>
+    </div>
+
+
     <!--   delete spl -->
     <div class="modal fade show" id="unlink-spl" tabindex="-1" role="dialog" aria-labelledby="delete_client_modalLabel" aria-hidden="true">
         <div class="modal-dialog"   role="document">
@@ -350,6 +398,8 @@
         </div>
 
     </div>
+
+
 
 
 @endsection
@@ -794,12 +844,19 @@
                 },
                 success: function(response) {
 
+
+
                     if(response == "Success")
                     {
                         swal.close();
                         $('#spls_table td').removeClass('selected') ;
                         $('#movies_table td.selected').remove() ;
                         showSwal('success-message') ;
+                    }
+                    else if(response == "missing")
+                    {
+                        swal.close();
+                        $('#ingest_spl').modal('show') ;
                     }
                     else
                     {
@@ -873,6 +930,92 @@
                 complete: function(jqXHR, textStatus) {}
             });
         })
+
+
+        $(document).on('click', '#submit-ingest-form', function ()
+        {
+            var spl_id = $('#spls_table td.selected').attr('data-id') ;
+            var location =  $('#location').val();
+            var url = "{{  url('') }}"+   "/sendXmlFileToApi";
+
+
+            /*var uuid =  $('#nos-spl').val();
+            var ingest_location =  $('#ingest-location').val();
+            var duration = $('#nos-spl option').data('duration');
+            var title = $('#nos-spl option').data('title');
+            var apiUrl = $('#ingest-location option').data('locationip');*/
+
+
+           // var apiUrl ="http://localhost/tms/system/api2.php" ;
+            //path = $('#nos-spl option:selected').data('filepath');
+
+            $.ajax({
+                url:url,
+
+                method: 'POST',
+                cache: false,
+                data: {
+                    spl_id: spl_id,
+                    location:location,
+                    "_token": "{{ csrf_token() }}",
+                },
+                success: function (response) {
+
+                    try {
+                        var missing_cpls  ;
+                        $("#ingest-modal").modal('hide');
+                        if(response.status == 1)
+                        {
+                            missing_cpls ='<p class="text-success">'+response.success+'</p>' ;
+                            if(response.missing_cpls.length > 0)
+                            {
+                                missing_cpls +=
+                                    '<p> there are CPLs missing in this location</p>'
+                                    +'<table class="table">'
+                                        +'<thead>'
+                                            +'<tr>'
+                                                +'<th>UUID </th>'
+                                                +'<th>Title</th>'
+                                            +'</tr>'
+                                        +'</thead>'
+                                        +'<tbody>'
+
+
+                                $.each(response.missing_cpls, function(index, value) {
+                                    missing_cpls +=
+                                            '<tr>'
+                                                +'<td style="font-size: 14px;">'+value.CPLId+'</td>'
+                                                +'<td style="font-size: 14px;">'+value.AnnotationText+'</td>'
+                                            +'</tr>' ;
+
+                                })
+                                missing_cpls +=
+                                    '</tbody>'
+                                    +'</table>' ;
+
+                            }
+                            $("#ingest-response").modal('show');
+                                $('#ingest-response #ingest-response-content ').html(missing_cpls)
+                        }
+                        else
+                        {
+                            $("#ingest-response").modal('show');
+                            $('#ingest-response #ingest-response-content ').html('<p class="text-danger">Error occurred while sending the request.</p>')
+                        }
+
+                    } catch (e) {
+                        console.log(e);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                },
+                complete: function (jqXHR, textStatus) {
+                }
+            });
+
+
+        });
 
     })(jQuery);
 
@@ -1105,7 +1248,7 @@
             value: selectedDate,
             min: startDate,
             max: endDate,
-        change: function (e) {
+            change: function (e) {
 
                 var datepicker = $('#scheduleDatePicker').data('kendoDatePicker');
 
