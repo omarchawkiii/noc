@@ -336,7 +336,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <h4 class="text-center"> No Location Selected!</h4>
+                    <h4 class="text-center">This SPL does not exist on this location, would you like to ingest it?</h4>
                 </div>
                 <div class="modal-footer">
                     <button id="submit-ingest-form" type="button" style="margin: auto" class="btn btn-secondary btn-fw "
@@ -350,7 +350,7 @@
         </div>
     </div>
     <div class=" modal fade " id="ingest-response" role="dialog" aria-labelledby="delete_client_modalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered  modal-xl">
+        <div class="modal-dialog modal-dialog-centered  modal-xl" style="border: 1px solid #5f5a5a">
             <div class="modal-content border-0">
 
                 <div class="modal-header p-4 pb-0">
@@ -807,7 +807,6 @@
 
         });
 
-
         $(document).on('click', '#movies_table td', function () {
             $('#movies_table td').removeClass('selected') ;
             $(this).addClass('selected') ;
@@ -884,20 +883,19 @@
             $('#unlink-spl .modal-body').html('<p> Do you want to unlink '+movie_title+' from '+spl_title+'</p>')
             $('#id-mivie-to-unlink').val(movie_id) ;
             $('#unlink-spl').modal('show')
-            console.log(movie_title)
-            console.log(spl_title)
-
 
         })
 
         $(document).on('click', '#confirm_inlink', function () {
-            movie_id = $('#id-mivie-to-unlink').val() ; ;
+            var movie_id = $('#id-mivie-to-unlink').val() ;
+            var location =  $('#location').val();
             $.ajax({
                 url:"{{  url('') }}"+ "/unlink_spl_movie",
                 type: 'post',
                 cache: false,
                 data: {
                     movie_id: movie_id,
+                    location:location,
                     "_token": "{{ csrf_token() }}",
                 },
                 beforeSend: function() {
@@ -931,13 +929,12 @@
             });
         })
 
-
         $(document).on('click', '#submit-ingest-form', function ()
         {
             var spl_id = $('#spls_table td.selected').attr('data-id') ;
             var location =  $('#location').val();
             var url = "{{  url('') }}"+   "/sendXmlFileToApi";
-
+            $('#ingest_spl').modal('hide');
 
             /*var uuid =  $('#nos-spl').val();
             var ingest_location =  $('#ingest-location').val();

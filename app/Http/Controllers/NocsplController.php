@@ -971,14 +971,12 @@ class NocsplController extends Controller
         $nos_pls = Nocspl::where('id',$request->spl_id)->first() ;
         $location = Location::where('id',$request->location)->first() ;
 
-
         // Check if the file exists
-        $xmlFilePath =    storage_path().'/app/xml_file/'.$nos_pls->path ;
+        $xmlFilePath =    storage_path().'/app/xml_file/'.$nos_pls->xmlpath ;
 
          if (!file_exists($xmlFilePath)) {
                 return ['error' => 'File not found.'];
             }
-
             // Read XML content from the file
             $xmlData = file_get_contents($xmlFilePath);
 
@@ -998,19 +996,20 @@ class NocsplController extends Controller
 
             // Execute cURL session and get the response
             $response = curl_exec($ch);
+            $response = json_decode($response) ;
 
 
-            if($response['status']== 1 )
+            if($response->status== 1 )
             {
                Lmsspl::updateOrCreate([
                     'uuid' =>$nos_pls->uuid,
-                    'location_id'     =>$request->ingest_location,
+                    'location_id'     =>$location->id,
                     ],[
                     'uuid'     => $nos_pls->uuid,
                     'name'     =>$nos_pls->spl_title,
                     'duration'     => gmdate("H:i:s", $nos_pls->duration) ,
                     'available_on'     => 'null',
-                    'location_id'     =>$request->ingest_location,
+                    'location_id'     =>$location->id,
                 ]);
 
             }
@@ -1020,7 +1019,6 @@ class NocsplController extends Controller
 
             if (curl_errno($ch)) {
                 return ['error' => 'Curl error: ' . curl_error($ch)];
-
             }
 
             // Close cURL session
