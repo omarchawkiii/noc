@@ -146,7 +146,7 @@
 
 
 
-            var url = "{{  url('') }}"+ '/get_snmp_with_filter/?location=' + location ;
+            var url = "{{  url('') }}"+ '/snmp/?location=' + location ;
             result =" " ;
 
             $.ajax({

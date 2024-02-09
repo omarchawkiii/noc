@@ -116,7 +116,7 @@ class MoviescodController extends Controller
         $apiUrl = 'http://localhost/tms/system/api2.php';
 
         $moviescod = Moviescod::findOrFail($request->movie_id) ;
-        dd($moviescod) ;
+
         $location = Location::findOrFail($request->location) ;
         $response = $this->sendUnlinkSplRequest($apiUrl, $moviescod->code);
         if($response['result'] === 1 )
@@ -143,8 +143,10 @@ class MoviescodController extends Controller
     }
 
 
-    function sendUpdateLinksRequest($apiUrl, $cod, $uuid)
-    {
+
+
+
+    function sendUpdateLinksRequest($apiUrl, $cod, $uuid) {
         // Prepare the request data
         $requestData = [
             'action' => 'updateLinks',
@@ -162,7 +164,7 @@ class MoviescodController extends Controller
 
         // Execute cURL session and get the response
         $response = curl_exec($ch);
-        //print_r($response);
+        print_r($response);
 
         // Check for cURL errors
         if (curl_errno($ch)) {
@@ -179,7 +181,6 @@ class MoviescodController extends Controller
             return json_decode($response, true);
         }
     }
-
     function sendUnlinkSplRequest($apiUrl, $cod) {
         // Prepare the request data
         $requestData = [

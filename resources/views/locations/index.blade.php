@@ -42,7 +42,7 @@
                                     <th class="sorting">Status</th>
                                     <th class="sorting">Space</th>
                                     <th class="sorting">Actions</th>
-                                    <th class="sorting">Infos</th>
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -94,11 +94,14 @@
                                                     <a class="btn btn-outline-primary dropdown-item" href="{{ route('playback.getplayback',$location->id) }}">Refreesh Playback </a>
                                                     <a class="btn btn-outline-primary dropdown-item" href="{{ route('refresh_macro_data_by_location',$location->id) }}">Refreesh Macros </a>
                                                     <a class="btn btn-outline-primary dropdown-item" href="{{ route('moviescod.getmoviescods',$location->id) }}">Refreesh MoviesCods </a>
+                                                    <a class="btn btn-outline-primary dropdown-item" href="{{ route('diskusage.getdiskusage',$location->id) }}">Refresh diskusage </a>
+
+
 
                                                 </div>
                                               </div>
                                         </td>
-                                        <td> <a class="btn btn-outline-primary info" data-bs-toggle="modal" id="{{ $location->id }}" data-bs-target="#infos_modal" href="#"><i class="mdi mdi-magnify"> </i> </a></td>
+
                                     </tr>
                                 @endforeach
 
@@ -111,14 +114,7 @@
         </div>
     </div>
 
-    <div class=" modal fade " id="infos_modal" tabindex="-1" role="dialog"  aria-labelledby="delete_client_modalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered  modal-xl">
-            <div class="modal-content border-0">
 
-            </div>
-        <!--end modal-content-->
-        </div>
-    </div>
 
 @endsection
 

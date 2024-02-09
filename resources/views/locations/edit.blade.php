@@ -412,6 +412,26 @@
                         </div>
                     </div>
 
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Latitude </label>
+                            <input type="text" class="form-control" placeholder="Latitude"  value="{{ $location->latitude }}"  name="latitude">
+                            @error('latitude')
+                                <div class="text-danger mt-1 ">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Longitude</label>
+                            <input type="text" class="form-control" placeholder="Longitude" value="{{ $location->longitude }}"  name="longitude">
+                            @error('longitude')
+                                <div class="text-danger mt-1 ">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+
                     </div>
                     <div class=" m-2">
                     <button type="submit" class="btn btn-success me-2">Submit</button>

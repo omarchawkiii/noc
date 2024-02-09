@@ -53,9 +53,7 @@ class KdmController extends Controller
 
                     if(count($content) != $screen->kdms->count() )
                     {
-
                         $uuid_kdms = array_column($content, 'uuid');
-
                             foreach($screen->kdms as $kdm)
                             {
                                 if (! in_array( $kdm->uuid , $uuid_kdms))
@@ -64,10 +62,8 @@ class KdmController extends Controller
                                     $kdm->delete() ;
                                 }
                             }
-
                         //dd('we should delete screens ') ;
                     }
-
                 }
             }
         }

@@ -785,8 +785,18 @@
                             available_on_content = available_on_content + '<div class="badge badge-primary m-1">'+ available_on_array[i]+'</div>'
                         }
 
+                        playable =""
+                        if(value.playable == 1)
+                        {
+                            playable = "bg-playable" ;
+                        }
+                        else
+                        {
+                            playable = "bg-no-playable";
+                        }
+
                         result = result
-                            +'<tr class="odd">'
+                            +'<tr class="'+playable+' odd">'
                                 +'<td class="sorting_1">'+ index+' </td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.contentTitleText+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">'+value.contentKind+'</a></td>'
@@ -879,8 +889,19 @@
                             }
                             available_on_content = available_on_content + '<div class="badge badge-primary m-1">'+ available_on_array[i]+'</div>'
                         }
+
+                        playable =""
+                        if(value.playable == 1)
+                        {
+                            playable = "bg-playable" ;
+                        }
+                        else
+                        {
+                            playable = "bg-no-playable";
+                        }
+
                         result = result
-                            +'<tr class="odd text-center">'
+                            +'<tr class="odd  '+playable+' text-center">'
                             +'<td class="sorting_1">'+ index+' </td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.contentTitleText+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">'+value.contentKind+'</a></td>'

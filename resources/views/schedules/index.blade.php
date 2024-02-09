@@ -432,6 +432,35 @@
             })
 
         }
+        if (type === 'link-spl') {
+            swal({
+                title: 'Done!',
+                text: 'SPL and movie are linked',
+                icon: 'success',
+                button: {
+                text: "Continue",
+                value: true,
+                visible: true,
+                className: "btn btn-primary"
+                }
+            })
+
+        }
+
+        if (type === 'unlink-spl') {
+            swal({
+                title: 'Done!',
+                text: 'SPL and movie are unlinked',
+                icon: 'success',
+                button: {
+                text: "Continue",
+                value: true,
+                visible: true,
+                className: "btn btn-primary"
+                }
+            })
+
+        }
 
         if (type === 'warning-message-and-cancel') {
             swal({
@@ -698,7 +727,7 @@
             })
 
         });
-        $(document).on('click', '#linking_btn', function () {
+        $(document).on('click', '#linking_btn , #no_linked_spls_movies_tab', function () {
 
             var location =  $('#location').val();
             if(location == 'Locations')
@@ -850,7 +879,7 @@
                         swal.close();
                         $('#spls_table td').removeClass('selected') ;
                         $('#movies_table td.selected').remove() ;
-                        showSwal('success-message') ;
+                        showSwal('link-spl') ;
                     }
                     else if(response == "missing")
                     {
@@ -914,7 +943,7 @@
                         swal.close();
                         $('#unlink-spl').modal('hide')
                         $('#'+movie_id+'').remove() ;
-                        showSwal('success-message') ;
+                        showSwal('unlink-spl') ;
                     }
                     else
                     {

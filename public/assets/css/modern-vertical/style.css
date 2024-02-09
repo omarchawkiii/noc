@@ -23840,3 +23840,8 @@ table td a
     color : #fff ;
     text-decoration: none ;
 }
+
+.bg-no-playable
+{
+    background-color: #551616;
+}

@@ -35,6 +35,7 @@ class Cpl extends Model
         'cpl_is_linked',
         'location_id',
         'screen_id',
+        'playable' ,
 
     ];
 

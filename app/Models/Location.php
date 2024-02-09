@@ -39,6 +39,8 @@ class Location extends Model
         'state',
         'company',
         'language',
+        'latitude',
+        'longitude',
     ];
 
     /**

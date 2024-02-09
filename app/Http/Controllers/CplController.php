@@ -36,6 +36,21 @@ class CplController extends Controller
                     foreach($content as $cpl)
                     {
                         $id = $cpl["uuid"] ."-".$location->id.'-'.$screen->id ;
+                        if(isset($cpl["playable"]))
+                        {
+                            if($cpl["playable"] == 1 )
+                            {
+                                $playable  = 1 ;
+                            }
+                            else
+                            {
+                                $playable  =0;
+                            }
+                        }
+                        else
+                        {
+                            $playable  =0;
+                        }
 
                         Cpl::updateOrCreate([
                             'id' => $id ,
@@ -57,10 +72,11 @@ class CplController extends Controller
                             'cpl_is_linked' => $cpl["cpl_is_linked"],
                             'screen_id'     =>$screen->id,
                             'location_id'     =>$location->id,
+                            'playable' => $playable ,
                         ]);
                     }
 
-                    /*if(count($content) != $screen->cpls->count() )
+                    if(count($content) != $screen->cpls->count() )
                     {
                         $uuid_cpls = array_column($content, 'uuid');
                             foreach($screen->cpls as $cpl)
@@ -72,7 +88,7 @@ class CplController extends Controller
                             }
 
                         //dd('we should delete screens ') ;
-                    }*/
+                    }
                 }
             }
         }
