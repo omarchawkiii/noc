@@ -128,7 +128,7 @@ class CplController extends Controller
             {
                 $location = Location::find($location) ;
                 $screens =$location->screens ;
-                $cpls =$cpls->where('location_id',$location->id);
+                $cpls =$cpls->where('location_id',$location->id)->groupBy('uuid');
             }
 
         }

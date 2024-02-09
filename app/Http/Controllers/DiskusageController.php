@@ -12,12 +12,12 @@ class DiskusageController extends Controller
 {
     public function getdiskusage($location)
     {
-        $location = Location::find($location)->first() ;
+
+        $location = Location::find($location) ;
         $url = $location->connection_ip . "?request=getLmsDiskUsage";
         $client = new Client();
         $response = $client->request('GET', $url);
         $contents = json_decode($response->getBody(), true);
-
         if($contents)
         {
             $free_space_percentage=($contents['usedSpace'] * 100) / $contents['totalSpace'];
