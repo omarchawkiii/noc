@@ -77,6 +77,7 @@ class SnmpController extends Controller
         $locations = Location::all() ;
         $diskusage = false ;
         $playback_generale_status = false ;
+        $securityManager = false  ;
         $schedules_error =false ;
         $infos ="" ;
         foreach($locations as $location )
@@ -85,6 +86,7 @@ class SnmpController extends Controller
             $diskusage = false ;
             $playback_generale_status = false ;
             $schedules_error =false ;
+            $securityManager = false  ;
 
             if($location->diskusage->free_space_percentage >= 90  )
             {
@@ -94,12 +96,21 @@ class SnmpController extends Controller
 
             foreach($location->playbacks as $playback)
             {
-                if($playback->storage_generale_status == 'Red' )
+                if($playback->storage_generale_status != 'Normal' )
                 {
                     $playback_generale_status = true ;
-                    $infos .=  " <p> playback generale status is red in screen: " .$playback->screen->screen_name ." </p>";
+                    $infos .=  " <p> playback generale status is ".$playback->storage_generale_status ." in screen: " .$playback->screen->screen_name ." </p>";
                 }
+
+                if($playback->securityManager != 'Normal' )
+                {
+                    $securityManager = true ;
+                    $infos .=  " <p> Security Manager status is: ".$playback->securityManager ." in screen: " .$playback->screen->screen_name ." </p>";
+                }
+
             }
+
+
 
             foreach($location->schedules as $schedule)
             {
@@ -116,7 +127,7 @@ class SnmpController extends Controller
                 }
             }
 
-            if( $diskusage || $playback_generale_status  || $schedules_error )
+            if( $diskusage || $playback_generale_status  || $schedules_error  || $securityManager)
             {
                 array_push($data_location,  array("state" => $location->city , "location" => $location->name, "latitude" => $location->latitude, "longitude" => $location->longitude, "status" => "red" , "infos" =>$infos));
                 if (!in_array($location->city, $states_red))
@@ -131,7 +142,7 @@ class SnmpController extends Controller
                 {
                     array_push($states_green, $location->city);
                 }
-                array_push($data_location,  array("state" => $location->city , "location" => $location->name, "latitude" => $location->latitude, "longitude" => $location->longitude, "status" => "green", "infos" => "" ));
+                array_push($data_location,  array("state" => $location->city , "location" => $location->name, "latitude" => $location->latitude, "longitude" => $location->longitude, "status" => "green", "infos" => "No Errors " ));
             }
 
 
