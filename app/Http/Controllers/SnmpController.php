@@ -68,97 +68,128 @@ class SnmpController extends Controller
     public function get_snmp_with_map(Request $request )
     {
 
-        $errors = Snmp::with('location')->groupBy('city')->get() ;
-        dd($errors) ;
+        $data_location = array() ;
+        $states_red = array() ;
+        $data_states = array() ;
+        $states_green = array() ;
+        //$errors = Snmp::with('location')->groupBy('locationcity')->get() ;
+        //$locations = Location::groupBy('city')->get() ;
+        $locations = Location::all() ;
+        $diskusage = false ;
+        $playback_generale_status = false ;
+        $schedules_error =false ;
+        $infos ="" ;
+        foreach($locations as $location )
+        {
+            $infos ="" ;
+            $diskusage = false ;
+            $playback_generale_status = false ;
+            $schedules_error =false ;
+
+            if($location->diskusage->free_space_percentage >= 90  )
+            {
+                $diskusage = true ;
+                $infos =  " <p>  Disque Usage is : ".$location->diskusage->free_space_percentage." % </p> " ;
+            }
+
+            foreach($location->playbacks as $playback)
+            {
+                if($playback->storage_generale_status == 'Red' )
+                {
+                    $playback_generale_status = true ;
+                    $infos .=  " <p> playback generale status is red in screen: " .$playback->screen->screen_name ." </p>";
+                }
+            }
+
+            foreach($location->schedules as $schedule)
+            {
+                if(($schedule->status != 'linked'  || ($schedule->kdm != 1 || $schedule->cpls != 1 )) &&  !$schedules_error )
+                {
+                    $schedules_error = true ;
+                    $infos .=  " <p> Schedule keys problems</p> " ;
+
+                }
+                if(($schedule->status != 'linked'  || ($schedule->kdm != 1 || $schedule->cpls != 1 )) )
+                {
+                    $schedules_error = true ;
+                    $infos .="<li> Schedule : ".$schedule->scheduleId." Has problem  </li> ";
+                }
+            }
+
+            if( $diskusage || $playback_generale_status  || $schedules_error )
+            {
+                array_push($data_location,  array("state" => $location->city , "location" => $location->name, "latitude" => $location->latitude, "longitude" => $location->longitude, "status" => "red" , "infos" =>$infos));
+                if (!in_array($location->city, $states_red))
+                {
+                    array_push($states_red, $location->city);
+                }
+
+            }
+            else
+            {
+                if (!in_array($location->city, $states_green) && !in_array($location->city, $states_red))
+                {
+                    array_push($states_green, $location->city);
+                }
+                array_push($data_location,  array("state" => $location->city , "location" => $location->name, "latitude" => $location->latitude, "longitude" => $location->longitude, "status" => "green", "infos" => "" ));
+            }
+
+
+
+        }
+        foreach ($states_red as $state)
+        {
+            $content = "" ;
+            foreach($data_location as $location)
+            {
+                if($state == $location['state'])
+                {
+                    $content .=  $location['infos'] ;
+                }
+
+            }
+
+            array_push($data_states,  array("state" => $location['state'] , "location" => $state , "latitude" => $location['latitude'], "longitude" => $location['longitude'], "status" => "red", "infos" => $content ));
+        }
+
+        foreach ($states_green as $state)
+        {
+            $content = "" ;
+            foreach($data_location as $location)
+            {
+                if($state == $location['state'])
+                {
+                    $content .=  $location['infos'] ;
+                }
+            }
+            array_push($data_states,  array("state" => $location['state'] , "location" => $state , "latitude" => "4.155672", "longitude" => "100.569649", "status" => "green", "infos" => $content ));
+        }
+
+
+
+
+
         $data = $request->data;
         $zoomLevel = $request->zoomLevel;
 
         if(isset($data) &&  $data != 'null' )
         {
-            if($zoomLevel > 6)
-            {
-                $locations = array(
-                    array("location" => "Kuala Lumpur", "status" => "red"),
-                    array("location" => "Johor", "status" => "green"),
-                    array("location" => "Selangor", "status" => "green")
-                );
-                $locations = array(
-                    array("location" => "Kedah State, Malaysia",
-                              "latitude" => 6.155672, "longitude" => 100.569649,
-                              "status" => "green",
-                              "locations" => array(
-                                     array("location" => "Location 1", "latitude" => 6.1, "longitude" => 100.5, "status" => "green"),
-                                      array("location" => "Location 2", "latitude" => 6.2, "longitude" => 100.6, "status" => "red")
-                               )),
-                    array("location" => "Perak, Malaysia", "latitude" => 4.693950, "longitude" => 101.117577, "status" => "green",
-                        "locations" => array(
-                            array("location" => "Location 3", "latitude" => 4.7, "longitude" => 101.1, "status" => "green"),
-                            array("location" => "Location 4", "latitude" => 4.8, "longitude" => 101.2, "status" => "red")
-                        )),
-                    array("location" => "Perlis, Malaysia", "latitude" => 6.443589, "longitude" => 100.216599, "status" => "green"),
-                    array("location" => "Penang, Malaysia", "latitude" => 5.285153, "longitude" => 100.456238, "status" => "red"),
-                    array("location" => "Negeri Sembilan, Malaysia", "latitude" => 2.731813, "longitude" => 102.252502, "status" => "green"),
-                    array("location" => "Kelantan Province, Malaysia", "latitude" => 6.125397, "longitude" => 102.238068, "status" => "red"),
-                    array("location" => "Sabah, Malaysia", "latitude" => 5.420404, "longitude" => 116.796783, "status" => "red"),
-                    array("location" => "Pahang, Malaysia", "latitude" => 3.974341, "longitude" => 102.438057, "status" => "red"),
-                    array("location" => "Selangor, Malaysia", "latitude" => 3.509247, "longitude" => 101.524803, "status" => "green"),
-                    array("location" => "Johor, Malaysia", "latitude" => 1.937344, "longitude" => 103.366585, "status" => "red"),
-                    array("location" => "Selangor, Malaysia", "latitude" => 3.072751, "longitude" => 101.423454, "status" => "red"),
-                    array("location" => "Johor, Malaysia", "latitude" => 1.527549, "longitude" => 103.745476, "status" => "red"),
-                    array("location" => "Puchong, Malaysia", "latitude" => 3.025340, "longitude" => 101.617767, "status" => "green"),
-                    array("locatio" => "Subang Jaya, Malaysia", "latitude" => 3.043840, "longitude" => 101.580620, "status" => "red")
-                );
 
+            if($zoomLevel <= 8)
+            {
+                $data_location = $data_states ;
+                return Response()->json(compact('data_location'));
             }
             else
             {
-
-
-                $locations = array(
-                    array("location" => "Kuala Lumpur", "status" => "red"),
-                    array("location" => "Johor", "status" => "green"),
-                    array("location" => "Selangor", "status" => "green")
-                );
-                $locations = array(
-                    array("location" => "Kedah State, Malaysia",
-                              "latitude" => 6.155672, "longitude" => 100.569649,
-                              "status" => "green",
-                              "locations" => array(
-                                     array("location" => "Location 1", "latitude" => 6.1, "longitude" => 100.5, "status" => "green"),
-                                      array("location" => "Location 2", "latitude" => 6.2, "longitude" => 100.6, "status" => "green")
-                               )),
-                    array("location" => "Perak, Malaysia", "latitude" => 4.693950, "longitude" => 101.117577, "status" => "green",
-                        "locations" => array(
-                            array("location" => "Location 3", "latitude" => 4.7, "longitude" => 101.1, "status" => "green"),
-                            array("location" => "Location 4", "latitude" => 4.8, "longitude" => 101.2, "status" => "green")
-                        )),
-                  /*  array("location" => "Perlis, Malaysia", "latitude" => 6.443589, "longitude" => 100.216599, "status" => "green"),
-                    array("location" => "Penang, Malaysia", "latitude" => 5.285153, "longitude" => 100.456238, "status" => "green"),
-                    array("location" => "Negeri Sembilan, Malaysia", "latitude" => 2.731813, "longitude" => 102.252502, "status" => "green"),
-                    array("location" => "Kelantan Province, Malaysia", "latitude" => 6.125397, "longitude" => 102.238068, "status" => "green"),
-                    array("location" => "Sabah, Malaysia", "latitude" => 5.420404, "longitude" => 116.796783, "status" => "green"),
-                    array("location" => "Pahang, Malaysia", "latitude" => 3.974341, "longitude" => 102.438057, "status" => "green"),
-                    array("location" => "Selangor, Malaysia", "latitude" => 3.509247, "longitude" => 101.524803, "status" => "green"),
-                    array("location" => "Johor, Malaysia", "latitude" => 1.937344, "longitude" => 103.366585, "status" => "green"),
-                    array("location" => "Selangor, Malaysia", "latitude" => 3.072751, "longitude" => 101.423454, "status" => "green"),
-                    array("location" => "Johor, Malaysia", "latitude" => 1.527549, "longitude" => 103.745476, "status" => "green"),
-                    array("location" => "Puchong, Malaysia", "latitude" => 3.025340, "longitude" => 101.617767, "status" => "green"),
-                    array("locatio" => "Subang Jaya, Malaysia", "latitude" => 3.043840, "longitude" => 101.580620, "status" => "green")*/
-                );
-
+                return Response()->json(compact('data_location'));
             }
-
-
-            return Response()->json(compact('locations'));
         }
         else
         {
-
             // Convert the array to JSON format
-
             $snmps=null ;
             $locations = Location::all() ;
-
             return view('snmps.map', compact('snmps','locations'));
         }
 

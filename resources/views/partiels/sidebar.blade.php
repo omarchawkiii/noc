@@ -46,14 +46,14 @@
         </a>
       </li>
 
-      <!--<li class="nav-item menu-items">
+      <li class="nav-item menu-items">
         <a class="nav-link" href="{{ route('snmp.get_snmp_with_map') }}">
           <span class="menu-icon icon-box-danger">
             <i class="mdi mdi-alert "></i>
           </span>
           <span class="menu-title"> Errors</span>
         </a>
-      </li> -->
+      </li>
       <li class="nav-item menu-items">
         <a class="nav-link" href="{{ route('playback.index') }}">
           <span class="menu-icon icon-box-warning">
