@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Location;
+use App\Models\Schedule;
 use App\Models\Snmp;
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 
@@ -112,7 +114,10 @@ class SnmpController extends Controller
 
 
 
-            foreach($location->schedules as $schedule)
+
+            $schedules = Schedule::where('location_id', $location->id )->where('date_start' , '>' , Carbon::today() )->get() ;
+
+            foreach($schedules as $schedule)
             {
                 if(($schedule->status != 'linked'  || ($schedule->kdm != 1 || $schedule->cpls != 1 )) &&  !$schedules_error )
                 {
@@ -148,12 +153,14 @@ class SnmpController extends Controller
 
 
         }
+
+
         foreach ($states_red as $state)
         {
             $content = "" ;
             foreach($data_location as $location)
             {
-                if($state == $location['state'])
+                if($state == $location['state'] && $location['status'] == 'red')
                 {
                     $content .=  $location['infos'] ;
                 }
@@ -168,7 +175,7 @@ class SnmpController extends Controller
             $content = "" ;
             foreach($data_location as $location)
             {
-                if($state == $location['state'])
+                if($state == $location['state'] && $location['status'] == 'green')
                 {
                     $content .=  $location['infos'] ;
                 }

@@ -40,6 +40,9 @@ class LocationStoreRequest extends FormRequest
             'support_email'=>[],
             'company'=>[],
             'language'=>[],
+            'latitude'=>[],
+            'longitude'=>[],
+
         ];
     }
 }

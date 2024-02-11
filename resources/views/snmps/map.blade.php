@@ -74,11 +74,12 @@
 
 
                  // Supprimer les anciens marqueurs
-    map.getLayers().forEach(function (layer) {
-        if (layer instanceof ol.layer.Vector) {
-            layer.getSource().clear(); // Efface les features de la source du vecteur
-        }
-    });
+                map.getLayers().forEach(function (layer) {
+
+                    if (layer instanceof ol.layer.Vector) {
+                        layer.getSource().clear(); // Efface les features de la source du vecteur
+                    }
+                });
 
 
                 var zoomLevel = map.getView().getZoom();
@@ -142,7 +143,7 @@
     var newZoom = map.getView().getZoom();
         if (currZoom != newZoom)
         {
-            console.log('zoom end, new zoom: ' + newZoom);
+            //console.log('zoom end, new zoom: ' + newZoom);
             getdata(newZoom) ;
             currZoom = newZoom;
 

@@ -23844,3 +23844,16 @@ table td a
 {
     background-color: #551616;
 }
+
+.modal-body
+{
+    padding: 5px;
+    height: 450px;
+    overflow: auto;
+    text-align: justify;
+    overflow-x: hidden;
+}
+.modal
+{
+    overflow: hidden !important;
+}
