@@ -194,12 +194,17 @@ class ScheduleContoller extends Controller
         $cpls_screen= $screen->cpls ;
 
         $missing_cpls = array();
-
+        $unplayable_cpls = array();
         foreach($cpls_spl as $cpl_spl)
         {
 
             if($cpls_screen->contains($cpl_spl))
                 {
+                    if($cpl_spl->playable == 1 )
+                    {
+                        array_push($unplayable_cpls,array("uuid" => $cpl_spl->uuid, "contentTitleText" => $cpl_spl->contentTitleText, "playable" => $cpl_spl->playable) ) ;
+                    }
+
                 }
                 else
                 {
@@ -209,7 +214,7 @@ class ScheduleContoller extends Controller
 
 
         }
-        return Response()->json(compact('missing_cpls'));
+        return Response()->json(compact('missing_cpls','unplayable_cpls'));
 
     }
 

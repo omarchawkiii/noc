@@ -409,8 +409,8 @@
                     <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body ">
-
-
+                    <div id="missing_cpls"></div>
+                    <div id="unplayble_cpls"></div>
                 </div>
             </div>
             <!--end modal-content-->
@@ -1084,7 +1084,8 @@
             var schedule_idd = $(this).attr('data-scheduleidd') ;
             var location =  $('#location').val();
             var url = "{{  url('') }}"+   "/get_unlinked_spl";
-            var missing_cpls =" " ;
+            var missing_cpls ="<h5 class=''> Missing CPLs </h5>" ;
+            var unplayable_cpls ="<h5 class='mt-4'> Unplayble CPLs </h5>" ;
             $.ajax({
                 url:url,
 
@@ -1096,8 +1097,9 @@
                     "_token": "{{ csrf_token() }}",
                 },
                 success: function (response) {
-
-                    missing_cpls +=
+                    if(response.missing_cpls.length > 0)
+                    {
+                        missing_cpls +=
                             '<table class="table">'
                                 +'<thead>'
                                     +'<tr>'
@@ -1106,19 +1108,62 @@
                                     +'</tr>'
                                 +'</thead>'
                                 +'<tbody>'
-                    $.each(response.missing_cpls, function(index, value) {
-                    missing_cpls +=
-                            '<tr>'
-                                +'<td style="font-size: 14px;">'+value.uuid+'</td>'
-                                +'<td style="font-size: 14px;">'+value.contentTitleText+'</td>'
-                            +'</tr>' ;
+                        $.each(response.missing_cpls, function(index, value) {
+                        missing_cpls +=
+                                '<tr>'
+                                    +'<td style="font-size: 14px;">'+value.uuid+'</td>'
+                                    +'<td style="font-size: 14px;">'+value.contentTitleText+'</td>'
+                                +'</tr>' ;
 
-                })
-                missing_cpls +=
-                    '</tbody>'
-                    +'</table>' ;
-                    $("#missing_cpls_schedule_check").modal('show');
-                     $('#missing_cpls_schedule_check .modal-body ').html(missing_cpls)
+                        })
+                        missing_cpls +=
+                            '</tbody>'
+                            +'</table>' ;
+                            $("#missing_cpls_schedule_check").modal('show');
+                            $('#missing_cpls_schedule_check #missing_cpls ').html(missing_cpls)
+                    }
+                    else
+                    {
+                        missing_cpls +=
+                        '<p> No Data </p>'
+                        $("#missing_cpls_schedule_check").modal('show');
+                        $('#missing_cpls_schedule_check #missing_cpls').html(missing_cpls)
+                    }
+
+                    if(response.unplayable_cpls.length > 0)
+                    {
+                        unplayable_cpls +=
+                            '<table class="table">'
+                                +'<thead>'
+                                    +'<tr>'
+                                        +'<th>UUID </th>'
+                                        +'<th>Title</th>'
+                                    +'</tr>'
+                                +'</thead>'
+                                +'<tbody>'
+                        $.each(response.unplayable_cpls, function(index, value) {
+                            unplayable_cpls +=
+                                '<tr>'
+                                    +'<td style="font-size: 14px;">'+value.uuid+'</td>'
+                                    +'<td style="font-size: 14px;">'+value.contentTitleText+'</td>'
+                                +'</tr>' ;
+
+                        })
+                        unplayable_cpls +=
+                            '</tbody>'
+                            +'</table>' ;
+                            $("#missing_cpls_schedule_check").modal('show');
+                            $('#missing_cpls_schedule_check #unplayble_cpls').html(unplayable_cpls)
+                    }
+                    else
+                    {
+                        unplayable_cpls +=
+                        '<p> No Data </p>'
+                        $("#missing_cpls_schedule_check").modal('show');
+                        $('#missing_cpls_schedule_check #unplayble_cpls').html(unplayable_cpls)
+                    }
+
+
                     console.log(response)
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
