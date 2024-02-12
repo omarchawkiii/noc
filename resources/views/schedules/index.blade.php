@@ -573,7 +573,14 @@
                         }
                         else
                         {
-                            icon_cpl = '<i class="mdi mdi-filmstrip text-warning">'
+                            if(value.status !="linked" )
+                            {
+                                icon_cpl = '<i class="mdi mdi-filmstrip text-danger">'
+                            }
+                            else
+                            {
+                                icon_cpl = '<i class="mdi mdi-filmstrip text-warning spl_not_linked" data-scheduleidd = "'+value.id+'">'
+                            }
                         }
 
                         if(value.kdm  ==1 )
@@ -623,7 +630,7 @@
 
         });
 
-        $(' #location').change(function(){
+        $('#location').change(function(){
 
             $("#location-listing").dataTable().fnDestroy();
             var loader_content  =
@@ -685,7 +692,7 @@
                         statu_content=""
                         if(value.status !="linked" )
                         {
-                            icon_spl = '<i class="mdi mdi-playlist-play text-danger spl_not_linked" data-scheduleidd = "'+value.id+'"> </i>'
+                            icon_spl = '<i class="mdi mdi-playlist-play text-danger > </i>'
                             statu_content = '<spn class="text-danger" >Unlinked  </span>'
                         }
                         else
@@ -700,7 +707,17 @@
                         }
                         else
                         {
-                            icon_cpl = '<i class="mdi mdi-filmstrip text-warning">'
+                            if(value.status !="linked" )
+                            {
+                                icon_cpl = '<i class="mdi mdi-filmstrip text-danger">'
+                            }
+                            else
+                            {
+                                icon_cpl = '<i class="mdi mdi-filmstrip text-warning  spl_not_linked" data-scheduleidd = "'+value.id+'">'
+                            }
+
+
+
                         }
 
                         if(value.kdm  ==1 )
