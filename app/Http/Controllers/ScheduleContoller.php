@@ -102,13 +102,13 @@ class ScheduleContoller extends Controller
                         $uuid_schedule = array_column($content, 'scheduleId');
 
 
-                        foreach($location->schedules as $schedule)
+                        /*foreach($location->schedules as $schedule)
                         {
                             if (! in_array( $schedule->scheduleId , $uuid_schedule) &&  strtotime($schedule->date_start) > strtotime('now')  )
                             {
                                 $schedule->delete() ;
                             }
-                        }
+                        }*/
 
                             //dd('we should delete screens ') ;
                     }
