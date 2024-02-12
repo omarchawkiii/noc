@@ -23848,7 +23848,7 @@ table td a
 .modal-body
 {
     padding: 5px;
-    height: 450px;
+    max-height: 450px;
     overflow: auto;
     text-align: justify;
     overflow-x: hidden;

@@ -967,10 +967,8 @@ class NocsplController extends Controller
 
     public function sendXmlFileToApi(Request $request)
     {
-
-        $nos_pls = Nocspl::where('id',$request->spl_id)->first() ;
+        $nos_pls = Nocspl::where('uuid',$request->spl_id)->first() ;
         $location = Location::where('id',$request->location)->first() ;
-
         // Check if the file exists
         $xmlFilePath =    storage_path().'/app/xml_file/'.$nos_pls->xmlpath ;
 
@@ -985,15 +983,12 @@ class NocsplController extends Controller
                 'action' => 'updateSpl',
                 'xmlData' => $xmlData
             ];
-
             // Initialize cURL session
             $ch = curl_init("http://localhost/tms/system/api2.php");
-
             // Set cURL options
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($requestData));
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
             // Execute cURL session and get the response
             $response = curl_exec($ch);
             $response = json_decode($response) ;
@@ -1072,11 +1067,21 @@ class NocsplController extends Controller
 
             foreach ($request->splfiles as $splfiles )
             {
+
+
                 $spl_file_content = simplexml_load_file($splfiles);
-                $file_name = "$spl_file_content->Id.xml" ;
-                $file_url = Storage::disk('local')->put( $file_name, $splfiles) ;
+
+                // Read file content
+                //$file_content = file_get_contents($splfiles);
+                $file_content = $spl_file_content->asXML();
+                $file_name = $spl_file_content->Id.".xml" ;
+                //$file_name = Str::uuid().".xml" ;
+                $file_url = Storage::disk('local')->put( $file_name, $file_content) ;
+
                 $duration = $this->calculateSplDuration($spl_file_content);
-                $new_nocspl = Nocspl::create([
+                 $new_nocspl = Nocspl::updateOrCreate([
+                    'uuid' =>$spl_file_content->Id,
+                    ],[
                     'uuid' => $spl_file_content->Id ,
                     'spl_title' => $spl_file_content->ShowTitleText,
                     'display_mode'=>null,

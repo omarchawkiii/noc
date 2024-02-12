@@ -400,6 +400,23 @@
     </div>
 
 
+    <div class=" modal fade " id="missing_cpls_schedule_check" role="dialog" aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered  modal-xl" >
+            <div class="modal-content border-0">
+
+                <div class="modal-header">
+                    <h5>Missing Cpls </h5>
+                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body ">
+
+
+                </div>
+            </div>
+            <!--end modal-content-->
+        </div>
+    </div>
+
 
 
 @endsection
@@ -646,7 +663,7 @@
                 method: 'GET',
                 success:function(response)
                 {
-
+                    console.log(response)
                     screens = '<option value="null" selected>All Screens</option>';
                     $.each(response.screens, function( index_screen, screen ) {
 
@@ -668,7 +685,7 @@
                         statu_content=""
                         if(value.status !="linked" )
                         {
-                            icon_spl = '<i class="mdi mdi-playlist-play text-danger"> </i>'
+                            icon_spl = '<i class="mdi mdi-playlist-play text-danger spl_not_linked" data-scheduleidd = "'+value.id+'"> </i>'
                             statu_content = '<spn class="text-danger" >Unlinked  </span>'
                         }
                         else
@@ -1042,6 +1059,61 @@
 
 
         });
+
+
+
+        $(document).on('click', '.spl_not_linked', function ()
+        {
+            var schedule_idd = $(this).attr('data-scheduleidd') ;
+            var location =  $('#location').val();
+            var url = "{{  url('') }}"+   "/get_unlinked_spl";
+            var missing_cpls =" " ;
+            $.ajax({
+                url:url,
+
+                method: 'GET',
+                cache: false,
+                data: {
+                    schedule_idd: schedule_idd,
+                    location:location,
+                    "_token": "{{ csrf_token() }}",
+                },
+                success: function (response) {
+
+                    missing_cpls +=
+                            '<table class="table">'
+                                +'<thead>'
+                                    +'<tr>'
+                                        +'<th>UUID </th>'
+                                        +'<th>Title</th>'
+                                    +'</tr>'
+                                +'</thead>'
+                                +'<tbody>'
+                    $.each(response.missing_cpls, function(index, value) {
+                    missing_cpls +=
+                            '<tr>'
+                                +'<td style="font-size: 14px;">'+value.uuid+'</td>'
+                                +'<td style="font-size: 14px;">'+value.contentTitleText+'</td>'
+                            +'</tr>' ;
+
+                })
+                missing_cpls +=
+                    '</tbody>'
+                    +'</table>' ;
+                    $("#missing_cpls_schedule_check").modal('show');
+                     $('#missing_cpls_schedule_check .modal-body ').html(missing_cpls)
+                    console.log(response)
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                },
+                complete: function (jqXHR, textStatus) {
+                }
+            });
+
+        });
+
+
 
     })(jQuery);
 

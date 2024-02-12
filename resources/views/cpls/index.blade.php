@@ -1019,6 +1019,7 @@ function formatSize(sizeInBytes) {
                             +'<td class="sorting_1">'+ index+' </td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.contentTitleText+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">'+value.contentKind+'</a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">' +formatSize(value.totalSize)+ '</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">' + available_on_content + '</a></td>'
                             +'<td><a class="btn btn-outline-primary infos_modal text-center" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+'" data-location="'+value.location.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
                             +'</tr>';

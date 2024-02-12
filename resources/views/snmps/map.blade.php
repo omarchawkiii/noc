@@ -153,8 +153,8 @@
 
     var greenMarkerStyle = new ol.style.Style({
         image: new ol.style.Icon({
-            src: 'https://openlayers.org/en/latest/examples/data/icon.png', // URL to the green marker icon provided by OpenLayers
-            scale: 0.7  , // Adjust the scale as needed
+            src: "{{  url('') }}"+ '/assets/images/true.png',  // URL to the green marker icon provided by OpenLayers
+            scale: 0.4  , // Adjust the scale as needed
 
         })
     });
@@ -162,8 +162,8 @@
     var redMarkerStyle = new ol.style.Style({
         image: new ol.style.Icon({
             color: 'red',
-            src: 'https://openlayers.org/en/latest/examples/data/icon.png', // URL to the red marker icon provided by OpenLayers
-            scale: 0.7, // Adjust the scale as needed
+           src: "{{  url('') }}"+ '/assets/images/false.png',  // URL to the red marker icon provided by OpenLayers
+            scale: 0.4, // Adjust the scale as needed
 
         })
     });

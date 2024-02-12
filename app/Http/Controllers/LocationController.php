@@ -25,7 +25,7 @@ class LocationController extends Controller
     public function index(Request $request): View
     {
         $locations = Location::all();
-        $location= Location::all()->first();
+
        // broadcast(new changeDataEvent($location))->toOthers() ;
         return view('locations.index', compact('locations'));
     }
@@ -250,7 +250,6 @@ class LocationController extends Controller
 
     public function refresh_content_all_location( )
     {
-
         $start_time = Carbon::now();
         echo $start_time->toDateTimeString();
 
@@ -262,17 +261,14 @@ class LocationController extends Controller
             {
                 app(\App\Http\Controllers\SplController::class)->getspls($location->id,$screen->id);
             }
-
             //$location = Location::find($location->id);
-
-
             foreach($location->screens as $screen)
             {
                 app(\App\Http\Controllers\CplController::class)->getcpls($location->id,$screen->id);
             }
 
-                //$location = Location::find($location->id);
-                $this->sync_spl_cpl($location->id );
+            //$location = Location::find($location->id);
+            $this->sync_spl_cpl($location->id );
             // get all KDMs
 
             //$location = Location::find($location->id);
@@ -452,7 +448,7 @@ class LocationController extends Controller
 
     public function refresh_spl_content( $location)
     {
-        $location = Location::find($location)->first();
+        $location = Location::find($location);
         foreach($location->screens as $screen)
         {
             app(\App\Http\Controllers\SplController::class)->getspls($location->id,$screen->id);
@@ -461,7 +457,7 @@ class LocationController extends Controller
 
     public function refresh_cpl_content( $location)
     {
-        $location = Location::find($location)->first();
+        $location = Location::find($location);
         foreach($location->screens as $screen)
         {
             app(\App\Http\Controllers\CplController::class)->getcpls($location->id,$screen->id);
@@ -470,7 +466,7 @@ class LocationController extends Controller
 
     public function refresh_kdm_content($location)
     {
-        $location = Location::find($location)->first();
+        $location = Location::find($location);
         foreach($location->screens as $screen)
         {
             app(\App\Http\Controllers\KdmController::class)->getkdms($location->id,$screen->id);
@@ -483,7 +479,7 @@ class LocationController extends Controller
         $start_time = Carbon::now();
         echo $start_time->toDateTimeString();
 
-        $location = Location::find($location)->first();
+        $location = Location::find($location);
         dd($location) ;
         app(\App\Http\Controllers\ScheduleContoller::class)->getschedules($location->id);
     }
@@ -506,7 +502,7 @@ class LocationController extends Controller
     public function sync_spl_cpl( $location )
     {
         $spls = Spl::all() ;
-        $location = Location::find($location)->first() ;
+        $location = Location::find($location) ;
 
         foreach($spls as $spl)
         {
@@ -519,13 +515,16 @@ class LocationController extends Controller
             //$spl->cpls()->detach() ;
             if($contents)
             {
+
                 foreach($contents as $content)
                 {
                     if($content)
                     {
                         foreach($content as $cpl_content)
                         {
-                            $cpl = Cpl::where('id','=',$cpl_content['CompositionPlaylistId'])->where('location_id','=',$location->id)->first() ;
+
+                            $cpl = Cpl::where('uuid','=',$cpl_content['CompositionPlaylistId'])->where('location_id','=',$location->id)->first() ;
+
                             if($cpl)
                             {
                                $spl->cpls()->syncWithoutDetaching([$cpl->id]);
@@ -543,7 +542,7 @@ class LocationController extends Controller
     {
         $lms_spls = Lmsspl::all() ;
 
-        $location = Location::find($location)->first() ;
+        $location = Location::find($location) ;
 
         foreach($lms_spls as $lms_spl)
         {
@@ -607,7 +606,7 @@ class LocationController extends Controller
     {
         $start_time = Carbon::now();
         echo $start_time->toDateTimeString();
-        $location = Location::find($location)->first() ;
+        $location = Location::find($location) ;
         app(\App\Http\Controllers\MacroController::class)->getMacros($location->id);
     }
 

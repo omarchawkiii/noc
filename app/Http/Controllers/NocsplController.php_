@@ -963,6 +963,7 @@ class NocsplController extends Controller
     {
         // Check if the file exists
         $xmlFilePath =    storage_path().'/app/xml_file/'.$request->path ;
+        dd($xmlFilePath) ;
         if (!file_exists($xmlFilePath)) {
             return ['error' => 'File not found.'];
         }

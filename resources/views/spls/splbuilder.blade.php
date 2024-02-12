@@ -4071,10 +4071,9 @@
 
    $(document).on('click', '#submit-ingest-form', function ()
         {
-            var spl_id = $('#spls_table td.selected').attr('data-id') ;
-            var location =  $('#location').val();
+            var spl_id = $('#nos-spl').val() ;
+            var location =  $('#ingest-location').val();
             var url = "{{  url('') }}"+   "/sendXmlFileToApi";
-
 
             /*var uuid =  $('#nos-spl').val();
             var ingest_location =  $('#ingest-location').val();

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cpl;
 use App\Models\Location;
 use App\Models\Schedule;
 use App\Models\Screen;
@@ -181,6 +182,36 @@ class ScheduleContoller extends Controller
 
     }
 
+    public function get_unlinked_spl(Request $request)
+    {
+        $schedule = Schedule::where('id',  $request->schedule_idd)->first() ;
+        $screen = $schedule->screen ;
+        //dd($schedule, $schedule->uuid_spl ,$schedule->location_id,$schedule->screen_id) ;
+        $spl = Spl::where('uuid',$schedule->uuid_spl)->where('screen_id',$schedule->screen_id)->where('location_id',$schedule->location_id)->first() ;
+
+        $cpls_spl = $spl->cpls;
+
+        $cpls_screen= $screen->cpls ;
+
+        $missing_cpls = array();
+
+        foreach($cpls_spl as $cpl_spl)
+        {
+
+            if($cpls_screen->contains($cpl_spl))
+                {
+                }
+                else
+                {
+                    array_push($missing_cpls,array("uuid" => $cpl_spl->uuid, "contentTitleText" => $cpl_spl->contentTitleText, "playable" => $cpl_spl->playable) ) ;
+
+                }
+
+
+        }
+        return Response()->json(compact('missing_cpls'));
+
+    }
 
 
 }

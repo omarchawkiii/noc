@@ -69,6 +69,7 @@ Route::get('get_kdms_with_filter', [App\Http\Controllers\KdmController::class , 
 
 Route::get('getschedules/{location}', [App\Http\Controllers\ScheduleContoller::class , 'getschedules'])->name('schedules.getschedules');
 Route::get('get_schedules_with_filter', [App\Http\Controllers\ScheduleContoller::class , 'get_schedules_with_filter'])->name('schedules.get_schedules_with_filter');
+Route::get('get_unlinked_spl', [App\Http\Controllers\ScheduleContoller::class , 'get_unlinked_spl'])->name('schedules.get_unlinked_spl');
 
 
 
