@@ -99,18 +99,16 @@ class ScheduleContoller extends Controller
                             }
 
                         }
-                        $uuid_schedule = array_column($content, 'scheduleId');
+                        $uuid_schedule = array_column($content, 'id');
 
 
-                        /*foreach($location->schedules as $schedule)
+                        foreach($location->schedules as $schedule)
                         {
                             if (! in_array( $schedule->scheduleId , $uuid_schedule) &&  strtotime($schedule->date_start) > strtotime('now')  )
                             {
                                 $schedule->delete() ;
                             }
-                        }*/
-
-                            //dd('we should delete screens ') ;
+                        }
                     }
                 }
             }
@@ -197,10 +195,11 @@ class ScheduleContoller extends Controller
         $unplayable_cpls = array();
         foreach($cpls_spl as $cpl_spl)
         {
-
-            if($cpls_screen->contains($cpl_spl))
+            if($cpl_spl->screen_id == $screen->id )
+            {
+                if($cpls_screen->contains($cpl_spl))
                 {
-                    if($cpl_spl->playable == 1 )
+                    if($cpl_spl->playable != 1 )
                     {
                         array_push($unplayable_cpls,array("uuid" => $cpl_spl->uuid, "contentTitleText" => $cpl_spl->contentTitleText, "playable" => $cpl_spl->playable) ) ;
                     }
@@ -209,12 +208,49 @@ class ScheduleContoller extends Controller
                 else
                 {
                     array_push($missing_cpls,array("uuid" => $cpl_spl->uuid, "contentTitleText" => $cpl_spl->contentTitleText, "playable" => $cpl_spl->playable) ) ;
-
                 }
+            }
+
 
 
         }
         return Response()->json(compact('missing_cpls','unplayable_cpls'));
+
+    }
+
+    public function get_need_kdm(Request $request)
+    {
+        $schedule = Schedule::where('id',  $request->schedule_idd)->first() ;
+        $screen = $schedule->screen ;
+        //dd($schedule, $schedule->uuid_spl ,$schedule->location_id,$schedule->screen_id) ;
+        $spl = Spl::where('uuid',$schedule->uuid_spl)->where('screen_id',$schedule->screen_id)->where('location_id',$schedule->location_id)->first() ;
+
+        $cpls_spl = $spl->cpls;
+
+        $cpls_screen= $screen->cpls ;
+
+        $missing_kdms = array();
+
+        foreach($cpls_spl as $cpl_spl)
+        {
+            if($cpl_spl->screen_id == $screen->id )
+            {
+                if($cpl_spl->pictureEncryptionAlgorithm != "None")
+                {
+                    $kdm = $cpl_spl->kdm ;
+                    if($kdm==null)
+                    {
+                        array_push($missing_kdms,array("uuid" => $cpl_spl->uuid, "contentTitleText" => $cpl_spl->contentTitleText, "playable" => $cpl_spl->playable) ) ;
+                    }
+                }
+
+
+            }
+
+
+
+        }
+        return Response()->json(compact('missing_kdms'));
 
     }
 

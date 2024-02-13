@@ -417,6 +417,22 @@
         </div>
     </div>
 
+    <div class=" modal fade " id="check_need_kdm_model" role="dialog" aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered  modal-xl" >
+            <div class="modal-content border-0">
+
+                <div class="modal-header">
+                    <h5>missing KDMs </h5>
+                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body ">
+
+                </div>
+            </div>
+            <!--end modal-content-->
+        </div>
+    </div>
+
 
 
 @endsection
@@ -575,12 +591,13 @@
                         {
                             if(value.status !="linked" )
                             {
-                                icon_cpl = '<i class="mdi mdi-filmstrip text-danger">'
+                                icon_cpl = '<i class="mdi mdi-filmstrip text-warning ">'
                             }
                             else
                             {
-                                icon_cpl = '<i class="mdi mdi-filmstrip text-warning spl_not_linked" data-scheduleidd = "'+value.id+'">'
+                                icon_cpl = '<i class="mdi mdi-filmstrip text-danger   spl_not_linked" data-scheduleidd = "'+value.id+'">'
                             }
+                            //icon_cpl = '<i class="mdi mdi-filmstrip text-warning">'
                         }
 
                         if(value.kdm  ==1 )
@@ -589,8 +606,18 @@
                         }
                         else
                         {
-                            icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
+                            if(value.status !="linked" )
+                            {
+
+                                icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
+                            }
+                            else
+                            {
+                                icon_kdm = '</i> <i class="mdi mdi-key-remove text-danger check_need_kdm" data-scheduleidd = "'+value.id+'"> </i>'
+
+                            }
                         }
+
 
                         result = result
                             +'<tr class="odd ">'
@@ -692,7 +719,7 @@
                         statu_content=""
                         if(value.status !="linked" )
                         {
-                            icon_spl = '<i class="mdi mdi-playlist-play text-danger > </i>'
+                            icon_spl = '<i class="mdi mdi-playlist-play text-danger"> </i>'
                             statu_content = '<spn class="text-danger" >Unlinked  </span>'
                         }
                         else
@@ -709,15 +736,13 @@
                         {
                             if(value.status !="linked" )
                             {
-                                icon_cpl = '<i class="mdi mdi-filmstrip text-danger">'
+                                icon_cpl = '<i class="mdi mdi-filmstrip text-warning ">'
                             }
                             else
                             {
-                                icon_cpl = '<i class="mdi mdi-filmstrip text-warning  spl_not_linked" data-scheduleidd = "'+value.id+'">'
+                                icon_cpl = '<i class="mdi mdi-filmstrip text-danger   spl_not_linked" data-scheduleidd = "'+value.id+'">'
                             }
-
-
-
+                            //icon_cpl = '<i class="mdi mdi-filmstrip text-warning">'
                         }
 
                         if(value.kdm  ==1 )
@@ -726,8 +751,18 @@
                         }
                         else
                         {
-                            icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
+                            if(value.status !="linked" )
+                            {
+
+                                icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
+                            }
+                            else
+                            {
+                                icon_kdm = '</i> <i class="mdi mdi-key-remove text-danger check_need_kdm" data-scheduleidd = "'+value.id+'"> </i>'
+
+                            }
                         }
+
 
                         result = result
                             +'<tr class="odd ">'
@@ -1175,6 +1210,67 @@
 
         });
 
+        $(document).on('click', '.check_need_kdm', function ()
+        {
+            var schedule_idd = $(this).attr('data-scheduleidd') ;
+            var location =  $('#location').val();
+            var url = "{{  url('') }}"+   "/get_need_kdm";
+            var missing_kdms ="" ;
+
+            $.ajax({
+                url:url,
+
+                method: 'GET',
+                cache: false,
+                data: {
+                    schedule_idd: schedule_idd,
+                    location:location,
+                    "_token": "{{ csrf_token() }}",
+                },
+                success: function (response) {
+                    if(response.missing_kdms.length > 0)
+                    {
+                        missing_kdms +=
+                            '<table class="table">'
+                                +'<thead>'
+                                    +'<tr>'
+                                        +'<th>UUID </th>'
+                                        +'<th>Title</th>'
+                                    +'</tr>'
+                                +'</thead>'
+                                +'<tbody>'
+                        $.each(response.missing_kdms, function(index, value) {
+                        missing_kdms +=
+                                '<tr>'
+                                    +'<td style="font-size: 14px;">'+value.uuid+'</td>'
+                                    +'<td style="font-size: 14px;">'+value.contentTitleText+'</td>'
+                                +'</tr>' ;
+
+                        })
+                        missing_kdms +=
+                            '</tbody>'
+                            +'</table>' ;
+                            $("#check_need_kdm_model").modal('show');
+                            $('#check_need_kdm_model .modal-body ').html(missing_kdms)
+                    }
+                    else
+                    {
+                        missing_kdms +=
+                        '<p> No Data </p>'
+                        $("#check_need_kdm_model").modal('show');
+                        $('#check_need_kdm_model .modal-body').html(missing_kdms)
+                    }
+                    console.log(response)
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                },
+                complete: function (jqXHR, textStatus) {
+                }
+            });
+
+        });
+
 
 
     })(jQuery);
@@ -1492,7 +1588,15 @@
                         }
                         else
                         {
-                            icon_cpl = '<i class="mdi mdi-filmstrip text-warning">'
+                            if(value.status !="linked" )
+                            {
+                                icon_cpl = '<i class="mdi mdi-filmstrip text-warning ">'
+                            }
+                            else
+                            {
+                                icon_cpl = '<i class="mdi mdi-filmstrip text-danger   spl_not_linked" data-scheduleidd = "'+value.id+'">'
+                            }
+                            //icon_cpl = '<i class="mdi mdi-filmstrip text-warning">'
                         }
 
                         if(value.kdm  ==1 )
@@ -1501,7 +1605,16 @@
                         }
                         else
                         {
-                            icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
+                            if(value.status !="linked" )
+                            {
+
+                                icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
+                            }
+                            else
+                            {
+                                icon_kdm = '</i> <i class="mdi mdi-key-remove text-danger check_need_kdm" data-scheduleidd = "'+value.id+'"> </i>'
+
+                            }
                         }
 
                         result = result
@@ -1603,7 +1716,15 @@
                         }
                         else
                         {
-                            icon_cpl = '<i class="mdi mdi-filmstrip text-warning">'
+                            if(value.status !="linked" )
+                            {
+                                icon_cpl = '<i class="mdi mdi-filmstrip text-warning ">'
+                            }
+                            else
+                            {
+                                icon_cpl = '<i class="mdi mdi-filmstrip text-danger   spl_not_linked" data-scheduleidd = "'+value.id+'">'
+                            }
+                            //icon_cpl = '<i class="mdi mdi-filmstrip text-warning">'
                         }
 
                         if(value.kdm  ==1 )
@@ -1612,7 +1733,16 @@
                         }
                         else
                         {
-                            icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
+                            if(value.status !="linked" )
+                            {
+
+                                icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
+                            }
+                            else
+                            {
+                                icon_kdm = '</i> <i class="mdi mdi-key-remove text-danger check_need_kdm" data-scheduleidd = "'+value.id+'"> </i>'
+
+                            }
                         }
 
                         result = result

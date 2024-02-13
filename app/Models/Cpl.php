@@ -36,6 +36,13 @@ class Cpl extends Model
         'location_id',
         'screen_id',
         'playable' ,
+        'pictureEncodingAlgorithm',
+        'pictureEncryptionAlgorithm',
+        'soundQuantizationBits',
+        'soundEncodingAlgorithm',
+        'soundEncryptionAlgorithm',
+        'markersCount',
+
 
     ];
 

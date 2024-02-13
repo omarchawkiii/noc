@@ -73,6 +73,12 @@ class CplController extends Controller
                             'screen_id'     =>$screen->id,
                             'location_id'     =>$location->id,
                             'playable' => $playable ,
+                            'pictureEncodingAlgorithm' => $cpl['pictureEncodingAlgorithm'] ,
+                            'pictureEncryptionAlgorithm' => $cpl['pictureEncryptionAlgorithm'] ,
+                            'soundQuantizationBits' => $cpl['soundQuantizationBits'] ,
+                            'soundEncodingAlgorithm' => $cpl['soundEncodingAlgorithm'] ,
+                            'soundEncryptionAlgorithm' => $cpl['soundEncryptionAlgorithm'] ,
+                            'markersCount' => $cpl['markersCount'] ,
                         ]);
                     }
 

@@ -60,8 +60,8 @@
         showSwal = function(type) {
         if (type === 'success-message') {
             swal({
-                title: 'Congratulations!',
-                text: '',
+                title: 'Done!',
+                text: 'Spls Uploaded Successfully ',
                 icon: 'success',
                 button: {
                 text: "Continue",
