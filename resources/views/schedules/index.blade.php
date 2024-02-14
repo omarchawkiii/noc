@@ -232,7 +232,7 @@
                         </li>
 
                       </ul>
-                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
                 </div>
                 <div class="modal-body text-center p-4">
                     <div class="tab-content border-0">
@@ -307,7 +307,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="ModalLabel">Please Select Location </h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close btn-close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
@@ -355,8 +355,7 @@
 
                 <div class="modal-header p-4 pb-0">
                     <h5></h5>
-                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
+                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal"aria-label="Close"><span aria-hidden="true" style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
                 </div>
                 <div class="modal-body text-center p-4">
                     <div class="" id="ingest-response-content" >
@@ -380,8 +379,7 @@
             <div class="modal-content" style="background: #000000">
                 <div class="modal-header">
                     <h5 class="modal-title" id="">Unlink</h5>
-                    <button type="button"  data-bs-dismiss="modal"
-                            aria-label="Close">
+                    <button type="button"  data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
@@ -406,7 +404,7 @@
 
                 <div class="modal-header">
                     <h5>Missing Cpls </h5>
-                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
                 </div>
                 <div class="modal-body ">
                     <div id="missing_cpls"></div>
@@ -423,7 +421,7 @@
 
                 <div class="modal-header">
                     <h5>missing KDMs </h5>
-                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
                 </div>
                 <div class="modal-body ">
 

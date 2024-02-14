@@ -98,7 +98,7 @@
                                                                       <a class="nav-link" id="schedules-tab" data-bs-toggle="tab" href="#schedules-{{ $cpl->uuid }}" role="tab" aria-controls="schedules" aria-selected="false">Related Schedules</a>
                                                                     </li>
                                                                   </ul>
-                                                                <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
                                                             </div>
                                                             <div class="modal-body text-center p-4">
 
@@ -112,10 +112,10 @@
                                                                                         <h6 class="mb-1">Title : </h6>
                                                                                     </div>
                                                                                     <div class="media-body">
-                                                                                        <p class="mb-0 text-muted m-1">   </p>
+                                                                                        <p class="mb-0  m-1">   </p>
                                                                                     </div>
                                                                                     <div class="media-body">
-                                                                                        <p class="mb-0 text-muted"> {{ $cpl->contentTitleText }} </p>
+                                                                                        <p class="mb-0 "> {{ $cpl->contentTitleText }} </p>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -128,10 +128,10 @@
                                                                                         <h6 class="mb-1">UUID : </h6>
                                                                                     </div>
                                                                                     <div class="media-body">
-                                                                                        <p class="mb-0 text-muted m-1">   </p>
+                                                                                        <p class="mb-0  m-1">   </p>
                                                                                     </div>
                                                                                     <div class="media-body">
-                                                                                        <p class="mb-0 text-muted"> {{ $cpl->uuid }} </p>
+                                                                                        <p class="mb-0 "> {{ $cpl->uuid }} </p>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -144,10 +144,10 @@
                                                                                         <h6 class="mb-1">Content Kind : </h6>
                                                                                     </div>
                                                                                     <div class="media-body">
-                                                                                        <p class="mb-0 text-muted m-1">   </p>
+                                                                                        <p class="mb-0  m-1">   </p>
                                                                                     </div>
                                                                                     <div class="media-body">
-                                                                                        <p class="mb-0 text-muted"> {{ $cpl->contentKind }} </p>
+                                                                                        <p class="mb-0 "> {{ $cpl->contentKind }} </p>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -217,7 +217,7 @@
                           <a class="nav-link" id="kdms-tab" data-bs-toggle="tab" href="#kdms" role="tab" aria-controls="schedules" aria-selected="false">Keys Messages</a>
                         </li>
                       </ul>
-                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
                 </div>
                 <div class="modal-body text-center p-4">
 
@@ -231,10 +231,10 @@
                                             <h6 class="mb-1">Title : </h6>
                                         </div>
                                         <div class="media-body">
-                                            <p class="mb-0 text-muted m-1">   </p>
+                                            <p class="mb-0  m-1">   </p>
                                         </div>
                                         <div class="media-body">
-                                            <p class="mb-0 text-muted">  </p>
+                                            <p class="mb-0 ">  </p>
                                         </div>
                                     </div>
                                 </div>
@@ -247,10 +247,10 @@
                                             <h6 class="mb-1">UUID : </h6>
                                         </div>
                                         <div class="media-body">
-                                            <p class="mb-0 text-muted m-1">   </p>
+                                            <p class="mb-0  m-1">   </p>
                                         </div>
                                         <div class="media-body">
-                                            <p class="mb-0 text-muted">  </p>
+                                            <p class="mb-0 ">  </p>
                                         </div>
                                     </div>
                                 </div>
@@ -263,10 +263,10 @@
                                             <h6 class="mb-1">Duration : </h6>
                                         </div>
                                         <div class="media-body">
-                                            <p class="mb-0 text-muted m-1">   </p>
+                                            <p class="mb-0  m-1">   </p>
                                         </div>
                                         <div class="media-body">
-                                            <p class="mb-0 text-muted">    </p>
+                                            <p class="mb-0 ">    </p>
                                         </div>
                                     </div>
                                 </div>
@@ -385,10 +385,10 @@ function formatSize(sizeInBytes) {
                                            +'<h6 class="mb-1">Title :  </h6>'
                                        +'</div>'
                                        +'<div class="media-body">'
-                                           +'<p class="mb-0 text-muted m-1">   </p>'
+                                           +'<p class="mb-0  m-1">   </p>'
                                        +'</div>'
                                        +'<div class="media-body">'
-                                           +'<p class="mb-0 text-muted"> '+ response.cpl.contentTitleText + ' </p>'
+                                           +'<p class="mb-0 "> '+ response.cpl.contentTitleText + ' </p>'
                                        +'</div>'
                                    +'</div>'
                                +'</div>'
@@ -401,10 +401,10 @@ function formatSize(sizeInBytes) {
                                            +'<h6 class="mb-1">UUID : </h6>'
                                        +'</div>'
                                        +'<div class="media-body">'
-                                           +'<p class="mb-0 text-muted m-1">   </p>'
+                                           +'<p class="mb-0  m-1">   </p>'
                                        +'</div>'
                                        +'<div class="media-body">'
-                                           +'<p class="mb-0 text-muted"> '+ response.cpl.uuid + ' </p>'
+                                           +'<p class="mb-0 "> '+ response.cpl.uuid + ' </p>'
                                        +'</div>'
                                    +'</div>'
                                +'</div>'
@@ -413,14 +413,14 @@ function formatSize(sizeInBytes) {
                                +'<div class="card-body p-3">'
                                    +'<div class="media  d-flex justify-content-start mr-5">'
                                        +'<div class="media-body d-flex align-items-center">'
-                                           +'<i class="mdi mdi-timer icon-sm align-self-center me-3"></i>'
+                                           +'<i class="mdi mdi-star icon-sm align-self-center me-3"></i>'
                                            +'<h6 class="mb-1">Kind : </h6>'
                                        +'</div>'
                                        +'<div class="media-body">'
-                                           +'<p class="mb-0 text-muted m-1">   </p>'
+                                           +'<p class="mb-0  m-1">   </p>'
                                        +'</div>'
                                        +'<div class="media-body">'
-                                           +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                           +'<p class="mb-0 "> '+ response.cpl.contentKind + '   </p>'
                                        +'</div>'
                                    +'</div>'
                                +'</div>'
@@ -432,37 +432,19 @@ function formatSize(sizeInBytes) {
 
                                         +'<div class="col-md-4 text-center" >'
                                             +'<div class="media-body ">'
-                                                +'<h6 class="mb-1">Duration   </h6>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted m-1">   </p>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted"> '+ response.cpl.durationEdits + '   </p>'
+                                                +'<h6 class="mb-1"> <i class="mdi mdi-timer icon-sm align-self-center"></i>  Duration   '+ response.cpl.durationEdits + '  </h6>'
                                             +'</div>'
                                         +'</div>'
 
                                         +'<div class="col-md-4 text-center" >'
                                             +'<div class="media-body ">'
-                                                +'<h6 class="mb-1">Edit Rate   </h6>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted m-1">   </p>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted"> '+ response.cpl.EditRate + '   </p>'
+                                                +'<h6 class="mb-1"> <i class="mdi mdi-table-edit icon-sm align-self-center "></i> Edit Rate    '+ response.cpl.EditRate + ' </h6>'
                                             +'</div>'
                                         +'</div>'
 
                                         +'<div class="col-md-4 text-center" >'
                                             +'<div class="media-body ">'
-                                                +'<h6 class="mb-1">Disk size   </h6>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted m-1">   </p>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted"> '+ response.cpl.totalSize + '   </p>'
+                                                +'<h6 class="mb-1"><i class="mdi mdi-chart-pie icon-sm align-self-center "></i> Disk size   '+ formatSize(response.cpl.totalSize) + ' </h6>'
                                             +'</div>'
                                         +'</div>'
 
@@ -483,10 +465,10 @@ function formatSize(sizeInBytes) {
                                                 +'<h6 class="mb-1">Picture Height  </h6>'
                                             +'</div>'
                                             +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                                +'<p class="mb-0  m-1">   </p>'
                                             +'</div>'
                                             +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                                +'<p class="mb-0 "> '+ response.cpl.pictureHeight + '   </p>'
                                             +'</div>'
                                         +'</div>'
 
@@ -495,10 +477,10 @@ function formatSize(sizeInBytes) {
                                                 +'<h6 class="mb-1">Picture width  </h6>'
                                             +'</div>'
                                             +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                                +'<p class="mb-0  m-1">   </p>'
                                             +'</div>'
                                             +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                                +'<p class="mb-0 "> '+ response.cpl.pictureWidth + '   </p>'
                                             +'</div>'
                                         +'</div>'
 
@@ -507,10 +489,10 @@ function formatSize(sizeInBytes) {
                                                 +'<h6 class="mb-1">Picture Encoding Algorithm   </h6>'
                                             +'</div>'
                                             +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                                +'<p class="mb-0  m-1">   </p>'
                                             +'</div>'
                                             +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                                +'<p class="mb-0 "> '+ response.cpl.pictureEncodingAlgorithm + '</p>'
                                             +'</div>'
                                         +'</div>'
 
@@ -519,10 +501,10 @@ function formatSize(sizeInBytes) {
                                                 +'<h6 class="mb-1">Picture Encryption Algorithm  </h6>'
                                             +'</div>'
                                             +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                                +'<p class="mb-0  m-1">   </p>'
                                             +'</div>'
                                             +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                                +'<p class="mb-0 "> '+ response.cpl.pictureEncryptionAlgorithm + '</p>'
                                             +'</div>'
                                         +'</div>'
 
@@ -539,10 +521,10 @@ function formatSize(sizeInBytes) {
                                                 +'<h6 class="mb-1">Sound Channel Count  </h6>'
                                             +'</div>'
                                             +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                                +'<p class="mb-0  m-1">   </p>'
                                             +'</div>'
                                             +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted"> '+ response.cpl.soundChannelCount + '   </p>'
+                                                +'<p class="mb-0 "> '+ response.cpl.soundChannelCount + '   </p>'
                                             +'</div>'
                                         +'</div>'
 
@@ -551,10 +533,10 @@ function formatSize(sizeInBytes) {
                                                 +'<h6 class="mb-1">Sound Encoding Algorithm </h6>'
                                             +'</div>'
                                             +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                                +'<p class="mb-0  m-1">   </p>'
                                             +'</div>'
                                             +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                                +'<p class="mb-0 "> '+ response.cpl.soundEncodingAlgorithm + '   </p>'
                                             +'</div>'
                                         +'</div>'
 
@@ -563,22 +545,10 @@ function formatSize(sizeInBytes) {
                                                 +'<h6 class="mb-1">Sound Encryption   </h6>'
                                             +'</div>'
                                             +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                                +'<p class="mb-0  m-1">   </p>'
                                             +'</div>'
                                             +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
-                                            +'</div>'
-                                        +'</div>'
-
-                                        +'<div class="col-md-3 text-center" >'
-                                            +'<div class="media-body ">'
-                                                +'<h6 class="mb-1"> Algorithm  </h6>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted m-1">   </p>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                                +'<p class="mb-0 "> '+ response.cpl.soundEncryptionAlgorithm + '   </p>'
                                             +'</div>'
                                         +'</div>'
 
@@ -794,7 +764,7 @@ function formatSize(sizeInBytes) {
                             {
                                 available_on_content = available_on_content + '<br />'
                             }
-                            available_on_content = available_on_content + '<div class="badge badge-primary m-1">'+ available_on_array[i]+'</div>'
+                            available_on_content = available_on_content + '<div class="badge badge-outline-primary m-1">'+ available_on_array[i]+'</div>'
                         }
 
                         playable =""
@@ -814,7 +784,7 @@ function formatSize(sizeInBytes) {
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">'+value.contentKind+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">' + formatSize(value.totalSize) + '</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">' + available_on_content + '</a></td>'
-                                +'<td><a class="btn btn-outline-primary infos_modal text-center" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+'" data-location="'+value.location.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
+                                +'<td><a class="btn btn-primary infos_modal text-center" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+'" data-location="'+value.location.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
                             +'</tr>';
                     });
                     console.log(response.cpls)
@@ -900,7 +870,7 @@ function formatSize(sizeInBytes) {
                             {
                                 available_on_content = available_on_content + '<br />'
                             }
-                            available_on_content = available_on_content + '<div class="badge badge-primary m-1">'+ available_on_array[i]+'</div>'
+                            available_on_content = available_on_content + '<div class="badge badge-outline-primary m-1">'+ available_on_array[i]+'</div>'
                         }
 
                         playable =""
@@ -920,7 +890,7 @@ function formatSize(sizeInBytes) {
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">'+value.contentKind+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">' +formatSize(value.totalSize)+ '</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">' + available_on_content + '</a></td>'
-                            +'<td><a class="btn btn-outline-primary infos_modal text-center" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+' " data-location="'+value.location.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
+                            +'<td><a class="btn btn-primary infos_modal text-center" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+' " data-location="'+value.location.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
                             +'</tr>';
                     });
                     console.log(response.cpls)
@@ -1000,12 +970,12 @@ function formatSize(sizeInBytes) {
                                     {
                                         available_on_content = available_on_content + '<br />'
                                     }
-                                    available_on_content = available_on_content + '<div class="badge badge-primary m-1">'+ available_on_array[i]+'</div>'
+                                    available_on_content = available_on_content + '<div class="badge badge-outline-primary m-1">'+ available_on_array[i]+'</div>'
                                 }
                             }
                             else
                             {
-                                available_on_content = '<div class="badge badge-primary m-1">'+ value.available_on+'</div>'
+                                available_on_content = '<div class="badge badge-outline-primary m-1">'+ value.available_on+'</div>'
                             }
                         }
                         else
@@ -1021,7 +991,7 @@ function formatSize(sizeInBytes) {
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">'+value.contentKind+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">' +formatSize(value.totalSize)+ '</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">' + available_on_content + '</a></td>'
-                            +'<td><a class="btn btn-outline-primary infos_modal text-center" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+'" data-location="'+value.location.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
+                            +'<td><a class="btn btn-primary infos_modal text-center" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+'" data-location="'+value.location.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
                             +'</tr>';
                     });
                     console.log(response.cpls)

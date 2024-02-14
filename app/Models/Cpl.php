@@ -42,7 +42,8 @@ class Cpl extends Model
         'soundEncodingAlgorithm',
         'soundEncryptionAlgorithm',
         'markersCount',
-
+        'pictureWidth',
+        'pictureHeight',
 
     ];
 
@@ -74,7 +75,7 @@ class Cpl extends Model
 
     public function spls(): BelongsToMany
     {
-        return $this->belongsToMany(Spl::class,'cpls_spls');
+        return $this->belongsToMany(Spl::class,'cpls_spls')->where('location_id','=', $this->location_id);
     }
 
     public function location(): BelongsTo
@@ -82,7 +83,7 @@ class Cpl extends Model
         return $this->belongsTo(Location::class);
     }
 
-    public function kdms(): HasMany
+    public function kdms(): hasMany
     {
         return $this->hasMany(Kdm::class);
     }

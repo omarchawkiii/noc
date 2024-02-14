@@ -55,7 +55,7 @@ class Spl extends Model
 
     public function cpls(): BelongsToMany
     {
-        return $this->belongsToMany(Cpl::class,'cpls_spls');
+        return $this->belongsToMany(Cpl::class,'cpls_spls')->where('location_id','=', $this->location_id);
     }
 
     public function location(): BelongsTo

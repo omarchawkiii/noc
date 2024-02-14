@@ -23848,7 +23848,8 @@ table td a
 .modal-body
 {
     padding: 5px;
-    max-height: 450px;
+    max-height: 500px;
+    min-height: 500px;
     overflow: auto;
     text-align: justify;
     overflow-x: hidden;
@@ -23856,4 +23857,30 @@ table td a
 .modal
 {
     overflow: hidden !important;
+}
+.table thead th, .jsgrid .jsgrid-table thead th
+{
+    color : white ;
+}
+
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link
+{
+    background-color: #121a2f !important;
+
+}
+.modal .modal-dialog
+{
+    margin-top: 50px;
+}
+
+.table, .jsgrid .jsgrid-table
+{
+    color: #e3e3e3;
+}
+
+.modal  .btn-close {
+    border: solid #394c5fe0 ;
+    padding: 8px;
+    line-height: 0;
+    background: #121a2f;
 }

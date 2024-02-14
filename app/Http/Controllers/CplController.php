@@ -79,6 +79,8 @@ class CplController extends Controller
                             'soundEncodingAlgorithm' => $cpl['soundEncodingAlgorithm'] ,
                             'soundEncryptionAlgorithm' => $cpl['soundEncryptionAlgorithm'] ,
                             'markersCount' => $cpl['markersCount'] ,
+                            'pictureWidth' => $cpl['pictureWidth'],
+                            'pictureHeight' => $cpl['pictureHeight'] ,
                         ]);
                     }
 

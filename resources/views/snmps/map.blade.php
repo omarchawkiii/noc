@@ -34,7 +34,7 @@
             <div class="modal-content border-0">
                 <div class="modal-header">
                     <h4 >title </h4>
-                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
                 </div>
                 <div class="modal-body  p-4">
 
