@@ -688,7 +688,7 @@
 
                     result = result
                                     +'<tr>'
-                                        +'<th>'+value.id+'</th>'
+                                        +'<th>'+value.uuid+'</th>'
                                         +'<th>'+value.contentTitleText+'</th>'
 
                                     +'</tr>'

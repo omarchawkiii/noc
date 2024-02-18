@@ -41,7 +41,6 @@ class MoviescodController extends Controller
                             'status' => $moviescod['status'],
                             'location_id'     =>$location->id,
                         ]);
-
                     }
                 }
             }
@@ -69,9 +68,9 @@ class MoviescodController extends Controller
 
         if($check_lms_spl)
         {
-            //$location = Location::findOrFail($splnoc->location_id) ;
+            $location = Location::findOrFail($splnoc->location_id) ;
             //$this->sendUpdateLinksRequest($location->connection_ip, $moviescod->moviescods_id, $splnoc->uuid);
-            $response = $this->sendUpdateLinksRequest($apiUrl, $moviescod->code, $splnoc->uuid);
+            $response = $this->sendUpdateLinksRequest($apiUrl, $moviescod->code, $splnoc->uuid, $location->email , $location->password);
 
             if($response['result'] === 1 )
             {
@@ -146,12 +145,15 @@ class MoviescodController extends Controller
 
 
 
-    function sendUpdateLinksRequest($apiUrl, $cod, $uuid) {
+    function sendUpdateLinksRequest($apiUrl, $cod, $uuid,$username,$password) {
         // Prepare the request data
         $requestData = [
             'action' => 'updateLinks',
             'movie_code' => $cod,
-            'spl_uuid' => $uuid
+            'spl_uuid' => $uuid,
+            'username' =>$username,
+            'password' =>$password
+
         ];
 
         // Initialize cURL session

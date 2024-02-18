@@ -115,20 +115,20 @@ class SnmpController extends Controller
 
 
 
-            $schedules = Schedule::where('location_id', $location->id )->where('date_start' , '>' , Carbon::today() )->get() ;
+            $schedules = Schedule::where('location_id', $location->id )->where('date_start' , '>' , Carbon::today() )->where('date_start' , '<' , Carbon::now()->addDays(1) )->get() ;
 
             foreach($schedules as $schedule)
             {
                 if(($schedule->status != 'linked'  || ($schedule->kdm != 1 || $schedule->cpls != 1 )) &&  !$schedules_error )
                 {
                     $schedules_error = true ;
-                    $infos .=  " <p> Schedule keys problems</p> " ;
+                    $infos .=  " <p> Missing KDMs </p> " ;
 
                 }
                 if(($schedule->status != 'linked'  || ($schedule->kdm != 1 || $schedule->cpls != 1 )) )
                 {
                     $schedules_error = true ;
-                    $infos .="<li> Schedule : ".$schedule->scheduleId." Has problem  </li> ";
+                    $infos .="<li>  session : ".$schedule->name." Has problem  </li> ";
                 }
             }
 

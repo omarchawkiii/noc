@@ -30,7 +30,7 @@
 
 
     <div class=" modal fade " id="location_errors" tabindex="-1" role="dialog"  aria-labelledby="delete_client_modalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered  ">
+        <div class="modal-dialog modal-dialog-centered   modal-xl ">
             <div class="modal-content border-0">
                 <div class="modal-header">
                     <h4 >title </h4>
@@ -171,8 +171,8 @@
 
     map.on('click', function(event) {
         map.forEachFeatureAtPixel(event.pixel, function(feature,layer) {
-            console.log(feature.getId())
-            console.log(layer.get('content'))
+            /*console.log(feature.getId())
+            console.log(layer.get('content'))*/
 
             $('#location_errors .modal-body ').html(layer.get('content'))
             $('#location_errors .modal-header h4 ').html( "Errors in location : " + layer.get('title'))

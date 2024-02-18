@@ -205,6 +205,8 @@ class CplController extends Controller
         $cpl = Cpl::where('id',$cpl)->where('location_id',$location)->first() ;
 
         $spls = $cpl->spls ;
+
+        //dd($cpl);
         $kdms = $cpl->kdms ;
 
         $kdms =Kdm::with('screen')->where('cpl_id',$cpl->id)->get();

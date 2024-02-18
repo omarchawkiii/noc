@@ -522,12 +522,15 @@ class LocationController extends Controller
                     {
                         foreach($content as $cpl_content)
                         {
-
                             $cpl = Cpl::where('uuid','=',$cpl_content['CompositionPlaylistId'])->where('location_id','=',$location->id)->first() ;
 
                             if($cpl)
                             {
                                $spl->cpls()->syncWithoutDetaching([$cpl->id]);
+                            }
+                            else
+                            {
+                                echo "CPLs dont existe " .  $cpl_content['CompositionPlaylistId'] . "<br />" ;
                             }
                         }
                     }
