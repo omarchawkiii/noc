@@ -967,11 +967,13 @@ class NocsplController extends Controller
 
     public function sendXmlFileToApi(Request $request)
     {
-        $nos_pls = Nocspl::where('uuid',$request->spl_id)->first() ;
+        $nos_spl = Nocspl::where('id',$request->spl_id)->first() ;
         $location = Location::where('id',$request->location)->first() ;
         // Check if the file exists
-        $xmlFilePath =    storage_path().'/app/xml_file/'.$nos_pls->xmlpath ;
 
+
+        $xmlFilePath =    storage_path().'/app/xml_file/'.$nos_spl->xmlpath ;
+            //dd($xmlFilePath);
          if (!file_exists($xmlFilePath)) {
                 return ['error' => 'File not found.'];
             }
@@ -981,7 +983,9 @@ class NocsplController extends Controller
             // Prepare the request data
             $requestData = [
                 'action' => 'updateSpl',
-                'xmlData' => $xmlData
+                'xmlData' => $xmlData,
+                'username' =>$location->email,
+                'password' =>$location->password,
             ];
             // Initialize cURL session
             $ch = curl_init("http://localhost/tms/system/api2.php");
@@ -993,16 +997,15 @@ class NocsplController extends Controller
             $response = curl_exec($ch);
             $response = json_decode($response) ;
 
-
             if($response->status== 1 )
             {
                Lmsspl::updateOrCreate([
-                    'uuid' =>$nos_pls->uuid,
+                    'uuid' =>$nos_spl->uuid,
                     'location_id'     =>$location->id,
                     ],[
-                    'uuid'     => $nos_pls->uuid,
-                    'name'     =>$nos_pls->spl_title,
-                    'duration'     => gmdate("H:i:s", $nos_pls->duration) ,
+                    'uuid'     => $nos_spl->uuid,
+                    'name'     =>$nos_spl->spl_title,
+                    'duration'     => gmdate("H:i:s", $nos_spl->duration) ,
                     'available_on'     => 'null',
                     'location_id'     =>$location->id,
                 ]);

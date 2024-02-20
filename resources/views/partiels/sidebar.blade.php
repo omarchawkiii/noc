@@ -1,10 +1,17 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
     <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
-      <a class="sidebar-brand brand-logo" href="{{ route('location.index') }}"><img src="{{asset('/assets/images/logo.png')}}" alt="logo" /></a>
-      <a class="sidebar-brand brand-logo-mini" href="{{ route('location.index') }}"><img src="{{asset('/assets/images/logo-mini.png')}}" alt="logo" /></a>
+      <a class="sidebar-brand brand-logo" href="{{ route('snmp.get_snmp_with_map') }}"><img src="{{asset('/assets/images/logo.png')}}" alt="logo" /></a>
+      <a class="sidebar-brand brand-logo-mini" href="{{ route('snmp.get_snmp_with_map') }}"><img src="{{asset('/assets/images/logo-mini.png')}}" alt="logo" /></a>
     </div>
     <ul class="nav">
-
+        <li class="nav-item menu-items">
+            <a class="nav-link" href="{{ route('snmp.get_snmp_with_map') }}">
+                <span class="menu-icon icon-box-danger">
+                <i class="mdi mdi-alert "></i>
+                </span>
+                <span class="menu-title"> Dashboard</span>
+            </a>
+        </li>
       <li class="nav-item menu-items">
         <a class="nav-link" href="{{ route('location.index') }}">
           <span class="menu-icon icon-box-danger">
@@ -46,14 +53,7 @@
         </a>
       </li>
 
-      <li class="nav-item menu-items">
-        <a class="nav-link" href="{{ route('snmp.get_snmp_with_map') }}">
-          <span class="menu-icon icon-box-danger">
-            <i class="mdi mdi-alert "></i>
-          </span>
-          <span class="menu-title"> Errors</span>
-        </a>
-      </li>
+
       <li class="nav-item menu-items">
         <a class="nav-link" href="{{ route('playback.index') }}">
           <span class="menu-icon icon-box-warning">

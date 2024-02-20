@@ -70,6 +70,8 @@ class SnmpController extends Controller
     public function get_snmp_with_map(Request $request )
     {
 
+        $locations = Location::all() ;
+
         $data_location = array() ;
         $states_red = array() ;
         $data_states = array() ;
@@ -81,60 +83,115 @@ class SnmpController extends Controller
         $playback_generale_status = false ;
         $securityManager = false  ;
         $schedules_error =false ;
+        $missing_cpls = false ;
+        $missing_kdms = false ;
         $infos ="" ;
+        $count_diskusage = 0 ;
+        $count_playback_generale_status = 0 ;
+        $count_securityManager = 0 ;
+        $count_missing_kdm_error = 0 ;
+        $count_missing_cpl_error = 0  ;
+        $playing_screen =  0;
+        $offline_screen =  0;
+        $idle_screen =  0;
         foreach($locations as $location )
         {
             $infos ="" ;
             $diskusage = false ;
             $playback_generale_status = false ;
             $schedules_error =false ;
+            $missing_cpls = false ;
+            $missing_kdms = false ;
             $securityManager = false  ;
+            $count_diskusage = 0 ;
+            $count_playback_generale_status = 0 ;
+            $count_securityManager = 0 ;
+            $count_missing_kdm_error = 0 ;
+            $count_missing_cpl_error = 0 ;
 
             if($location->diskusage->free_space_percentage >= 90  )
             {
                 $diskusage = true ;
-                $infos =  " <p>  Disque Usage is : ".$location->diskusage->free_space_percentage." % </p> " ;
+                $infos =  " <p class='m-2'>  Disque Usage is : ".$location->diskusage->free_space_percentage." % </p> " ;
+                $count_diskusage ++ ;
             }
 
             foreach($location->playbacks as $playback)
             {
+                if ($playback->playback_status == 'Stop')
+                {
+                    $idle_screen ++ ;
+                }
+                if ($playback->playback_status == 'Unknown' )
+                {
+                    $offline_screen ++ ;
+                }
+                if ($playback->playback_status == 'Play')
+                {
+                    $playing_screen ++ ;
+                }
+
                 if($playback->storage_generale_status != 'Normal' )
                 {
                     $playback_generale_status = true ;
-                    $infos .=  " <p> playback generale status is ".$playback->storage_generale_status ." in screen: " .$playback->screen->screen_name ." </p>";
+                    $count_playback_generale_status ++ ;
+                    $infos .=  " <p class='m-2'> playback generale status is ".$playback->storage_generale_status ." in screen: " .$playback->screen->screen_name ." </p>";
                 }
 
                 if($playback->securityManager != 'Normal' )
                 {
                     $securityManager = true ;
-                    $infos .=  " <p> Security Manager status is: ".$playback->securityManager ." in screen: " .$playback->screen->screen_name ." </p>";
+                    $count_securityManager ++ ;
+                    $infos .=  " <p class='m-2'> Security Manager status is: ".$playback->securityManager ." in screen: " .$playback->screen->screen_name ." </p>";
                 }
 
             }
-
-
-
 
             $schedules = Schedule::where('location_id', $location->id )->where('date_start' , '>' , Carbon::today() )->where('date_start' , '<' , Carbon::now()->addDays(1) )->get() ;
 
             foreach($schedules as $schedule)
             {
-                if(($schedule->status != 'linked'  || ($schedule->kdm != 1 || $schedule->cpls != 1 )) &&  !$schedules_error )
-                {
-                    $schedules_error = true ;
-                    $infos .=  " <p> Missing KDMs </p> " ;
 
-                }
-                if(($schedule->status != 'linked'  || ($schedule->kdm != 1 || $schedule->cpls != 1 )) )
+                if($schedule->status != 'linked')
                 {
                     $schedules_error = true ;
-                    $infos .="<li>  session : ".$schedule->name." Has problem  </li> ";
+                    $infos .=  " <p class='m-2'> Session Not Linked  </p> " ;
+                }
+
+                if($schedule->status == 'linked'  && $schedule->kdm != 1   &&  !$missing_kdms )
+                {
+                    $missing_kdms = true ;
+                    $infos .=  " <p class='m-2'> Missing KDMs </p> " ;
+                }
+
+                if($schedule->status == 'linked'  && $schedule->cpls != 1  &&  !$missing_cpls )
+                {
+                    $missing_cpls = true ;
+                    $infos .=  " <p class='m-2'> Missing CPLs </p> " ;
+                }
+
+
+                if($schedule->kdm != 1)
+                {
+                    $infos .="<li>  session : ".$schedule->name." Is Not Linked </li> ";
+                }
+
+                if($schedule->kdm != 1)
+                {
+                    $count_missing_kdm_error ++ ;
+                    $infos .="<li>  session : ".$schedule->name." Has missing   KDMs</li> ";
+                }
+
+                if($schedule->cpls != 1 )
+                {
+                    $count_missing_cpl_error++ ;
+                    $infos .="<li>  session : ".$schedule->name." Has missing CPLs  </li> ";
                 }
             }
 
             if( $diskusage || $playback_generale_status  || $schedules_error  || $securityManager)
             {
-                array_push($data_location,  array("state" => $location->city , "location" => $location->name, "latitude" => $location->latitude, "longitude" => $location->longitude, "status" => "red" , "infos" =>$infos));
+                array_push($data_location,  array("state" => $location->city , "location" => $location->name, "latitude" => $location->latitude, "longitude" => $location->longitude, "status" => "red" , "infos" =>$infos , "count_diskusage" =>$count_diskusage, "count_playback_generale_status" =>$count_playback_generale_status, "count_securityManager" =>$count_securityManager, "count_missing_kdm_error" =>$count_missing_kdm_error, "count_missing_cpl_error" =>$count_missing_cpl_error));
                 if (!in_array($location->city, $states_red))
                 {
                     array_push($states_red, $location->city);
@@ -147,7 +204,7 @@ class SnmpController extends Controller
                 {
                     array_push($states_green, $location->city);
                 }
-                array_push($data_location,  array("state" => $location->city , "location" => $location->name, "latitude" => $location->latitude, "longitude" => $location->longitude, "status" => "green", "infos" => "No Errors " ));
+                array_push($data_location,  array("state" => $location->city , "location" => $location->name, "latitude" => $location->latitude, "longitude" => $location->longitude, "status" => "green", "infos" => "No Errors ", "count_diskusage" =>$count_diskusage, "count_playback_generale_status" =>$count_playback_generale_status, "count_securityManager" =>$count_securityManager, "count_missing_kdm_error" =>$count_missing_kdm_error, "count_missing_cpl_error" =>$count_missing_cpl_error ));
             }
 
 
@@ -180,7 +237,7 @@ class SnmpController extends Controller
                     $content .=  $location['infos'] ;
                 }
             }
-            array_push($data_states,  array("state" => $location['state'] , "location" => $state , "latitude" => "4.155672", "longitude" => "100.569649", "status" => "green", "infos" => $content ));
+            array_push($data_states,  array("state" => $location['state'] , "location" => $state , "latitude" => $location['latitude'], "longitude" =>$location['longitude'], "status" => "green", "infos" => $content ));
         }
 
 
@@ -195,19 +252,21 @@ class SnmpController extends Controller
 
             if($zoomLevel <= 8)
             {
+                $data_count = $data_location;
                 $data_location = $data_states ;
-                return Response()->json(compact('data_location'));
+                return Response()->json(compact('data_location','data_count','locations','idle_screen','offline_screen','playing_screen'));
             }
             else
             {
-                return Response()->json(compact('data_location'));
+                $data_count = $data_location;
+                return Response()->json(compact('data_location','locations'));
             }
         }
         else
         {
             // Convert the array to JSON format
             $snmps=null ;
-            $locations = Location::all() ;
+
             return view('snmps.map', compact('snmps','locations'));
         }
 

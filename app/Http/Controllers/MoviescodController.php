@@ -68,7 +68,8 @@ class MoviescodController extends Controller
 
         if($check_lms_spl)
         {
-            $location = Location::findOrFail($splnoc->location_id) ;
+            $location = Location::findOrFail($check_lms_spl->location_id) ;
+
             //$this->sendUpdateLinksRequest($location->connection_ip, $moviescod->moviescods_id, $splnoc->uuid);
             $response = $this->sendUpdateLinksRequest($apiUrl, $moviescod->code, $splnoc->uuid, $location->email , $location->password);
 
@@ -117,7 +118,7 @@ class MoviescodController extends Controller
         $moviescod = Moviescod::findOrFail($request->movie_id) ;
 
         $location = Location::findOrFail($request->location) ;
-        $response = $this->sendUnlinkSplRequest($apiUrl, $moviescod->code);
+        $response = $this->sendUnlinkSplRequest($apiUrl, $moviescod->code, $location->email , $location->password);
         if($response['result'] === 1 )
         {
             $moviescod = $moviescod->update([
@@ -166,7 +167,7 @@ class MoviescodController extends Controller
 
         // Execute cURL session and get the response
         $response = curl_exec($ch);
-        print_r($response);
+       // print_r($response);
 
         // Check for cURL errors
         if (curl_errno($ch)) {
@@ -183,11 +184,13 @@ class MoviescodController extends Controller
             return json_decode($response, true);
         }
     }
-    function sendUnlinkSplRequest($apiUrl, $cod) {
+    function sendUnlinkSplRequest($apiUrl, $cod ,$username,$password) {
         // Prepare the request data
         $requestData = [
             'action' => 'unlinkMovie',
             'movie_code' => $cod,
+            'username' =>$username,
+            'password' =>$password
         ];
 
         // Initialize cURL session

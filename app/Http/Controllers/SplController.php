@@ -139,6 +139,8 @@ class SplController extends Controller
 
     public function upload_spl()
     {
+
+
         return view('spls.uploadspl');
     }
 
