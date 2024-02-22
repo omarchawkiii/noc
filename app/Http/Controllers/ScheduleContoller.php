@@ -194,7 +194,35 @@ class ScheduleContoller extends Controller
 
         $missing_cpls = array();
         $unplayable_cpls = array();
-        foreach($cpls_spl as $cpl_spl)
+        $location = $schedule->location ;
+        $url = $location->connection_ip."?request=getCplsBySpl&spl_uuid=".$spl->uuid;
+
+
+        $client = new Client();
+        $response = $client->request('GET', $url);
+        $contents = json_decode($response->getBody(), true);
+        //$spl->cpls()->detach() ;
+        if($contents)
+        {
+            foreach($contents as $content)
+            {
+                if($content)
+                {
+                    foreach($content as $cpl_content)
+                    {
+                        $cpl = Cpl::where('uuid','=',$cpl_content['CompositionPlaylistId'])->where('location_id','=',$location->id)->first() ;
+
+                        if($cpl == null )
+                        {
+                            array_push($unplayable_cpls,array("uuid" => $cpl_content['CompositionPlaylistId'], "contentTitleText" => $cpl_content['AnnotationText'] , "playable" => 1) ) ;
+                        }
+                    }
+                }
+            }
+        }
+
+
+        /*foreach($cpls_spl as $cpl_spl)
         {
             if($cpl_spl->screen_id == $screen->id)
             {
@@ -202,7 +230,7 @@ class ScheduleContoller extends Controller
                 {
                     if($cpl_spl->playable != 1 )
                     {
-                        array_push($unplayable_cpls,array("uuid" => $cpl_spl->uuid, "contentTitleText" => $cpl_spl->contentTitleText, "playable" => $cpl_spl->playable) ) ;
+
                     }
                 }
                 else
@@ -210,8 +238,7 @@ class ScheduleContoller extends Controller
                     array_push($missing_cpls,array("uuid" => $cpl_spl->uuid, "contentTitleText" => $cpl_spl->contentTitleText, "playable" => $cpl_spl->playable) ) ;
                 }
             }
-
-        }
+        }*/
 
         return Response()->json(compact('missing_cpls','unplayable_cpls'));
 

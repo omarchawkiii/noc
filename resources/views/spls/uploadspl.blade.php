@@ -112,6 +112,34 @@
 
                         </div>
                     </main>
+
+                    <div class="row mt-3 preview-list multiplex">
+                        <div class="col-12">
+                            <h5>KDM Uploaded from NOC</h5>
+                            <div class="table-responsive">
+                                <table id="kdm-listing" class="table text-center">
+                                    <thead>
+                                        <tr>
+                                            <th class="sorting sorting_asc">Screen </th>
+
+                                            <th class="sorting">Content Name </th>
+                                            <th class="sorting">Begin Validity </th>
+                                            <th class="sorting">End Validity </th>
+                                            <th class="sorting">CPL</th>
+
+                                            <th class="sorting ">Device Target</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
               </div>
@@ -293,6 +321,7 @@
                             swal.close();
                             $('#upload_spl_form').trigger("reset");
                             showSwal('success-message');
+                            load_splnoc();
                         } else {
                             swal.close();
                             showSwal('warning-message-and-cancel')
@@ -339,6 +368,7 @@
                             swal.close();
                             $('#upload_kdm_form').trigger("reset");
                             showSwal('success-message');
+                            load_kdmnoc();
                         } else {
                             swal.close();
                             showSwal('warning-message-and-cancel')
@@ -353,9 +383,21 @@
                 })
             });
 
+            function dhm (ms)
+            {
+                const days = Math.floor(ms / (24*60*60*1000));
+                const daysms = ms % (24*60*60*1000);
+                const hours = Math.floor(daysms / (60*60*1000));
+                const hoursms = ms % (60*60*1000);
+                const minutes = Math.floor(hoursms / (60*1000));
+                const minutesms = ms % (60*1000);
+                const sec = Math.floor(minutesms / 1000);
+                return days + "D " + hours + "H " + minutes + "M " + sec  + "S ";
+            }
 
 
-           function load_splnoc(){
+           function load_splnoc()
+           {
 
                 $("#location-listing").dataTable().fnDestroy();
                 var loader_content  =
@@ -428,7 +470,107 @@
                 })
 
             }
+
+
             load_splnoc()
+            function load_kdmnoc()
+            {
+
+                    $("#kdm-listing").dataTable().fnDestroy();
+                    var loader_content  =
+                    '<div class="jumping-dots-loader">'
+                        +'<span></span>'
+                        +'<span></span>'
+                        +'<span></span>'
+                        +'</div>'
+                    $('#kdm-listing tbody').html(loader_content)
+
+
+
+
+                    var url = "{{  url('') }}"+ '/get_nockdm/' ;
+                    var result =" " ;
+
+                    $.ajax({
+                        url: url,
+                        method: 'GET',
+                        success:function(response)
+                        {
+
+                            console.log(response)
+                            $.each(response.nockdms, function( index, value ) {
+                                index++ ;
+
+                                /*if(value.content_present == 'yes'  || true ){
+                                    content_present = '<i class= "mdi mdi-check-circle-outline text-white" > </i>'
+                                }else{
+                                    content_present = '<i class= "mdi mdi-checkbox-blank-circle-outline text-white" > </i>'
+                                }
+                                if(value.kdm_installed == 'yes' ){
+                                    kdm_installed = '<i class= "mdi mdi-check-circle-outline text-white" > </i>'
+                                }else{
+                                    kdm_installed = '<i class= "mdi mdi-checkbox-blank-circle-outline text-white" > </i>'
+                                }*/
+
+                                const date1 = new Date();
+                                const date2 = new Date(value.ContentKeysNotValidAfter);
+                                let diffTime = Math.abs(date2 - date1);
+
+                                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                                var background_difftime=""
+
+                                if(diffTime/100/60/60 > 48 )
+                                {
+                                    background_difftime = "bg-success"
+                                }
+                                if(diffTime/100/60/60 < 48  && diffTime/100/60/60 > 0 )
+                                {
+                                    background_difftime = "bg-warning"
+                                }
+                                if(diffTime/100/60/60 <= 0 )
+                                {
+                                    background_difftime = "bg-danger"
+                                }
+
+
+                                result = result
+                                    +'<tr class="odd">'
+                                        +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.screen.screen_name+' </td>'
+                                        +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
+                                        +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidBefore+'</a></td>'
+                                        +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidAfter+'</a></td>'
+                                        //+'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ content_present+'</a></td>'
+                                        //+'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ kdm_installed+'</a></td>'
+                                        +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ dhm (diffTime)+'</a></td>'
+                                        +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> - </a></td>'
+                                    +'</tr>';
+                            });
+                            $('#kdm-listing tbody').html(result)
+
+                            console.log(response.nockdms)
+                            /***** refresh datatable **** **/
+
+                            var spl_datatable = $('#kdm-listing').DataTable({
+                                "iDisplayLength": 10,
+                                destroy: true,
+                                "bDestroy": true,
+                                "language": {
+                                    search: "_INPUT_",
+                                    searchPlaceholder: "Search..."
+                                }
+                            });
+
+                        },
+                        error: function(response) {
+
+                        }
+                    })
+
+            }
+
+            load_kdmnoc()
+
 
 
         })(jQuery);

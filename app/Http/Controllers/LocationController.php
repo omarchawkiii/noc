@@ -359,6 +359,7 @@ class LocationController extends Controller
             {
                 foreach($content as $screen)
                 {
+
                     $new_screen = Screen::updateOrCreate([
                         'screen_number' => $screen["screen_number"],
                         'location_id' => $location->id
@@ -398,6 +399,7 @@ class LocationController extends Controller
                         "dolby_audio_processor_dnQualifier"  => $screen["dolby_audio_processor_dnQualifier"],
                         'location_id' => $location->id,
                     ]);
+
 
                     foreach($screen['powers'] as $power)
                     {
@@ -499,9 +501,6 @@ class LocationController extends Controller
     }
 
 
-
-
-
     public function sync_spl_cpl( $location )
     {
         $spls = Spl::all() ;
@@ -533,6 +532,7 @@ class LocationController extends Controller
                             }
                             else
                             {
+
                                 echo "CPLs dont existe " .  $cpl_content['CompositionPlaylistId'] . "<br />" ;
                             }
                         }

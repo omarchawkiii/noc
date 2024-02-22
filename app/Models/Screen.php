@@ -47,6 +47,11 @@ class Screen extends Model
         "automation_password" ,
         "enable_power_control" ,
         'location_id',
+
+        'serial_number',
+        'jp2k_dnQualifier',
+        'jp2k_cn',
+        'dolby_audio_processor_dnQualifier',
     ];
 
     /**

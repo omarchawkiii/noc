@@ -45,4 +45,9 @@ class Schedule extends Model
         return $this->belongsTo(Spl::class);
     }
 
+    public function location(): BelongsTo
+    {
+        return $this->belongsTo(Location::class);
+    }
+
 }
