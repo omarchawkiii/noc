@@ -43,6 +43,11 @@ class Location extends Model
         'language',
         'latitude',
         'longitude',
+        'serial_number',
+        'jp2k_dnQualifier',
+        'jp2k_cn',
+        'dolby_audio_processor_dnQualifier',
+
     ];
 
     /**

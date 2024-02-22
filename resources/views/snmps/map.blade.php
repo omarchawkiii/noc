@@ -55,7 +55,7 @@
             </div>
 
             <div class="row mt-3">
-                <div class="col-sm-4 grid-margin">
+                <div class="col-sm-3 grid-margin">
                     <div class="card">
                         <div class="card-body">
 
@@ -74,8 +74,27 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-sm-3 grid-margin">
+                    <div class="card">
+                        <div class="card-body">
 
-                <div class="col-sm-4 grid-margin">
+                            <div class="row bg-info bg-gradient">
+                                <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
+                                    <i class="icon-lg mdi mdi-stop-circle-outline   ml-auto"></i>
+                                </div>
+                                <div class="col-8 col-sm-12 col-xl-8 my-auto">
+                                    <div class="d-flex d-sm-block d-md-flex align-items-center">
+                                        <h3 class="mb-0" id="pause_screen" ></h3>
+                                    </div>
+                                    <h6 class="font-weight-normal">Currently Pause</h6>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-3 grid-margin">
                     <div class="card">
                         <div class="card-body">
 
@@ -94,13 +113,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-4 grid-margin">
+
+                <div class="col-sm-3 grid-margin">
                     <div class="card">
                         <div class="card-body">
 
                             <div class="row bg-danger bg-gradient">
                                 <div class="col-4 col-sm-12 col-xl-4 text-center text-xl-right">
-                                    <i class="icon-lg mdi mdi-stop-circle-outline ml-auto"></i>
+                                    <i class="icon-lg mdi  mdi-wifi-off ml-auto"></i>
                                 </div>
                                 <div class="col-8 col-sm-12 col-xl-8 my-auto">
                                     <div class="d-flex d-sm-block d-md-flex align-items-center">
@@ -126,11 +146,11 @@
                         <thead>
                             <tr>
                                 <th class="sorting sorting_asc text-center">Location</th>
-                                <th class="sorting text-center"><i class="icon-md mdi mdi-key-variant  ml-auto"></i></th>
-                                <th class="sorting text-center"><i class="icon-md mdi mdi-chart-pie  ml-auto"></i></th>
-                                <th class="sorting text-center"><i class="icon-md mdi mdi-monitor  ml-auto"></i></th>
-                                <th class="sorting text-center"><i class="icon-md mdi mdi-camera-rear  ml-auto"></i></th>
-                                <th class="sorting text-center"><i class="icon-md mdi mdi-volume-high ml-auto"></i></th>
+                                <th class="sorting text-center" data-bs-toggle="tooltip" data-placement="right" title="" data-bs-original-title="Missing kdm"><i class="icon-md mdi mdi-key-variant  ml-auto"></i></th>
+                                <th class="sorting text-center" data-bs-toggle="tooltip" data-placement="right" title="" data-bs-original-title="Diskusage"><i class="icon-md mdi mdi-chart-pie  ml-auto"></i></th>
+                                <th class="sorting text-center" data-bs-toggle="tooltip" data-placement="right" title="" data-bs-original-title="Missing cpl"><i class="icon-md mdi mdi-monitor  ml-auto"></i></th>
+                                <th class="sorting text-center" data-bs-toggle="tooltip" data-placement="right" title="" data-bs-original-title="Security Manager Status"><i class="icon-md mdi mdi-camera-rear  ml-auto"></i></th>
+                                <th class="sorting text-center" data-bs-toggle="tooltip" data-placement="right" title="" data-bs-original-title="Playback Generale Status"><i class="icon-md mdi mdi-volume-high ml-auto"></i></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -236,6 +256,8 @@
                         $('#idle_screen').html(response.idle_screen) ;
                         $('#offline_screen').html(response.offline_screen) ;
                         $('#playing_screen').html(response.playing_screen) ;
+                        $('#pause_screen').html(response.pause_screen) ;
+
                     }
                     //   var data = JSON.parse(response.locations);
                     //   addMarkers(data); // Call function to add markers to the map

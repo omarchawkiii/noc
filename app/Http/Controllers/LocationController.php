@@ -25,7 +25,6 @@ class LocationController extends Controller
     public function index(Request $request): View
     {
         $locations = Location::all();
-
        // broadcast(new changeDataEvent($location))->toOthers() ;
         return view('locations.index', compact('locations'));
     }
@@ -393,6 +392,10 @@ class LocationController extends Controller
                         "automation_username"  => $screen["automation_username"],
                         "automation_password"  => $screen["automation_password"],
                         "enable_power_control"  => $screen["enable_power_control"],
+                        "serial_number"  => $screen["serial_number"],
+                        "jp2k_dnQualifier"  => $screen["jp2k_dnQualifier"],
+                        "jp2k_cn"  => $screen["jp2k_cn"],
+                        "dolby_audio_processor_dnQualifier"  => $screen["dolby_audio_processor_dnQualifier"],
                         'location_id' => $location->id,
                     ]);
 

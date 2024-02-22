@@ -27,8 +27,6 @@
                             <thead>
                                 <tr>
                                     <th class="sorting sorting_asc">Location</th>
-
-
                                     <th class="sorting">1</th>
                                     <th class="sorting">2</th>
                                     <th class="sorting">3</th>
@@ -44,7 +42,6 @@
                                     <th class="sorting">13</th>
                                     <th class="sorting">14</th>
                                     <th class="sorting">15</th>
-
                                 </tr>
                             </thead>
                             <tbody>
@@ -56,22 +53,22 @@
                                             @foreach ( $location->playbacks as  $playback)
                                                 <td class="sorting_1">
                                                     @if ($playback->playback_status == 'Pause' )
-                                                        <div class="icon icon-box-warning " style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="{{$playback->playback_status}}">
+                                                        <div class="icon icon-box-warning  playback_icon" style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="{{$playback->playback_status}}" data-id="{{ $playback->id }}">
                                                             <span class="mdi mdi-play-pause "></span>
                                                         </div>
                                                     @endif
                                                     @if ($playback->playback_status == 'Stop')
-                                                        <div class="icon icon-box-danger " style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="{{$playback->playback_status}}">
+                                                        <div class="icon icon-box-danger playback_icon " style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="{{$playback->playback_status}}" data-id="{{ $playback->id }}">
                                                             <span class="mdi mdi-stop  "></span>
                                                         </div>
                                                     @endif
                                                     @if ($playback->playback_status == 'Unknown' )
-                                                        <div class="icon icon-box-warning " style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="{{$playback->playback_status}}">
+                                                        <div class="icon icon-box-warning  playback_icon" style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="{{$playback->playback_status}}" data-id="{{ $playback->id }}">
                                                             <span class="mdi mdi-comment-question-outline  "></span>
                                                         </div>
                                                     @endif
                                                     @if ($playback->playback_status == 'Play')
-                                                        <div class="icon icon-box-success " style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="{{$playback->playback_status}}">
+                                                        <div class="icon icon-box-success playback_icon" style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="{{$playback->playback_status}}" data-id="{{ $playback->id }}">
                                                             <span class="mdi mdi-play "></span>
                                                         </div>
                                                     @endif
@@ -170,6 +167,17 @@
     <div class=" modal fade " id="infos_modal" tabindex="-1" role="dialog"  aria-labelledby="delete_client_modalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered  modal-xl">
             <div class="modal-content border-0">
+                <div class="modal-header">
+                    <h4>title </h4>
+                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true"
+                            style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
+                </div>
+                <div class="modal-body  p-4">
+
+
+                </div>
+
 
             </div>
         <!--end modal-content-->
@@ -255,7 +263,7 @@
   });
 })(jQuery);
 
-    $(document).on('click', '.info', function () {
+    $(document).on('click', '.playback_icon', function () {
         var loader_content  =
             '<div class="jumping-dots-loader">'
                 +'<span></span>'
@@ -263,219 +271,40 @@
                 +'<span></span>'
                 +'</div>'
         $('#infos_modal .modal-body').html(loader_content)
-        location_id = $(this).attr("id") ;
-        var url = "{{  url('') }}"+  "location_infos/"+location_id ;
+        $('#infos_modal').modal('show')
+        var id = this.getAttribute("data-id")
+        var data ;
         $.ajax({
-                url: url,
-                method: 'GET',
-                success:function(response)
-                {
-                    console.log(response.location) ;
-
-                        result =
-                        '<div class="modal-header p-4 pb-0">'
-                            +'<h3><i class="mdi mdi-home align-self-center me-3"></i> Location : '+ response.location.name +'</h3>'
-                            +'<button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"></button>'
-                        +'</div>'
-                        +'<div class="modal-body text-center p-4">'
-                        +'<div class="row">'
-                            +'<div class="col-md-3">'
-                                +'<div class="card rounded border mb-2">'
-                                    +'<div class="card-body p-3">'
-                                        +'<div class="media  justify-content-start">'
-                                            +'<div class="media-body d-flex align-items-center">'
-                                                +'<i class="mdi mdi-login-variant icon-sm align-self-center me-3"></i>'
-                                                +'<h6 class="mb-1">Session :  </h6>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted m-1">   </p>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted"> '+ response.diskusage.session + ' </p>'
-                                            +'</div>'
-                                        +'</div>'
-                                    +'</div>'
-                                +'</div>'
-                            +'</div>'
-                            +'<div class="col-md-3">'
-                                +'<div class="card rounded border mb-2">'
-                                    +'<div class="card-body p-3">'
-                                        +'<div class="media  d-flex justify-content-start">'
-                                            +'<div class="media-body d-flex align-items-center">'
-                                                +'<i class="mdi mdi-format-indent-decrease icon-sm align-self-center me-3"></i>'
-                                                +'<h6 class="mb-1">type : </h6>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted m-1">   </p>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted"> '+ response.diskusage.type + ' </p>'
-                                            +'</div>'
-                                        +'</div>'
-                                    +'</div>'
-                                +'</div>'
-                            +'</div>'
-
-                            +'<div class="col-md-3">'
-                                +'<div class="card rounded border mb-2">'
-                                    +'<div class="card-body p-3">'
-                                        +'<div class="media  d-flex justify-content-start mr-5">'
-                                            +'<div class="media-body d-flex align-items-center">'
-                                                +'<i class="mdi mdi-harddisk icon-sm align-self-center me-3"></i>'
-                                                +'<h6 class="mb-1">Total Space  : </h6>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted m-1">   </p>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted"> '+ response.diskusage.totalSpaceFormatted+ '   </p>'
-                                            +'</div>'
-                                        +'</div>'
-                                    +'</div>'
-                                +'</div>'
-                            +'</div>'
-
-                            +'<div class="col-md-3">'
-                                +'<div class="card rounded border mb-2">'
-                                    +'<div class="card-body p-3">'
-                                        +'<div class="media  d-flex justify-content-start mr-5">'
-                                            +'<div class="media-body d-flex align-items-center">'
-                                                +'<i class="mdi mdi-harddisk icon-sm align-self-center me-3"></i>'
-                                                +'<h6 class="mb-1">Total Space Used: </h6>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted m-1">   </p>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted"> '+ response.diskusage.usedSpaceFormatted+ '   </p>'
-                                            +'</div>'
-                                        +'</div>'
-                                    +'</div>'
-                                +'</div>'
-                            +'</div>'
-
-                            +'<div class="col-md-3">'
-                                +'<div class="card rounded border mb-2">'
-                                    +'<div class="card-body p-3">'
-                                        +'<div class="media  d-flex justify-content-start mr-5">'
-                                            +'<div class="media-body d-flex align-items-center">'
-                                                +'<i class="mdi mdi-playlist-check icon-sm align-self-center me-3"></i>'
-                                                +'<h6 class="mb-1">cpls Complete : </h6>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted m-1">   </p>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted"> '+ response.diskusage.cpls_complete+ '   </p>'
-                                            +'</div>'
-                                        +'</div>'
-                                    +'</div>'
-                                +'</div>'
-                            +'</div>'
-
-                            +'<div class="col-md-3">'
-                                +'<div class="card rounded border mb-2">'
-                                    +'<div class="card-body p-3">'
-                                        +'<div class="media  d-flex justify-content-start mr-5">'
-                                            +'<div class="media-body d-flex align-items-center">'
-                                                +'<i class="mdi mdi-playlist-remove icon-sm align-self-center me-3"></i>'
-                                                +'<h6 class="mb-1">Cpls Incomplete : </h6>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted m-1">   </p>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted"> '+ response.diskusage.cpls_incomplete+ '   </p>'
-                                            +'</div>'
-                                        +'</div>'
-                                    +'</div>'
-                                +'</div>'
-                            +'</div>'
-
-                            +'<div class="col-md-3">'
-                                +'<div class="card rounded border mb-2">'
-                                    +'<div class="card-body p-3">'
-                                        +'<div class="media  d-flex justify-content-start mr-5">'
-                                            +'<div class="media-body d-flex align-items-center">'
-                                                +'<i class="mdi mdi-key-remove icon-sm align-self-center me-3"></i>'
-                                                +'<h6 class="mb-1">Kdms Expired : </h6>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted m-1">   </p>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted"> '+ response.diskusage.Kdms_expired+ '   </p>'
-                                            +'</div>'
-                                        +'</div>'
-                                    +'</div>'
-                                +'</div>'
-                            +'</div>'
-
-                            +'<div class="col-md-3">'
-                                +'<div class="card rounded border mb-2">'
-                                    +'<div class="card-body p-3">'
-                                        +'<div class="media  d-flex justify-content-start mr-5">'
-                                            +'<div class="media-body d-flex align-items-center">'
-                                                +'<i class="mdi mdi-key-remove icon-sm align-self-center me-3"></i>'
-                                                +'<h6 class="mb-1">Kdms Not Valid : </h6>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted m-1">   </p>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted"> '+ response.diskusage.Kdms_not_valid+ '   </p>'
-                                            +'</div>'
-                                        +'</div>'
-                                    +'</div>'
-                                +'</div>'
-                            +'</div>'
-                            +'<div class="col-md-3">'
-                                +'<div class="card rounded border mb-2">'
-                                    +'<div class="card-body p-3">'
-                                        +'<div class="media  d-flex justify-content-start mr-5">'
-                                            +'<div class="media-body d-flex align-items-center">'
-                                                +'<i class="mdi mdi-key icon-sm align-self-center me-3"></i>'
-                                                +'<h6 class="mb-1">Kdms Valid : </h6>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted m-1">   </p>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted"> '+ response.diskusage.Kdms_valid+ '   </p>'
-                                            +'</div>'
-                                        +'</div>'
-                                    +'</div>'
-                                +'</div>'
-                            +'</div>'
-                            +'<div class="col-md-3">'
-                                +'<div class="card rounded border mb-2">'
-                                    +'<div class="card-body p-3">'
-                                        +'<div class="media  d-flex justify-content-start mr-5">'
-                                            +'<div class="media-body d-flex align-items-center">'
-                                                +'<i class="mdi mdi-playlist-play icon-sm align-self-center me-3"></i>'
-                                                +'<h6 class="mb-1">Spls Count : </h6>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted m-1">   </p>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted"> '+ response.diskusage.splCount+ '   </p>'
-                                            +'</div>'
-                                        +'</div>'
-                                    +'</div>'
-                                +'</div>'
-                            +'</div>'
-
-                        +'</div>'
-                        +'</div>'
-
-                    $('#infos_modal .modal-content ').html(result)
-
+                url:"{{  url('') }}"+ "/get_playbak_detail",
+                type: 'get',
+                //cache: false,
+                data: {
+                    id: id,
                 },
-                error: function(response) {
+                success: function(response) {
 
-                }
-        })
+                    $('#infos_modal .modal-header h4').html("Playback : " + response.playback.serverName)
+                 //   $('#infos_modal .modal-body').html("Playback :" + response.playback.serverName)
+                    data = '<p> <i class="align-middle icon-md mdi mdi-playlist-play"> </i> <span> Curent SPL :</span> '+response.playback.spl_title+' </p> '
+                    +'<p> <i class="align-middle icon-md mdi mdi-play-circle"> </i> <span>  Curent CPL : </span>'+response.playback.cpl_title+' </p> '
+                    +'<p> <i class="align-middle icon-md mdi mdi-timer"> </i> <span>  Time : </span> '+response.playback.elapsed_runtime+' / '+response.playback.remaining_runtime+' </p> '
+                    +'<p> <i class="align-middle icon-md mdi mdi-assistant"> </i> <span>  playback generale status is :  </span>'+response.playback.storage_generale_status+'</p>'
+                    +'<p> <i class="align-middle icon-md mdi mdi-security"> </i> <span>  Security Manager status is :  </span>'+response.playback.securityManager+'</p>'
+
+                    $('#infos_modal .modal-body').html(data) ;
+
+
+                    console.log(response)
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                },
+                complete: function(jqXHR, textStatus) {}
+            });
+
+
+
+
 
     });
 </script>
@@ -487,4 +316,15 @@
 <link rel="stylesheet" href="{{asset('/assets/vendors/datatables.net-bs4/dataTables.bootstrap4.css')}}">
 <link rel="stylesheet" href="{{asset('/assets/vendors/jquery-toast-plugin/jquery.toast.min.css')}}">
 
+<style>
+    #infos_modal .modal-body p
+    {
+        font-size: 18px ;
+
+    }
+    #infos_modal .modal-body p
+    {
+        margin-bottom: 8px ;
+    }
+    </style>
 @endsection

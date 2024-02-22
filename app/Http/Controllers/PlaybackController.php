@@ -79,4 +79,11 @@ class PlaybackController extends Controller
         $locations = Location::all();
         return view('playbacks.index', compact('locations'));
     }
+
+    public function get_playbak_detail(Request $request)
+    {
+        $playback = Playback::find($request->id) ;
+        return Response()->json(compact('playback'));
+
+    }
 }

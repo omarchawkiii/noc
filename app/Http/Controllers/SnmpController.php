@@ -94,6 +94,7 @@ class SnmpController extends Controller
         $playing_screen =  0;
         $offline_screen =  0;
         $idle_screen =  0;
+        $pause_screen =  0;
         foreach($locations as $location )
         {
             $infos ="" ;
@@ -130,6 +131,10 @@ class SnmpController extends Controller
                 {
                     $playing_screen ++ ;
                 }
+                if ($playback->playback_status == 'Pause')
+                {
+                    $pause_screen ++ ;
+                }
 
                 if($playback->storage_generale_status != 'Normal' )
                 {
@@ -151,7 +156,6 @@ class SnmpController extends Controller
 
             foreach($schedules as $schedule)
             {
-
                 if($schedule->status != 'linked')
                 {
                     $schedules_error = true ;
@@ -169,7 +173,6 @@ class SnmpController extends Controller
                     $missing_cpls = true ;
                     $infos .=  " <p class='m-2'> Missing CPLs </p> " ;
                 }
-
 
                 if($schedule->kdm != 1)
                 {
@@ -254,7 +257,7 @@ class SnmpController extends Controller
             {
                 $data_count = $data_location;
                 $data_location = $data_states ;
-                return Response()->json(compact('data_location','data_count','locations','idle_screen','offline_screen','playing_screen'));
+                return Response()->json(compact('data_location','data_count','locations','idle_screen','offline_screen','playing_screen','pause_screen'));
             }
             else
             {

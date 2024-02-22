@@ -91,6 +91,10 @@ Route::get('error_map', [App\Http\Controllers\SnmpController::class , 'get_snmp_
 Route::get('getplayback/{location}', [App\Http\Controllers\PlaybackController::class , 'getplayback'])->name('playback.getplayback');
 Route::get('playback', [App\Http\Controllers\PlaybackController::class , 'index'])->name('playback.index');
 
+Route::get('get_playbak_detail', [App\Http\Controllers\PlaybackController::class , 'get_playbak_detail'])->name('playback.get_playbak_detail');
+
+
+
 Route::get('getMacros/{location}', [App\Http\Controllers\MacroController::class , 'getMacros'])->name('macros.getMacros');
 
 Route::post('createlocalspl', [App\Http\Controllers\NocsplController::class , 'createlocalspl'])->name('nocspl.createlocalspl');
@@ -109,3 +113,6 @@ Route::get('get_spl_and_movies/{location}', [App\Http\Controllers\MoviescodContr
 Route::post('add_movies_to_spls', [App\Http\Controllers\MoviescodController::class , 'add_movies_to_spls'])->name('moviescod.MoviescodController');
 Route::get('get_spl_and_movies_linked/{location}', [App\Http\Controllers\MoviescodController::class , 'get_spl_and_movies_linked'])->name('moviescod.get_spl_and_movies_linked');
 Route::post('unlink_spl_movie', [App\Http\Controllers\MoviescodController::class , 'unlink_spl_movie'])->name('moviescod.unlink_spl_movie');
+
+
+Route::post('uploadlocalkdm', [App\Http\Controllers\NockdmController::class , 'uploadlocalkdm'])->name('nockdm.uploadlocalkdm');
