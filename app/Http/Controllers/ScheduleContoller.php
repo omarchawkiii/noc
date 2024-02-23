@@ -214,7 +214,7 @@ class ScheduleContoller extends Controller
 
                         if($cpl == null )
                         {
-                            array_push($unplayable_cpls,array("uuid" => $cpl_content['CompositionPlaylistId'], "contentTitleText" => $cpl_content['AnnotationText'] , "playable" => 1) ) ;
+                            array_push($missing_cpls,array("uuid" => $cpl_content['CompositionPlaylistId'], "contentTitleText" => $cpl_content['AnnotationText'] , "playable" => 1) ) ;
                         }
                     }
                 }

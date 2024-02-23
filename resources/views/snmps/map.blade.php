@@ -4,11 +4,11 @@
 @endsection
 @section('content')
     <div class="page-header playbck-shadow">
-        <h3 class="page-title">Errors </h3>
+        <h3 class="page-title">Dashboard </h3>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Errors</li>
+                <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
             </ol>
         </nav>
     </div>
@@ -18,7 +18,7 @@
             <div class="row" id="map-container">
                 <div class="d-flex flex-row justify-content-between mt-2 mb-3">
                     <div>
-                        <h4 class="card-title ">Errors</h4>
+                        <h4 class="card-title ">Dashboard</h4>
                     </div>
                     <button type="button" class="btn btn-icon btn-topbar btn-ghost-primary rounded-circle"
                         onclick="$('#map-container').toggleFullScreen(true)">

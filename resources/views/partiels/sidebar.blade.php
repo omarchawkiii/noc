@@ -7,7 +7,7 @@
         <li class="nav-item menu-items">
             <a class="nav-link" href="{{ route('snmp.get_snmp_with_map') }}">
                 <span class="menu-icon icon-box-danger">
-                <i class="mdi mdi-alert "></i>
+                <i class="mdi mdi-speedometer"></i>
                 </span>
                 <span class="menu-title"> Dashboard</span>
             </a>
@@ -15,7 +15,7 @@
       <li class="nav-item menu-items">
         <a class="nav-link" href="{{ route('location.index') }}">
           <span class="menu-icon icon-box-danger">
-            <i class="mdi mdi-speedometer"></i>
+            <i class="mdi mdi-map-marker"></i>
           </span>
           <span class="menu-title">Locations</span>
         </a>
