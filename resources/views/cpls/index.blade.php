@@ -620,7 +620,7 @@ function formatSize(sizeInBytes) {
                    result = result
                                    +'<tr>'
                                         +'<th>'+value.uuid_spl+'</th>'
-                                        +'<th>'+value.AnnotationText+'</th>'
+                                        +'<th>'+value.spl.name+'</th>'
 
 
                                    +'</tr>'

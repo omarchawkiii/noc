@@ -95,8 +95,6 @@ class CplController extends Controller
                                     $cpl->delete() ;
                                 }
                             }
-
-                        //dd('we should delete screens ') ;
                     }
                 }
             }
@@ -206,7 +204,7 @@ class CplController extends Controller
 
         //$spls = $cpl->spls ;
         //dd($cpl->uuid) ;
-        $spls = splcomponents::where('CompositionPlaylistId',$cpl->uuid)->where('location_id',$cpl->location_id)->get() ;
+        $spls = splcomponents::with('spl')->where('CompositionPlaylistId',$cpl->uuid)->where('location_id',$cpl->location_id)->get() ;
 
         //dd($cpl);
         $kdms = $cpl->kdms ;
