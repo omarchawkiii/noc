@@ -1544,48 +1544,32 @@
                         {
                             icon_spl = '<i class="mdi mdi-playlist-play text-danger"> </i>'
                             statu_content = '<spn class="text-danger" >Unlinked  </span>'
+                            icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
+                            icon_cpl = '<i class="mdi mdi-filmstrip text-warning ">'
                         }
                         else
                         {
-                            icon_spl =  '<i class="mdi mdi-playlist-play text-success"> </i>'
                             statu_content = '<spn class="text-success" > Linled</span>'
-                        }
-
-                        if(value.cpls ==1)
-                        {
-                            icon_cpl = '<i class="mdi mdi-filmstrip text-success">'
-                        }
-                        else
-                        {
-                            if(value.status !="linked" )
+                            icon_spl =  '<i class="mdi mdi-playlist-play text-success"> </i>'
+                            if(value.cpls ==1)
                             {
-                                icon_cpl = '<i class="mdi mdi-filmstrip text-warning ">'
+                                icon_cpl = '<i class="mdi mdi-filmstrip text-success">'
+                                if(value.kdm  ==1 )
+                                {
+                                    icon_kdm = '</i> <i class="mdi mdi-key-change text-success"> </i>'
+                                }
+                                else
+                                {
+                                    icon_kdm = '</i> <i class="mdi mdi-key-remove text-danger check_need_kdm" data-scheduleidd = "'+value.id+'"> </i>'
+                                }
+
                             }
                             else
                             {
+                                icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
                                 icon_cpl = '<i class="mdi mdi-filmstrip text-danger   spl_not_linked" data-scheduleidd = "'+value.id+'">'
                             }
-                            //icon_cpl = '<i class="mdi mdi-filmstrip text-warning">'
                         }
-
-                        if(value.kdm  ==1 )
-                        {
-                            icon_kdm = '</i> <i class="mdi mdi-key-change text-success"> </i>'
-                        }
-                        else
-                        {
-                            if(value.status !="linked" )
-                            {
-
-                                icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
-                            }
-                            else
-                            {
-                                icon_kdm = '</i> <i class="mdi mdi-key-remove text-danger check_need_kdm" data-scheduleidd = "'+value.id+'"> </i>'
-
-                            }
-                        }
-
                         result = result
                             +'<tr class="odd ">'
                             +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.type+' </td>'
@@ -1672,45 +1656,30 @@
                         {
                             icon_spl = '<i class="mdi mdi-playlist-play text-danger"> </i>'
                             statu_content = '<spn class="text-danger" >Unlinked  </span>'
+                            icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
+                            icon_cpl = '<i class="mdi mdi-filmstrip text-warning ">'
                         }
                         else
                         {
-                            icon_spl =  '<i class="mdi mdi-playlist-play text-success"> </i>'
                             statu_content = '<spn class="text-success" > Linled</span>'
-                        }
-
-                        if(value.cpls ==1)
-                        {
-                            icon_cpl = '<i class="mdi mdi-filmstrip text-success">'
-                        }
-                        else
-                        {
-                            if(value.status !="linked" )
+                            icon_spl =  '<i class="mdi mdi-playlist-play text-success"> </i>'
+                            if(value.cpls ==1)
                             {
-                                icon_cpl = '<i class="mdi mdi-filmstrip text-warning ">'
+                                icon_cpl = '<i class="mdi mdi-filmstrip text-success">'
+                                if(value.kdm  ==1 )
+                                {
+                                    icon_kdm = '</i> <i class="mdi mdi-key-change text-success"> </i>'
+                                }
+                                else
+                                {
+                                    icon_kdm = '</i> <i class="mdi mdi-key-remove text-danger check_need_kdm" data-scheduleidd = "'+value.id+'"> </i>'
+                                }
+
                             }
                             else
                             {
-                                icon_cpl = '<i class="mdi mdi-filmstrip text-danger   spl_not_linked" data-scheduleidd = "'+value.id+'">'
-                            }
-                            //icon_cpl = '<i class="mdi mdi-filmstrip text-warning">'
-                        }
-
-                        if(value.kdm  ==1 )
-                        {
-                            icon_kdm = '</i> <i class="mdi mdi-key-change text-success"> </i>'
-                        }
-                        else
-                        {
-                            if(value.status !="linked" )
-                            {
-
                                 icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
-                            }
-                            else
-                            {
-                                icon_kdm = '</i> <i class="mdi mdi-key-remove text-danger check_need_kdm" data-scheduleidd = "'+value.id+'"> </i>'
-
+                                icon_cpl = '<i class="mdi mdi-filmstrip text-danger   spl_not_linked" data-scheduleidd = "'+value.id+'">'
                             }
                         }
 

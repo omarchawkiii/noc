@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Lmscpl;
 use App\Models\Location;
+use App\Models\splcomponents;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -12,16 +13,11 @@ class LmscplController extends Controller
 {
     public function getlmscpls($location)
     {
-
         $location = Location::find($location) ;
-
         $url = $location->connection_ip."?request=getLmsCplList"    ;
-
         $client = new Client();
         $response = $client->request('GET', $url);
-
         $contents = json_decode($response->getBody(), true);
-
         if($contents)
         {
             foreach($contents as $content)
@@ -86,10 +82,11 @@ class LmscplController extends Controller
     public function get_lmscpl_infos($cpl )
     {
         $cpl = Lmscpl::find($cpl) ;
-        $spls = $cpl->lmsspls ;
+       // $spls = $cpl->lmsspls ;
         $kdms =null ;
-
         $schedules = null ;
+        $spls = splcomponents::where('CompositionPlaylistId',$cpl->uuid)->where('location_id',$cpl->location_id)->get() ;
+
         return Response()->json(compact('cpl','spls','kdms'));
     }
 

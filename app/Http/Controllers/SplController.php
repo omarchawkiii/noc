@@ -8,6 +8,7 @@ use App\Models\Nocspl;
 use App\Models\Schedule;
 use App\Models\Screen;
 use App\Models\Spl;
+use App\Models\splcomponents;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -76,7 +77,9 @@ class SplController extends Controller
     public function get_spl_infos($spl )
     {
         $spl = Spl::find($spl) ;
-        $cpls = $spl->cpls ;
+       // $cpls = $spl->cpls ;
+        //$cpls = $spl->splcomponents ;
+        $cpls = splcomponents::where('uuid_spl',$spl->uuid)->where('location_id',$spl->location_id)->get() ;
       //  $schedules =  $spl->schedules ;
         $schedules =Schedule::with('screen')->where('spl_id',$spl->id)->get();
         return Response()->json(compact('spl','cpls','schedules'));
@@ -139,10 +142,6 @@ class SplController extends Controller
 
     public function upload_spl()
     {
-
-
         return view('spls.uploadspl');
     }
-
-
 }

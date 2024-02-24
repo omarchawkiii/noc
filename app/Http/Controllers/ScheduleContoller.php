@@ -8,6 +8,7 @@ use App\Models\Location;
 use App\Models\Schedule;
 use App\Models\Screen;
 use App\Models\Spl;
+use App\Models\splcomponents;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
@@ -120,7 +121,6 @@ class ScheduleContoller extends Controller
 
 
     }
-
     public function get_schedules_with_filter(Request $request )
     {
         $location = $request->location;
@@ -187,22 +187,47 @@ class ScheduleContoller extends Controller
         $screen = $schedule->screen ;
         //dd($schedule, $schedule->uuid_spl ,$schedule->location_id,$schedule->screen_id) ;
         $spl = Spl::where('uuid',$schedule->uuid_spl)->where('screen_id',$schedule->screen_id)->where('location_id',$schedule->location_id)->first() ;
+        $cpls_from_splcomponent = splcomponents::where('uuid_spl',$spl->uuid)->where('location_id',$spl->location_id)->get() ;
 
-        $cpls_spl = $spl->cpls;
+
+        //$cpls_spl = $spl->cpls;
 
         $cpls_screen= $screen->cpls ;
 
         $missing_cpls = array();
         $unplayable_cpls = array();
-        $location = $schedule->location ;
-        $url = $location->connection_ip."?request=getCplsBySpl&spl_uuid=".$spl->uuid;
+        //$location = $schedule->location ;
+        //dd($cpls_screen) ;
+
+        foreach($cpls_from_splcomponent as $cpl_from_splcomponent)
+        {
+                $cpl = Cpl::where('uuid',$cpl_from_splcomponent->CompositionPlaylistId)->where('location_id',$schedule->location_id)->first() ;
+
+                if($cpl == null)
+                {
+                    array_push($missing_cpls,array("uuid" => $cpl_from_splcomponent->CompositionPlaylistId, "contentTitleText" => $cpl_from_splcomponent->AnnotationText, "playable" => 1) ) ;
+
+                }
+                else
+                {
+                    if($cpl->playable != 1)
+                    {
+                        array_push($unplayable_cpls,array("uuid" => $cpl->uuid, "contentTitleText" => $cpl->contentTitleText, "playable" => $cpl->playable) ) ;
+                    }
+                }
+
+        }
+
+
+
+        /*$url = $location->connection_ip."?request=getCplsBySpl&spl_uuid=".$spl->uuid;
 
 
         $client = new Client();
         $response = $client->request('GET', $url);
         $contents = json_decode($response->getBody(), true);
         //$spl->cpls()->detach() ;
-        if($contents)
+        /*if($contents)
         {
             foreach($contents as $content)
             {
@@ -220,25 +245,8 @@ class ScheduleContoller extends Controller
                 }
             }
         }
+*/
 
-
-        /*foreach($cpls_spl as $cpl_spl)
-        {
-            if($cpl_spl->screen_id == $screen->id)
-            {
-                if($cpls_screen->contains($cpl_spl))
-                {
-                    if($cpl_spl->playable != 1 )
-                    {
-
-                    }
-                }
-                else
-                {
-                    array_push($missing_cpls,array("uuid" => $cpl_spl->uuid, "contentTitleText" => $cpl_spl->contentTitleText, "playable" => $cpl_spl->playable) ) ;
-                }
-            }
-        }*/
 
         return Response()->json(compact('missing_cpls','unplayable_cpls'));
 
@@ -270,6 +278,5 @@ class ScheduleContoller extends Controller
         return Response()->json(compact('missing_kdms'));
 
     }
-
 
 }

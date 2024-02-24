@@ -671,7 +671,7 @@
                 method: 'GET',
                 success:function(response)
                 {
-                    console.log(response.spl) ;
+                    console.log(response.cpls) ;
                     result =
                         '<div class="">'
                             +'<table class="table">'
@@ -688,8 +688,8 @@
 
                     result = result
                                     +'<tr>'
-                                        +'<th>'+value.uuid+'</th>'
-                                        +'<th>'+value.contentTitleText+'</th>'
+                                        +'<th>'+value.CompositionPlaylistId+'</th>'
+                                        +'<th>'+value.AnnotationText+'</th>'
 
                                     +'</tr>'
                     });

@@ -70,4 +70,9 @@ class Spl extends Model
     {
         return $this->belongsTo(Screen::class);
     }
+
+    public function splcomponents(): HasMany
+    {
+        return $this->hasMany(splcomponents::class);
+    }
 }

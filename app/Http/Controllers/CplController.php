@@ -10,6 +10,7 @@ use App\Models\Macro;
 use App\Models\Schedule;
 use App\Models\Screen;
 use App\Models\Spl;
+use App\Models\splcomponents;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -182,7 +183,6 @@ class CplController extends Controller
 
     public function get_cpl_with_filter_for_noc(Request $request )
     {
-
         $location = $request->location;
         $country = $request->country;
         $screen = $request->screen;
@@ -204,7 +204,9 @@ class CplController extends Controller
     {
         $cpl = Cpl::where('id',$cpl)->where('location_id',$location)->first() ;
 
-        $spls = $cpl->spls ;
+        //$spls = $cpl->spls ;
+        //dd($cpl->uuid) ;
+        $spls = splcomponents::where('CompositionPlaylistId',$cpl->uuid)->where('location_id',$cpl->location_id)->get() ;
 
         //dd($cpl);
         $kdms = $cpl->kdms ;

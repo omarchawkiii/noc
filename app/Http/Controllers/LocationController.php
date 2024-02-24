@@ -11,6 +11,7 @@ use App\Models\Location;
 use App\Models\Power;
 use App\Models\Screen;
 use App\Models\Spl;
+use App\Models\splcomponents;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -503,13 +504,12 @@ class LocationController extends Controller
 
     public function sync_spl_cpl( $location )
     {
-        $spls = Spl::all() ;
+        //$spls = Spl::all() ;
         $location = Location::find($location) ;
-
+        $spls = $location->spls ;
         foreach($spls as $spl)
         {
             $url = $location->connection_ip."?request=getCplsBySpl&spl_uuid=".$spl->uuid;
-
 
             $client = new Client();
             $response = $client->request('GET', $url);
@@ -517,27 +517,43 @@ class LocationController extends Controller
             //$spl->cpls()->detach() ;
             if($contents)
             {
-
                 foreach($contents as $content)
                 {
                     if($content)
                     {
                         foreach($content as $cpl_content)
                         {
-                            $cpl = Cpl::where('uuid','=',$cpl_content['CompositionPlaylistId'])->where('location_id','=',$location->id)->first() ;
+                            splcomponents::updateOrCreate([
+                                'id_splcomponent' => $cpl_content['id'],
+                                'location_id' => $location->id
+                            ],[
+                                'id_splcomponent' => $cpl_content['id'],
+                                'CompositionPlaylistId' => $cpl_content['CompositionPlaylistId'],
+                                'AnnotationText' => $cpl_content['AnnotationText'],
+                                'EditRate' => $cpl_content['EditRate'],
+                                'editRate_numerator' => $cpl_content['editRate_numerator'],
+                                'editRate_denominator' => $cpl_content['editRate_denominator'],
+                                'uuid_spl' => $cpl_content['uuid_spl'],
+                                'spl_id' => $spl->id,
+                                'location_id'     =>$location->id,
+                            ]);
 
-                            if($cpl)
-                            {
-                               $spl->cpls()->syncWithoutDetaching([$cpl->id]);
-                            }
-                            else
-                            {
-
-                                echo "CPLs dont existe " .  $cpl_content['CompositionPlaylistId'] . "<br />" ;
-                            }
                         }
                     }
                 }
+
+                if(count($contents) != $spl->splcomponents->count() )
+                {
+                    $uuid_spls = array_column($content, 'id');
+                        foreach($spl->splcomponents as $splcomponent)
+                        {
+                            if (! in_array( $splcomponent->id_splcomponent , $uuid_spls))
+                            {
+                                $splcomponent->delete() ;
+                            }
+                        }
+                }
+
             }
         }
     }

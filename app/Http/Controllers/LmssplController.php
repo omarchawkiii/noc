@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Lmsspl;
 use App\Models\Location;
+use App\Models\splcomponents;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -62,7 +63,8 @@ class LmssplController extends Controller
     public function get_lmsspl_infos($spl )
     {
         $spl = Lmsspl::find($spl) ;
-        $cpls = $spl->lmscpls ;
+        //$cpls = $spl->lmscpls ;
+        $cpls = splcomponents::where('uuid_spl',$spl->uuid)->where('location_id',$spl->location_id)->get() ;
       //  $schedules =  $spl->schedules ;
         $schedules =null ; //Schedule::with('screen')->where('spl_id',$spl->id)->get();
         return Response()->json(compact('spl','cpls','schedules'));
