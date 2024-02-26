@@ -23702,6 +23702,13 @@ footer .footer-box
 {
   box-shadow : 0px -44px 41px #F24EB1;
 }
+.performance-shadow {
+    box-shadow: 0px -44px 41px #61c4d8;
+}
+.icon-box-performance i
+{
+    color : #61c4d8 !important;
+}
 
 .breadcrumb-item a
 {

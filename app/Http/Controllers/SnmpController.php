@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cpl;
 use App\Models\Location;
 use App\Models\Schedule;
 use App\Models\Snmp;
@@ -273,6 +274,26 @@ class SnmpController extends Controller
             return view('snmps.map', compact('snmps','locations'));
         }
 
+    }
+
+    public function get_performance_log()
+    {
+        $locations = Location::all() ;
+        return view('snmps.performance_logs', compact('locations'));
+    }
+
+    public function get_screen_from_location(Request $request)
+    {
+        $location = Location::find($request->location) ;
+        $screens =$location->screens ;
+        return Response()->json(compact('screens'));
+    }
+
+    public function get_suggestion_cpls(Request $request)
+    {
+        $location = Location::find($request->location) ;
+        $cpls = Cpl::where('contentTitleText','like', "%$request->searchText%")->get() ;
+        return Response()->json(compact('cpls'));
     }
 
 }

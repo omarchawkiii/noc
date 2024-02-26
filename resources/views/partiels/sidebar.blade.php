@@ -80,6 +80,15 @@
           <span class="menu-title">Upload Playlist</span>
         </a>
       </li>
+
+      <li class="nav-item menu-items">
+        <a class="nav-link" href="{{ route('snmp.get_performance_log') }}">
+          <span class="menu-icon icon-box-performance">
+            <i class="mdi mdi-bookmark-check "></i>
+          </span>
+          <span class="menu-title">Performance Logs</span>
+        </a>
+      </li>
       <li>
         <br />
         <br /><br /><br /><br /><br /> <br /><br /><br /><br /><br />
