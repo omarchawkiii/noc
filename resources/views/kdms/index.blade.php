@@ -149,27 +149,17 @@
 
 <script>
 
-    function dhm (ms) {
-    const days = Math.floor(ms / (24*60*60*1000));
-    const daysms = ms % (24*60*60*1000);
-    const hours = Math.floor(daysms / (60*60*1000));
-    const hoursms = ms % (60*60*1000);
-    const minutes = Math.floor(hoursms / (60*1000));
-    const minutesms = ms % (60*1000);
-    const sec = Math.floor(minutesms / 1000);
-    return days + "D " + hours + "H " + minutes + "M " + sec  + "S ";
+    function dhm (ms)
+    {
+        const days = Math.floor(ms / (24*60*60*1000));
+        const daysms = ms % (24*60*60*1000);
+        const hours = Math.floor(daysms / (60*60*1000));
+        const hoursms = ms % (60*60*1000);
+        const minutes = Math.floor(hoursms / (60*1000));
+        const minutesms = ms % (60*1000);
+        const sec = Math.floor(minutesms / 1000);
+        return days + "D " + hours + "H " + minutes + "M " + sec  + "S ";
     }
-
-
-    (function($) {
-    'use strict';
-    $(function() {
-
-
-
-    });
-    })(jQuery);
-
 
 
     // filter location
@@ -271,8 +261,8 @@
                             +'<tr class="odd '+background_difftime+'">'
                                 +'<td class="text-body align-middle fw-medium text-decoration-none">'+ screen_name +' </td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidBefore+'</a></td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidAfter+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ new Date(value.ContentKeysNotValidBefore).toLocaleString() +'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ new Date(value.ContentKeysNotValidAfter).toLocaleString() +'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ content_present+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ kdm_installed+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ dhm (diffTime)+'</a></td>'
@@ -395,8 +385,8 @@
                             +'<tr class="odd '+background_difftime+'">'
                                 +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.screen.screen_name+' </td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidBefore+'</a></td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidAfter+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ new Date(value.ContentKeysNotValidBefore).toLocaleString() +'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ new Date(value.ContentKeysNotValidAfter).toLocaleString() +'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ content_present+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ kdm_installed+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ dhm (diffTime)+'</a></td>'
@@ -515,8 +505,8 @@
                             +'<tr class="odd '+background_difftime+'">'
                                 +'<td class="text-body align-middle fw-medium text-decoration-none">'+ screen_name+' </td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidBefore+'</a></td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidAfter+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ new Date(value.ContentKeysNotValidBefore).toLocaleString() +'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ new Date(value.ContentKeysNotValidAfter).toLocaleString() +'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ content_present+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ kdm_installed+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ dhm (diffTime)+'</a></td>'

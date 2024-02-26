@@ -29,12 +29,23 @@ class NockdmController extends Controller
                 $kdm_file_data ["SubjectName"] = (string)$kdm_file_content->AuthenticatedPublic->RequiredExtensions->KDMRequiredExtensions->Recipient->X509SubjectName;
                 $kdm_file_data ["SerialNumber"] = (string)$kdm_file_content->Signer->X509SerialNumber;
                 $kdm_file_data ["DeviceListDescription"] = (string)$kdm_file_content->AuthenticatedPublic->RequiredExtensions->KDMRequiredExtensions->AuthorizedDeviceInfo->DeviceListDescription;
+
+                $SubjectName=(string)$kdm_file_content->AuthenticatedPublic->RequiredExtensions->KDMRequiredExtensions->Recipient->X509SubjectName;
+                $pattern = '/\b\d{6}\b/';
+                if (preg_match($pattern, $SubjectName, $matches)) {
+                    // Extract the matched 6-digit number
+                    $serial_number = $matches[0];
+                } else {
+                    $serial_number="unknown";
+                }
+
                 $file_name = $kdm_file_data['MessageId'].".xml" ;
                 $cn_dn_table = $this->getDnCn($kdm_file_data ["SubjectName"]);
-                $screen =  $this->getScreenByDnCn( $cn_dn_table['dnQualifier'],$cn_dn_table['CN']) ;
+                $screen =  $this->getScreenByDnCn( $cn_dn_table['dnQualifier'],$cn_dn_table['CN'],$serial_number) ;
+                 dd($screen) ;
                 if($screen)
                 {
-
+                    echo "$screen->name" ;
                     $file_url = Storage::disk('local')->put( $file_name, $file_content) ;
                     $location = $screen->location ;
                     $cpl = Cpl::where('uuid','=',$kdm_file_data['CompositionPlaylistId'])->where('location_id','=',$location->id)->first() ;
@@ -46,35 +57,9 @@ class NockdmController extends Controller
                     {
                         $cpl_id =null ;
                     }
-
-
                     $xmlFilePath =    storage_path().'/app/xml_file/'.$file_name ;
-
-                    if (!file_exists($xmlFilePath))
-                    {
-                        return ['error' => 'File not found.'];
-                    }
-
-                    // Read XML content from the file
-                    $xmlData = file_get_contents($xmlFilePath);
-
-                    // Prepare the request data
-                    $requestData = [
-                        'action' => 'updateKdm',
-                        'kdm_uuid' =>$kdm_file_data ["MessageId"] ,
-                        'xmlData' => $xmlData,
-                        'username' =>$location->email,
-                        'password' =>$location->password,
-                    ];
-                    // Initialize cURL session
-                    $ch = curl_init("http://localhost/tms/system/api2.php");
-                    // Set cURL options
-                    curl_setopt($ch, CURLOPT_POST, 1);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($requestData));
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                    // Execute cURL session and get the response
-                    $response = curl_exec($ch);
-                    $response = json_decode($response) ;
+                    $apiUrl = "http://localhost/tms/system/api2.php" ;
+                    $response = $this->updateKdm($apiUrl,$kdm_file_data ["MessageId"],$xmlFilePath,$location->email,$location->password ) ;
 
                     if($response->status== 1 )
                     {
@@ -120,35 +105,13 @@ class NockdmController extends Controller
                     {
                         return $response;
                     }
-
-                    // Check for cURL errors
-
-
-                    if (curl_errno($ch)) {
-                        return ['error' => 'Curl error: ' . curl_error($ch)];
-                    }
-
-                    // Close cURL session
-                    curl_close($ch);
-
-                    // Process the API response
-                    if (!$response) {
-                        return ['error' => 'Error occurred while sending the request.'];
-                    } else {
-                        return json_decode($response, true);
-                    }
-
-
-
                 }
             }
             echo "Success" ;
-
         } catch (Exception $e) {
             echo "Failed" ;
             return $e;
         }
-
     }
 
     public function getDnCn($SubjectName)
@@ -167,17 +130,16 @@ class NockdmController extends Controller
         }
         return $result;
     }
-
-
-    public function getScreenByDnCn($dn,$cn)
+    public function getScreenByDnCn($dn,$cn,$serial_number)
     {
-        /*$screen = Screen::where('dolby_audio_processor_dnQualifier',$dn)
-        ->orWhere(function ($q) {
+
+        $screen = Screen::where('dolby_audio_processor_dnQualifier',$dn)
+        ->orWhere(function ($q) use ($dn , $cn) {
 
             $q->where('jp2k_dnQualifier', $dn)->Where('jp2k_cn', $cn);
         })
-       ->first() ;*/
-       $screen = Screen::where('jp2k_dnQualifier', $dn)->Where('jp2k_cn', $cn)->first() ;
+        ->orWhere('serial_number',$serial_number)
+       ->first() ;
 
        return $screen ;
     }
@@ -188,75 +150,50 @@ class NockdmController extends Controller
         return Response()->json(compact('nockdms'));
     }
 
-
-    public function sendXmlFileToApi($kdm_uuid ,$kdm_content , $location  )
+    function updateKdm($apiUrl,$uuid,$xmlFilePath,$username,$password )
     {
+        if (!file_exists($xmlFilePath)) {
+            return ['error' => 'File not found.'];
+        }
+        // Read XML content from the file
+        $xmlData = file_get_contents($xmlFilePath);
 
-        $nos_spl = Nocspl::where('id',$request->spl_id)->first() ;
-        $location = Location::where('id',$request->location)->first() ;
-        // Check if the file exists
+        // Prepare the request data
+        $requestData = [
+            'action' => 'updateKdm',
+            'xmlData' => $xmlData,
+            'uuid'=>$uuid,
+            'username'=>$username,
+            'password'=>$password
+        ];
 
+        // Initialize cURL session
+        $ch = curl_init($apiUrl);
 
-        $xmlFilePath =    storage_path().'/app/xml_file/'.$nos_spl->xmlpath ;
-            //dd($xmlFilePath);
-         if (!file_exists($xmlFilePath)) {
-                return ['error' => 'File not found.'];
-            }
-            // Read XML content from the file
-            $xmlData = file_get_contents($xmlFilePath);
+        // Set cURL options
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($requestData));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-            // Prepare the request data
-            $requestData = [
-                'action' => 'updateKdm',
-                'kdm_uuid' =>
-                'xmlData' => $xmlData,
-                'username' =>$location->email,
-                'password' =>$location->password,
-            ];
-            // Initialize cURL session
-            $ch = curl_init("http://localhost/tms/system/api2.php");
-            // Set cURL options
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($requestData));
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            // Execute cURL session and get the response
-            $response = curl_exec($ch);
-            $response = json_decode($response) ;
+        // Execute cURL session and get the response
+        $response = curl_exec($ch);
 
-            if($response->status== 1 )
-            {
-               Lmsspl::updateOrCreate([
-                    'uuid' =>$nos_spl->uuid,
-                    'location_id'     =>$location->id,
-                    ],[
-                    'uuid'     => $nos_spl->uuid,
-                    'name'     =>$nos_spl->spl_title,
-                    'duration'     => gmdate("H:i:s", $nos_spl->duration) ,
-                    'available_on'     => 'null',
-                    'location_id'     =>$location->id,
-                ]);
+        return $response;
+        // Check for cURL errors
+        if (curl_errno($ch)) {
+            return ['error' => 'Curl error: ' . curl_error($ch)];
+        }
 
-            }
-            return $response;
-            // Check for cURL errors
+        // Close cURL session
+        curl_close($ch);
 
-
-            if (curl_errno($ch)) {
-                return ['error' => 'Curl error: ' . curl_error($ch)];
-            }
-
-            // Close cURL session
-            curl_close($ch);
-
-            // Process the API response
-            if (!$response) {
-                return ['error' => 'Error occurred while sending the request.'];
-            } else {
-                return json_decode($response, true);
-            }
-
+        // Process the API response
+        if (!$response) {
+            return ['error' => 'Error occurred while sending the request.'];
+        } else {
+            return json_decode($response, true);
+        }
     }
-
 
 
 
