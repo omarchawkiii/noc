@@ -284,8 +284,27 @@ class SnmpController extends Controller
 
     public function get_screen_from_location(Request $request)
     {
-        $location = Location::find($request->location) ;
-        $screens =$location->screens ;
+
+
+
+        if( $request->location != null )
+        {
+            $locations= explode(',', $request->location);
+            if(count($locations) == 1  )
+            {
+                $location = Location::find($request->location) ;
+                $screens =$location->screens ;
+            }
+            else
+            {
+                $screens = null ;
+            }
+        }
+        else
+        {
+            $screens = null ;
+        }
+
         return Response()->json(compact('screens'));
     }
 

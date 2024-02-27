@@ -16,6 +16,8 @@ class NockdmController extends Controller
     {
         try
         {
+            $data_location = array() ;
+            $ingest_success = array() ;
             foreach ($request->kdmfiles as $kdmfile )
             {
                 $kdm_file_content = simplexml_load_file($kdmfile);
@@ -42,7 +44,7 @@ class NockdmController extends Controller
                 $file_name = $kdm_file_data['MessageId'].".xml" ;
                 $cn_dn_table = $this->getDnCn($kdm_file_data ["SubjectName"]);
                 $screen =  $this->getScreenByDnCn( $cn_dn_table['dnQualifier'],$cn_dn_table['CN'],$serial_number) ;
-                 dd($screen) ;
+
                 if($screen)
                 {
                     echo "$screen->name" ;
@@ -60,7 +62,7 @@ class NockdmController extends Controller
                     $xmlFilePath =    storage_path().'/app/xml_file/'.$file_name ;
                     $apiUrl = "http://localhost/tms/system/api2.php" ;
                     $response = $this->updateKdm($apiUrl,$kdm_file_data ["MessageId"],$xmlFilePath,$location->email,$location->password ) ;
-
+                    $response = json_decode($response) ;
                     if($response->status== 1 )
                     {
                         $noc_kdm = Nockdm::updateOrCreate([
@@ -100,14 +102,25 @@ class NockdmController extends Controller
                             'location_id' => $location->id,
 
                         ]);
+
+                        array_push($ingest_errors,  array("status" => $response->status , "id" =>  $kdm_file_data ["MessageId"] , "AnnotationText" =>  $kdm_file_data ["AnnotationText"]));
+
                     }
                     else
                     {
-                        return $response;
+                        array_push($ingest_errors,  array("status" => $response->status , "id" =>  $kdm_file_data ["MessageId"],  "AnnotationText" =>  $kdm_file_data ["AnnotationText"]));
                     }
                 }
             }
-            echo "Success" ;
+            if(count($ingest_errors) > 0  )
+            {
+                return Response()->json(compact('ingest_errors','ingest_success'));
+            }
+            else
+            {
+                return Response()->json(compact('ingest_errors','ingest_success'));
+            }
+
         } catch (Exception $e) {
             echo "Failed" ;
             return $e;
@@ -146,8 +159,24 @@ class NockdmController extends Controller
 
     public function get_nockdm(Request $request)
     {
-        $nockdms = Nockdm::with('screen')->get() ;
-        return Response()->json(compact('nockdms'));
+
+        $location = $request->location;
+        $screen = $request->screen;
+
+        $nockdms = Nockdm::with('screen')->with('location');
+        $screens = null ;
+        if(isset($location) &&  $location != 'null' )
+        {
+            $screens = Screen::where('location_id', $location)->get() ;
+            $nockdms =$nockdms->where('location_id',$location);
+        }
+
+        if(isset($screen) &&  $screen != 'null' )
+        {
+             $nockdms =$nockdms->where('screen_id',$screen);
+        }
+        $nockdms =$nockdms->get() ;
+        return Response()->json(compact('nockdms','screens'));
     }
 
     function updateKdm($apiUrl,$uuid,$xmlFilePath,$username,$password )
@@ -193,6 +222,48 @@ class NockdmController extends Controller
         } else {
             return json_decode($response, true);
         }
+    }
+
+    public function uploadexistingkdm(Request $request)
+    {
+
+        try
+        {
+            $ingest_errors = array() ;
+            $ingest_success = array() ;
+            foreach ($request->kdms_id as $kdms_id )
+            {
+                $noc_kdm = Nockdm::where('id',$kdms_id)->first() ;
+                $location = $noc_kdm->location ;
+
+                $xmlFilePath =    storage_path().'/app/xml_file/'.$noc_kdm->xmlpath ;
+                $apiUrl = "http://localhost/tms/system/api2.php" ;
+                $response = $this->updateKdm($apiUrl,$noc_kdm->uuid,$xmlFilePath,$location->email,$location->password ) ;
+                $response = json_decode($response) ;
+                if($response->status== 1 )
+                {
+                    array_push($ingest_errors,  array("status" => $response->status , "id" =>  $noc_kdm->uuid , "AnnotationText" =>  $noc_kdm->name));
+                }
+                else
+                {
+                    array_push($ingest_errors,  array("status" => $response->status , "id" =>  $noc_kdm->uuid , "AnnotationText" =>  $noc_kdm->name ));
+                }
+
+            }
+            if(count($ingest_errors) > 0  )
+            {
+                return Response()->json(compact('ingest_errors','ingest_success'));
+            }
+            else
+            {
+                return Response()->json(compact('ingest_errors','ingest_success'));
+            }
+
+        } catch (Exception $e) {
+            echo "Failed" ;
+            return $e;
+        }
+
     }
 
 

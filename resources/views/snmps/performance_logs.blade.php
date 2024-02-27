@@ -16,20 +16,26 @@
     <div class="row  ">
 
 
-        <div class="col-xl-2">
+        <div class="col-xl-4">
             <div class="input-group mb-2 mr-sm-2">
-                <div class="input-group-prepend">
-                    <div class="input-group-text"><i class="mdi mdi-home-map-marker"></i></div>
+
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text"><i class="mdi mdi-home-map-marker"></i></div>
+                    </div>
+                    <select class="form-select  form-control form-select-sm"
+                        aria-label=".form-select-sm example" id="location" name="location[]"
+                        multiple="multiple">
+
+
+                        @foreach ($locations as $location)
+                            <option value="{{ $location->id }}">{{ $location->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
-                <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="location">
-                    <option selected="">Locations</option>
-                    @foreach ($locations as $location )
-                        <option  value="{{ $location->id }}">{{ $location->name }}</option>
-                    @endforeach
-                </select>
             </div>
         </div>
-        <div class="col-xl-2">
+        <div class="col-xl-4">
             <div class="input-group mb-2 mr-sm-2">
                 <div class="input-group-prepend">
                     <div class="input-group-text"><i class="mdi mdi-monitor"></i></div>
@@ -42,27 +48,7 @@
         </div>
 
 
-        <div class="col-xl-2">
-            <div id="datepicker-popup" class="input-group date datepicker">
-                <span class="input-group-addon input-group-append border-left">
-                    <span class="mdi mdi-calendar input-group-text"></span>
-                </span>
-                <input type="text datepicker" class="form-control" id="from" placeholder="From">
-
-            </div>
-        </div>
-        <div class="col-xl-2">
-            <div id="datepicker-popup" class="input-group date datepicker">
-                <span class="input-group-addon input-group-append border-left">
-                    <span class="mdi mdi-calendar input-group-text"></span>
-                </span>
-                <input type="text" class="form-control" id="to" placeholder="To">
-
-            </div>
-        </div>
-
-
-        <div class="col-xl-2   " style="margin-top: 5px;">
+        <div class="col-xl-4   ">
             <div class="input-group ">
                 <div class="input-group-prepend">
                     <div class="input-group-text"><i class="mdi mdi-magnify"></i></div>
@@ -72,7 +58,28 @@
                     <div id="suggestions" class="row hide-search"></div>
             </div>
         </div>
-        <div class="col-xl-2 " style="margin-top: 5px;">
+
+
+        <div class="col-xl-4">
+            <div id="datepicker-popup" class="input-group date datepicker">
+                <span class="input-group-addon input-group-append border-left">
+                    <span class="mdi mdi-calendar input-group-text"></span>
+                </span>
+                <input type="text datepicker" class="form-control" id="from" placeholder="From">
+
+            </div>
+        </div>
+        <div class="col-xl-4">
+            <div id="datepicker-popup" class="input-group date datepicker">
+                <span class="input-group-addon input-group-append border-left">
+                    <span class="mdi mdi-calendar input-group-text"></span>
+                </span>
+                <input type="text" class="form-control" id="to" placeholder="To">
+
+            </div>
+        </div>
+
+        <div class="col-xl-4 ">
             <div class="input-group mb-2 mr-sm-2 " id="search_content">
 
                 <button class="form-   form-control form-select-sm" style="  background-color: #297EEE!important"
@@ -346,7 +353,16 @@
     <script src="{{ asset('/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
 
     <script src="{{ asset('/assets/vendors/jquery-toast-plugin/jquery.toast.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
+    <script>
+        $(document).ready(function() {
+            $('#location').select2({
+                placeholder: "Select a state",
+                allowClear: true
+                });
+        });
+    </script>
 
     <script>
         (function($) {
@@ -365,11 +381,23 @@
                 method: 'GET',
                 success:function(response)
                 {
-                    screens = '<option value="null" selected>All screen </option>';
-                    $.each(response.screens, function( index_screen, screen ) {
-                        screens = screens
-                            +'<option  value="'+screen.id+'">'+screen.screen_name+'</option>';
-                    });
+
+                    if(response.screens!= null   )
+                    {
+                        $('#screen').prop('disabled', false);
+                        screens = '<option value="null" selected>All screen </option>';
+                        $.each(response.screens, function( index_screen, screen ) {
+                            screens = screens
+                                +'<option  value="'+screen.id+'">'+screen.screen_name+'</option>';
+                        });
+                    }
+                    else
+                    {
+                        screens = '<option value="null" selected>All screen </option>';
+                        $('#screen').prop('disabled', 'disabled');
+                    }
+
+
 
                     $('#screen').html(screens)
 
@@ -506,8 +534,44 @@
 @section('custom_css')
     <link rel="stylesheet" href="{{ asset('/assets/vendors/datatables.net-bs4/dataTables.bootstrap4.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/vendors/jquery-toast-plugin/jquery.toast.min.css') }}">
-
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <style>
+
+        /* ***** Select 2 **** */
+
+        .select2.select2-container.select2-container--default {
+            width: 90% !important;
+            background: #2a3038;
+        }
+
+        .select2-container--default .select2-selection--multiple {
+            border: none;
+            background: #2a3038;
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice,
+        .select2-container--default .select2-selection--multiple .select2-selection__choice:nth-child(5n+1) {
+            font-size: 14px;
+            background: #2a3038;
+        }
+
+        .select2-container--default .select2-results__option--selected {
+            background-color: #297eee;
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            padding: 5px;
+            padding-left: 21px;
+
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+            padding: 5px;
+        }
+
+
+
+        /* ************* */
          .hide-div {
                 display: none;
             }
@@ -565,6 +629,12 @@
                 #suggestions {
                     max-height: 150px; /* Adjust max height for smaller screens */
                 }
+            }
+
+
+            .form-select:disabled
+            {
+                background-color: #2a3038;
             }
     </style>
 @endsection

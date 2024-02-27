@@ -34,4 +34,9 @@ class Nockdm extends Model
         return $this->belongsTo(Screen::class);
     }
 
+    public function location(): BelongsTo
+    {
+        return $this->belongsTo(Location::class);
+    }
+
 }

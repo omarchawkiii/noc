@@ -8,7 +8,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Upload SPL</li>
+                <li class="breadcrumb-item active" aria-current="page">Upload </li>
             </ol>
         </nav>
     </div>
@@ -18,15 +18,14 @@
 
             <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item">
-                  <a class="nav-link active" id="upload-spl-tab" data-bs-toggle="tab" href="#upload-spl" role="tab" aria-controls="home" aria-selected="true">Upload SPL</a>
+                  <a class="nav-link active" id="upload-spl-tab" data-bs-toggle="tab" href="#upload-spl" role="tab" aria-controls="home" aria-selected="true">Upload Show Playlists</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" id="upload-kdm-tab" data-bs-toggle="tab" href="#upload-kdm" role="tab" aria-controls="profile" aria-selected="false">Upload KDM</a>
                 </li>
+            </ul>
 
-              </ul>
-
-              <div class="tab-content">
+            <div class="tab-content">
                 <div class="tab-pane fade show active" id="upload-spl" role="tabpanel" aria-labelledby="home-tab">
 
                     <main>
@@ -59,10 +58,12 @@
                             </form>
                         </div>
                     </main>
-
+                    <div class="row mt-2">
+                        <h3>Show Playlists Uploaded from NOC</h3>
+                    </div>
                     <div class="row mt-3 preview-list multiplex">
                         <div class="col-12">
-                            <h5>SPL Uploaded from NOC</h5>
+
                             <div class="table-responsive">
                                 <table id="location-listing" class="table text-center">
                                     <thead>
@@ -71,7 +72,7 @@
                                             <th class="sorting">Playlist</th>
 
                                             <th class="sorting">Duration </th>
-
+                                            <th class="sorting">Delete </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -114,38 +115,94 @@
                     </main>
 
                     <div class="row mt-3 preview-list multiplex">
-                        <div class="col-12">
-                            <h5>KDM Uploaded from NOC</h5>
-                            <div class="table-responsive">
-                                <table id="kdm-listing" class="table text-center">
-                                    <thead>
-                                        <tr>
-                                            <th class="sorting sorting_asc">Screen </th>
 
-                                            <th class="sorting">Content Name </th>
-                                            <th class="sorting">Begin Validity </th>
-                                            <th class="sorting">End Validity </th>
-                                            <th class="sorting">CPL</th>
+                        <div class="row">
+                            <h3>KDM Uploaded from NOC</h3>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-3">
+                                <div class="input-group mb-2 mr-sm-2">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text"><i class="mdi mdi-home-map-marker"></i></div>
+                                    </div>
+                                    <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="location">
+                                        <option selected="">Locations</option>
+                                        @foreach ($locations as $location )
+                                            <option   value="{{ $location->id }}">{{ $location->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-3">
+                                <div class="input-group mb-2 mr-sm-2">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text"><i class="mdi mdi-monitor"></i></div>
+                                    </div>
+                                    <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="screen">
+                                        <option value="null">Screens</option>
 
-                                            <th class="sorting ">Device Target</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-6">
+                                <button id="ingest_kdm" class="btn btn-primary  btn-icon-text " style="float: right">
+                                    <i class="mdi mdi-plus btn-icon-prepend"></i> Ingest KDMS
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+
+                                <div class="table-responsive">
+                                    <table id="kdm-listing" class="table text-center">
+                                        <thead>
+                                            <tr>
+                                                <th class="sorting sorting_asc">Screen </th>
+                                                <th class="sorting">Location</th>
+                                                <th class="sorting">Content Name </th>
+                                                <th class="sorting">Begin Validity </th>
+                                                <th class="sorting">End Validity </th>
+                                                <th class="sorting">CPL</th>
+
+                                                <th class="sorting ">Device Target</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
 
 
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                    </table>
 
+                                </div>
                             </div>
                         </div>
                     </div>
 
                 </div>
-
               </div>
-
         </div>
     </div>
+
+    <div class=" modal fade " id="upload_kdm_errors" tabindex="-1" role="dialog"  aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered  modal-xl">
+            <div class="modal-content border-0">
+                <div class="modal-header">
+                    <h4>Uploaded Kdms infos </h4>
+                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true"
+                            style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
+                </div>
+                <div class="modal-body  p-4">
+
+
+                </div>
+
+
+            </div>
+        <!--end modal-content-->
+        </div>
+    </div>
+
 @endsection
 
 @section('custom_script')
@@ -260,6 +317,22 @@
 
                 }
 
+
+                if (type === 'success-message-kdm') {
+                    swal({
+                        title: 'Done!',
+                        text: 'Spls Uploaded S8uccessfully ',
+                        icon: 'success',
+                        button: {
+                            text: "Continue",
+                            value: true,
+                            visible: true,
+                            className: "btn btn-primary"
+                        }
+                    })
+
+                }
+
                 if (type === 'warning-message-and-cancel') {
                     swal({
                         title: 'Failed',
@@ -277,11 +350,9 @@
                                 className: "btn btn-danger",
                                 closeModal: true,
                             },
-
                         }
                     })
                 }
-
             }
 
         })(jQuery);
@@ -363,15 +434,47 @@
                         });
                     },
                     success: function(response) {
+                        var result ;
                         console.log(response) ;
-                        if (response == "Success") {
+                        if (response.ingest_errors.length> 0 )
+                        {
+                            swal.close();
+                            $('#upload_kdm_errors').modal('show') ;
+                            $.each(response.ingest_errors, function( index, value ) {
+
+                                result = result
+                                +'<tr class="odd">'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.id+'</a></td>'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.AnnotationText+'</a></td>'
+                                +'</tr>';
+                            });
+
+                            if (response.ingest_success.length> 0 )
+                            {
+                                $.each(response.ingest_errors, function( index, value ) {
+
+                                    result = result
+                                    +'<tr class="odd">'
+                                        +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.id+'</a></td>'
+                                        +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.AnnotationText+'</a></td>'
+                                    +'</tr>';
+                                });
+                            }
+
+
+                            $('#upload_kdm_errors .modal-body').html(data) ;
+                            //showSwal('warning-message-and-cancel')
+
+
+
+                        } else {
+
                             swal.close();
                             $('#upload_kdm_form').trigger("reset");
-                            showSwal('success-message');
+                            showSwal('success-message-kdm');
                             load_kdmnoc();
-                        } else {
-                            swal.close();
-                            showSwal('warning-message-and-cancel')
+
+
                         }
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
@@ -397,7 +500,7 @@
 
 
            function load_splnoc()
-           {
+            {
 
                 $("#location-listing").dataTable().fnDestroy();
                 var loader_content  =
@@ -446,6 +549,7 @@
                                 +'<td class="sorting_1">'+index +' </td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.spl_title+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.duration+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none"> <i class="mdi mdi-delete-forever text-danger" > </i></a></td>'
                                 +'</tr>';
                         });
                         $('#location-listing tbody').html(result)
@@ -470,12 +574,10 @@
                 })
 
             }
-
-
             load_splnoc()
-            function load_kdmnoc()
-            {
 
+            function load_kdmnoc(location , screen )
+            {
                     $("#kdm-listing").dataTable().fnDestroy();
                     var loader_content  =
                     '<div class="jumping-dots-loader">'
@@ -485,23 +587,35 @@
                         +'</div>'
                     $('#kdm-listing tbody').html(loader_content)
 
-
-
-
                     var url = "{{  url('') }}"+ '/get_nockdm/' ;
                     var result =" " ;
-
+                    var screens  =" " ;
                     $.ajax({
                         url: url,
                         method: 'GET',
+                        data: {
+                            location: location,
+                            screen: screen,
+                        },
                         success:function(response)
                         {
 
                             console.log(response)
+                            if(location != null)
+                            {
+                                screens = '<option value="null" selected>All Screens</option>';
+                                $.each(response.screens, function( index_screen, screen ) {
+
+                                    screens = screens
+                                        +'<option  value="'+screen.id+'">'+screen.screen_name+'</option>';
+                                });
+                                $('#screen').html(screens);
+                            }
+
                             $.each(response.nockdms, function( index, value ) {
                                 index++ ;
 
-                                /*if(value.content_present == 'yes'  || true ){
+                                /* if(value.content_present == 'yes'  || true ) {
                                     content_present = '<i class= "mdi mdi-check-circle-outline text-white" > </i>'
                                 }else{
                                     content_present = '<i class= "mdi mdi-checkbox-blank-circle-outline text-white" > </i>'
@@ -535,8 +649,9 @@
 
 
                                 result = result
-                                    +'<tr class="odd">'
+                                    +'<tr class="odd" data-id="'+value.id+'">'
                                         +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.screen.screen_name+' </td>'
+                                        +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.location.name+' </td>'
                                         +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
                                         +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidBefore+'</a></td>'
                                         +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidAfter+'</a></td>'
@@ -568,10 +683,183 @@
                     })
 
             }
+            load_kdmnoc(null , null )
 
-            load_kdmnoc()
 
 
+            function dhm (ms)
+            {
+                const days = Math.floor(ms / (24*60*60*1000));
+                const daysms = ms % (24*60*60*1000);
+                const hours = Math.floor(daysms / (60*60*1000));
+                const hoursms = ms % (60*60*1000);
+                const minutes = Math.floor(hoursms / (60*1000));
+                const minutesms = ms % (60*1000);
+                const sec = Math.floor(minutesms / 1000);
+                return days + "D " + hours + "H " + minutes + "M " + sec  + "S ";
+            }
+
+
+
+
+            $('#screen').change(function(){
+
+                var location =  $('#location').val();
+                var screen =  $('#screen').val();
+                load_kdmnoc(location , screen )
+            });
+
+            $('#location').change(function(){
+                //$('#location-listing tbody').html('')
+                var location =  $('#location').val();
+                var screen =null
+                load_kdmnoc(location , screen )
+            });
+
+
+            // select kdms to ingest
+            $(document).on('click', '#kdm-listing tbody tr', function () {
+                $(this).toggleClass('selected') ;
+            })
+
+            // upload existing KDM
+            $(document).on('click', '#ingest_kdm', function () {
+
+                var kdms_id = $('#kdm-listing tr.selected').map(function(){
+                    return $(this).data('id');
+                }).get();
+                console.log(kdms_id)
+                $.ajax({
+                    url: "{{ route('nockdm.uploadexistingkdm') }}",
+                    type: 'POST',
+                    method: 'POST',
+                    data: {
+                        kdms_id: kdms_id,
+                    },
+
+                    headers: {
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                        "_token": "{{ csrf_token() }}",
+                    },
+                    beforeSend: function() {
+                        swal({
+                            title: 'Refreshing',
+                            allowEscapeKey: false,
+                            allowOutsideClick: true,
+                            onOpen: () => {
+                                swal.showLoading();
+                            }
+                        });
+                    },
+                    success: function(response) {
+                        var result ;
+                        console.log(response) ;
+                        if (response.ingest_errors.length> 0 )
+                        {
+                            swal.close();
+                            $('#upload_kdm_errors').modal('show') ;
+                            $.each(response.ingest_errors, function( index, value ) {
+
+                                result = result
+                                +'<tr class="odd">'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.id+'</a></td>'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.AnnotationText+'</a></td>'
+                                +'</tr>';
+                            });
+
+                            if (response.ingest_success.length> 0 )
+                            {
+                                $.each(response.ingest_errors, function( index, value ) {
+
+                                    result = result
+                                    +'<tr class="odd">'
+                                        +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.id+'</a></td>'
+                                        +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.AnnotationText+'</a></td>'
+                                    +'</tr>';
+                                });
+                            }
+
+
+                            $('#upload_kdm_errors .modal-body').html(data) ;
+                            //showSwal('warning-message-and-cancel')
+
+
+
+                        } else {
+
+                            swal.close();
+                            $('#upload_kdm_form').trigger("reset");
+                            showSwal('success-message-kdm');
+                            load_kdmnoc();
+
+
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        swal.close();
+                        showSwal('warning-message-and-cancel');
+
+                        //console.log(response) ;
+                    }
+                })
+
+                //var kdm_id = $('#kdm-listing tr.selected').attr('data-id') ;
+
+                /*var movie_id = $('#movies_table td.selected').attr('data-id') ;
+
+                $.ajax({
+                    url:"{{  url('') }}"+ "/add_movies_to_spls",
+                    type: 'post',
+                    cache: false,
+                    data: {
+                        movie_id: movie_id,
+                        spl_id: spl_id,
+                        "_token": "{{ csrf_token() }}",
+                    },
+                    beforeSend: function() {
+                        swal({
+                            title: 'Refreshing',
+                            allowEscapeKey: false,
+                            allowOutsideClick: true,
+                            onOpen: () => {
+                                swal.showLoading();
+                            }
+                        });
+                    },
+                    success: function(response) {
+
+
+
+                        if(response == "Success")
+                        {
+                            swal.close();
+                            $('#spls_table td').removeClass('selected') ;
+                            $('#movies_table td.selected').remove() ;
+                            showSwal('link-spl') ;
+                        }
+                        else if(response == "missing")
+                        {
+                            swal.close();
+                            $('#ingest_spl').modal('show') ;
+                        }
+                        else
+                        {
+                            swal.close();
+                            showSwal('warning-message-and-cancel')
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    },
+                    complete: function(jqXHR, textStatus) {}
+                });
+
+
+                */
+
+                })
+
+            var spl_id = $('#spls_table td.selected').attr('data-id') ;
 
         })(jQuery);
     </script>
@@ -641,10 +929,7 @@
             color: white;
             border: none;
         }
-        .card
-        {
 
-        }
 main {
   margin-top: 30px;
   height: 100%;
@@ -675,6 +960,10 @@ main {
     filter: alpha(opacity=0); /* and all the other old opacity stuff you
                                  want to support */
 
+}
+
+.selected {
+    background-color: rgb(0 210 91 / 35%) !important;
 }
 
     </style>

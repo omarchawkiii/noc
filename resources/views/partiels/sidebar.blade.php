@@ -77,7 +77,7 @@
           <span class="menu-icon icon-box-success">
             <i class="mdi mdi-upload "></i>
           </span>
-          <span class="menu-title">Upload Playlist</span>
+          <span class="menu-title">Upload </span>
         </a>
       </li>
 
