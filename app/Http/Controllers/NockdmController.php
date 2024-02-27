@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cpl;
 use App\Models\Kdm;
+use App\Models\Lmskdm;
 use App\Models\Nockdm;
 use App\Models\Screen;
 use Exception;
@@ -74,7 +75,7 @@ class NockdmController extends Controller
                             'xmlpath'=> $file_name ,
                             'ContentKeysNotValidBefore' => $kdm_file_data ["ContentKeysNotValidBefore"],
                             'ContentKeysNotValidAfter' => $kdm_file_data ["ContentKeysNotValidAfter"],
-                        /* 'kdm_installed' => $kdm['kdm_installed'],
+                            /* 'kdm_installed' => $kdm['kdm_installed'],
                             'content_present' => $kdm['content_present'], */
                             'serverName_by_serial' => $kdm_file_data ["SerialNumber"],
                             'cpl_uuid' => $kdm_file_data['CompositionPlaylistId'],
@@ -93,7 +94,7 @@ class NockdmController extends Controller
                             'name' => $kdm_file_data ["ContentTitleText"],
                             'ContentKeysNotValidBefore' => $kdm_file_data ["ContentKeysNotValidBefore"],
                             'ContentKeysNotValidAfter' => $kdm_file_data ["ContentKeysNotValidAfter"],
-                        /* 'kdm_installed' => $kdm['kdm_installed'],
+                            /* 'kdm_installed' => $kdm['kdm_installed'],
                             'content_present' => $kdm['content_present'], */
                             'serverName_by_serial' => $kdm_file_data ["SerialNumber"],
                             'cpl_uuid' => null,
@@ -102,6 +103,39 @@ class NockdmController extends Controller
                             'location_id' => $location->id,
 
                         ]);
+
+                        /*Lmskdm::updateOrCreate([
+                            'uuid' => $kdm_file_data['MessageId'],
+                            'location_id' => $location->id
+                        ],[
+
+                            'uuid' => $kdm_file_data['MessageId'],
+                            'name' => $kdm_file_data ['ContentTitleText'],
+                            'idkdm_files' => $kdm_file_data ['idkdm_files'],
+                            'AnnotationText' => $kdm_file_data ['AnnotationText'],
+                            'ContentKeysNotValidBefore' => $kdm_file_data ['ContentKeysNotValidBefore'],
+                            'ContentKeysNotValidAfter' => $kdm_file_data ['ContentKeysNotValidAfter'],
+                            'SubjectName' => $kdm_file_data ['SubjectName'],
+                            'DeviceListDescription' => $kdm_file_data ['DeviceListDescription'],
+                            'path_file' => $kdm_file_data ['path_file'],
+                            'server_name' => $kdm_file_data ['server_name'],
+                            'file_type' => $kdm_file_data ['file_type'],
+                            'id_server' => $kdm_file_data ['id_server'],
+                            'file_size' => $kdm_file_data ['file_size'],
+                            'file_progress' => $kdm_file_data ['file_progress'],
+                            'tms_path' => $kdm_file_data ['tms_path'],
+                            'last_update' => $kdm_file_data ['last_update'],
+                            'device_target' => $kdm_file_data ['device_target'],
+                            'serverName_by_serial' => $kdm_file_data ['serverName_by_serial'],
+                            'kdm_installed' => $kdm_file_data ['kdm_installed'],
+                            'content_present' => $kdm_file_data ['content_present'],
+
+                            'lmscpl_id' =>null ,
+
+                            'screen_id' => $screen->id,
+                            'location_id' => $location->id,
+
+                        ]); */
 
                         array_push($ingest_errors,  array("status" => $response->status , "id" =>  $kdm_file_data ["MessageId"] , "AnnotationText" =>  $kdm_file_data ["AnnotationText"]));
 
@@ -242,7 +276,7 @@ class NockdmController extends Controller
                 $response = json_decode($response) ;
                 if($response->status== 1 )
                 {
-                    array_push($ingest_errors,  array("status" => $response->status , "id" =>  $noc_kdm->uuid , "AnnotationText" =>  $noc_kdm->name));
+                    array_push($ingest_success,  array("status" => $response->status , "id" =>  $noc_kdm->uuid , "AnnotationText" =>  $noc_kdm->name));
                 }
                 else
                 {

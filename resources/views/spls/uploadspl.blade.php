@@ -47,7 +47,7 @@
                                         <span v-if="typeof file.name !== 'undefined'">
                                             {{ file.name }} ({{ file.size }} b)
                                           </span>
-                                        <button @click="removeFile(index)" title="Remove"> <i class="mdi mdi-delete-forever"></i></button>
+                                        <a @click="removeFile(index)" title="Remove" href="javascript:void(0);"> <i class="mdi mdi-delete-forever"></i></a>
                                     </li>
                                     @endverbatim
                                 </ul>
@@ -104,7 +104,7 @@
                                         <span v-if="typeof file.name !== 'undefined'">
                                             {{ file.name }} ({{ file.size }} b)
                                           </span>
-                                        <button @click="removeFile(index)" title="Remove"> <i class="mdi mdi-delete-forever"></i></button>
+                                        <a @click="removeFile(index)" title="Remove" href="javascript:void(0);" > <i class="mdi mdi-delete-forever"></i></a>
                                     </li>
                                     @endverbatim
                                 </ul>
@@ -119,7 +119,7 @@
                         <div class="row">
                             <h3>KDM Uploaded from NOC</h3>
                         </div>
-                        <div class="row">
+                        <div class="row mb-3">
                             <div class="col-xl-3">
                                 <div class="input-group mb-2 mr-sm-2">
                                     <div class="input-group-prepend">
@@ -202,6 +202,27 @@
         <!--end modal-content-->
         </div>
     </div>
+
+    <div class=" modal fade " id="ingest_kdm_vide" tabindex="-1" role="dialog"  aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered ">
+            <div class="modal-content border-0">
+                <div class="modal-header">
+
+                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true"
+                            style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
+                </div>
+                <div class="modal-body  p-4">
+
+                    <h3>Please Select one or more KDMs to ingest </h3>
+                </div>
+
+
+            </div>
+        <!--end modal-content-->
+        </div>
+    </div>
+
 
 @endsection
 
@@ -321,7 +342,7 @@
                 if (type === 'success-message-kdm') {
                     swal({
                         title: 'Done!',
-                        text: 'Spls Uploaded S8uccessfully ',
+                        text: 'Kdms Uploaded S8uccessfully ',
                         icon: 'success',
                         button: {
                             text: "Continue",
@@ -332,6 +353,7 @@
                     })
 
                 }
+
 
                 if (type === 'warning-message-and-cancel') {
                     swal({
@@ -353,6 +375,28 @@
                         }
                     })
                 }
+
+                if (type === 'no_kdms_selected') {
+                    swal({
+                        title: 'No KDMS Selected ',
+                        text: "Please Select one or more KDMs to ingest.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3f51b5',
+                        cancelButtonColor: '#ff4081',
+                        confirmButtonText: 'Great ',
+                        buttons: {
+                            cancel: {
+                                text: "Cancel",
+                                value: null,
+                                visible: true,
+                                className: "btn btn-danger",
+                                closeModal: true,
+                            },
+                        }
+                    })
+                }
+
             }
 
         })(jQuery);
@@ -441,7 +485,7 @@
                             swal.close();
                             $('#upload_kdm_errors').modal('show') ;
                             $.each(response.ingest_errors, function( index, value ) {
-
+                                result = "<h4> ingested kdms successfully </h4>" ;
                                 result = result
                                 +'<tr class="odd">'
                                     +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.id+'</a></td>'
@@ -452,7 +496,7 @@
                             if (response.ingest_success.length> 0 )
                             {
                                 $.each(response.ingest_errors, function( index, value ) {
-
+                                    result = result + "<h4> Failed kdms Ingest  </h4>" ;
                                     result = result
                                     +'<tr class="odd">'
                                         +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.id+'</a></td>'
@@ -462,7 +506,7 @@
                             }
 
 
-                            $('#upload_kdm_errors .modal-body').html(data) ;
+                            $('#upload_kdm_errors .modal-body').html(result) ;
                             //showSwal('warning-message-and-cancel')
 
 
@@ -519,16 +563,8 @@
                 //$('#location-listing tbody').html('')
 
 
-                window.lms = false ;
 
-                if(location != "Locations")
-                {
-                    $('#refresh_lms').show();
-                }
-                else
-                {
-                    $('#refresh_lms').hide();
-                }
+
                 var url = "{{  url('') }}"+ '/get_nocspl/' ;
                 var result =" " ;
 
@@ -549,7 +585,7 @@
                                 +'<td class="sorting_1">'+index +' </td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.spl_title+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.duration+'</a></td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none"> <i class="mdi mdi-delete-forever text-danger" > </i></a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none"> <i class="mdi mdi-delete-forever text-danger" id="Delete_spl" > </i></a></td>'
                                 +'</tr>';
                         });
                         $('#location-listing tbody').html(result)
@@ -716,7 +752,6 @@
                 load_kdmnoc(location , screen )
             });
 
-
             // select kdms to ingest
             $(document).on('click', '#kdm-listing tbody tr', function () {
                 $(this).toggleClass('selected') ;
@@ -728,138 +763,92 @@
                 var kdms_id = $('#kdm-listing tr.selected').map(function(){
                     return $(this).data('id');
                 }).get();
-                console.log(kdms_id)
-                $.ajax({
-                    url: "{{ route('nockdm.uploadexistingkdm') }}",
-                    type: 'POST',
-                    method: 'POST',
-                    data: {
-                        kdms_id: kdms_id,
-                    },
 
-                    headers: {
-                        'X-CSRF-TOKEN': "{{ csrf_token() }}",
-                        "_token": "{{ csrf_token() }}",
-                    },
-                    beforeSend: function() {
-                        swal({
-                            title: 'Refreshing',
-                            allowEscapeKey: false,
-                            allowOutsideClick: true,
-                            onOpen: () => {
-                                swal.showLoading();
-                            }
-                        });
-                    },
-                    success: function(response) {
-                        var result ;
-                        console.log(response) ;
-                        if (response.ingest_errors.length> 0 )
-                        {
-                            swal.close();
-                            $('#upload_kdm_errors').modal('show') ;
-                            $.each(response.ingest_errors, function( index, value ) {
+                if(kdms_id.length > 0 )
+                {
+                    $.ajax({
+                        url: "{{ route('nockdm.uploadexistingkdm') }}",
+                        type: 'POST',
+                        method: 'POST',
+                        data: {
+                            kdms_id: kdms_id,
+                        },
 
-                                result = result
-                                +'<tr class="odd">'
-                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.id+'</a></td>'
-                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.AnnotationText+'</a></td>'
-                                +'</tr>';
+                        headers: {
+                            'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                            "_token": "{{ csrf_token() }}",
+                        },
+                        beforeSend: function() {
+                            swal({
+                                title: 'Refreshing',
+                                allowEscapeKey: false,
+                                allowOutsideClick: true,
+                                onOpen: () => {
+                                    swal.showLoading();
+                                }
                             });
-
-                            if (response.ingest_success.length> 0 )
+                        },
+                        success: function(response) {
+                            var result ;
+                            console.log(response) ;
+                            if (response.ingest_errors.length> 0 )
                             {
+                                swal.close();
+                                $('#upload_kdm_errors').modal('show') ;
                                 $.each(response.ingest_errors, function( index, value ) {
-
+                                    result = "<h4> ingested kdms successfully </h4>" ;
                                     result = result
                                     +'<tr class="odd">'
                                         +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.id+'</a></td>'
                                         +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.AnnotationText+'</a></td>'
                                     +'</tr>';
                                 });
+
+                                if (response.ingest_success.length> 0 )
+                                {
+                                    $.each(response.ingest_errors, function( index, value ) {
+                                        result = result + "<h4> Failed kdms Ingest  </h4>" ;
+                                        result = result
+                                        +'<tr class="odd">'
+                                            +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.id+'</a></td>'
+                                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.AnnotationText+'</a></td>'
+                                        +'</tr>';
+                                    });
+                                }
+
+
+                                $('#upload_kdm_errors .modal-body').html(result) ;
+                                //showSwal('warning-message-and-cancel')
+
+
+
+                            } else {
+
+                                swal.close();
+                                $('#upload_kdm_form').trigger("reset");
+                                showSwal('success-message-kdm');
+                                load_kdmnoc();
+
+
                             }
-
-
-                            $('#upload_kdm_errors .modal-body').html(data) ;
-                            //showSwal('warning-message-and-cancel')
-
-
-
-                        } else {
-
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
                             swal.close();
-                            $('#upload_kdm_form').trigger("reset");
-                            showSwal('success-message-kdm');
-                            load_kdmnoc();
+                            showSwal('warning-message-and-cancel');
 
-
+                            //console.log(response) ;
                         }
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        swal.close();
-                        showSwal('warning-message-and-cancel');
+                    })
+                }
+                else
+                {
+                    showSwal('no_kdms_selected');
+                }
 
-                        //console.log(response) ;
-                    }
-                })
+            })
 
-                //var kdm_id = $('#kdm-listing tr.selected').attr('data-id') ;
+            //Delete NOC SPLs
 
-                /*var movie_id = $('#movies_table td.selected').attr('data-id') ;
-
-                $.ajax({
-                    url:"{{  url('') }}"+ "/add_movies_to_spls",
-                    type: 'post',
-                    cache: false,
-                    data: {
-                        movie_id: movie_id,
-                        spl_id: spl_id,
-                        "_token": "{{ csrf_token() }}",
-                    },
-                    beforeSend: function() {
-                        swal({
-                            title: 'Refreshing',
-                            allowEscapeKey: false,
-                            allowOutsideClick: true,
-                            onOpen: () => {
-                                swal.showLoading();
-                            }
-                        });
-                    },
-                    success: function(response) {
-
-
-
-                        if(response == "Success")
-                        {
-                            swal.close();
-                            $('#spls_table td').removeClass('selected') ;
-                            $('#movies_table td.selected').remove() ;
-                            showSwal('link-spl') ;
-                        }
-                        else if(response == "missing")
-                        {
-                            swal.close();
-                            $('#ingest_spl').modal('show') ;
-                        }
-                        else
-                        {
-                            swal.close();
-                            showSwal('warning-message-and-cancel')
-                        }
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        console.log(errorThrown);
-                    },
-                    complete: function(jqXHR, textStatus) {}
-                });
-
-
-                */
-
-                })
-
-            var spl_id = $('#spls_table td.selected').attr('data-id') ;
 
         })(jQuery);
     </script>
@@ -912,7 +901,7 @@
             font-size: 16px;
             margin-top: 10px;
             text-align: left;
-            min-width: 321px;
+            min-width: 500px;
             margin: auto;
             display: table;
             margin-bottom: 47px;
@@ -922,13 +911,19 @@
         {
             padding: 10px ;
         }
-        #upload_spl_form ul button ,
-        #upload_kdm_form ul button
+        #upload_spl_form ul a ,
+        #upload_kdm_form ul a
         {
             background: red;
             color: white;
             border: none;
         }
+        #upload_spl_form ul a i,
+        #upload_kdm_form ul a i
+        {
+            padding: 5px;
+        }
+
 
 main {
   margin-top: 30px;
