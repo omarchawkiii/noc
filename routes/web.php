@@ -128,4 +128,4 @@ Route::post('uploadexistingkdm', [App\Http\Controllers\NockdmController::class ,
 Route::delete('localkdm/{id}/destroy', [App\Http\Controllers\NockdmController::class , 'destroy'])->name('nockdm.destroy');
 
 
-Route::get('getlogs/{location}', [App\Http\Controllers\LogsController::class , 'get_logs'])->name('logs.getlogs');
+Route::get('getlogs/{location}', [App\Http\Controllers\LogController::class , 'get_logs'])->name('logs.getlogs');

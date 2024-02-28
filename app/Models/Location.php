@@ -129,5 +129,9 @@ class Location extends Model
     {
         return $this->hasMany(Moviescod::class);
     }
+    public function logs(): HasMany
+    {
+        return $this->hasMany(Log::class);
+    }
 
 }

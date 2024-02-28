@@ -101,4 +101,9 @@ class Screen extends Model
         return $this->hasMany(Playback::class);
     }
 
+    public function logs(): HasMany
+    {
+        return $this->hasMany(Log::class);
+    }
+
 }
