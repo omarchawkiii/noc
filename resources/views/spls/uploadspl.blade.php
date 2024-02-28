@@ -165,6 +165,8 @@
                                                 <th class="sorting">CPL</th>
 
                                                 <th class="sorting ">Device Target</th>
+                                                <th class="sorting ">Delete</th>
+
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -222,7 +224,6 @@
         <!--end modal-content-->
         </div>
     </div>
-
 
 @endsection
 
@@ -326,7 +327,7 @@
                 if (type === 'success-message') {
                     swal({
                         title: 'Done!',
-                        text: 'Spls Uploaded S8uccessfully ',
+                        text: 'Spls Uploaded Successfully ',
                         icon: 'success',
                         button: {
                             text: "Continue",
@@ -342,7 +343,7 @@
                 if (type === 'success-message-kdm') {
                     swal({
                         title: 'Done!',
-                        text: 'Kdms Uploaded S8uccessfully ',
+                        text: 'Kdms Uploaded Successfully ',
                         icon: 'success',
                         button: {
                             text: "Continue",
@@ -543,7 +544,7 @@
             }
 
 
-           function load_splnoc()
+            function load_splnoc()
             {
 
                 $("#location-listing").dataTable().fnDestroy();
@@ -585,7 +586,7 @@
                                 +'<td class="sorting_1">'+index +' </td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.spl_title+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.duration+'</a></td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none"> <i class="mdi mdi-delete-forever text-danger" id="Delete_spl" > </i></a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none"> <i class="mdi mdi-delete-forever text-danger delete_spl" data-id="'+value.id+'" > </i></a></td>'
                                 +'</tr>';
                         });
                         $('#location-listing tbody').html(result)
@@ -689,12 +690,13 @@
                                         +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.screen.screen_name+' </td>'
                                         +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.location.name+' </td>'
                                         +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
-                                        +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidBefore+'</a></td>'
-                                        +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.ContentKeysNotValidAfter+'</a></td>'
+                                        +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ new Date(value.ContentKeysNotValidBefore).toLocaleString() +'</a></td>'
+                                        +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ new Date(value.ContentKeysNotValidAfter).toLocaleString() +'</a></td>'
                                         //+'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ content_present+'</a></td>'
                                         //+'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ kdm_installed+'</a></td>'
                                         +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ dhm (diffTime)+'</a></td>'
                                         +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> - </a></td>'
+                                        +'<td><a class="text-body align-middle fw-medium text-decoration-none"> <i class="mdi mdi-delete-forever text-danger delete_kdm" data-id="'+value.id+'" > </i></a></td>'
                                     +'</tr>';
                             });
                             $('#kdm-listing tbody').html(result)
@@ -848,6 +850,230 @@
             })
 
             //Delete NOC SPLs
+            $(document).on('click', '.delete_spl', function () {
+
+                var id =  $(this).data('id');
+                var url = '{{  url("") }}'+ '/localspl/'+id+'/destroy' ;
+
+                swal({
+                        showCancelButton: true,
+                        title: 'SPL Deletion!',
+                        text: 'You are sure you want to delete this spl',
+                        icon: 'warning',
+                        buttons: {
+                            cancel: {
+                                text: "Cancel",
+                                value: null,
+                                visible: true,
+                                className: "btn btn-primary",
+                                closeModal: true,
+                            },
+
+                            Confirm: {
+                                text: "Yes, delete it!",
+                                value: true,
+                                visible: true,
+                                className: "btn btn-danger",
+                                closeModal: true,
+                            },
+                        }
+                    }).then((result) => {
+                        console.log(result)
+                    if (result) {
+
+                        $.ajax({
+                            url: url,
+                            type: 'DELETE',
+                            method: 'DELETE',
+                            data: {
+                                id: id,
+                                "_token": "{{ csrf_token() }}",
+                            },
+
+                            headers: {
+                                'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                                "_token": "{{ csrf_token() }}",
+                            },
+                            beforeSend: function() {
+                                swal({
+                                    title: 'Refreshing',
+                                    allowEscapeKey: false,
+                                    allowOutsideClick: true,
+                                    onOpen: () => {
+                                        swal.showLoading();
+                                    }
+                                });
+                            },
+                            success: function(response) {
+
+
+
+                                swal.close();
+
+                                if(response == 'Success')
+                                {
+                                    load_splnoc()
+                                    swal({
+                                        title: 'Done!',
+                                        text: 'Spls Deleted Successfully ',
+                                        icon: 'success',
+                                        button: {
+                                            text: "Continue",
+                                            value: true,
+                                            visible: true,
+                                            className: "btn btn-primary"
+                                        }
+                                    })
+
+                                }
+                                else
+                                {
+                                    swal({
+                                        title: 'Failed',
+                                        text: "Error occurred while sending the request.",
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#3f51b5',
+                                        cancelButtonColor: '#ff4081',
+                                        confirmButtonText: 'Great ',
+                                        buttons: {
+                                            cancel: {
+                                                text: "Cancel",
+                                                value: null,
+                                                visible: true,
+                                                className: "btn btn-danger",
+                                                closeModal: true,
+                                            },
+                                        }
+                                    })
+                                }
+
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                swal.close();
+                                showSwal('warning-message-and-cancel');
+
+                                //console.log(response) ;
+                            }
+                        })
+
+
+                    }
+
+                })
+
+            })
+
+            //Delete NOC KDM
+            $(document).on('click', '.delete_kdm', function () {
+
+                var id =  $(this).data('id');
+                var url = '{{  url("") }}'+ '/localkdm/'+id+'/destroy' ;
+
+                swal({
+                        showCancelButton: true,
+                        title: 'KDM Deletion!',
+                        text: 'You are sure you want to delete this KDM',
+                        icon: 'warning',
+                        buttons: {
+                            cancel: {
+                                text: "Cancel",
+                                value: null,
+                                visible: true,
+                                className: "btn btn-primary",
+                                closeModal: true,
+                            },
+
+                            Confirm: {
+                                text: "Yes, delete it!",
+                                value: true,
+                                visible: true,
+                                className: "btn btn-danger",
+                                closeModal: true,
+                            },
+                        }
+                    }).then((result) => {
+                        console.log(result)
+                    if (result) {
+
+                        $.ajax({
+                            url: url,
+                            type: 'DELETE',
+                            method: 'DELETE',
+                            data: {
+                                id: id,
+                                "_token": "{{ csrf_token() }}",
+                            },
+
+                            headers: {
+                                'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                                "_token": "{{ csrf_token() }}",
+                            },
+                            beforeSend: function() {
+                                swal({
+                                    title: 'Refreshing',
+                                    allowEscapeKey: false,
+                                    allowOutsideClick: true,
+                                    onOpen: () => {
+                                        swal.showLoading();
+                                    }
+                                });
+                            },
+                            success: function(response) {
+                                swal.close();
+
+                                if(response == 'Success')
+                                {
+                                    load_kdmnoc()
+                                    swal({
+                                        title: 'Done!',
+                                        text: 'KDM Deleted Successfully ',
+                                        icon: 'success',
+                                        button: {
+                                            text: "Continue",
+                                            value: true,
+                                            visible: true,
+                                            className: "btn btn-primary"
+                                        }
+                                    })
+                                }
+                                else
+                                {
+                                    swal({
+                                        title: 'Failed',
+                                        text: "Error occurred while sending the request.",
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#3f51b5',
+                                        cancelButtonColor: '#ff4081',
+                                        confirmButtonText: 'Great ',
+                                        buttons: {
+                                            cancel: {
+                                                text: "Cancel",
+                                                value: null,
+                                                visible: true,
+                                                className: "btn btn-danger",
+                                                closeModal: true,
+                                            },
+                                        }
+                                    })
+                                }
+
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                swal.close();
+                                showSwal('warning-message-and-cancel');
+
+                                //console.log(response) ;
+                            }
+                        })
+
+
+                    }
+
+                })
+
+            })
 
 
         })(jQuery);
@@ -961,5 +1187,10 @@ main {
     background-color: rgb(0 210 91 / 35%) !important;
 }
 
+.delete_spl ,
+.delete_kdm
+{
+    font-size: 20px ;
+}
     </style>
 @endsection

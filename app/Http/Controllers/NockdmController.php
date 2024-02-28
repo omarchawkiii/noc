@@ -300,6 +300,18 @@ class NockdmController extends Controller
 
     }
 
+    public function destroy($id)
+    {
+        $nockdm= Nockdm::find($id) ;
+        if($nockdm->delete())
+        {
+            echo 'Success' ;
+        }
+        else
+        {
+            echo 'Failed' ;
+        }
+    }
 
 
 }

@@ -1070,17 +1070,13 @@ class NocsplController extends Controller
 
             foreach ($request->splfiles as $splfiles )
             {
-
-
                 $spl_file_content = simplexml_load_file($splfiles);
-
                 // Read file content
                 //$file_content = file_get_contents($splfiles);
                 $file_content = $spl_file_content->asXML();
                 $file_name = $spl_file_content->Id.".xml" ;
                 //$file_name = Str::uuid().".xml" ;
                 $file_url = Storage::disk('local')->put( $file_name, $file_content) ;
-
                 $duration = $this->calculateSplDuration($spl_file_content);
                  $new_nocspl = Nocspl::updateOrCreate([
                     'uuid' =>$spl_file_content->Id,
@@ -1103,4 +1099,20 @@ class NocsplController extends Controller
         }
 
     }
+
+    public function destroy($id)
+    {
+
+        $nocspl = Nocspl::find($id) ;
+        if($nocspl->delete())
+        {
+            echo 'Success' ;
+        }
+        else
+        {
+            echo 'Failed' ;
+        }
+
+    }
+
 }

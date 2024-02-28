@@ -111,6 +111,8 @@ Route::post('checkAvailability', [App\Http\Controllers\NocsplController::class ,
 
 Route::post('checkCplsInLocation', [App\Http\Controllers\NocsplController::class , 'checkCplsInLocation'])->name('nocspl.checkCplsInLocation');
 Route::post('uploadlocalspl', [App\Http\Controllers\NocsplController::class , 'uploadlocalspl'])->name('nocspl.uploadlocalspl');
+Route::delete('localspl/{id}/destroy', [App\Http\Controllers\NocsplController::class , 'destroy'])->name('nocspl.destroy');
+
 
 
 Route::get('getMoviesCods/{location}', [App\Http\Controllers\MoviescodController::class , 'getMoviesCods'])->name('moviescod.getmoviescods');
@@ -123,3 +125,7 @@ Route::post('unlink_spl_movie', [App\Http\Controllers\MoviescodController::class
 Route::post('uploadlocalkdm', [App\Http\Controllers\NockdmController::class , 'uploadlocalkdm'])->name('nockdm.uploadlocalkdm');
 Route::get('get_nockdm', [App\Http\Controllers\NockdmController::class , 'get_nockdm'])->name('nockdm.get_nockdm');
 Route::post('uploadexistingkdm', [App\Http\Controllers\NockdmController::class , 'uploadexistingkdm'])->name('nockdm.uploadexistingkdm');
+Route::delete('localkdm/{id}/destroy', [App\Http\Controllers\NockdmController::class , 'destroy'])->name('nockdm.destroy');
+
+
+Route::get('getlogs/{location}', [App\Http\Controllers\LogsController::class , 'get_logs'])->name('logs.getlogs');
