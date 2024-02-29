@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cpl;
 use App\Models\Location;
 use App\Models\Log;
+use App\Models\Logstitle;
 use App\Models\Screen;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
@@ -104,7 +105,7 @@ class LogController extends Controller
     public function get_suggestion_cpls(Request $request)
     {
         //$location = Location::find($request->location) ;
-        $cpls = Cpl::where('contentTitleText','like', "%$request->searchText%")->groupBy('uuid') ;
+        $cpls = Logstitle::where('propertyValue','like', "%$request->searchText%") ;
         if( $request->location != null )
         {
             $locations= explode(',', $request->location);

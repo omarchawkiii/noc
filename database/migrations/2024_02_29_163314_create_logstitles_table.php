@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('logstitles', function (Blueprint $table) {
             $table->id();
+            $table->string('propertyValue', 255)->nullable();
+            $table->string('recKeywords', 255)->nullable();
+            $table->string('type', 255)->nullable();
+            $table->foreignId('location_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
