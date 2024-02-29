@@ -258,12 +258,12 @@
                                 for (var i = 0; i < obj.length; i++) {
                                     box += '' +
                                         '<div class="row item_result border-bottom" ' +
-                                        'data-id="' + obj[i].uuid + '" ' +
-                                        'data-title="' + obj[i].contentTitleText + '"  ' +
-                                        'data-property="' + obj[i].contentTitleText + '" style="padding-left: 9px;font-size: 12px">\n' +
+                                        'data-id="' + obj[i].recKeywords + '" ' +
+                                        'data-title="' + obj[i].propertyValue + '"  ' +
+                                        'data-property="' + obj[i].propertyValue + '" style="padding-left: 9px;font-size: 12px">\n' +
                                         '<div class="col-12 results">\n' +
                                         '    <div class="pt-4  ">\n' +
-                                        obj[i].contentTitleText +
+                                        obj[i].propertyValue +
                                         '    </div>\n' +
                                         '</div> ' +
                                         '</div> ';
@@ -396,12 +396,10 @@
 
                 var fromDate = $('#from').val();
                 var toDate = $('#to').val();
-                /*var id_source = $('#list_screens option:selected').val();
-                let name_screen = $("#list_screens option:selected").text();
-                // Do something with the obtained dates
 
-                var id_content = $('#search_content_by_title').attr('data-id')*/
-                var url = "{{  url('') }}"+ '/generate_pdf_report?id_location='+id_location+'&id_screen='+id_screen+'&fromDate='+fromDate+'&toDate='+toDate ;
+                var id_content = $('#search_content_by_title').attr('data-id')
+                var title_content = $('#search_content_by_title').val();
+                var url = "{{  url('') }}"+ '/generate_pdf_report?id_location='+id_location+'&id_screen='+id_screen+'&fromDate='+fromDate+'&toDate='+toDate +'&id_content='+id_content +'&title_content='+title_content ;
               //  window.open('pdfReport.php?id_source='+id_source+'&name_screen='+name_screen+'&fromDate='+fromDate+'&toDate='+toDate+'&id_content='+id_content+'&title_content='+title_content, '_blank');
               window.open(url);
              //   generate_pdf_report(id_location, id_screen, fromDate, toDate)
@@ -454,7 +452,7 @@
         $(document).on('click', '.item_result', function (event) {
             $('.item_result').not(this).removeClass('selected');
             $(this).toggleClass("selected");
-
+            console.log($(this).hasClass('selected'))
             if ($(this).hasClass('selected')) {
                 // Get the value of the data-title attribute
                 var id = $(this).attr('data-id');

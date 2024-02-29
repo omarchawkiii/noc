@@ -147,10 +147,10 @@ class LogController extends Controller
 
     }
 
-        public function generate_pdf_report(Request $request)
+    public function generate_pdf_report(Request $request)
     {
         $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-        $pdf_file_name ="Repport_";
+        $pdf_file_name ="";
 
         $pdf->SetCreator(PDF_CREATOR);
         $pdf->SetAuthor('EXPERSYS TMS');
@@ -172,14 +172,12 @@ class LogController extends Controller
                 $location = Location::find($locatin_id) ;
                 $location_name .= $location->name ." " ;
             }
-
             $pdf->Cell(0, 10, 'Locations : '.$location_name , 0, 1);
         }
         else
         {
             $pdf->Cell(0, 10, 'Locations : ALL' , 0, 1);
         }
-
 
         if( $request->id_screen != 'null' )
         {
@@ -192,8 +190,8 @@ class LogController extends Controller
         }
 
         $pdf->Cell(0, 10, 'Date Generation Report: ' .  date("Y-m-d H:i:s"), 0, 1);
-        //$pdf->Cell(0, 10, 'Title: ' . $_GET["title_content"], 0, 1);
-        //$pdf->Cell(0, 10, 'ID: ' . $_GET["id_content"], 0, 1);
+        $pdf->Cell(0, 10, 'Title: ' .$request->title_content, 0, 1);
+        $pdf->Cell(0, 10, 'ID: ' .$request->id_content , 0, 1);
         if( isset($request->fromDate) && $request->fromDate != 'null' )
         {
             $pdf->Cell(0, 10, 'Date From: ' . $request->fromDate, 0, 1);
@@ -204,18 +202,129 @@ class LogController extends Controller
             $pdf->Cell(0, 10, 'Date To: ' . $request->toDate, 0, 1);
             $pdf_file_name .= $request->toDate."" ;
         }
+        $pdf_file_name .= $request->title_content."" ;
 
 
-
-        $pdf->Output($pdf_file_name.".pdf", 'D');
-
-       // $locations= explode(',', $request->id_location);
-       /*
         $logs = Log::with('location') ;
-        if( $request->id_location != 'null' )
+        if( isset($request->id_location) && $request->id_location != 'null' )
         {
-            $logs = $logs->whereIn('location_id',$request->id_location) ;
+            $locations= explode(',', $request->id_location);
+            $logs = $logs->whereIn('location_id',$locations) ;
         }
+        if( $request->id_screen != 'null' )
+        {
+            $logs = $logs->where('screen_id', $request->id_screen) ;
+        }
+
+
+        $played = $logs->where('recKeywords',$request->id_content)->where('recSubtype','PlayoutAlert')->get()->count() ;
+        $failed = $logs->where('recKeywords',$request->id_content)->where('recSubtype','CPLStart')->get()->count() ;
+
+        $pdf->Cell(0, 10, 'Played ( CPLStart ) : ' . $played, 0, 1);
+        $pdf->Cell(0, 10, 'Failed ( Playouts Alert ): ' . $failed, 0, 1);
+
+        if($request->id_screen == 'null' )
+        {
+            $locations= explode(',', $request->id_location);
+            $location_name = ' ' ;
+            foreach($locations as $locatin_id)
+            {
+                $location = Location::find($locatin_id) ;
+
+                $pdf->Ln();
+                $pdf->Cell(0, 10, 'Locations : '.$location->name , 0, 1);
+
+                $pdf->SetFont('helvetica', '', 10);
+                $pdf->Cell(40, 10, 'Screen ', 1, 0, 'C');
+                $pdf->Cell(40, 10, 'Played', 1, 0, 'C');
+                $pdf->Cell(40, 10, 'Failed', 1, 0, 'C');
+                $pdf->Ln();
+
+
+                foreach($location->screens  as $screen)
+                {
+                    $played = Log::where('location_id',$location->id)->where('screen_id',$screen->id)->where('recKeywords',$request->id_content)->where('recSubtype','PlayoutAlert')->get()->count() ;
+                    $failed = Log::where('location_id',$location->id)->where('screen_id',$screen->id)->where('recKeywords',$request->id_content)->where('recSubtype','CPLStart')->get()->count() ;
+                    $pdf->Cell(40, 10,  $screen->screen_name , 1, 0, 'C');
+                    $pdf->Cell(40, 10, $played, 1, 0, 'C');
+                    $pdf->Cell(40, 10,  $failed, 1, 0, 'C');
+                    $pdf->Ln(); // Move to the next row
+                }
+
+
+
+            }
+
+        }else{
+            $locations= explode(',', $request->id_location);
+            $location_name = ' ' ;
+            foreach($locations as $locatin_id)
+            {
+                $location = Location::find($locatin_id) ;
+
+                    $played = Log::where('location_id',$location->id)->where('screen_id',$request->id_screen)->where('recKeywords',$request->id_content)->where('recSubtype','PlayoutAlert')->get()->count() ;
+                    $failed = Log::where('location_id',$location->id)->where('screen_id',$request->id_screen)->where('recKeywords',$request->id_content)->where('recSubtype','CPLStart')->get()->count() ;
+                    $pdf->Cell(40, 10,  $screen->screen_name , 1, 0, 'C');
+                    $pdf->Cell(40, 10, $played, 1, 0, 'C');
+                    $pdf->Cell(40, 10,  $failed, 1, 0, 'C');
+                    $pdf->Ln(); // Move to the next row
+            }
+        }
+
+        $pdf->Ln();
+        $pdf->Cell(0, 10, 'Log Data : '  , 0, 1);
+
+        $pdf->SetFont('helvetica', '', 10);
+        $pdf->Cell(40, 10, 'recId', 1, 0, 'C');
+        $pdf->Cell(40, 10, 'recType', 1, 0, 'C');
+        $pdf->Cell(40, 10, 'recSubtype', 1, 0, 'C');
+        $pdf->Cell(40, 10, 'recPriority', 1, 0, 'C');
+    //    $pdf->Cell(40, 10, 'recKeywords', 1, 0, 'C');
+        $pdf->Cell(40, 10, 'date', 1, 0, 'C');
+        $pdf->Cell(40, 10, 'screen', 1, 0, 'C');
+        $pdf->Ln();
+
+        $i = 1 ;
+
+        $logs = $logs->where('recSubtype','!=','ScheduleStart')
+                    ->where('recSubtype','!=','MacroComplete')
+                    ->where('recSubtype','!=','CPLCheck')
+                    ->orderBy('screen_id', 'Asc')
+                    ->orderBy('recId', 'Asc')
+                    ->orderBy('converted_rec_date', 'Asc')
+                    ->orderBy('recKeywords', 'Asc')
+                    ->orderBy('screen_id', 'Asc') ;
+
+
+        foreach($logs as $log)
+        {
+            if ($log->recSubtype == 'CPLStart') {
+                $pdf->Cell(240, 10, $i, 1, 0, 'C');
+
+                $i++;
+                $pdf->Ln();
+            }
+            $pdf->Cell(40, 10, $log->recType, 1, 0, 'C');
+            $pdf->Cell(40, 10, $log->recSubtype, 1, 0, 'C');
+            $pdf->Cell(40, 10, $log->recPriority, 1, 0, 'C');
+            $pdf->Cell(40, 10, $log->converted_rec_date, 1, 0, 'C');
+            $pdf->Cell(40, 10, $log->serverName, 1, 0, 'C');
+            $pdf->Ln(); // Move to the next row
+
+
+            if ($log->recSubtype== 'CPLEnd')
+            {
+                $pdf->SetDrawColor(0, 0, 0); // Set line color to black
+                $pdf->Line($pdf->GetX(), $pdf->GetY(), $pdf->GetX() + 120, $pdf->GetY()); // Draw line
+                $pdf->Ln();
+            }
+
+
+        }
+
+        $pdf->Output($pdf_file_name.'.pdf', 'D');
+
+        /*
         if( $request->id_screen != 'null' )
         {
             $logs = $logs->where('screen_id', $request->id_screen) ;
@@ -235,7 +344,9 @@ class LogController extends Controller
         }
         $logs = $logs->get() ;
         return Response()->json(compact('logs'));
-*/
+        */
+
+
     }
 
 }
