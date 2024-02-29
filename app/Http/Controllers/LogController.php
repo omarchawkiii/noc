@@ -115,43 +115,48 @@ class LogController extends Controller
         return Response()->json(compact('cpls'));
     }
 
-
-    public function getListlogs(Request $request)
+    public function get_logs_with_filter($id_location,$id_screen,$fromDate,$toDate,$id_content)
     {
-
-       // $locations= explode(',', $request->id_location);
         $logs = Log::with('location') ;
-        if( $request->id_location != 'null' )
+        if( $id_location != 'null' )
         {
-            $logs = $logs->whereIn('location_id',$request->id_location) ;
-        }
-        if( $request->id_screen != 'null' )
-        {
-            $logs = $logs->where('screen_id', $request->id_screen) ;
+            $logs = $logs->where('recKeywords',$id_content) ;
         }
 
-        if( isset($request->fromDate) && $request->fromDate != 'null' )
+        if( $id_location != 'null' )
         {
-            $fromDate = Carbon::parse($request->fromDate);
+            $logs = $logs->whereIn('location_id',$id_location) ;
+        }
+        if( $id_screen != 'null' )
+        {
+            $logs = $logs->where('screen_id', $id_screen) ;
+        }
+
+        if( isset($fromDate) && $fromDate != 'null' )
+        {
+            $fromDate = Carbon::parse($fromDate);
 
             $logs = $logs->where('converted_rec_date','>',  $fromDate ) ;
         }
 
-        if(isset($request->toDate) && $request->toDate != 'null' )
+        if(isset($toDate) && $toDate != 'null' )
         {
-            $toDate = Carbon::parse($request->toDate);
+            $toDate = Carbon::parse($toDate);
             $logs = $logs->where('converted_rec_date','<',  $toDate ) ;
         }
-        $logs = $logs->get() ;
+        $logs = $logs ;
+        return $logs ;
+    }
+    public function getListlogs(Request $request)
+    {
+        $logs = $this->get_logs_with_filter($request->id_location,$request->id_screen,$request->fromDate,$request->toDate,$request->id_content)->get();
         return Response()->json(compact('logs'));
-
     }
 
     public function generate_pdf_report(Request $request)
     {
         $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         $pdf_file_name ="";
-
         $pdf->SetCreator(PDF_CREATOR);
         $pdf->SetAuthor('EXPERSYS TMS');
         $pdf->SetTitle('Exported Data');
@@ -205,25 +210,13 @@ class LogController extends Controller
         $pdf_file_name .= $request->title_content."" ;
 
 
-        $logs = Log::with('location') ;
-        if( isset($request->id_location) && $request->id_location != 'null' )
-        {
-            $locations= explode(',', $request->id_location);
-            $logs = $logs->whereIn('location_id',$locations) ;
-        }
-        if( $request->id_screen != 'null' )
-        {
-            $logs = $logs->where('screen_id', $request->id_screen) ;
-        }
-
-
-        $played = $logs->where('recKeywords',$request->id_content)->where('recSubtype','PlayoutAlert')->get()->count() ;
-        $failed = $logs->where('recKeywords',$request->id_content)->where('recSubtype','CPLStart')->get()->count() ;
+        $failed =  Log::where('recKeywords',$request->id_content)->where('recSubtype','=','PlayoutAlert')->get()->count() ;
+        $played =  Log::where('recKeywords',$request->id_content)->where('recSubtype','=','CPLStart')->get()->count() ;
 
         $pdf->Cell(0, 10, 'Played ( CPLStart ) : ' . $played, 0, 1);
         $pdf->Cell(0, 10, 'Failed ( Playouts Alert ): ' . $failed, 0, 1);
 
-        if($request->id_screen == 'null' )
+        if(isset($request->id_screen) && $request->id_screen == 'null' )
         {
             $locations= explode(',', $request->id_location);
             $location_name = ' ' ;
@@ -243,8 +236,8 @@ class LogController extends Controller
 
                 foreach($location->screens  as $screen)
                 {
-                    $played = Log::where('location_id',$location->id)->where('screen_id',$screen->id)->where('recKeywords',$request->id_content)->where('recSubtype','PlayoutAlert')->get()->count() ;
-                    $failed = Log::where('location_id',$location->id)->where('screen_id',$screen->id)->where('recKeywords',$request->id_content)->where('recSubtype','CPLStart')->get()->count() ;
+                    $failed= Log::where('location_id',$location->id)->where('screen_id',$screen->id)->where('recKeywords',$request->id_content)->where('recSubtype','PlayoutAlert')->get()->count() ;
+                    $played  = Log::where('location_id',$location->id)->where('screen_id',$screen->id)->where('recKeywords',$request->id_content)->where('recSubtype','CPLStart')->get()->count() ;
                     $pdf->Cell(40, 10,  $screen->screen_name , 1, 0, 'C');
                     $pdf->Cell(40, 10, $played, 1, 0, 'C');
                     $pdf->Cell(40, 10,  $failed, 1, 0, 'C');
@@ -262,8 +255,8 @@ class LogController extends Controller
             {
                 $location = Location::find($locatin_id) ;
 
-                    $played = Log::where('location_id',$location->id)->where('screen_id',$request->id_screen)->where('recKeywords',$request->id_content)->where('recSubtype','PlayoutAlert')->get()->count() ;
-                    $failed = Log::where('location_id',$location->id)->where('screen_id',$request->id_screen)->where('recKeywords',$request->id_content)->where('recSubtype','CPLStart')->get()->count() ;
+                    $failed = Log::where('location_id',$location->id)->where('screen_id',$request->id_screen)->where('recKeywords',$request->id_content)->where('recSubtype','PlayoutAlert')->get()->count() ;
+                    $played = Log::where('location_id',$location->id)->where('screen_id',$request->id_screen)->where('recKeywords',$request->id_content)->where('recSubtype','CPLStart')->get()->count() ;
                     $pdf->Cell(40, 10,  $screen->screen_name , 1, 0, 'C');
                     $pdf->Cell(40, 10, $played, 1, 0, 'C');
                     $pdf->Cell(40, 10,  $failed, 1, 0, 'C');
@@ -271,7 +264,11 @@ class LogController extends Controller
             }
         }
 
+
+        $logs = $this->get_logs_with_filter($request->id_location,$request->id_screen,$request->fromDate,$request->toDate,$request->id_content);
+
         $pdf->Ln();
+
         $pdf->Cell(0, 10, 'Log Data : '  , 0, 1);
 
         $pdf->SetFont('helvetica', '', 10);
@@ -289,11 +286,13 @@ class LogController extends Controller
         $logs = $logs->where('recSubtype','!=','ScheduleStart')
                     ->where('recSubtype','!=','MacroComplete')
                     ->where('recSubtype','!=','CPLCheck')
+                    ->where('recSubtype','!=','SPLStart')
                     ->orderBy('screen_id', 'Asc')
                     ->orderBy('recId', 'Asc')
                     ->orderBy('converted_rec_date', 'Asc')
                     ->orderBy('recKeywords', 'Asc')
-                    ->orderBy('screen_id', 'Asc') ;
+                    ->orderBy('screen_id', 'Asc')
+                    ->get();
 
 
         foreach($logs as $log)
@@ -304,6 +303,7 @@ class LogController extends Controller
                 $i++;
                 $pdf->Ln();
             }
+            $pdf->Cell(40, 10, $log->recId, 1, 0, 'C');
             $pdf->Cell(40, 10, $log->recType, 1, 0, 'C');
             $pdf->Cell(40, 10, $log->recSubtype, 1, 0, 'C');
             $pdf->Cell(40, 10, $log->recPriority, 1, 0, 'C');
@@ -318,34 +318,8 @@ class LogController extends Controller
                 $pdf->Line($pdf->GetX(), $pdf->GetY(), $pdf->GetX() + 120, $pdf->GetY()); // Draw line
                 $pdf->Ln();
             }
-
-
         }
-
         $pdf->Output($pdf_file_name.'.pdf', 'D');
-
-        /*
-        if( $request->id_screen != 'null' )
-        {
-            $logs = $logs->where('screen_id', $request->id_screen) ;
-        }
-
-        if( isset($request->fromDate) && $request->fromDate != 'null' )
-        {
-            $fromDate = Carbon::parse($request->fromDate);
-
-            $logs = $logs->where('converted_rec_date','>',  $fromDate ) ;
-        }
-
-        if(isset($request->toDate) && $request->toDate != 'null' )
-        {
-            $toDate = Carbon::parse($request->toDate);
-            $logs = $logs->where('converted_rec_date','<',  $toDate ) ;
-        }
-        $logs = $logs->get() ;
-        return Response()->json(compact('logs'));
-        */
-
 
     }
 

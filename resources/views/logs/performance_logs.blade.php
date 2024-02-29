@@ -310,20 +310,20 @@
 
                 var fromDate = $('#from').val();
                 var toDate = $('#to').val();
-                var id_source = $('#list_screens option:selected').val();
-                let name_screen = $("#list_screens option:selected").text();
+                var id_content = $('#search_content_by_title').attr('data-id')
+                var title_content = $('#search_content_by_title').val();
                 // Do something with the obtained dates
 
                 var id_content = $('#search_content_by_title').attr('data-id')
 
-                getListlogs(id_location, id_screen, fromDate, toDate)
+                getListlogs(id_location, id_screen, fromDate, toDate,id_content)
 
                 if (id_content === undefined) {
                     id_content=null;
                 }
             });
             // function to get logs data from database
-            function getListlogs(id_location, id_screen, fromDate, toDate)
+            function getListlogs(id_location, id_screen, fromDate, toDate,id_content)
             {
                 $("#logs-listing").dataTable().fnDestroy();
                 var loader_content  =
@@ -345,6 +345,7 @@
                         id_screen: id_screen ,
                         fromDate: fromDate ,
                         toDate: toDate ,
+                        id_content:id_content,
                     },
                     success:function(response)
                     {
