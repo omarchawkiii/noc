@@ -132,3 +132,5 @@ Route::get('get_screen_from_location', [App\Http\Controllers\LogController::clas
 Route::get('get_suggestion_cpls', [App\Http\Controllers\LogController::class , 'get_suggestion_cpls'])->name('logs.get_suggestion_cpls');
 Route::get('getListlogs', [App\Http\Controllers\LogController::class , 'getListlogs'])->name('logs.getListlogs');
 Route::get('generate_pdf_report', [App\Http\Controllers\LogController::class , 'generate_pdf_report'])->name('logs.generate_pdf_report');
+
+Route::get('get_logstitle/{location}', [App\Http\Controllers\LogstitleController::class , 'get_logstitle'])->name('logstitle.get_logstitle');

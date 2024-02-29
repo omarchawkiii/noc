@@ -149,8 +149,8 @@ class LogController extends Controller
         public function generate_pdf_report(Request $request)
     {
         $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $pdf_file_name ="Repport_";
 
-        $pdf_file_name='test.pdf';
         $pdf->SetCreator(PDF_CREATOR);
         $pdf->SetAuthor('EXPERSYS TMS');
         $pdf->SetTitle('Exported Data');
@@ -196,15 +196,17 @@ class LogController extends Controller
         if( isset($request->fromDate) && $request->fromDate != 'null' )
         {
             $pdf->Cell(0, 10, 'Date From: ' . $request->fromDate, 0, 1);
+            $pdf_file_name .= $request->fromDate."_" ;
         }
         if(isset($request->toDate) && $request->toDate != 'null' )
         {
             $pdf->Cell(0, 10, 'Date To: ' . $request->toDate, 0, 1);
+            $pdf_file_name .= $request->toDate."" ;
         }
 
 
 
-        $pdf->Output($pdf_file_name, 'D');
+        $pdf->Output($pdf_file_name.".pdf", 'D');
 
        // $locations= explode(',', $request->id_location);
        /*

@@ -272,7 +272,7 @@ class NockdmController extends Controller
         if (!$response) {
             return ['error' => 'Error occurred while sending the request.'];
         } else {
-            return json_decode($response, true);
+            return json_decode($response,true);
         }
     }
 
