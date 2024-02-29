@@ -209,17 +209,13 @@
         <div class="modal-dialog modal-dialog-centered ">
             <div class="modal-content border-0">
                 <div class="modal-header">
-
                     <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal"
                         aria-label="Close"><span aria-hidden="true"
                             style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
                 </div>
                 <div class="modal-body  p-4">
-
                     <h3>Please Select one or more KDMs to ingest </h3>
                 </div>
-
-
             </div>
         <!--end modal-content-->
         </div>
@@ -1151,46 +1147,46 @@
         }
 
 
-main {
-  margin-top: 30px;
-  height: 100%;
-}
-.container {
-  border: 2px dashed pink;
-  min-height: 150px;
-}
+        main {
+        margin-top: 30px;
+        height: 100%;
+        }
+        .container {
+        border: 2px dashed pink;
+        min-height: 150px;
+        }
 
-.file-wrapper {
-  text-align: center;
-  width: 300px;
-  height: 5em;
-  vertical-align: middle;
-  display: table-cell;
-  position: relative;
-  overflow: hidden;
-  background: #122c4e; /* and other things to make it pretty */
-}
+        .file-wrapper {
+        text-align: center;
+        width: 300px;
+        height: 5em;
+        vertical-align: middle;
+        display: table-cell;
+        position: relative;
+        overflow: hidden;
+        background: #122c4e; /* and other things to make it pretty */
+        }
 
 
-.file-wrapper input {
+        .file-wrapper input {
 
-    right: 0; /* not left, because only the right part of the input seems to
-                 be clickable in some browser I can't remember */
-    cursor: pointer;
-    opacity: 0.0;
-    filter: alpha(opacity=0); /* and all the other old opacity stuff you
-                                 want to support */
+            right: 0; /* not left, because only the right part of the input seems to
+                        be clickable in some browser I can't remember */
+            cursor: pointer;
+            opacity: 0.0;
+            filter: alpha(opacity=0); /* and all the other old opacity stuff you
+                                        want to support */
 
-}
+        }
 
-.selected {
-    background-color: rgb(0 210 91 / 35%) !important;
-}
+        .selected {
+            background-color: rgb(0 210 91 / 35%) !important;
+        }
 
-.delete_spl ,
-.delete_kdm
-{
-    font-size: 20px ;
-}
+        .delete_spl ,
+        .delete_kdm
+        {
+            font-size: 20px ;
+        }
     </style>
 @endsection

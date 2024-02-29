@@ -82,7 +82,7 @@
       </li>
 
       <li class="nav-item menu-items">
-        <a class="nav-link" href="{{ route('snmp.get_performance_log') }}">
+        <a class="nav-link" href="{{ route('logs.get_performance_log') }}">
           <span class="menu-icon icon-box-performance">
             <i class="mdi mdi-bookmark-check "></i>
           </span>

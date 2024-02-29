@@ -276,43 +276,5 @@ class SnmpController extends Controller
 
     }
 
-    public function get_performance_log()
-    {
-        $locations = Location::all() ;
-        return view('snmps.performance_logs', compact('locations'));
-    }
-
-    public function get_screen_from_location(Request $request)
-    {
-
-
-
-        if( $request->location != null )
-        {
-            $locations= explode(',', $request->location);
-            if(count($locations) == 1  )
-            {
-                $location = Location::find($request->location) ;
-                $screens =$location->screens ;
-            }
-            else
-            {
-                $screens = null ;
-            }
-        }
-        else
-        {
-            $screens = null ;
-        }
-
-        return Response()->json(compact('screens'));
-    }
-
-    public function get_suggestion_cpls(Request $request)
-    {
-        $location = Location::find($request->location) ;
-        $cpls = Cpl::where('contentTitleText','like', "%$request->searchText%")->get() ;
-        return Response()->json(compact('cpls'));
-    }
 
 }

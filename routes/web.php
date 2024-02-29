@@ -87,9 +87,7 @@ Route::get('getdiskusage/{location}', [App\Http\Controllers\DiskusageController:
 Route::get('getsnmp/{location}', [App\Http\Controllers\SnmpController::class , 'getsnmp'])->name('snmp.getsnmp');
 Route::get('snmp', [App\Http\Controllers\SnmpController::class , 'get_snmp_with_filter'])->name('snmp.get_snmp_with_filter');
 Route::get('error_map', [App\Http\Controllers\SnmpController::class , 'get_snmp_with_map'])->name('snmp.get_snmp_with_map');
-Route::get('performance_logs', [App\Http\Controllers\SnmpController::class , 'get_performance_log'])->name('snmp.get_performance_log');
-Route::get('get_screen_from_location', [App\Http\Controllers\SnmpController::class , 'get_screen_from_location'])->name('snmp.get_screen_from_location');
-Route::get('get_suggestion_cpls', [App\Http\Controllers\SnmpController::class , 'get_suggestion_cpls'])->name('snmp.get_suggestion_cpls');
+
 
 
 
@@ -129,3 +127,7 @@ Route::delete('localkdm/{id}/destroy', [App\Http\Controllers\NockdmController::c
 
 
 Route::get('getlogs/{location}', [App\Http\Controllers\LogController::class , 'get_logs'])->name('logs.getlogs');
+Route::get('performance_logs', [App\Http\Controllers\LogController::class , 'get_performance_log'])->name('logs.get_performance_log');
+Route::get('get_screen_from_location', [App\Http\Controllers\LogController::class , 'get_screen_from_location'])->name('logs.get_screen_from_location');
+Route::get('get_suggestion_cpls', [App\Http\Controllers\LogController::class , 'get_suggestion_cpls'])->name('logs.get_suggestion_cpls');
+Route::get('getListlogs', [App\Http\Controllers\LogController::class , 'getListlogs'])->name('logs.getListlogs');
