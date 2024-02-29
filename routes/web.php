@@ -131,3 +131,4 @@ Route::get('performance_logs', [App\Http\Controllers\LogController::class , 'get
 Route::get('get_screen_from_location', [App\Http\Controllers\LogController::class , 'get_screen_from_location'])->name('logs.get_screen_from_location');
 Route::get('get_suggestion_cpls', [App\Http\Controllers\LogController::class , 'get_suggestion_cpls'])->name('logs.get_suggestion_cpls');
 Route::get('getListlogs', [App\Http\Controllers\LogController::class , 'getListlogs'])->name('logs.getListlogs');
+Route::get('generate_pdf_report', [App\Http\Controllers\LogController::class , 'generate_pdf_report'])->name('logs.generate_pdf_report');

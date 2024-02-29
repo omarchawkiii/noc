@@ -9,6 +9,7 @@ use App\Models\Screen;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use TCPDF;
 
 class LogController extends Controller
 {
@@ -144,4 +145,94 @@ class LogController extends Controller
         return Response()->json(compact('logs'));
 
     }
+
+        public function generate_pdf_report(Request $request)
+    {
+        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+        $pdf_file_name='test.pdf';
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor('EXPERSYS TMS');
+        $pdf->SetTitle('Exported Data');
+        $pdf->SetSubject('Exported Data');
+        $pdf->SetKeywords('TCPDF, PDF, export, data');
+
+        $pdfWidth = 210; // in mm
+        $pdfHeight = 297; // in mm
+        $pageLayout = array(297, 210); // A4 dimensions in millimeters (width, height)
+        $pdf->AddPage('L', $pageLayout);
+
+        if( isset($request->id_location) && $request->id_location != 'null' )
+        {
+            $locations= explode(',', $request->id_location);
+            $location_name = ' ' ;
+            foreach($locations as $locatin_id)
+            {
+                $location = Location::find($locatin_id) ;
+                $location_name .= $location->name ." " ;
+            }
+
+            $pdf->Cell(0, 10, 'Locations : '.$location_name , 0, 1);
+        }
+        else
+        {
+            $pdf->Cell(0, 10, 'Locations : ALL' , 0, 1);
+        }
+
+
+        if( $request->id_screen != 'null' )
+        {
+            $screen = Screen::find($request->id_screen) ;
+            $pdf->Cell(0, 10, 'Screen :   ' . $screen->screen_name, 0, 1);
+        }
+        else
+        {
+            $pdf->Cell(0, 10, 'Screen : ALL  ' , 0, 1);
+        }
+
+        $pdf->Cell(0, 10, 'Date Generation Report: ' .  date("Y-m-d H:i:s"), 0, 1);
+        //$pdf->Cell(0, 10, 'Title: ' . $_GET["title_content"], 0, 1);
+        //$pdf->Cell(0, 10, 'ID: ' . $_GET["id_content"], 0, 1);
+        if( isset($request->fromDate) && $request->fromDate != 'null' )
+        {
+            $pdf->Cell(0, 10, 'Date From: ' . $request->fromDate, 0, 1);
+        }
+        if(isset($request->toDate) && $request->toDate != 'null' )
+        {
+            $pdf->Cell(0, 10, 'Date To: ' . $request->toDate, 0, 1);
+        }
+
+
+
+        $pdf->Output($pdf_file_name, 'D');
+
+       // $locations= explode(',', $request->id_location);
+       /*
+        $logs = Log::with('location') ;
+        if( $request->id_location != 'null' )
+        {
+            $logs = $logs->whereIn('location_id',$request->id_location) ;
+        }
+        if( $request->id_screen != 'null' )
+        {
+            $logs = $logs->where('screen_id', $request->id_screen) ;
+        }
+
+        if( isset($request->fromDate) && $request->fromDate != 'null' )
+        {
+            $fromDate = Carbon::parse($request->fromDate);
+
+            $logs = $logs->where('converted_rec_date','>',  $fromDate ) ;
+        }
+
+        if(isset($request->toDate) && $request->toDate != 'null' )
+        {
+            $toDate = Carbon::parse($request->toDate);
+            $logs = $logs->where('converted_rec_date','<',  $toDate ) ;
+        }
+        $logs = $logs->get() ;
+        return Response()->json(compact('logs'));
+*/
+    }
+
 }

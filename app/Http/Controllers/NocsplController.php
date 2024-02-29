@@ -193,8 +193,6 @@ class NocsplController extends Controller
     }
 
 
-
-
     public function uniqueMultidimArray($array, $key): array
     {
         $uniq_array = array();
@@ -1070,26 +1068,42 @@ class NocsplController extends Controller
 
             foreach ($request->splfiles as $splfiles )
             {
-                $spl_file_content = simplexml_load_file($splfiles);
-                // Read file content
-                //$file_content = file_get_contents($splfiles);
-                $file_content = $spl_file_content->asXML();
-                $file_name = $spl_file_content->Id.".xml" ;
-                //$file_name = Str::uuid().".xml" ;
-                $file_url = Storage::disk('local')->put( $file_name, $file_content) ;
-                $duration = $this->calculateSplDuration($spl_file_content);
-                 $new_nocspl = Nocspl::updateOrCreate([
-                    'uuid' =>$spl_file_content->Id,
-                    ],[
-                    'uuid' => $spl_file_content->Id ,
-                    'spl_title' => $spl_file_content->ShowTitleText,
-                    'display_mode'=>null,
-                    'spl_properties_hfr'=>null ,
-                    'xmlpath'=>$file_name,
-                    'duration'=> $duration,
-                    'source'=> "flash disk",
-                    'location_id'=> null,
-                ]) ;
+
+                if ($splfiles->extension() === 'xml')
+                {
+                    $spl_file_content = simplexml_load_file($splfiles);
+                    if($spl_file_content)
+                    {
+                        // Read file content
+                        //$file_content = file_get_contents($splfiles);
+                        $file_content = $spl_file_content->asXML();
+                        if($file_content)
+                        {
+                            if($spl_file_content->getName() == 'ShowPlaylist')
+                            {
+                                $file_name = $spl_file_content->Id.".xml" ;
+                                //$file_name = Str::uuid().".xml" ;
+                                $file_url = Storage::disk('local')->put( $file_name, $file_content) ;
+                                $duration = $this->calculateSplDuration($spl_file_content);
+                                $new_nocspl = Nocspl::updateOrCreate([
+                                    'uuid' =>$spl_file_content->Id,
+                                    ],[
+                                    'uuid' => $spl_file_content->Id ,
+                                    'spl_title' => $spl_file_content->ShowTitleText,
+                                    'display_mode'=>null,
+                                    'spl_properties_hfr'=>null ,
+                                    'xmlpath'=>$file_name,
+                                    'duration'=> $duration,
+                                    'source'=> "flash disk",
+                                    'location_id'=> null,
+                                ]) ;
+                            }
+
+                        }
+
+                    }
+
+                }
             }
             echo "Success" ;
 

@@ -388,6 +388,60 @@
             }
 
 
+             // Event listener for Download PDF report
+            $('#export_Pdf').click(function () {
+                // Get the values of the 'from' and 'to' inputs
+                var id_location =  $('#location').val();
+                var id_screen =  $('#screen').val();
+
+                var fromDate = $('#from').val();
+                var toDate = $('#to').val();
+                /*var id_source = $('#list_screens option:selected').val();
+                let name_screen = $("#list_screens option:selected").text();
+                // Do something with the obtained dates
+
+                var id_content = $('#search_content_by_title').attr('data-id')*/
+                var url = "{{  url('') }}"+ '/generate_pdf_report?id_location='+id_location+'&id_screen='+id_screen+'&fromDate='+fromDate+'&toDate='+toDate ;
+              //  window.open('pdfReport.php?id_source='+id_source+'&name_screen='+name_screen+'&fromDate='+fromDate+'&toDate='+toDate+'&id_content='+id_content+'&title_content='+title_content, '_blank');
+              window.open(url);
+             //   generate_pdf_report(id_location, id_screen, fromDate, toDate)
+
+               /*if (id_content === undefined) {
+                    id_content=null;
+                }*/
+            });
+
+            // function to generete PDF report
+            function generate_pdf_report(id_location, id_screen, fromDate, toDate)
+            {
+
+                var result ='';
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    data :
+                    {
+                        id_location: id_location ,
+                        id_screen: id_screen ,
+                        fromDate: fromDate ,
+                        toDate: toDate ,
+                    },
+                    success:function(response)
+                    {
+
+
+
+                            console.log(response)
+
+
+                    },
+                    error: function(response) {
+
+                    }
+                })
+            }
+
+
             // fix page hight
 
             var t = $(window).height();
