@@ -35,7 +35,7 @@
                 <div class="d-flex flex-row justify-content-between mt-2 mb-3">
 
                     <div>
-                    <h4 class="card-title ">Locations</h4>
+                    <h4 class="card-title ">Users</h4>
                     </div>
 
                     <div>

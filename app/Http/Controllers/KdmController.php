@@ -31,10 +31,7 @@ class KdmController extends Controller
                 {
                     foreach($content as $kdm)
                     {
-
-
                         $cpl = Cpl::where('uuid','=',$kdm['cplId'])->where('location_id','=',$location->id)->first() ;
-
                         if($cpl)
                         {
                             Kdm::updateOrCreate([
@@ -48,6 +45,7 @@ class KdmController extends Controller
                                 'kdm_installed' => $kdm['kdm_installed'],
                                 'content_present' => $kdm['content_present'],
                                 'serverName_by_serial' => $kdm['serverName_by_serial'],
+                                'device_target' => $kdm['DeviceTarget'],
                                 'cpl_uuid' => $kdm['cplId'],
                                 'cpl_id' => $cpl->id,
                                 'screen_id' => $screen->id,
@@ -59,7 +57,6 @@ class KdmController extends Controller
                         {
                             echo "CPL dont exsite " . $kdm['cplId'] ;
                         }
-
                     }
 
                     if(count($content) != $screen->kdms->count() )
@@ -87,6 +84,7 @@ class KdmController extends Controller
         $country = $request->country;
         $screen = $request->screen;
         $lms= $request->lms ;
+
         if($lms== true)
         {
             $kdms =Lmskdm::with('screen');

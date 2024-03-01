@@ -247,6 +247,7 @@
                         {
                             background_difftime = "bg-danger"
                         }
+
                         if(value.screen)
                         {
                             screen_name = value.screen.screen_name
@@ -390,7 +391,7 @@
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ content_present+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ kdm_installed+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ dhm (diffTime)+'</a></td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> - </a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;">  '+value.device_target+' </a></td>'
                             +'</tr>';
                     });
                     $('#location-listing tbody').html(result)
