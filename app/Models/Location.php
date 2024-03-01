@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Crypt;
@@ -112,14 +113,17 @@ class Location extends Model
     {
         return $this->hasMany(Screen::class);
     }
+
     public function snmps(): HasMany
     {
         return $this->hasMany(Snmp::class);
     }
+
     public function playbacks(): HasMany
     {
         return $this->hasMany(Playback::class);
     }
+
     public function macros(): HasMany
     {
         return $this->hasMany(Macro::class);
@@ -129,9 +133,15 @@ class Location extends Model
     {
         return $this->hasMany(Moviescod::class);
     }
+
     public function logs(): HasMany
     {
         return $this->hasMany(Log::class);
+    }
+
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(Location::class,'locations_users');
     }
 
 }

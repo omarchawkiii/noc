@@ -134,3 +134,12 @@ Route::get('getListlogs', [App\Http\Controllers\LogController::class , 'getListl
 Route::get('generate_pdf_report', [App\Http\Controllers\LogController::class , 'generate_pdf_report'])->name('logs.generate_pdf_report');
 
 Route::get('get_logstitle/{location}', [App\Http\Controllers\LogstitleController::class , 'get_logstitle'])->name('logstitle.get_logstitle');
+
+
+Route::get('user/create', [App\Http\Controllers\UserController::class , 'create'])->name('users.create');
+Route::post('user/store', [App\Http\Controllers\UserController::class , 'store'])->name('users.store');
+Route::get('user/index', [App\Http\Controllers\UserController::class , 'index'])->name('users.index');
+Route::delete('user/{id}/destroy', [App\Http\Controllers\UserController::class , 'destroy'])->name('users.destroy');
+
+Route::get('get_users', [App\Http\Controllers\UserController::class , 'get_users'])->name('users.get_users');
+

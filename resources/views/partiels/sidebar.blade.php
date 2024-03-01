@@ -89,6 +89,14 @@
           <span class="menu-title">Performance Logs</span>
         </a>
       </li>
+      <li class="nav-item menu-items">
+        <a class="nav-link" href="{{ route('users.index') }}">
+          <span class="menu-icon icon-user-performance">
+            <i class="mdi mdi-account-multiple-outline"></i>
+          </span>
+          <span class="menu-title">Users Management </span>
+        </a>
+      </li>
       <li>
         <br />
         <br /><br /><br /><br /><br /> <br /><br /><br /><br /><br />

@@ -118,14 +118,17 @@ class LogController extends Controller
     public function get_logs_with_filter($id_location,$id_screen,$fromDate,$toDate,$id_content)
     {
         $logs = Log::with('location') ;
-        if( $id_location != 'null' )
+        if( $id_content != 'null' )
         {
             $logs = $logs->where('recKeywords',$id_content) ;
         }
 
         if( $id_location != 'null' )
         {
-            $logs = $logs->whereIn('location_id',$id_location) ;
+            //$locations= explode(',', $id_location);
+            $logs = $logs->whereIn('location_id',$id_location
+
+            ) ;
         }
         if( $id_screen != 'null' )
         {
@@ -264,8 +267,8 @@ class LogController extends Controller
             }
         }
 
-
-        $logs = $this->get_logs_with_filter($request->id_location,$request->id_screen,$request->fromDate,$request->toDate,$request->id_content);
+        $locations= explode(',', $request->id_location);
+        $logs = $this->get_logs_with_filter($locations ,$request->id_screen,$request->fromDate,$request->toDate,$request->id_content);
 
         $pdf->Ln();
 
