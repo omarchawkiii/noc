@@ -11,6 +11,7 @@ use SoulDoit\DataTable\SSP;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 
@@ -957,7 +958,14 @@ class NocsplController extends Controller
     public function get_nocspl()
     {
         $nocspls = Nocspl::all() ;
-        $locations =Location::all() ;
+        if( Auth::user()->role != 1)
+        {
+            $locations = Auth::user()->locations ;
+        }
+        else
+        {
+            $locations = Location::all() ;
+        }
         return Response()->json(compact('nocspls','locations'));
     }
 

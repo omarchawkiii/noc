@@ -9,6 +9,7 @@ use App\Models\Snmp;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SnmpController extends Controller
 {
@@ -63,7 +64,14 @@ class SnmpController extends Controller
         else
         {
             $snmps=null ;
-            $locations = Location::all() ;
+            if( Auth::user()->role != 1)
+            {
+                $locations = Auth::user()->locations ;
+            }
+            else
+            {
+                $locations = Location::all() ;
+            }
             return view('snmps.index', compact('snmps','locations'));
         }
 
@@ -71,7 +79,14 @@ class SnmpController extends Controller
     public function get_snmp_with_map(Request $request )
     {
 
-        $locations = Location::all() ;
+        if( Auth::user()->role != 1)
+        {
+            $locations = Auth::user()->locations ;
+        }
+        else
+        {
+            $locations = Location::all() ;
+        }
 
         $data_location = array() ;
         $states_red = array() ;
@@ -79,7 +94,7 @@ class SnmpController extends Controller
         $states_green = array() ;
         //$errors = Snmp::with('location')->groupBy('locationcity')->get() ;
         //$locations = Location::groupBy('city')->get() ;
-        $locations = Location::all() ;
+
         $diskusage = false ;
         $playback_generale_status = false ;
         $securityManager = false  ;

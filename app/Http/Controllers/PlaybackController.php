@@ -7,6 +7,7 @@ use App\Models\Playback;
 use App\Models\Screen;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PlaybackController extends Controller
 {
@@ -76,7 +77,14 @@ class PlaybackController extends Controller
 
     public function index()
     {
-        $locations = Location::all();
+        if( Auth::user()->role != 1)
+        {
+            $locations = Auth::user()->locations ;
+        }
+        else
+        {
+            $locations = Location::all() ;
+        }
         return view('playbacks.index', compact('locations'));
     }
 

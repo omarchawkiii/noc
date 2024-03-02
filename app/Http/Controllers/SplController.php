@@ -11,6 +11,7 @@ use App\Models\Spl;
 use App\Models\splcomponents;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Input;
 use Symfony\Component\Console\Input\Input as InputInput;
@@ -89,7 +90,12 @@ class SplController extends Controller
     public function spl_by_screen(Screen $screen)
     {
         $screens = $screen->location->screens ;
-        $locations = Location::all() ;
+
+        $locations = Location::whereHas('locations', function($q) {
+            $q->whereIn('user_id', Auth::user()->id);
+        })->get();
+
+        //$locations = Location::all() ;
         return view('spls.index', compact('screen','screens','locations'));
     }
 
@@ -119,7 +125,15 @@ class SplController extends Controller
         {
             $screens =null;
             $screen=null ;
-            $locations = Location::all() ;
+
+            if( Auth::user()->role != 1)
+            {
+                $locations = Auth::user()->locations ;
+            }
+            else
+            {
+                $locations = Location::all() ;
+            }
 
             return view('spls.index', compact('screen','screens','locations'));
         }

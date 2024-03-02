@@ -22,10 +22,11 @@
                     </div>
 
                     <div>
-
-                    <a  href="{{ route('location.create') }}" class="btn btn-primary  btn-icon-text">
-                        <i class="mdi mdi-plus btn-icon-prepend"></i> Create Location
-                    </a>
+                    @if (Auth::user()->role == 1 )
+                        <a  href="{{ route('location.create') }}" class="btn btn-primary  btn-icon-text">
+                            <i class="mdi mdi-plus btn-icon-prepend"></i> Create Location
+                        </a>
+                    @endif
                     </div>
                 </div>
 

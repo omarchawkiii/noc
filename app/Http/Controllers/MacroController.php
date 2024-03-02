@@ -30,9 +30,6 @@ class MacroController extends Controller
                 {
                     foreach($content as $macro_section)
                     {
-
-
-
                         foreach($macro_section['macros_section'] as $macro_element)
                         {
                             Macro::updateOrCreate([

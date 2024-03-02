@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Auth;
 
 class ScreenController extends Controller
 {
@@ -26,7 +27,14 @@ class ScreenController extends Controller
 
     public function create(): View
     {
-        $locations = Location::all() ;
+        if( Auth::user()->role != 1)
+        {
+            $locations = Auth::user()->locations ;
+        }
+        else
+        {
+            $locations = Location::all() ;
+        }
         return view('screens.create', compact('locations'));
     }
 

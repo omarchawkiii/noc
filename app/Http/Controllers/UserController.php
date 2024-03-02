@@ -30,14 +30,19 @@ class UserController extends Controller
             'email' => $request->email ,
             'password' => Hash::make($request->password) ,
             'email_verified_at' =>now() ,
+            'role' => $request->role ,
         ]);
-
-
 
         $new_user =User::find($user->id) ;
         $user->locations()->sync($request->location);
 
         return redirect()->route('users.index')->with('message' ,'User Has Been Added ');
+    }
+
+    public function show($id)
+    {
+        $user = User::with('locations')->find($id);
+        return Response()->json(compact('user'));
     }
 
 

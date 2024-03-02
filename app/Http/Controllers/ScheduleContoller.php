@@ -12,6 +12,7 @@ use App\Models\splcomponents;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 
 class ScheduleContoller extends Controller
@@ -171,7 +172,14 @@ class ScheduleContoller extends Controller
             }
             else
             {
-                $locations = Location::all() ;
+                if( Auth::user()->role != 1)
+                {
+                    $locations = Auth::user()->locations ;
+                }
+                else
+                {
+                    $locations = Location::all() ;
+                }
                 $schedules =null ;
                 $screens = null ;
 

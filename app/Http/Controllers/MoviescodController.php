@@ -142,10 +142,6 @@ class MoviescodController extends Controller
 
     }
 
-
-
-
-
     function sendUpdateLinksRequest($apiUrl, $cod, $uuid,$username,$password) {
         // Prepare the request data
         $requestData = [

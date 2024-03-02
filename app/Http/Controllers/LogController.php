@@ -10,6 +10,7 @@ use App\Models\Screen;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use TCPDF;
 
 class LogController extends Controller
@@ -76,7 +77,14 @@ class LogController extends Controller
 
     public function get_performance_log()
     {
-        $locations = Location::all() ;
+        if( Auth::user()->role != 1)
+        {
+            $locations = Auth::user()->locations ;
+        }
+        else
+        {
+            $locations = Location::all() ;
+        }
         return view('logs.performance_logs', compact('locations'));
     }
 

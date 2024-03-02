@@ -9,6 +9,7 @@ use App\Models\Location;
 use App\Models\Screen;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 
 class KdmController extends Controller
@@ -18,6 +19,7 @@ class KdmController extends Controller
         $screen = Screen::find($screen);
         $location = Location::find($location) ;
         $url = $location->connection_ip . "?request=getKdmListByScreenNumber&screen_number=".$screen->screen_number;
+        $url ="http://localhost/tms/system/api2.php?request=getKdmListByScreenNumber&screen_number=".$screen->screen_number;
 
         $client = new Client();
         $response = $client->request('GET', $url);
@@ -104,7 +106,14 @@ class KdmController extends Controller
         {
             $screens =null;
             $screen=null ;
-            $locations = Location::all() ;
+            if( Auth::user()->role != 1)
+            {
+                $locations = Auth::user()->locations ;
+            }
+            else
+            {
+                $locations = Location::all() ;
+            }
             return view('kdms.index', compact('screen','screens','locations'));
         }
 

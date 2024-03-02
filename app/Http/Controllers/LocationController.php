@@ -19,20 +19,36 @@ use Illuminate\View\View;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Redirect;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+
 ini_set('max_execution_time', 600);
 
 class LocationController extends Controller
 {
     public function index(Request $request): View
     {
-        $locations = Location::all();
+        if( Auth::user()->role != 1)
+        {
+            $locations = Auth::user()->locations ;
+        }
+        else
+        {
+            $locations = Location::all() ;
+        }
        // broadcast(new changeDataEvent($location))->toOthers() ;
         return view('locations.index', compact('locations'));
     }
 
     public function create(): View
     {
-        return view('locations.create');
+        if( Auth::user()->role == 1)
+        {
+            return view('locations.create');
+        }
+        else
+        {
+            abort(403) ;
+        }
     }
 
     public function show(Location $location): View
@@ -42,6 +58,7 @@ class LocationController extends Controller
 
     public function store(LocationStoreRequest $request)
     {
+
         $location = Location::create($request->validated());
         return redirect()->route('location.index')->with('message' ,' The location has been created ');
     }

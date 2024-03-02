@@ -13,6 +13,7 @@ use App\Models\Spl;
 use App\Models\splcomponents;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 
 class CplController extends Controller
@@ -105,7 +106,14 @@ class CplController extends Controller
     public function cpl_by_screen(Screen $screen)
     {
         $screens = $screen->location->screens ;
-        $locations = Location::all() ;
+        if( Auth::user()->role != 1)
+            {
+                $locations = Auth::user()->locations ;
+            }
+            else
+            {
+                $locations = Location::all() ;
+            }
         return view('cpls.index', compact('screen','screens','locations'));
     }
 
@@ -143,7 +151,14 @@ class CplController extends Controller
         {
             $screens =null;
             $screen=null ;
-            $locations = Location::all() ;
+            if( Auth::user()->role != 1)
+            {
+                $locations = Auth::user()->locations ;
+            }
+            else
+            {
+                $locations = Location::all() ;
+            }
             return view('cpls.index', compact('screen','screens','locations'));
         }
        // dd($cpls->get()) ;

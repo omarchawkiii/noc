@@ -89,6 +89,7 @@
           <span class="menu-title">Performance Logs</span>
         </a>
       </li>
+      @if (Auth::user()->role == 1 )
       <li class="nav-item menu-items">
         <a class="nav-link" href="{{ route('users.index') }}">
           <span class="menu-icon icon-user-performance">
@@ -97,6 +98,7 @@
           <span class="menu-title">Users Management </span>
         </a>
       </li>
+      @endif
       <li>
         <br />
         <br /><br /><br /><br /><br /> <br /><br /><br /><br /><br />

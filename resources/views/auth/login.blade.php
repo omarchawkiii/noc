@@ -9,14 +9,14 @@
 
             <div class="row m-5">
               <div class="sidebar-brand-wrapper d-lg-flex align-items-center justify-content-center ">
-                <a class="sidebar-brand brand-logo" href="index.html"><img src="{{asset('images/logo.png')}}" alt="logo"></a>
+                <a class="sidebar-brand brand-logo" href="index.html"><img src="{{asset('assets/images/logo.png')}}" alt="logo"></a>
               </div>
             </div>
             <h3 class="card-title text-start mb-3">Login</h3>
             <form action="{{ route('login') }}" method="POST">
                 @csrf()
               <div class="form-group">
-                <label>Username or email *</label>
+                <label>Email *</label>
                 <input type="email" class="form-control p_input @error('email') is-invalid @enderror " id="email" name="email" aria-describedby="emailHelp"  >
                 @error('email')
                     <span class="invalid-feedback" role="alert">
@@ -34,23 +34,17 @@
                 @enderror
 
               </div>
-              <div class="form-group d-flex align-items-center justify-content-between">
-                <div class="form-check">
-                  <label class="form-check-label">
-                    <input type="checkbox" class="form-check-input"> Remember me <i class="input-helper"></i></label>
-                </div>
-                @if (Route::has('password.request'))
-                    <a class="forgot-pass" href="{{ route('password.request') }}">Forgot Your Password?</a>
-                @endif
 
-              </div>
               <div class="text-center">
                 <button type="submit" class="btn btn-primary btn-block enter-btn">Login</button>
               </div>
+              <p>
+                Admin Access : Email : admin@gmail.com | password : admin<br /><br />
+                Manager Access : Email : manager@gmail.com | password : manager</p>
 
-              <p class="sign-up">Don't have an Account?<a href="#"> Sign Up</a></p>
             </form>
           </div>
+
         </div>
         <div class="col-lg-8"></div>
       </div>

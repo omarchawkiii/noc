@@ -8,7 +8,7 @@
                 <div class="d-flex flex-column h-100 py-0 py-xl-4">
 
                     <div class="text-center mb-5">
-                        <a href="{{ route('dashboard') }}">
+                        <a href="#">
                             <span class="logo-lg">
                                 <img src="assets/images/logo-dark.png" alt="" height="37">
                             </span>
