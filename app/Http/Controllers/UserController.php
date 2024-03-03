@@ -41,8 +41,32 @@ class UserController extends Controller
 
     public function show($id)
     {
+        $locations =Location::all() ;
         $user = User::with('locations')->find($id);
-        return Response()->json(compact('user'));
+        return Response()->json(compact('user','locations'));
+    }
+
+    public function update(Request $request)
+    {
+        $user = User::where('email',$request->email)->first();
+        $user->update([
+            'name' => $request->name ,
+            'email' => $request->email ,
+            'role' => $request->role ,
+
+        ]);
+
+        $user->locations()->sync($request->location);
+
+    }
+
+    public function update_password(Request $request)
+    {
+        $user = User::find($request->id);
+        $user->update([
+            'password' => $request->password ,
+        ]);
+
     }
 
 
@@ -62,6 +86,7 @@ class UserController extends Controller
 
     public function get_users(Request $request)
     {
+
         if( $request->location != null)
         {
             $users = User::whereHas('locations', function($q)use( $request) {
@@ -71,7 +96,7 @@ class UserController extends Controller
         }
         else
         {
-            $users = User::all() ;
+            $users = User::with('locations')->get() ;
         }
 
         return Response()->json(compact('users'));

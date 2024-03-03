@@ -89,6 +89,8 @@
                                                     style="">
                                                     <a class="btn btn-outline-primary dropdown-item edit_user"
                                                         id="{{ $user->id }}">Edit</a>
+                                                    <a class="btn btn-outline-primary dropdown-item edit_password_btn"
+                                                        id="{{ $user->id }}">Edit password</a>
                                                     <a class="btn btn-outline-primary dropdown-item delete_user"
                                                         id="{{ $user->id }}">Delete</a>
 
@@ -120,7 +122,7 @@
                 </div>
                 <div class="modal-body text-center p-4">
                     <div class="">
-                        <form method="POST" class="needs-validation" novalidate action="{{ route('users.store') }}">
+                        <form method="POST" id="create_user_form" class="needs-validation" novalidate action="{{ route('users.store') }}">
                             @csrf
                             <div class="row">
 
@@ -196,7 +198,8 @@
 
                                 <div class=" m-2">
                                     <button type="submit" class="btn btn-success me-2">Submit</button>
-                                    <button class="btn btn-dark">Cancel</button>
+                                    <button class="btn btn-dark" data-bs-dismiss="modal" aria-label="Close" type="button" >Cancel</button>
+
                                 </div>
                             </div>
                         </form>
@@ -220,9 +223,9 @@
                         aria-label="Close"><span aria-hidden="true"
                             style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
                 </div>
-                <div class="modal-body text-center p-4">
+                <div class="modal-body minauto text-center p-4">
                     <div class="">
-                        <form method="PUT" class="needs-validation" novalidate>
+                        <form method="PUT" class="needs-validation" novalidate id="edit_user_form">
                             @csrf
                             <div class="row">
                                 <div class="col-md-12">
@@ -245,37 +248,14 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="w-100 " style="text-align: left">Password</label>
-                                        <input id="password" type="password" class="form-control"
-                                            placeholder="Password" value="{{ old('password') }}" name="password"
-                                            required>
-                                        @error('password')
-                                            <div class="text-danger mt-1 ">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="w-100 " style="text-align: left"> Confirm Password </label>
-                                        <input id="confirm_password" type="password" class="form-control"
-                                            placeholder=" Confirm Password " value="{{ old('confirm_password') }}"
-                                            name="confirm_password" required>
-                                        @error('confirm_password')
-                                            <div class="text-danger mt-1 ">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
 
                                 <div class="col-md-12">
                                     <div class="input-group mb-2 mr-sm-2">
                                         <label class="w-100 " style="text-align: left"> Role </label>
-                                        <select id="role" class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" name="role" required>
-                                            <option selected="" value>Role</option>
-                                                    <option value="1">Admin</option>
-                                                    <option value="2">Manager</option>
+                                        <select id="role" class="form-select  form-control form-select-sm" id="role" aria-label=".form-select-sm example" name="role" required>
+                                                <option value>Role</option>
+                                                <option value="1">Admin</option>
+                                                <option value="2">Manager</option>
                                             </select>
                                     </div>
                                 </div>
@@ -290,9 +270,6 @@
                                                 name="location[]" multiple="multiple" required>
 
 
-                                                @foreach ($locations as $location)
-                                                    <option value="{{ $location->id }}">{{ $location->name }}</option>
-                                                @endforeach
                                             </select>
                                         </div>
                                     </div>
@@ -300,8 +277,66 @@
 
 
                                 <div class=" m-2">
-                                    <button type="submit" class="btn btn-success me-2">Submit</button>
-                                    <button class="btn btn-dark">Cancel</button>
+                                    <button type="submit" class="btn btn-success me-2" id="submit_update">Submit</button>
+                                    <button data-bs-dismiss="modal" aria-label="Close" type="button"  class="btn btn-dark">Cancel</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+            <!--end modal-content-->
+        </div>
+    </div>
+
+    <!-- Edit  Password -->
+    <div id="edit_password_modal" class="modal hide fade" role="dialog" aria-labelledby="edit_user_modal"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered  ">
+            <div class="modal-content border-0">
+                <div class="modal-header">
+                    <h5>Edit password</h5>
+                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true"
+                            style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
+                </div>
+                <div class="modal-body minauto text-center p-4">
+                    <div class="">
+                        <form method="PUT" class="needs-validation" novalidate id="edit_password_form">
+                            @csrf
+                            <div class="row">
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="w-100 " style="text-align: left">Password</label>
+                                        <input id="password" type="password" class="form-control"
+                                            placeholder="Password" value="{{ old('password') }}" name="password"
+                                            required>
+                                        @error('password')
+                                            <div class="text-danger mt-1 ">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <input type="hidden" id="id_user_password" value>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="w-100 " style="text-align: left"> Confirm Password </label>
+                                        <input id="confirm_password" type="password" class="form-control"
+                                            placeholder=" Confirm Password " value="{{ old('confirm_password') }}"
+                                            name="confirm_password" required>
+                                        @error('confirm_password')
+                                            <div class="text-danger mt-1 ">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+
+
+                                <div class=" m-2">
+                                    <button type="submit" class="btn btn-success me-2" id="submit_update_password">Submit</button>
+                                    <button data-bs-dismiss="modal" aria-label="Close" type="button"  class="btn btn-dark">Cancel</button>
                                 </div>
                             </div>
                         </form>
@@ -328,13 +363,15 @@
             'use strict'
 
             // Fetch all the forms we want to apply custom Bootstrap validation styles to
-            var forms = document.querySelectorAll('.needs-validation')
+            var forms =$( "#edit_user_form, #edit_password_form, #create_user_form" )
 
             // Loop over them and prevent submission
             Array.prototype.slice.call(forms)
                 .forEach(function (form) {
                 form.addEventListener('submit', function (event) {
+
                     if (!form.checkValidity()) {
+
                     event.preventDefault()
                     event.stopPropagation()
                     }
@@ -477,16 +514,26 @@
                     location: location,
                 },
                 success: function(response) {
+
                     $.each(response.users, function(index, value) {
                         var user_locations = "";
 
                         $.each(value.locations, function(index, value) {
-
+                            console.log(value)
                             user_locations += '<div class="badge badge-outline-primary m-1">' +
                                 value.name + '</div>';
                         })
 
                         index++;
+                        var role="";
+                        if(value.role ==1)
+                        {
+                            role="Admin";
+                        }
+                        else
+                        {
+                            role="Manager";
+                        }
                         result = result +
                             '<tr class="odd text-center">' +
                             '<td class="text-body align-middle fw-medium text-decoration-none">' +
@@ -495,6 +542,7 @@
                             .name + ' </td>' +
                             '<td class="text-body align-middle fw-medium text-decoration-none">' + value
                             .email + ' </td>' +
+                            '<td class="text-body align-middle fw-medium text-decoration-none">' + role + ' </td>' +
                             '<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> ' +
                             user_locations + '</a></td>' +
                             '<td class="text-body align-middle fw-medium text-decoration-none">' +
@@ -503,6 +551,8 @@
                             '<div class="dropdown-menu" aria-labelledby="dropdownMenuOutlineButton6" style="">' +
                             '<a class="btn btn-outline-primary dropdown-item edit_user" id="' + value
                             .id + '">Edit</a>' +
+                            '<a class="btn btn-outline-primary dropdown-item edit_password_btn" id="' + value
+                            .id + '">Edit Password</a>' +
                             '<a class="btn btn-outline-primary dropdown-item delete_user" id="' + value
                             .id + '">Delete</a>' +
                             '</div>' +
@@ -532,9 +582,7 @@
 
         }
         $('#location').change(function() {
-
             var location = $('#location').val();
-
             get_users(location)
         });
 
@@ -650,15 +698,13 @@
 
         })
 
-
         $(document).on('click', '.edit_user', function() {
 
             var id = $(this).attr('id');
             var url = '{{ url('') }}' + '/user/' + id + '/show';
             var location = $('#location').val();
-
-           // $("#location_edit_user").select2("val", "");
-
+            var location_option =""  ;
+            var selected = false ;
 
             $('#edit_user_modal').modal('show');
 
@@ -683,6 +729,7 @@
                     "_token": "{{ csrf_token() }}",
                 },
                 success: function(response) {
+                    console.log(response)
                     $('#edit_user_modal #name').val(response.user.name)
                     $('#edit_user_modal #Email').val(response.user.email)
 
@@ -691,18 +738,30 @@
                         allowClear: true
                     });
 
-                    $("#edit_user_modal #role option[value='+ response.user.role+']").prop("selected", true)
+                    $("#edit_user_modal #role option[value="+ response.user.role+"]").prop("selected", true)
 
 
-                    $.each(response.user.locations, function(index, value) {
+                    $.each(response.locations, function(index, value) {
 
-                        //$("#edit_user_modal #location").select2().select2('val',value.id);
-                        $('#edit_user_modal #location').val(value).trigger('change');
-
+                        $.each(response.user.locations, function(index, selected_element) {
+                            if(selected_element.id === value.id)
+                            {
+                                selected = true ;
+                            }
+                        })
+                        if(selected)
+                        {
+                            location_option  =location_option
+                            +'<option selected value="'+value.id+'">'+value.name+'</option>' ;
+                        }
+                        else
+                        {
+                            location_option  =location_option
+                            +'<option value="'+value.id+'">'+value.name+'</option>' ;
+                        }
+                        selected = false ;
                     })
-
-                    //$('#edit_user_modal #location').val(response.user.locations.id)
-
+                    $('#edit_user_modal #location_edit_user').html(location_option)
 
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
@@ -712,11 +771,111 @@
         })
 
         $(document).on('click', '#create_user_btn', function() {
-
             $('#create_user_modal').modal('show');
         })
 
+        $(document).on("submit","#edit_user_form" , function(event) {
 
+            event.preventDefault();
+
+
+            var name = $('#name').val();
+            var email = $('#Email').val();
+            var role = $('#role').val();
+            var location = $('#location_edit_user').val();
+            var url = '{{ url('') }}' + '/user/update';
+
+            //$('#edit_user_modal').modal('show');
+            $.ajax({
+                url: url,
+                type: 'PUT',
+                method: 'PUT',
+                data: {
+                    url: url,
+                    name: name,
+                    email: email,
+                    role: role,
+                    location: location,
+                    "_token": "{{ csrf_token() }}",
+                },
+
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                    "_token": "{{ csrf_token() }}",
+                },
+                success: function(response) {
+                    console.log(response)
+                    get_users(location)
+                        swal({
+                            title: 'Done!',
+                            text: 'User Updated Successfully ',
+                            icon: 'success',
+                            button: {
+                                text: "Continue",
+                                value: true,
+                                visible: true,
+                                className: "btn btn-primary"
+                            }
+                        })
+                        $('#edit_user_modal').modal('hide') ;
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(response);
+                }
+            })
+
+
+        })
+
+
+        $(document).on('click', '.edit_password_btn', function() {
+            var id = $(this).attr('id');
+            $('#id_user_password').val(id)
+            $('#edit_password_modal').modal('show');
+        })
+        $(document).on("submit","#edit_password_form" , function(event) {
+            event.preventDefault();
+            var id = $('#id_user_password').val();
+            var password = $('#password').val();
+            var url = '{{ url('') }}' + '/user/update_password';
+
+            //$('#edit_user_modal').modal('show');
+            $.ajax({
+                url: url,
+                type: 'PUT',
+                method: 'PUT',
+                data: {
+                    id: id,
+                    password: password,
+
+                    "_token": "{{ csrf_token() }}",
+                },
+
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                    "_token": "{{ csrf_token() }}",
+                },
+                success: function(response) {
+
+                        swal({
+                            title: 'Done!',
+                            text: 'Password Updated Successfully ',
+                            icon: 'success',
+                            button: {
+                                text: "Continue",
+                                value: true,
+                                visible: true,
+                                className: "btn btn-primary"
+                            }
+                        })
+                        $('#edit_password_modal').modal('hide') ;
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(response);
+                }
+            })
+
+        })
         // fix page hight
 
         var t = $(window).height();

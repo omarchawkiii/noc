@@ -115,7 +115,6 @@
 
     </div>
     <div class="row ">
-
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body " id="content_page">
@@ -164,6 +163,7 @@
 
     <script src="{{ asset('/assets/vendors/jquery-toast-plugin/jquery.toast.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="{{ asset('/assets/vendors/sweetalert/sweetalert.min.js') }}"></script>
 
     <script>
         $(document).ready(function() {
@@ -310,17 +310,39 @@
 
                 var fromDate = $('#from').val();
                 var toDate = $('#to').val();
-                var id_content = $('#search_content_by_title').attr('data-id')
+                //var id_content = $('#search_content_by_title').attr('data-id')
                 var title_content = $('#search_content_by_title').val();
                 // Do something with the obtained dates
 
                 var id_content = $('#search_content_by_title').attr('data-id')
 
-                getListlogs(id_location, id_screen, fromDate, toDate,id_content)
-
-                if (id_content === undefined) {
-                    id_content=null;
+                console.log(id_content)
+                if(id_content =='' || typeof id_content == 'undefined' )
+                {
+                    swal({
+                                    title: 'Failed!',
+                                    text: 'Please Select CPL    ',
+                                    icon: 'warning',
+                                    buttons: {
+                                        cancel: {
+                                            text: "Cancel",
+                                            value: null,
+                                            visible: true,
+                                            className: "btn btn-danger",
+                                            closeModal: true,
+                                        },
+                                    }
+                                })
                 }
+                else
+                {
+                    getListlogs(id_location, id_screen, fromDate, toDate,id_content)
+
+                    if (id_content === undefined) {
+                        id_content=null;
+                    }
+                }
+
             });
             // function to get logs data from database
             function getListlogs(id_location, id_screen, fromDate, toDate,id_content)
@@ -401,13 +423,33 @@
                 var id_content = $('#search_content_by_title').attr('data-id')
                 var title_content = $('#search_content_by_title').val();
                 var url = "{{  url('') }}"+ '/generate_pdf_report?id_location='+id_location+'&id_screen='+id_screen+'&fromDate='+fromDate+'&toDate='+toDate +'&id_content='+id_content +'&title_content='+title_content ;
-              //  window.open('pdfReport.php?id_source='+id_source+'&name_screen='+name_screen+'&fromDate='+fromDate+'&toDate='+toDate+'&id_content='+id_content+'&title_content='+title_content, '_blank');
-              window.open(url);
-             //   generate_pdf_report(id_location, id_screen, fromDate, toDate)
+                if(id_content =='' || typeof id_content == 'undefined' )
+                {
+                    swal({
+                                    title: 'Failed!',
+                                    text: 'Please Select CPL    ',
+                                    icon: 'warning',
+                                    buttons: {
+                                        cancel: {
+                                            text: "Cancel",
+                                            value: null,
+                                            visible: true,
+                                            className: "btn btn-danger",
+                                            closeModal: true,
+                                        },
+                                    }
+                                })
+                }
+                else
+                {
+                    //  window.open('pdfReport.php?id_source='+id_source+'&name_screen='+name_screen+'&fromDate='+fromDate+'&toDate='+toDate+'&id_content='+id_content+'&title_content='+title_content, '_blank');
+                window.open(url);
+                //   generate_pdf_report(id_location, id_screen, fromDate, toDate)
 
-               /*if (id_content === undefined) {
-                    id_content=null;
-                }*/
+                /*if (id_content === undefined) {
+                        id_content=null;
+                    }*/
+                }
             });
 
             // function to generete PDF report

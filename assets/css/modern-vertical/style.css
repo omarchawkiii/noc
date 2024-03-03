@@ -23871,6 +23871,10 @@ table td a
     text-align: justify;
     overflow-x: hidden;
 }
+.modal-body.minauto
+{
+    min-height: auto !important;
+}
 .modal
 {
     overflow: hidden !important;

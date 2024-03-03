@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -145,3 +146,5 @@ Route::get('user/index', [App\Http\Controllers\UserController::class , 'index'])
 Route::delete('user/{id}/destroy', [App\Http\Controllers\UserController::class , 'destroy'])->name('users.destroy')->middleware(['auth']);
 Route::get('user/{id}/show', [App\Http\Controllers\UserController::class , 'show'])->name('users.show')->middleware(['auth']);
 Route::get('get_users', [App\Http\Controllers\UserController::class , 'get_users'])->name('users.get_users')->middleware(['auth']);
+Route::put('user/update', [App\Http\Controllers\UserController::class , 'update'])->name('users.update')->middleware(['auth']);
+Route::put('user/update_password', [App\Http\Controllers\UserController::class , 'update_password'])->name('users.update_password')->middleware(['auth']);
