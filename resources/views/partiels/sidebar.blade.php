@@ -45,6 +45,15 @@
         </a>
       </li>
       <li class="nav-item menu-items">
+        <a class="nav-link" href="{{ route('ingester.index') }}">
+          <span class="menu-icon icon-box-blue">
+            <i class="mdi mdi-calendar-today "></i>
+          </span>
+          <span class="menu-title">Ingester</span>
+        </a>
+      </li>
+
+      <li class="nav-item menu-items">
         <a class="nav-link" href="{{ route('snmp.get_snmp_with_filter') }}">
           <span class="menu-icon icon-box-danger">
             <i class="mdi mdi-alert-octagon "></i>

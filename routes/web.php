@@ -148,3 +148,6 @@ Route::get('user/{id}/show', [App\Http\Controllers\UserController::class , 'show
 Route::get('get_users', [App\Http\Controllers\UserController::class , 'get_users'])->name('users.get_users')->middleware(['auth']);
 Route::put('user/update', [App\Http\Controllers\UserController::class , 'update'])->name('users.update')->middleware(['auth']);
 Route::put('user/update_password', [App\Http\Controllers\UserController::class , 'update_password'])->name('users.update_password')->middleware(['auth']);
+
+
+Route::get('ingester/index', [App\Http\Controllers\IngersterController::class , 'index'])->name('ingester.index')->middleware(['auth']);
