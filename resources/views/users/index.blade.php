@@ -783,6 +783,7 @@
             var email = $('#Email').val();
             var role = $('#role').val();
             var location = $('#location_edit_user').val();
+            var all_location = $('#location').val();
             var url = '{{ url('') }}' + '/user/update';
 
             //$('#edit_user_modal').modal('show');
@@ -804,8 +805,8 @@
                     "_token": "{{ csrf_token() }}",
                 },
                 success: function(response) {
-                    console.log(response)
-                    get_users(location)
+
+                    get_users(all_location)
                         swal({
                             title: 'Done!',
                             text: 'User Updated Successfully ',
@@ -838,7 +839,7 @@
             var id = $('#id_user_password').val();
             var password = $('#password').val();
             var url = '{{ url('') }}' + '/user/update_password';
-
+            var all_location = $('#location').val();
             //$('#edit_user_modal').modal('show');
             $.ajax({
                 url: url,
@@ -856,19 +857,19 @@
                     "_token": "{{ csrf_token() }}",
                 },
                 success: function(response) {
-
-                        swal({
-                            title: 'Done!',
-                            text: 'Password Updated Successfully ',
-                            icon: 'success',
-                            button: {
-                                text: "Continue",
-                                value: true,
-                                visible: true,
-                                className: "btn btn-primary"
-                            }
-                        })
-                        $('#edit_password_modal').modal('hide') ;
+                    get_users(all_location)
+                    swal({
+                        title: 'Done!',
+                        text: 'Password Updated Successfully ',
+                        icon: 'success',
+                        button: {
+                            text: "Continue",
+                            value: true,
+                            visible: true,
+                            className: "btn btn-primary"
+                        }
+                    })
+                    $('#edit_password_modal').modal('hide') ;
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.log(response);
