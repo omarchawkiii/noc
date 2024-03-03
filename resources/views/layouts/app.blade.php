@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{{asset('/assets/css/modern-vertical/style.css')}}">
     <link rel="shortcut icon" href="{{asset('/assets/images/favicon.png')}}" >
     <link rel="shortcut icon" href="{{asset('/assets/images/favicon.ico')}}">
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     @yield('custom_css')
 </head>
 

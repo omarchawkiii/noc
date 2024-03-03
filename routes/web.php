@@ -151,3 +151,7 @@ Route::put('user/update_password', [App\Http\Controllers\UserController::class ,
 
 
 Route::get('ingester/index', [App\Http\Controllers\IngersterController::class , 'index'])->name('ingester.index')->middleware(['auth']);
+Route::post('ingester/action_contoller', [App\Http\Controllers\IngersterController::class , 'action_contoller'])->name('ingester.action_contoller')->middleware(['auth']);
+
+Route::get('ingestersources/index', [App\Http\Controllers\IngestsourceController::class , 'index'])->name('ingestersources.index')->middleware(['auth']);
+Route::post('ingestersources/store', [App\Http\Controllers\IngestsourceController::class , 'store'])->name('ingestersources.store')->middleware(['auth']);
