@@ -108,6 +108,16 @@
         </a>
       </li>
       @endif
+
+      <li class="nav-item menu-items">
+        <a class="nav-link" href="{{ route('ingestersources.index') }}">
+          <span class="menu-icon icon-box-performance">
+            <i class="mdi mdi-bookmark-check "></i>
+          </span>
+          <span class="menu-title">Ingest Source</span>
+        </a>
+      </li>
+
       <li>
         <br />
         <br /><br /><br /><br /><br /> <br /><br /><br /><br /><br />

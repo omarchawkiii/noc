@@ -93,19 +93,19 @@
                                 <div class="col-md-4 mb-3">
                                     <div class="form-check">
                                         <label class="form-check-label" style="text-align: left">
-                                        <input name="defaultlocation_add_form" id="defaultlocation_add_form" type="checkbox" class="form-check-input"> Ingest Library <i class="input-helper"></i></label>
+                                        <input name="defaultlocation_add_form" id="defaultlocation_add_form" type="checkbox" class="form-check-input" value="1"> Ingest Library <i class="input-helper"></i></label>
                                     </div>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <div class="form-check">
                                         <label class="form-check-label" style="text-align: left">
-                                        <input name="usb_content_add_form" id="usb_content_add_form"  type="checkbox" class="form-check-input"> Media Content Library <i class="input-helper"></i></label>
+                                        <input name="usb_content_add_form" id="usb_content_add_form"  type="checkbox" class="form-check-input" value="1"> Media Content Library <i class="input-helper"></i></label>
                                     </div>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <div class="form-check">
                                         <label class="form-check-label" style="text-align: left">
-                                        <input name="defaultContent_add_form" id="defaultContent_add_form"  type="checkbox" class="form-check-input"> Default Content Library <i class="input-helper"></i></label>
+                                        <input name="defaultContent_add_form" id="defaultContent_add_form"  type="checkbox" class="form-check-input" value="1"> Default Content Library <i class="input-helper"></i></label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">

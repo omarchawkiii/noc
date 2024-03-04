@@ -415,7 +415,6 @@
             $('#export_Pdf').click(function () {
                 // Get the values of the 'from' and 'to' inputs
                 var id_location =  $('#location').val();
-                console.log(id_location.length)
                 var id_screen =  $('#screen').val();
 
                 var fromDate = $('#from').val();
@@ -424,7 +423,7 @@
                 var id_content = $('#search_content_by_title').attr('data-id')
                 var title_content = $('#search_content_by_title').val();
                 var url = "{{  url('') }}"+ '/generate_pdf_report?id_location='+id_location+'&id_screen='+id_screen+'&fromDate='+fromDate+'&toDate='+toDate +'&id_content='+id_content +'&title_content='+title_content ;
-                if(id_content =='' || typeof id_content == 'undefined' || id_location.length ==0 )
+                if(id_content =='' || typeof id_content == 'undefined' )
                 {
                     swal({
                                     title: 'Failed!',

@@ -34,8 +34,10 @@ class IngersterController extends Controller
                 $ingester_manager = new IngesterManager(getdb());
                 $server = $manager_server->getServerData($_POST["screen_id"]);*/
                 $server = Ingestsource::find($_POST["screen_id"]) ;
-                dd($server) ;
-               /* if ($manager_server->getScreenTypeById($_POST["screen_id"]) == "Screen") {
+               // dd($server) ;
+               /*
+               if ($manager_server->getScreenTypeById($_POST["screen_id"]) == "Screen")
+               {
                     $soapManagement = new SoapManagement();
                     $session = $soapManagement->login($server['usernameAdmin'], $server['passwordAdmin'], $server['serverName'], $server['managment_ip'], $server['id_server'], getdb());
 
@@ -109,161 +111,81 @@ class IngersterController extends Controller
                     }
 
                     echo json_encode($response);
-                } else if ($manager_server->getScreenTypeById($_POST["screen_id"]) == "Ingest") { */
-                    $verified_dcp_content = array();
-                    $ingester_manager = new IngesterManager(getdb());
-                    if ($ingester_manager->isMedia($_POST["screen_id"])) {
-                        $content = $ingester_manager->getScannedFiles($_POST["screen_id"]);
-
-                        foreach ($content as $item) {
-                            if ($ingester_manager->checkIngestExist($item['cpl_id_pack']) == "exists") {
-                                $item['downloaded_to_tms'] = $ingester_manager->isDownloaded($item['cpl_id_pack']);
-                                $item['current_status'] = $ingester_manager->checkDownloadStatus($item['cpl_id_pack']);
-                            } else {
-                                $item['downloaded_to_tms'] = 0;
-                                $item['current_status'] = 0;
-                            }
-                            array_push($verified_dcp_content, $item);
-                        }
-                        $verified_spl = array();
-                        $spl = $ingester_manager->getSplScanByIdServer($_POST["screen_id"]);
+                }
+                else if ($manager_server->getScreenTypeById($_POST["screen_id"]) == "Ingest")
+                { */
+            $verified_dcp_content = array();
+            $ingester_manager = new IngesterManager();
+            //$ingester_manager = new IngesterManager(getdb());
+            //if ($ingester_manager->isMedia($_POST["screen_id"])) {
 
 
-                        $response = array("session" => 1, "type" => "Ingest", "dcp_content" => $verified_dcp_content, "spl_content" => $spl);
+                $content = $ingester_manager->getScannedFiles($_POST["screen_id"]);
+                foreach ($content as $item) {
+                $new_item =  (array) $item;
+              
+                    if ($ingester_manager->checkIngestExist($new_item['cpl_id_pack']) == "exists") {
+                         $new_item['downloaded_to_tms'] = $ingester_manager->checkDcpIsDownloaded($new_item['cpl_id_pack']);
+                        $new_item['current_status'] = $ingester_manager->checkDownloadStatus($new_item['cpl_id_pack']);
+
                     } else {
-
-                        $content = $ingester_manager->getScannedFiles($_POST["screen_id"]);
-                        foreach ($content as $item) {
-                            if ($ingester_manager->checkIngestExist($item['cpl_id_pack']) == "exists") {
-                                $item['downloaded_to_tms'] = $ingester_manager->isDownloaded($item['cpl_id_pack']);
-                                $item['current_status'] = $ingester_manager->checkDownloadStatus($item['cpl_id_pack']);
-                            } else {
-                                $item['downloaded_to_tms'] = 0;
-                                $item['current_status'] = 0;
-                            }
-                            array_push($verified_dcp_content, $item);
-                        }
-                        $spl = $ingester_manager->getSplScanByIdServer($_POST["screen_id"]);
-
-                        $response = array("session" => 1, "type" => "Ingest", "dcp_content" => $verified_dcp_content, "spl_content" => $spl);
+                        $new_item['downloaded_to_tms'] = 0;
+                        $new_item['current_status'] = 0;
                     }
+                     array_push($verified_dcp_content, $new_item);
+                }
+                //$spl = $ingester_manager->getSplScanByIdServer($_POST["screen_id"]);
 
-                    echo json_encode($response);
+                $response = array("session" => 1, "type" => "Ingest", "dcp_content" => $verified_dcp_content, "spl_content" => []);
+
+
+            echo json_encode($response);
 
                // }
             }
 
             if ($_POST['action_control'] == "refresh_server") {
-                $manager_server = new ServerManager(getdb());
-                $ingester_manager = new IngesterManager(getdb());
-                $server = $manager_server->getServerData($_POST["screen_id"]);
-                if ($manager_server->getScreenTypeById($_POST["screen_id"]) == "Screen") {
-                    $soapManagement = new SoapManagement();
-                    $session = $soapManagement->login($server['usernameAdmin'], $server['passwordAdmin'], $server['serverName'], $server['managment_ip'], $server['id_server'], getdb());
 
+
+               // $manager_server = new ServerManager(getdb());
+                $ingester_manager = new IngesterManager();
+                //$server = $manager_server->getServerData($_POST["screen_id"]);
+                $server = Ingestsource::find($_POST["screen_id"]) ;
+
+
+                if ($ingester_manager->checkServerFtpConnection($_POST["screen_id"])) {
+
+                    $ingester_manager->refreshLibrary($_POST["screen_id"], $server->server_ip, $server->usernameServer, $server->passwordServer, $server->path);
                     $verified_dcp_content = array();
-                    $verified_spl = array();
-                    if ($session == NULL) {
-                        $response = array("session" => 0, "dcp_content" => 0, "spl_content" => 0);
-                    } else {
-                        //dcp content
-                        $soapManagement->CancelScan($session, $server['managment_ip']);
-                        $soapManagement->ClearScan($session, $server['managment_ip']);
-                        $soapManagement->StartScan($session, $server['managment_ip'], "data/assets/");
-                        $status = $soapManagement->GetScanStatus($session, $server['managment_ip']);
-
-                        if ($status == "Completed") {
-                            $content = $soapManagement->GetScanResult($session, $server['managment_ip']);
-
-                        } else {
-                            while ($status != "Completed") {
-                                $status = $soapManagement->GetScanStatus($session, $server['managment_ip']);
-                            }
-                            $content = $soapManagement->GetScanResult($session, $server['managment_ip']);
-
-                        }
-                        if (empty(get_object_vars($content->assetList))) {
-
-                        } else {
-                            $content = $content->assetList->asset;
-                            foreach ($content as $item) {
-                                $download_status = $ingester_manager->checkDownloadStatus($item->id);
-                                $item->downloaded_to_tms = ($download_status == "Complete" ? 1 : 0);
-                                $item->current_status = $download_status;
-                                array_push($verified_dcp_content, $item);
-                            }
-                        }
-
-
-                        //  get spl content
-                        $soapManagement->CancelScan($session, $server['managment_ip']);
-                        $soapManagement->ClearScan($session, $server['managment_ip']);
-                        $soapManagement->StartScan($session, $server['managment_ip'], "data/playlists/");
-                        $status = $soapManagement->GetScanStatus($session, $server['managment_ip']);
-
-                        if ($status == "Completed") {
-                            $spl_content = $soapManagement->GetScanResult($session, $server['managment_ip']);
-                        } else {
-                            while ($status != "Completed") {
-                                $status = $soapManagement->GetScanStatus($session, $server['managment_ip']);
-                            }
-                            $spl_content = $soapManagement->GetScanResult($session, $server['managment_ip']);
-
-                        }
-
-                        if (empty(get_object_vars($spl_content->assetList))) {
-
-                        } else {
-                            $spl_content = $spl_content->assetList->asset;
-                            if (is_array($spl_content)) {
-                                foreach ($spl_content as $item) {
-                                    $item->downloaded_to_tms = $ingester_manager->checkSplIsDownloaded($item->id);
-                                    array_push($verified_spl, $item);
-                                }
-                            } else {
-                                $spl_content->downloaded_to_tms = $ingester_manager->checkSplIsDownloaded($spl_content->id);
-                                array_push($verified_spl, $spl_content);
-                            }
-
-                        }
-                        $response = array("session" => 1, "type" => "screen", "dcp_content" => $verified_dcp_content, "spl_content" => $verified_spl);
-
+                    $content = $ingester_manager->getScannedFiles($_POST["screen_id"]);
+                    foreach ($content as $item) {
+                       $new_item =  (array) $item;
+                        $new_item['downloaded_to_tms'] = $ingester_manager->checkDcpIsDownloaded($new_item['cpl_id_pack']);
+                        $new_item['current_status'] = $ingester_manager->checkDownloadStatus($new_item['cpl_id_pack']);
+                        array_push($verified_dcp_content, $new_item);
                     }
+                   // $spl = $ingester_manager->getSplScanByIdServer($_POST["screen_id"]);
 
+                    $response = array("session" => 1, "type" => "Ingest", "dcp_content" => $verified_dcp_content, "spl_content" => []);
+                    echo json_encode($response);
+                } else {
+                    $response = array("session" => 0, "type" => "Ingest", "dcp_content" => 0, "spl_content" => 0);
                     echo json_encode($response);
                 }
-                if ($server["serverType"] == "Ingest") {
-                    if ($ingester_manager->checkServerFtpConnection($_POST["screen_id"])) {
 
-                        $ingester_manager->refreshLibrary($_POST["screen_id"], $server['server_ip'], $server['usernameServer'], $server['passwordServer'], $server['remotPath']);
-                        $verified_dcp_content = array();
-                        $content = $ingester_manager->getScannedFiles($_POST["screen_id"]);
-                        foreach ($content as $item) {
-                            $item['downloaded_to_tms'] = $ingester_manager->checkDcpIsDownloaded($item['cpl_id_pack']);
-                            $item['current_status'] = $ingester_manager->checkDownloadStatus($item['cpl_id_pack']);
-                            array_push($verified_dcp_content, $item);
-                        }
-                        $spl = $ingester_manager->getSplScanByIdServer($_POST["screen_id"]);
 
-                        $response = array("session" => 1, "type" => "Ingest", "dcp_content" => $verified_dcp_content, "spl_content" => $spl);
-                        echo json_encode($response);
-                    } else {
-                        $response = array("session" => 0, "type" => "Ingest", "dcp_content" => 0, "spl_content" => 0);
-                        echo json_encode($response);
-                    }
-
-                }
             }
 
             if ($_POST["action_control"] == "start_ingest") {
-                $soapManagement = new SoapManagement();
-                $SPLManagement_clientSoap = $soapManagement->LoadWsdl2("Dolby_IMS_WSDL/SPLManagement.wsdl");
+                //$soapManagement = new SoapManagement();
+                //$SPLManagement_clientSoap = $soapManagement->LoadWsdl2("Dolby_IMS_WSDL/SPLManagement.wsdl");
 
-                $ingester_manager = new IngesterManager(getdb());
+                $ingester_manager = new IngesterManager();
                 $tms_hard_drive = $ingester_manager->getTmsHardDrive();
                 $manager_server = new ServerManager(getdb());
-                $server = $manager_server->getServerData($_POST["id_source"]);
-                if (!empty($_POST["spl_content"])) {
+                //$server = $manager_server->getServerData($_POST["id_source"]);
+                $server = Ingestsource::find($_POST["screen_id"]) ;
+                /*if (!empty($_POST["spl_content"])) {
                     if ($manager_server->getScreenTypeById($_POST["id_source"]) == "Screen") {
                         $session = $server['session_id'];
                         //$soapManagement->login($server['usernameAdmin'], $server['passwordAdmin'], $server['serverName'], $server['managment_ip'], $server['id_server'], getdb());
@@ -318,7 +240,7 @@ class IngersterController extends Controller
                         }
                     }
 
-                }
+                }*/
 
                 if (!empty($_POST["dcp_content"])) {
                     $total_files = array();
@@ -401,7 +323,7 @@ class IngersterController extends Controller
             }
 
             if ($_POST["action_control"] == "monitor") {
-                $ingester_manager = new IngesterManager(getdb());
+                $ingester_manager = new IngesterManager();
                 $response = array("running" => $ingester_manager->getRunningIngests(), "pending" => $ingester_manager->getPendingIngests());
                 //$ingester_manager->displayMonitoring();
                 echo json_encode($response);
@@ -450,5 +372,8 @@ class IngersterController extends Controller
 
         }
     }
+
+
+
 
 }
