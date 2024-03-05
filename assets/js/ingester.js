@@ -99,95 +99,7 @@ function scanScreen(screen_id, action, screen_name) {
                         $("#result_scan").css("overflow-y", "hidden");
                     } else {
 
-                        if (obj.type == "screen") {
-                            for (var i = 0; i < content.length; i++) {
-                                if (content[i].type == "CompositionPlaylist") {
-                                    let pkl = getPkl(content, content[i].parent_id);
-                                    let asset = getAssetMap(content, pkl['parent_id']);
-                                    box += '<div class=" border-bottom custom-border ingest-item row ' +
-                                        ((content[i].downloaded_to_tms == 1) ? "element-not-loaded" : " ") +
 
-                                        '"' +
-                                        '         data-type="CompositionPlaylist"' +
-                                        '         data-cpl_id="' + content[i].id + '"' +
-                                        '         data-cpl_uri="' + content[i].uri + '"' +
-                                        '         data-pkl_uri="' + pkl['uri'] + '"   ' +
-                                        '         data-pkl_id="' + pkl['id'] + '"   ' +
-                                        '         data-asset_id="' + asset['id'] + '"' +
-                                        '         data-asset_uri="' + asset['uri'] + '"' +
-                                        '         data-multiple_asset="0"' +
-                                        '         data-asset_description="' + asset['description'] + '"' +
-                                        '         data-download_status="' + ((content[i].current_status == "pending") ? "pending"
-                                            : (content[i].current_status == "running") ? "running" : "1") + '"' +
-                                        '> ' +
-                                        '   <div class="preview-item cpl" ' +
-                                        '             data-uuid="' + content[i].id + '"' +
-                                        '             data-type="' + content[i].type + '" ' +
-                                        '             data-description="' + content[i].description + '"' +
-                                        '             data-is3D="' + content[i].is3D + '"   ' +
-                                        '             data-uri="' + content[i].uri + '"' +
-                                        '   >' +
-                                        '        <div class="icon icon-box-primary"> ' +
-                                        '           <i class="mdi mdi-play-protected-content btn btn-success   custom-icon"></i> ' +
-                                        '        </div> ' +
-                                        '        <div class="preview-item-content d-sm-flex flex-grow">  ' +
-                                        '            <div class="flex-grow">\n' +
-                                        '                 <h6 class="preview-subject">' + content[i].description +
-                                        ((content[i].current_status == "pending") ? "<i class=\"mdi mdi-av-timer custom-icon   btn btn-warning \" style='border:0;margin-left: 14px; font-size: 23px; background: none;   color: #ffab00;'></i>"
-                                            : (content[i].current_status == "running") ? "<i class=\"btn btn-primary running-icon custom-icon mdi mdi-play-circle-outline\"   style='margin-left: 14px; font-size: 23px; background: none;      border: 0; color: #297EEE;'   \"></i>" : " ") +
-                                        '                      </h6> ' +
-                                        '            </div>' +
-                                        '        </div>' +
-                                        '   </div>' +
-                                        '   <div class="preview-item col-md-12 pkl "' +
-                                        '             data-uuid="' + pkl['id'] + '"' +
-                                        '             data-type="' + pkl['type'] + '"' +
-                                        '             data-description="' + pkl['description'] + '"' +
-                                        '             data-uri="' + pkl['uri'] + '">' +
-
-                                        '        <div class="icon icon-box-primary">\n' +
-                                        '               <i class="mdi mdi-package btn  btn-primary  custom-icon"></i>\n' +
-                                        '        </div>\n' +
-                                        '        <div class="preview-item-content d-sm-flex flex-grow">\n' +
-                                        '             <div class="flex-grow">\n' +
-                                        '                   <h6 class="preview-subject">' + pkl['description'] + '</h6>\n' +
-                                        '             </div>\n' +
-                                        '         </div>\n' +
-                                        '   </div>\n' +
-                                        '</div>';
-                                }
-                            }
-
-                            for (var i = 0; i < spl_content_screen.length; i++) {
-                                var exist = "";
-                                if (spl_content_screen[i].downloaded_to_tms == true) {
-                                    exist = "element-not-loaded";
-                                }
-
-                                box += '<div class=" border-bottom custom-border ingest-item row ' + exist + '"' +
-                                    '         data-type="ShowPlaylist"' +
-                                    '             data-uuid="' + spl_content_screen[i].id + '" ' +
-                                    '             data-type="' + spl_content_screen[i].type + '" ' +
-                                    '             data-description="' + spl_content_screen[i].description + '" ' +
-                                    '             data-uri="' + spl_content_screen[i].uri + '"> ' +
-
-                                    '   <div class="preview-item spl" ' +
-                                    '             data-uuid="' + spl_content_screen[i].id + '" ' +
-                                    '             data-type="' + spl_content_screen[i].type + '" ' +
-                                    '             data-description="' + spl_content_screen[i].description + '" ' +
-                                    '             data-uri="' + spl_content_screen[i].uri + '"> ' +
-                                    '        <div class="icon icon-box-primary"> ' +
-                                    '           <i class="mdi mdi-format-list-bulleted-type btn btn-warning custom-icon"></i> ' +
-                                    '        </div> ' +
-                                    '        <div class="preview-item-content d-sm-flex flex-grow">  ' +
-                                    '            <div class="flex-grow">\n' +
-                                    '                 <h6 class="preview-subject">' + spl_content_screen[i].description + '</h6> ' +
-                                    '            </div>' +
-                                    '        </div>' +
-                                    '   </div>' +
-                                    '</div>';
-                            }
-                        } else {
 
                             for (var i = 0; i < content.length; i++) {
 
@@ -225,7 +137,12 @@ function scanScreen(screen_id, action, screen_name) {
                                         '        </div> ' +
                                         '        <div class="preview-item-content d-sm-flex flex-grow">  ' +
                                         '            <div class="flex-grow">\n' +
-                                        '                 <h6 class="preview-subject">' + content[i].description + '</h6> ' +
+                                        '                 <h6 class="preview-subject">' + content[i].description +
+                                                                                ((content[i].current_status == "pending") ? "<i class=\"mdi mdi-av-timer custom-icon   btn btn-warning \" style='border:0;margin-left: 14px; font-size: 23px; background: none;   color: #ffab00;'></i>"
+                                            : (content[i].current_status == "running") ? "<i class=\"btn btn-primary running-icon custom-icon mdi mdi-play-circle-outline\"   style='margin-left: 14px; font-size: 23px; background: none;      border: 0; color: #297EEE;'   \"></i>"
+                                                : " "
+                                        ) +
+                                        '   </h6> ' +
                                         '            </div>' +
                                         '        </div>' +
                                         '   </div>' +
@@ -280,7 +197,7 @@ function scanScreen(screen_id, action, screen_name) {
                                         '</div>';
                                 }
                             }
-                        }
+
 
 
                         $('#result_scan').val("");
@@ -420,7 +337,7 @@ search_screens.onkeyup = function () {
 }
 
 $(document).on('click', '#start_ingest', function () {
-
+    var start_ingest   = " ";
     let id_source = $('#list_source_ingest option:selected').val();
     if (id_source == "Select_Library") {
         $("#warning_content").html('No Selected Source !');
@@ -481,9 +398,8 @@ $(document).on('click', '#start_ingest', function () {
                     dcp_content: dcp_content,
                     spl_content: spl_content
                 },
-                data:{
-                    'action_control':  action_control,
-                    //'_token': $('meta[name="csrf-token"]').attr('content'),
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function (response) {
                     console.log(response);
@@ -721,10 +637,9 @@ function displayMonitoring() {
                 if (running_ingest.length === 0) {
                     $('#table_ingest_running').data("current_status", "0");
                     $('#body_ingest_running').html("");
-                    console.log(running_ingest)
+                    $('#empty_running_list').removeClass("hide_div");
                 } else {
-
-
+                    $('#empty_running_list').addClass("hide_div");
                     for (var i = 0; i < running_ingest.length; i++) {
                         box_running += '<tr class="item_to_select running-item" id="current_download" data-task_status="running" data-current="1" data-id_cpl="' + running_ingest[i].id_cpl + '" data-id_server="' + running_ingest[i].id_server + '" data-status="running" style="font-weight: bold">' +
                             '    <td class="status_control">' + getStatusDownload(running_ingest[i].status) + ' </td>  ' +
@@ -737,28 +652,126 @@ function displayMonitoring() {
 
                     }
                     $('#body_ingest_running').html(box_running);
-
-
                 }
 
                 //  pending section
-                for (var i = 0; i < pending_ingest.length; i++) {
-                    box_pending += '' +
-                        '<tr  class="item_to_select pending-item" data-task_status="pending"data-id_cpl="' + pending_ingest[i].id_cpl + '"  data-id_server="' + pending_ingest[i].id_server + '" data-status="pending">' +
-                        '     <td class="py-1 text-warning">\n' +
-                        '         <span class="mdi mdi-timer-sand btn btn-warning custom-icon  " style="margin-left: 1px; font-size: 23px; background: none;border: 0; "></span>\n' +
-                        '                  Pending\n' +
-                        '    </td>  ' +
-                        // ' <td class="status_control" style="width: 100px;">'+getStatusDownload(pending_ingest[i].status)+' </td>  ' +
-                        '    <td>' + pending_ingest[i].type + '</td>\n' +
-                        '    <td>' + pending_ingest[i].cpl_description + '</td>\n' +
-                        '    <td>' + pending_ingest[i].source + '</td>\n' +
-                        '    <td>' + pending_ingest[i].date_create_ingest + '</td>\n' +
+                if (pending_ingest.length === 0) {
+                    $('#body_ingest_pending').html("");
+                    $('#empty_pending_list').removeClass("hide_div");
+                }else{
+                    $('#empty_pending_list').addClass("hide_div");
+                    for (var i = 0; i < pending_ingest.length; i++) {
+                        box_pending += '' +
+                            '<tr  class="item_to_select pending-item" data-task_status="pending"data-id_cpl="' + pending_ingest[i].id_cpl + '"  data-id_server="' + pending_ingest[i].id_server + '" data-status="pending">' +
+                            '     <td class="py-1 text-warning">\n' +
+                            '         <span class="mdi mdi-timer-sand btn btn-warning custom-icon  " style="margin-left: 1px; font-size: 23px; background: none;border: 0; "></span>\n' +
+                            '                  Pending\n' +
+                            '    </td>  ' +
+                            // ' <td class="status_control" style="width: 100px;">'+getStatusDownload(pending_ingest[i].status)+' </td>  ' +
+                            '    <td>' + pending_ingest[i].type + '</td>\n' +
+                            '    <td>' + pending_ingest[i].cpl_description + '</td>\n' +
+                            '    <td>' + pending_ingest[i].source + '</td>\n' +
+                            '    <td>' + pending_ingest[i].date_create_ingest + '</td>\n' +
 
-                        '</tr>';
+                            '</tr>';
+                    }
+                    $('#body_ingest_pending').html(box_pending);
                 }
-                $('#body_ingest_pending').html(box_pending);
 
+
+                let height_parent = $('.background-content').height();
+                $("#tab2-1").css("max-height", height_parent - 30);
+                $("#tab2-1").css("overflow-y", "auto");
+                $("#tab2-1").css("max-height", height_parent - 30);
+                $("#tab2-1").css("overflow-y", "auto");
+            } catch (e) {
+                console.log(e);
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        },
+        complete: function (jqXHR, textStatus) {
+        }
+    });
+}
+
+function updateMonitoring() {
+    $.ajax({
+        url: '/noc/ingester/action_contoller',
+        method: "POST",
+        data: {action_control: "monitor"},
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function (response) {
+            try {
+                let box_running = "";
+                let box_pending = "";
+                var obj = JSON.parse(response);
+                var running_ingest = obj.running;
+                var pending_ingest = obj.pending;
+                if ($('#table_ingest_running tbody tr').length > 0) {
+                    // Iterate through each row in the table
+                    $('#table_ingest_running tbody tr').each(function() {
+                        // Get the data-id_cpl attribute value of the current row
+                        var idCpl = $(this).attr('data-id_cpl');
+
+                        // Iterate through the array to find the matching object
+                        for (var i = 0; i < running_ingest.length; i++) {
+                            if (running_ingest[i].id_cpl === idCpl) {
+                                // Update the percentage value in the "Overall Progress" column
+                                $(this).find('td:last-child').text(running_ingest[i].percentage + ' %');
+                                if (running_ingest[i].percentage === 100) {
+                                    $(this).remove();
+                                    $('#empty_running_list').removeClass("hide_div");
+                                }
+                                break; // Exit the loop once the match is found
+                            }
+                        }
+                    });
+                }
+
+
+                // pending tab
+                if ($('#table_ingest_pending tbody tr').length > 0) {
+                    // Iterate through each row in the table
+                    $('#table_ingest_pending tbody tr').each(function() {
+                        // Get the data-id_cpl attribute value of the current row
+                        var idCpl = $(this).attr('data-id_cpl');
+                        var found = false; // Flag to track if the idCpl is found in the array
+                        // Iterate through the array to find the matching object
+                        for (var i = 0; i < pending_ingest.length; i++) {
+                            if (pending_ingest[i].id_cpl === idCpl) {
+                                found = true; // Set found to true if idCpl is found in the array
+                                break; // Exit the loop if idCpl is found
+                            }
+                        }
+                        // If idCpl is not found in the array, remove the row
+                        if (!found) {
+                            $(this).remove();
+                        }
+                    });
+                }
+// Iterate through the pending_ingest array to add missing rows to the table
+                for (var i = 0; i < pending_ingest.length; i++) {
+                    var idCpl = pending_ingest[i].id_cpl;
+                    // Check if the row with the idCpl already exists in the table
+                    if (!$('#table_ingest_pending tbody tr[data-id_cpl="' + idCpl + '"]').length) {
+                        var newRow_pending =
+                            '<tr  class="item_to_select pending-item" data-task_status="pending"data-id_cpl="' + pending_ingest[i].id_cpl + '"  data-id_server="' + pending_ingest[i].id_server + '" data-status="pending">' +
+                            '     <td class="py-1 text-warning">\n' +
+                            '         <span class="mdi mdi-timer-sand btn btn-warning custom-icon  " style="margin-left: 1px; font-size: 23px; background: none;border: 0; "></span>\n' +
+                            '                  Pending\n' +
+                            '    </td>  ' +
+                             '    <td>' + pending_ingest[i].type + '</td>\n' +
+                            '    <td>' + pending_ingest[i].cpl_description + '</td>\n' +
+                            '    <td>' + pending_ingest[i].source + '</td>\n' +
+                            '    <td>' + pending_ingest[i].date_create_ingest + '</td>\n' +
+                            '</tr>';
+                        $('#table_ingest_pending tbody').append(newRow_pending);
+                    }
+                }
                 let height_parent = $('.background-content').height();
                 $("#tab2-1").css("max-height", height_parent - 30);
                 $("#tab2-1").css("overflow-y", "auto");

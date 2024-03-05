@@ -13,7 +13,6 @@ class IngersterController extends Controller
         return view('ingester.index');
     }
 
-
     public function action_contoller()
     {
 
@@ -114,10 +113,10 @@ class IngersterController extends Controller
                 }
                 else if ($manager_server->getScreenTypeById($_POST["screen_id"]) == "Ingest")
                 { */
-            $verified_dcp_content = array();
-            $ingester_manager = new IngesterManager();
-            //$ingester_manager = new IngesterManager(getdb());
-            //if ($ingester_manager->isMedia($_POST["screen_id"])) {
+                $verified_dcp_content = array();
+                $ingester_manager = new IngesterManager();
+                //$ingester_manager = new IngesterManager(getdb());
+                //if ($ingester_manager->isMedia($_POST["screen_id"])) {
 
 
                 $content = $ingester_manager->getScannedFiles($_POST["screen_id"]);
@@ -139,7 +138,7 @@ class IngersterController extends Controller
                 $response = array("session" => 1, "type" => "Ingest", "dcp_content" => $verified_dcp_content, "spl_content" => []);
 
 
-            echo json_encode($response);
+                echo json_encode($response);
 
                // }
             }
@@ -181,10 +180,10 @@ class IngersterController extends Controller
                 //$SPLManagement_clientSoap = $soapManagement->LoadWsdl2("Dolby_IMS_WSDL/SPLManagement.wsdl");
 
                 $ingester_manager = new IngesterManager();
-                $tms_hard_drive = $ingester_manager->getTmsHardDrive();
+                $tms_hard_drive = "/DATA";
                 // $manager_server = new ServerManager();
                 //$server = $manager_server->getServerData($_POST["id_source"]);
-                $server = Ingestsource::find($_POST["screen_id"]) ;
+                $server = Ingestsource::find($_POST["id_source"]) ;
                 /*if (!empty($_POST["spl_content"])) {
                     if ($manager_server->getScreenTypeById($_POST["id_source"]) == "Screen") {
                         $session = $server['session_id'];
@@ -332,7 +331,6 @@ class IngersterController extends Controller
             }
 
             if ($_POST["action_control"] == "cancel_ingest") {
-
                 $ingester_manager = new IngesterManager();
                 $ingester_manager->updateDownloadStatusByIdCpl($_POST["idCpl"], "Canceled By User");
                 $tms_dir = $ingester_manager->getDcpTmsDirByCplUuid($_POST["idCpl"]);
@@ -343,16 +341,11 @@ class IngersterController extends Controller
             }
             if ($_POST["action_control"] == "details_ingest") {
                 $ingester_manager = new IngesterManager();
-
                     $ingester_manager->getDcpLogsDetails($_POST["idCpl"]);
-
-
             }
-
 
             if ($_POST["action_control"] == "get_logs") {
                 $ingester_manager = new IngesterManager();
-
                 //$response = array("dcp" => $ingester_manager->getDcpLogs(), "spl" => $ingester_manager->getSplLogs());
                 $response = array("dcp" => $ingester_manager->getDcpLogs(), "spl" => []);
                 echo json_encode($response);
@@ -362,7 +355,6 @@ class IngersterController extends Controller
                 foreach ($_POST["array_logs"] as $id) {
                     $ingester_manager-> DeleteLogsById($id);
                 }
-
             }
         }
 
@@ -376,8 +368,5 @@ class IngersterController extends Controller
 
         }
     }
-
-
-
 
 }

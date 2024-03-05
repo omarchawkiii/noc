@@ -57,7 +57,7 @@ class IngesterManager extends Controller
 
 
 
-    public function getScreenTypeById($id_server)
+    /*public function getScreenTypeById($id_server)
     {
         $q = $this
             ->_db
@@ -71,16 +71,11 @@ class IngesterManager extends Controller
             echo $e->getMessage();
         }
         return Null;
-    }
+    }*/
 
     public function downloadCplFile($id, $uuid, $uri, $server_ip, $username, $password, $dcp_dir, $type, $path, $id_source)
     {
-        if ($this->getScreenTypeById($id_source) == "Screen") {
-            $prefix = 'data/';
-            if (substr($uri, 0, strlen($prefix)) == $prefix) {
-                $uri = substr($uri, strlen($prefix));
-            }
-        }
+
         $url = 'ftp://' . $username . ':' . $password . '@' . $server_ip . '/' . $uri;
         $file_path = $dcp_dir . '/' . basename($uri);
         $hout = fopen($file_path, "wb") or die("Cannot open destination file");
@@ -101,12 +96,7 @@ class IngesterManager extends Controller
 
     public function downloadPklFile($id, $uuid, $uri, $server_ip, $username, $password, $dcp_dir, $type, $path,$id_source)
     {
-        if ($this->getScreenTypeById($id_source) == "Screen") {
-            $prefix = 'data/';
-            if (substr($uri, 0, strlen($prefix)) == $prefix) {
-                $uri = substr($uri, strlen($prefix));
-            }
-        }
+
         $url = 'ftp://' . $username . ':' . $password . '@' . $server_ip . '/' . $uri;
         $file_path = $dcp_dir . '/' . basename($uri);
         $hout = fopen($file_path, "wb") or die("Cannot open destination file");
@@ -151,7 +141,7 @@ class IngesterManager extends Controller
         $result =  DB::table('ingests')
         ->where('cpl_id', $cpl_uuid)
         ->select('ingests.pkl_id')
-        ->get();
+        ->first();
 
         return $result->pkl_id ;
 
@@ -192,9 +182,11 @@ class IngesterManager extends Controller
     public function insertCplData($cpl_uuid, $ContentKind)
     {
 
+
         $this->DeleteCplByUuidCpl($cpl_uuid);
 
-        DB::table('ingests')->insert(
+
+        DB::table('cpl_data')->insert(
             [
                 'id' => uniqid() ,
                 'uuid' => $cpl_uuid ,
@@ -215,11 +207,15 @@ class IngesterManager extends Controller
 
     public function DeleteCplByUuidCpl($uuid_cpl)
     {
-        $q2 = $this->_db->prepare('DELETE  FROM cpl_data   WHERE cpl_data.uuid = :uuid');
+        DB::table('cpl_data')
+                ->where('uuid', $uuid_cpl)
+                ->delete();
+
+        /*$q2 = $this->_db->prepare('DELETE  FROM cpl_data   WHERE cpl_data.uuid = :uuid');
         try {
             $q2->execute(array(':uuid' => $uuid_cpl));
         } catch (PDOException $e) {
-        }
+        }*/
     }
 
     public function loadAssetMap($tms_asset_path, $tms_dir, $assetMap)
@@ -397,18 +393,6 @@ class IngesterManager extends Controller
         return $file_mxf;
     }
 
-    public function updateIngestStatusByCplUuid($uuid_cpl, $status)
-    {
-        DB::table('ingests')
-        ->where('cpl_id', $uuid_cpl)
-        ->update(array('status' => $status ));
-
-
-       /* $q = $this
-            ->_db->prepare('UPDATE ingests SET status = ?  WHERE cpl_id = ?  ');
-        $q->execute([$status, $uuid_cpl]);*/
-    }
-
     public function checkDcpItemExist($Id, $id_cpl)
     {
         echo $Id . '-----------' . $id_cpl . '-----';
@@ -461,12 +445,7 @@ class IngesterManager extends Controller
 
     public function downloadAssetFile($id, $uuid, $uri, $server_ip, $username, $password, $dcp_dir, $type, $path,$id_source)
     {
-        if ($this->getScreenTypeById($id_source) == "Screen") {
-            $prefix = 'data/';
-            if (substr($uri, 0, strlen($prefix)) == $prefix) {
-                $uri = substr($uri, strlen($prefix));
-            }
-        }
+
 
         $url = 'ftp://' . $username . ':' . $password . '@' . $server_ip . '/' . $uri;
 
@@ -592,13 +571,20 @@ class IngesterManager extends Controller
     {
         $currentDateTime = date('Y-m-d H:i:s');
         //        $adjustedDateTime = date('Y-m-d H:i:s', strtotime($currentDateTime . ' +8 hours'));
-        $q = $this
+        /*$q = $this
             ->_db->prepare('UPDATE ingests SET ' . $type_file_progress . ' = ?,  date_create_ingest = ? WHERE id = ?  ');
-        $q->execute([$progress, $currentDateTime, $id]);
+        $q->execute([$progress, $currentDateTime, $id]);*/
+
+
+        DB::table('ingests')
+        ->where('id', $id)
+        ->update(array($type_file_progress => $progress , 'date_create_ingest' => $currentDateTime ));
+
     }
 
     public function DeleteDcpByUuidCpl($uuid_cpl)
     {
+        print_r($uuid_cpl);
         DB::table('ingests')
                 ->where('cpl_id', $uuid_cpl)
                 ->delete();
@@ -763,7 +749,7 @@ class IngesterManager extends Controller
         $string = 'This is a string &quot; &euro; &aacute; &amp;';
         $clean_path = preg_replace('#&[^;]+;#', '', $path);
         $pattern = '/&([#0-9A-Za-z]+);/';
-//        echo preg_replace($pattern, '', $path);
+        //        echo preg_replace($pattern, '', $path);
         return $clean_path;
     }
 
@@ -772,10 +758,9 @@ class IngesterManager extends Controller
         $result =  DB::table('ingests')
         ->where('cpl_id', $cpl_id)
         ->select('ingests.status')
-        ->get();
+        ->first();
 
-
-        if ($result !== false) {
+        if ($result != null ) {
             return $result->status;
         } else {
             return 0;
@@ -2144,67 +2129,69 @@ class IngesterManager extends Controller
         }
     }
 
-    public function getErrorsScan()
-    {
 
-
-        $dbDetails = getdb();
-        $table = <<<EOT
-        (
-            SELECT
-            ingest_scan_errors.id  ,
-            ingest_scan_errors.title,
-            ingest_scan_errors.content ,
-            ingest_scan_errors.file_path,
-            ingest_scan_errors.date_time,
-            ingest_scan_errors.type,
-            server.serverName
-        FROM
-            ingest_scan_errors
-        LEFT JOIN server ON ingest_scan_errors.id_server = server.idserver
-            ORDER BY ingest_scan_errors.date_time DESC
-         )AS temp
-        EOT;
-        $primaryKey = 'id';
-        $columns = array(
-            array('db' => 'id', 'dt' => 0),
-            array('db' => 'title', 'dt' => 1),
-            array('db' => 'content', 'dt' => 2),
-            array('db' => 'file_path', 'dt' => 3),
-            array('db' => 'date_time', 'dt' => 4),
-            array('db' => 'type', 'dt' => 5),
-            array('db' => 'serverName', 'dt' => 6),
-        );
-
-        echo json_encode(
-            SSP::simple($_GET, $dbDetails, $table, $primaryKey, $columns));
-    }
 
 
     // *********************************************************** script methods
 
     public function getListIngest()
     {
-        $stmt = $this->_db->prepare('SELECT ingests.*,
+
+
+        $res =  DB::table('ingests')
+            ->select('ingests.*', 'ingestsources.id', 'ingestsources.usernameServer', 'ingestsources.passwordServer', 'ingestsources.server_ip')
+            ->leftJoin('ingestsources', 'ingests.id_source', '=', 'ingestsources.id')
+            ->where('status', 'pending')
+            ->where('status', 'Pending')
+            ->orderBy('ingests.order', 'ASC')
+            ->get();
+
+        return $res ;
+
+
+
+        /*$stmt = $this->_db->prepare('SELECT ingests.*,
                                             server.idserver,  server.usernameServer,  server.passwordServer,server.server_ip
                                         FROM   `ingests`
                                         LEFT JOIN server  ON ingests.id_source = server.idserver
                                         WHERE status = "pending" ORDER BY ingests.order ASC ');
         $stmt->execute();
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(); */
     }
     public function getIngestFiles($cpl_uuid)
     {
 
-        $stmt = $this->_db->prepare('SELECT ingest_dcp_large.*  ,ingests.pkl_uri,ingests.id_source
+        $res = DB::table('ingest_dcp_large')
+            ->select('ingest_dcp_large.*', 'ingests.pkl_uri', 'ingests.id_source')
+            ->leftJoin('ingests', 'ingest_dcp_large.id_cpl', '=', 'ingests.cpl_id')
+            ->where('ingest_dcp_large.id_cpl', '=', $cpl_uuid)
+            ->get();
+
+        return $res ;
+
+        /*$stmt = $this->_db->prepare('SELECT ingest_dcp_large.*  ,ingests.pkl_uri,ingests.id_source
                                           FROM   `ingest_dcp_large`
                                           LEFT JOIN ingests  ON ingest_dcp_large.id_cpl = ingests.cpl_id
                                           WHERE ingest_dcp_large.id_cpl=:id_cpl');
         $stmt->execute(['id_cpl' => $cpl_uuid]);
-        return $stmt->fetchAll();
+        return $stmt->fetchAll();*/
     }
     public function ingestHasMxf($idCpl) {
-        $stmt = $this->_db->prepare('
+
+        $resultSet = DB::table('ingest_dcp_large')
+            ->leftJoin('ingests', 'ingest_dcp_large.Id', '=', 'ingests.cpl_id')
+            ->where('ingest_dcp_large.id_cpl', $idCpl)
+            ->whereNull('ingests.cpl_id')
+            ->count();
+
+        if ($resultSet == 0) {
+            // The result set is empty
+            return 0;
+        } else {
+            return 1;
+        }
+
+        /*$stmt = $this->_db->prepare('
                                   SELECT COUNT(*) as nbr_mxf FROM
                                  ingest_dcp_large
                                  LEFT JOIN ingests ON ingest_dcp_large.Id = ingests.cpl_id
@@ -2223,24 +2210,51 @@ class IngesterManager extends Controller
         else{
             return 1;
         }
-
+        */
     }
     public function updateIngestHasMxf($uuid_cpl, $has_mxf_status)
     {
-        $q = $this
+
+        DB::table('ingests')
+            ->where('cpl_id', $uuid_cpl)
+            ->update(['hasMxf' => $has_mxf_status]);
+
+
+        /*$q = $this
             ->_db->prepare('UPDATE ingests SET hasMxf = ?  WHERE cpl_id = ?  ');
-        $q->execute([$has_mxf_status, $uuid_cpl]);
+        $q->execute([$has_mxf_status, $uuid_cpl]);*/
     }
 
     public function updateIngestStartDownloadByCplUuid($uuid_cpl, $date_start_ingesting)
     {
-        $q = $this
+
+        DB::table('ingests')
+            ->where('cpl_id', $uuid_cpl)
+            ->update(['date_start_ingesting' => $date_start_ingesting]);
+
+        /*$q = $this
             ->_db->prepare('UPDATE ingests SET date_start_ingesting = ?  WHERE cpl_id = ?  ');
-        $q->execute([$date_start_ingesting, $uuid_cpl]);
+        $q->execute([$date_start_ingesting, $uuid_cpl]);*/
     }
 
     public function checkRunningExist()
     {
+
+        $RunningExists = false; // Initialize the variable
+        try {
+            $status = 'running';
+            $count = DB::table('ingests')->where('status', $status)->count();
+
+            if ($count > 0) {
+                return 1; // Task exists
+            } else {
+                return 0; // Task does not exist
+            }
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
+
+        /*
         $RunningExists = false; // Initialize the variable
         $q = $this
             ->_db
@@ -2261,6 +2275,7 @@ class IngesterManager extends Controller
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
+        */
 
     }
 
@@ -2315,6 +2330,7 @@ class IngesterManager extends Controller
         //$playlist_builder_manager = new  PlaylistBuilderManager(getdb());
         $data_dcp = $this->getDcpData($cpl_uuid);
 
+$data_dcp = json_decode(json_encode($data_dcp), true);
         $fileInfo = $this->getMediaInfo2(escapeshellarg($data_dcp['tms_dir'] . '/' . basename($data_dcp['cpl_uri'])));
         $media_info_xml = simplexml_load_string($fileInfo);
         $VideoTrack = $media_info_xml->media->track[1];
@@ -2433,8 +2449,10 @@ class IngesterManager extends Controller
     {
         try {
             $result = DB::table('ingests')
-                ->select('ingests.id', 'ingests.cpl_id', 'ingests.cpl_description', 'ingests.id_source', 'ingests.tms_dir', 'ingests.cpl_uri', 'server.serverType', 'server.serverName AS name_source')
-                ->leftJoin('server', 'ingests.id_source', '=', 'server.idserver')
+                ->select('ingests.id', 'ingests.cpl_id', 'ingests.cpl_description', 'ingests.id_source', 'ingests.tms_dir',
+                'ingests.cpl_uri',  'ingestsources.serverName AS name_source')
+                 ->selectRaw('"Ingest" AS serverType')
+                ->leftJoin('ingestsources', 'ingests.id_source', '=', 'ingestsources.id')
                 ->where('status', 'Complete')
                 ->whereNotExists(function ($query) {
                     $query->select(DB::raw(1))
@@ -2472,7 +2490,30 @@ class IngesterManager extends Controller
     public function check_DcpIsDownloaded($cpl_id)
     {
 
-        $q = $this->_db->prepare('  SELECT COUNT(*) AS result  FROM ingests
+
+        try {
+            $result = DB::table('ingests')
+                ->select(DB::raw('COUNT(*) AS result'))
+                ->where('cpl_id', $cpl_id)
+                ->where('status', 'Complete')
+                ->whereNotExists(function ($query) {
+                    $query->select(DB::raw(1))
+                          ->from('ingest_dcp_large as l')
+                          ->whereColumn('l.id_cpl', 'ingests.cpl_id')
+                          ->where('l.hash_verified', 0);
+                })
+                ->first();
+
+            if ($result && $result->result > 0) {
+                return 1;
+            } else {
+                return 0;
+            }
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
+
+        /*$q = $this->_db->prepare('  SELECT COUNT(*) AS result  FROM ingests
                                     WHERE cpl_id = :cpl_id  AND status = "Complete"
                                    AND NOT EXISTS ( SELECT 1 FROM ingest_dcp_large l  WHERE l.id_cpl = ingests.cpl_id AND l.hash_verified = 0
                                                   )
@@ -2485,11 +2526,27 @@ class IngesterManager extends Controller
             return 1;
         } else {
             return 0;
-        }
+        }*/
     }
     public function checkFileDownloadedByIdAndCPl($id_file, $cpl_id)
     {
-        $q = $this
+        try {
+            $result = DB::table('ingest_dcp_large')
+                ->select('status', 'hash_verified')
+                ->where('id_file', $id_file)
+                ->where('id_cpl', $cpl_id)
+                ->first();
+
+            if ($result && $result->status === 'Complete' && $result->hash_verified == 1) {
+                return 1;
+            } else {
+                return 0;
+            }
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
+
+        /*$q = $this
             ->_db
             ->prepare('SELECT  status,hash_verified  FROM ingest_dcp_large WHERE  id_file  = ? AND id_cpl=? ');
         try {
@@ -2503,7 +2560,7 @@ class IngesterManager extends Controller
 
         } catch (PDOException $e) {
             echo $e->getMessage();
-        }
+        }*/
 
     }
 
@@ -2630,59 +2687,32 @@ class IngesterManager extends Controller
 
     public function getRunningIngests()
     {
-        /*
-        $q = $this
-            ->_db
-            ->prepare('SELECT
 
-                       MAX(ingest_dcp_large.id_cpl) as id_cpl,
-                       MAX(ingest_dcp_large.id_server) as id_server ,
-                       "DCP" AS type,
-                         MAX(ingests.cpl_description) as cpl_description,
-                           MAX(ingests.status) as status,
-                             MAX(ingests.date_create_ingest) as date_create_ingest,
-                               MAX(ingests.date_start_ingesting) as date_start_ingesting,
-                       IFNULL(SUM(ingest_dcp_large.Size),0) AS "Total_size",
-                       IFNULL( SUM(ingest_dcp_large.progress),0) AS "Total_progress",
-                       ROUND((SUM(ingest_dcp_large.progress)*100/SUM(ingest_dcp_large.Size)),2 )  AS "percentage",
-                        MAX(server.serverName )As "source",
-                          MAX(ingests.order )As "order"
 
-                       FROM  ingests
-                       LEFT JOIN   server ON ingests.id_source   = server.idserver
-                       LEFT JOIN   ingest_dcp_large ON ingests.cpl_id = ingest_dcp_large.id_cpl
-                       WHERE ingests.status  ="running"
-                      GROUP BY ingest_dcp_large.id_cpl, ingests.order
-                         ORDER BY ingests.order ASC ;');
-        try {
-            $q->execute();
-            return $q->fetchAll();
-        } catch (PDOException $e) {
-            echo $e->getMessage();
-        }
-        */
+         $res=   DB::table('ingests')
+                ->leftJoin('ingestsources', 'ingests.id_source', '=', 'ingestsources.id')
+                ->leftJoin('ingest_dcp_large', 'ingests.cpl_id', '=', 'ingest_dcp_large.id_cpl')
+                ->select(
+                    DB::raw('MAX(ingest_dcp_large.id_cpl) as id_cpl'),
+                    DB::raw('MAX(ingest_dcp_large.id_server) as id_server'),
+                    DB::raw('"DCP" AS type'),
+                    DB::raw('MAX(ingests.cpl_description) as cpl_description'),
+                    DB::raw('MAX(ingests.status) as status'),
+                    DB::raw('MAX(ingests.date_create_ingest) as date_create_ingest'),
+                    DB::raw('MAX(ingests.date_start_ingesting) as date_start_ingesting'),
+                    DB::raw('IFNULL(SUM(ingest_dcp_large.Size),0) AS Total_size'),
+                    DB::raw('IFNULL(SUM(ingest_dcp_large.progress),0) AS Total_progress'),
+                    DB::raw('ROUND((SUM(ingest_dcp_large.progress)*100/SUM(ingest_dcp_large.Size)),2) AS percentage'),
+                    DB::raw('MAX(ingestsources.serverName) AS source'),
+                    DB::raw('MAX(ingests.order) AS `order`') // Enclose 'order' within backticks
+                )
+                ->where('ingests.status', '=', 'running')
+                ->groupBy('ingest_dcp_large.id_cpl', 'ingests.order')
+                ->orderBy('ingests.order', 'ASC')
+                ->get();
+                return $res;
 
-        DB::table('ingests')
-            ->leftJoin('server', 'ingests.id_source', '=', 'server.idserver')
-            ->leftJoin('ingest_dcp_large', 'ingests.cpl_id', '=', 'ingest_dcp_large.id_cpl')
-            ->select(
-                DB::raw('MAX(ingest_dcp_large.id_cpl) as id_cpl'),
-                DB::raw('MAX(ingest_dcp_large.id_server) as id_server'),
-                DB::raw('"DCP" AS type'),
-                DB::raw('MAX(ingests.cpl_description) as cpl_description'),
-                DB::raw('MAX(ingests.status) as status'),
-                DB::raw('MAX(ingests.date_create_ingest) as date_create_ingest'),
-                DB::raw('MAX(ingests.date_start_ingesting) as date_start_ingesting'),
-                DB::raw('IFNULL(SUM(ingest_dcp_large.Size),0) AS Total_size'),
-                DB::raw('IFNULL(SUM(ingest_dcp_large.progress),0) AS Total_progress'),
-                DB::raw('ROUND((SUM(ingest_dcp_large.progress)*100/SUM(ingest_dcp_large.Size)),2) AS percentage'),
-                DB::raw('MAX(server.serverName) AS source'),
-                DB::raw('MAX(ingests.order) AS order')
-            )
-            ->where('ingests.status', '=', 'running')
-            ->groupBy('ingest_dcp_large.id_cpl', 'ingests.order')
-            ->orderBy('ingests.order', 'ASC')
-            ->get();
+
     }
 
     public function getPendingIngests()
@@ -2718,27 +2748,31 @@ class IngesterManager extends Controller
         }
         */
 
-        DB::table('ingests')
-            ->leftJoin('server', 'ingests.id_source', '=', 'server.idserver')
-            ->leftJoin('ingest_dcp_large', 'ingests.cpl_id', '=', 'ingest_dcp_large.id_cpl')
-            ->select(
-                DB::raw('MAX(ingest_dcp_large.id_cpl) as id_cpl'),
-                DB::raw('MAX(ingest_dcp_large.id_server) as id_server'),
-                DB::raw('"DCP" AS type'),
-                DB::raw('MAX(ingests.cpl_description) as cpl_description'),
-                DB::raw('MAX(ingests.status) as status'),
-                DB::raw('MAX(ingests.date_create_ingest) as date_create_ingest'),
-                DB::raw('MAX(ingests.date_start_ingesting) as date_start_ingesting'),
-                DB::raw('IFNULL(SUM(ingest_dcp_large.Size),0) AS Total_size'),
-                DB::raw('IFNULL(SUM(ingest_dcp_large.progress),0) AS Total_progress'),
-                DB::raw('ROUND((SUM(ingest_dcp_large.progress)*100/SUM(ingest_dcp_large.Size)),2) AS percentage'),
-                DB::raw('MAX(server.serverName) AS source'),
-                DB::raw('MAX(ingests.order) AS order')
-            )
-            ->where('ingests.status', '=', 'Pending')
-            ->groupBy('ingest_dcp_large.id_cpl', 'ingests.order')
-            ->orderBy('ingests.order', 'ASC')
-            ->get();
+
+      $res=  DB::table('ingests')
+                ->leftJoin('ingestsources', 'ingests.id_source', '=', 'ingestsources.id')
+                ->leftJoin('ingest_dcp_large', 'ingests.cpl_id', '=', 'ingest_dcp_large.id_cpl')
+                ->select(
+                    DB::raw('MAX(ingest_dcp_large.id_cpl) as id_cpl'),
+                    DB::raw('MAX(ingest_dcp_large.id_server) as id_server'),
+                    DB::raw('"DCP" AS type'),
+                    DB::raw('MAX(ingests.cpl_description) as cpl_description'),
+                    DB::raw('MAX(ingests.status) as status'),
+                    DB::raw('MAX(ingests.date_create_ingest) as date_create_ingest'),
+                    DB::raw('MAX(ingests.date_start_ingesting) as date_start_ingesting'),
+                    DB::raw('IFNULL(SUM(ingest_dcp_large.Size),0) AS Total_size'),
+                    DB::raw('IFNULL(SUM(ingest_dcp_large.progress),0) AS Total_progress'),
+                    DB::raw('ROUND((SUM(ingest_dcp_large.progress)*100/SUM(ingest_dcp_large.Size)),2) AS percentage'),
+                    DB::raw('MAX(ingestsources.serverName) AS source'),
+                    DB::raw('MAX(ingests.order) AS `order`') // Enclose 'order' within backticks
+                )
+                ->where('ingests.status', '=', 'Pending')
+                ->orWhere('ingests.status', '=', 'pending')
+                ->groupBy('ingest_dcp_large.id_cpl', 'ingests.order')
+                ->orderBy('ingests.order', 'ASC')
+                ->get();
+                return $res;
+
     }
 
 
@@ -3002,14 +3036,7 @@ class IngesterManager extends Controller
     }
 
 
-    function secondsToHms($seconds)
-    {
-        $hours = floor($seconds / 3600);
-        $minutes = floor(($seconds % 3600) / 60);
-        $seconds = $seconds % 60;
 
-        return sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
-    }
 
 
 
@@ -3025,11 +3052,34 @@ class IngesterManager extends Controller
     }
 
 
-    public function checkLocalCplNeedsKdm($reelList)
+
+        function secondsToHms($seconds)
+    {
+        $hours = floor($seconds / 3600);
+        $minutes = floor(($seconds % 3600) / 60);
+        $seconds = $seconds % 60;
+
+        return sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
+    }
+
+
+    public function updateIngestStatusByCplUuid($uuid_cpl, $status)
+    {
+        DB::table('ingests')
+        ->where('cpl_id', $uuid_cpl)
+        ->update(array('status' => $status ));
+
+        /*$q = $this
+            ->_db->prepare('UPDATE ingests SET status = ?  WHERE cpl_id = ?  ');
+        $q->execute([$status, $uuid_cpl]);*/
+
+
+    }
+        public function checkLocalCplNeedsKdm($reelList)
     {
         $hasKeyId = false;
 
-        // Check if ReelList contains more than one reel
+// Check if ReelList contains more than one reel
         if (isset($reelList['Reel'][0])) {
             foreach ($reelList['Reel'] as $reel) {
                 if (isset($reel['AssetList']['MainPicture']['KeyId'])) {
@@ -3048,6 +3098,69 @@ class IngesterManager extends Controller
         return $hasKeyId ? 1 : 0;
 
     }
+
+
+    public function updateIngestEndDownloadByCplUuid($uuid_cpl, $date_end_ingest)
+    {
+
+        DB::table('ingests')
+            ->where('cpl_id', $uuid_cpl)
+            ->update(['date_end_ingest' => $date_end_ingest]);
+
+        /*
+        $q = $this
+            ->_db->prepare('UPDATE ingests SET date_end_ingest = ?  WHERE cpl_id = ?  ');
+        $q->execute([$date_end_ingest, $uuid_cpl]); */
+    }
+
+ public function script_ingester()
+ {
+    // $soapManagement = new SoapManagement();
+    $ingester_manager = new IngesterManager();
+    //$manager_server = new ServerManager(getdb());
+    $counter = 0;
+
+
+    while ($counter < 16) {
+        $list_ingests=$this->getListIngest();
+        foreach ($list_ingests AS $ingest){
+            $pack_ingest=$this->getIngestFiles($ingest['cpl_id']);
+            $this->ingestHasMxf($ingest['cpl_id']);
+
+            if ($this->ingestHasMxf($ingest['cpl_id'])==0) {
+                $this->updateIngestStatusByCplUuid($ingest['cpl_id'], "Complete");
+                $date_start_ingest = date('Y-m-d H:i:s');
+                $this-> updateIngestStartDownloadByCplUuid($ingest['cpl_id'],$date_start_ingest);
+                $date_end_ingest = date('Y-m-d H:i:s');
+                $this-> updateIngestEndDownloadByCplUuid($ingest['cpl_id'],$date_end_ingest);
+                $this->updateIngestHasMxf($ingest['cpl_id'],0);
+
+            }
+        else{
+                if($this->checkRunningExist()==0){
+                    if($this->checkDownloadStatus($ingest['cpl_id'])=="Paused"){
+                        continue;
+                    }
+                    $this->updateIngestStatusByCplUuid($ingest['cpl_id'], "running");
+                    $date_start_ingest = date('Y-m-d H:i:s');
+                    $this-> updateIngestStartDownloadByCplUuid($ingest['cpl_id'],$date_start_ingest);
+                    $this->updateIngestHasMxf($ingest['cpl_id'],1);
+                    $this->startDownloadPackIngest($pack_ingest,$ingest['cpl_id'],$ingest['server_ip'],$ingest['usernameServer'],$ingest['passwordServer'] );
+                    break;
+                }
+            }
+
+        }
+        usleep(3000000); // Sleep for 4 seconds (4,000,000 microseconds)
+
+        $counter++;
+    }
+
+
+ }
+
+
+
 
 
 
