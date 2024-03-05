@@ -123,7 +123,7 @@ class IngersterController extends Controller
                 $content = $ingester_manager->getScannedFiles($_POST["screen_id"]);
                 foreach ($content as $item) {
                 $new_item =  (array) $item;
-              
+
                     if ($ingester_manager->checkIngestExist($new_item['cpl_id_pack']) == "exists") {
                          $new_item['downloaded_to_tms'] = $ingester_manager->checkDcpIsDownloaded($new_item['cpl_id_pack']);
                         $new_item['current_status'] = $ingester_manager->checkDownloadStatus($new_item['cpl_id_pack']);
@@ -182,7 +182,7 @@ class IngersterController extends Controller
 
                 $ingester_manager = new IngesterManager();
                 $tms_hard_drive = $ingester_manager->getTmsHardDrive();
-                $manager_server = new ServerManager(getdb());
+                // $manager_server = new ServerManager();
                 //$server = $manager_server->getServerData($_POST["id_source"]);
                 $server = Ingestsource::find($_POST["screen_id"]) ;
                 /*if (!empty($_POST["spl_content"])) {
@@ -286,8 +286,10 @@ class IngersterController extends Controller
                         }
                         if (empty($file_mxf)) {
                             $ingester_manager->updateIngestStatusByCplUuid($item['cpl_uuid'], "Complete");
-                            $ingester_manager->updateIngestCplData($item['cpl_uuid']);
 
+                            /* ************ check this ***** */
+                            $ingester_manager->updateIngestCplData($item['cpl_uuid']);
+                            /* ************************************ */
                         } else {
                             //create download mxf
                             $mxf_files_by_cpl = array();
@@ -330,7 +332,8 @@ class IngersterController extends Controller
             }
 
             if ($_POST["action_control"] == "cancel_ingest") {
-                $ingester_manager = new IngesterManager(getdb());
+
+                $ingester_manager = new IngesterManager();
                 $ingester_manager->updateDownloadStatusByIdCpl($_POST["idCpl"], "Canceled By User");
                 $tms_dir = $ingester_manager->getDcpTmsDirByCplUuid($_POST["idCpl"]);
                 sleep(1);
@@ -339,7 +342,7 @@ class IngersterController extends Controller
 
             }
             if ($_POST["action_control"] == "details_ingest") {
-                $ingester_manager = new IngesterManager(getdb());
+                $ingester_manager = new IngesterManager();
 
                     $ingester_manager->getDcpLogsDetails($_POST["idCpl"]);
 
@@ -348,13 +351,14 @@ class IngersterController extends Controller
 
 
             if ($_POST["action_control"] == "get_logs") {
-                $ingester_manager = new IngesterManager(getdb());
+                $ingester_manager = new IngesterManager();
 
-                $response = array("dcp" => $ingester_manager->getDcpLogs(), "spl" => $ingester_manager->getSplLogs());
+                //$response = array("dcp" => $ingester_manager->getDcpLogs(), "spl" => $ingester_manager->getSplLogs());
+                $response = array("dcp" => $ingester_manager->getDcpLogs(), "spl" => []);
                 echo json_encode($response);
             }
             if ($_POST["action_control"] == "delete_scan_logs") {
-                $ingester_manager = new IngesterManager(getdb());
+                $ingester_manager = new IngesterManager();
                 foreach ($_POST["array_logs"] as $id) {
                     $ingester_manager-> DeleteLogsById($id);
                 }
@@ -365,8 +369,8 @@ class IngersterController extends Controller
         if (isset($_GET['action_control'])) {
 
             if ($_GET["action_control"] == "get_scan_errors") {
-                $manager_server = new ServerManager(getdb());
-                $ingester_manager = new IngesterManager(getdb());
+                //$manager_server = new ServerManager(getdb());
+                $ingester_manager = new IngesterManager();
                 $ingester_manager->getErrorsScan();
             }
 

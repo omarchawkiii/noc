@@ -147,15 +147,15 @@ class IngesterManager extends Controller
 
     public function getPklUuid($cpl_uuid)
     {
-    
-   	$pkl_id = DB::table('ingests')
-                ->where('cpl_id', $cpl_uuid)
-                ->select( 'pkl_id')
-                ->get(); 
-        return    $pkl_id ;  
-               
-          /*      
-        $q = $this
+
+        $result =  DB::table('ingests')
+        ->where('cpl_id', $cpl_uuid)
+        ->select('ingests.pkl_id')
+        ->get();
+
+        return $result->pkl_id ;
+
+        /*$q = $this
             ->_db
             ->prepare('SELECT pkl_id  FROM  ingests where cpl_id = ? ');
 
@@ -165,8 +165,9 @@ class IngesterManager extends Controller
             return $result['pkl_id'];
         } catch (PDOException $e) {
             echo $e->getMessage();
-        }
-        return Null;*/
+        }*/
+
+        return Null;
     }
 
     public function checkPathFromPkl($my_asset)
@@ -192,13 +193,22 @@ class IngesterManager extends Controller
     {
 
         $this->DeleteCplByUuidCpl($cpl_uuid);
-        $q = $this->_db->prepare("INSERT INTO cpl_data (id,uuid,ContentKind ) VALUES (?,?,?)");
+
+        DB::table('ingests')->insert(
+            [
+                'id' => uniqid() ,
+                'uuid' => $cpl_uuid ,
+                'ContentKind' => $ContentKind ,
+            ]
+        );
+
+        /*$q = $this->_db->prepare("INSERT INTO cpl_data (id,uuid,ContentKind ) VALUES (?,?,?)");
         try {
             $q->execute([uniqid() . $cpl_uuid, $cpl_uuid, $ContentKind]);
 
         } catch (PDOException $e) {
             echo $e->getMessage();
-        }
+        }*/
 
 
     }
@@ -389,14 +399,35 @@ class IngesterManager extends Controller
 
     public function updateIngestStatusByCplUuid($uuid_cpl, $status)
     {
-        $q = $this
+        DB::table('ingests')
+        ->where('cpl_id', $uuid_cpl)
+        ->update(array('status' => $status ));
+
+
+       /* $q = $this
             ->_db->prepare('UPDATE ingests SET status = ?  WHERE cpl_id = ?  ');
-        $q->execute([$status, $uuid_cpl]);
+        $q->execute([$status, $uuid_cpl]);*/
     }
 
     public function checkDcpItemExist($Id, $id_cpl)
     {
         echo $Id . '-----------' . $id_cpl . '-----';
+
+
+        $res =  DB::table('ingest_dcp_large')
+        ->where('Id', $Id)
+        ->where('id_cpl', $id_cpl)
+        ->get();
+        echo "testt---";
+        echo count($res) ;
+
+        if (count($res) > 0) {
+            return true ;
+        } else {
+            // Handle query error
+            return false;
+        }
+        /*
         $q = $this
             ->_db
             ->prepare('SELECT  count(*)  FROM ingest_dcp_large WHERE  Id  = ? AND id_cpl=? ');
@@ -411,7 +442,7 @@ class IngesterManager extends Controller
         } catch (PDOException $e) {
             // echo $e->getMessage();
             return false;
-        }
+        }*/
 
     }
 
@@ -463,22 +494,55 @@ class IngesterManager extends Controller
     public function createDcpLargeFile($id_file, $Id, $Hash, $Size, $Type, $OriginalFileName, $tms_dir, $id_ingests, $cpl_id, $id_server, $name_source)
     {
         if ($Id != $cpl_id) {
+
+
             $date_create_ingest = date('Y-m-d H:i:s');
+
+            DB::table('ingest_dcp_large')->insert(
+                [
+                    'id_file'=> $id_file ,
+                    'Id' => $Id ,
+                    'Hash' => $Hash ,
+                    'Size' => $Size ,
+                    'Type' => $Type ,
+                     'OriginalFileName' => $OriginalFileName ,
+                    'tms_dir' => $tms_dir ,
+                    'id_ingests' => $id_ingests ,
+                     'id_cpl' => $cpl_id ,
+                     'id_server' => $id_server ,
+                    'date_create_ingest' => $date_create_ingest ,
+                ]
+            );
+
+
             // $tms_dir = $this->getPathFolder(str_replace(' ', '', $name_source) . '_' . (substr($cpl_id, 9)), "dcp");
-            $q = $this->_db->prepare("INSERT INTO ingest_dcp_large (id_file,Id,Hash,Size,Type, OriginalFileName,tms_dir,id_ingests, id_cpl, id_server,date_create_ingest  ) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
+            /*$q = $this->_db->prepare("INSERT INTO ingest_dcp_large (id_file,Id,Hash,Size,Type, OriginalFileName,tms_dir,id_ingests, id_cpl, id_server,date_create_ingest  ) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
             try {
                 $q->execute([$id_file, $Id, $Hash, $Size, $Type, $OriginalFileName, $tms_dir, $id_ingests, $cpl_id, $id_server, $date_create_ingest]);
 
                 return $tms_dir;
             } catch (PDOException $e) {
                 echo $e->getMessage();
-            }
+            }*/
         }
 
     }
 
     public function getMxfData($id_file, $cpl_uuid)
     {
+
+        $result =  DB::table('ingest_dcp_large')
+        ->where('Id', $id_file)
+        ->where('id_cpl', $cpl_uuid)
+        ->select('OriginalFileName','tms_dir')
+        ->get();
+
+        if (count($result) > 0) {
+            return $result;
+        } else {
+
+        }
+        /*
         $q = $this->_db->prepare('SELECT  OriginalFileName,tms_dir  FROM ingest_dcp_large WHERE  Id  = ? AND id_cpl = ?  ');
         try {
             $q->execute(array($id_file, $cpl_uuid));
@@ -495,13 +559,20 @@ class IngesterManager extends Controller
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
-
+        */
     }
 
     public function updateDcpLargeFile($id_file, $OriginalFileName, $cpl_id)
     {
+
         $date_update_ingest = date('Y-m-d H:i:s');
-        $data = [
+
+        DB::table('ingest_dcp_large')
+        ->where('Id', $id_file)
+        ->where('id_cpl', $cpl_id)
+        ->update(array('OriginalFileName' => $OriginalFileName , 'date_create_ingest' => $date_update_ingest ));
+
+       /* $data = [
             'OriginalFileName' => $OriginalFileName,
             'Id' => $id_file,
             'id_cpl' => $cpl_id,
@@ -514,7 +585,7 @@ class IngesterManager extends Controller
             ->_db
             ->prepare($sql);
 
-        $q->execute($data);
+        $q->execute($data);*/
     }
 
     public function updateProgress($id, $type_file_progress, $progress)
@@ -528,23 +599,22 @@ class IngesterManager extends Controller
 
     public function DeleteDcpByUuidCpl($uuid_cpl)
     {
-        $q2 = $this->_db->prepare('DELETE  FROM ingests   WHERE ingests.cpl_id = :cpl_id');
+        DB::table('ingests')
+                ->where('cpl_id', $uuid_cpl)
+                ->delete();
+
+        /*$q2 = $this->_db->prepare('DELETE  FROM ingests   WHERE ingests.cpl_id = :cpl_id');
         try {
             $q2->execute(array(':cpl_id' => $uuid_cpl));
         } catch (PDOException $e) {
-        }
+        }*/
     }
 
-    public function createDcp($id, $cpl_id, $cpl_description, $is3D, $cpl_uri, $pkl_id, $pkl_description, $pkl_uri,
-                              $asset_id, $asset_description, $asset_uri, $id_source, $name_source, $status, $dcp_dir,
-                              $ftp_username, $ftp_password, $ip)
+        public function createDcp($id, $cpl_id, $cpl_description, $is3D, $cpl_uri, $pkl_id, $pkl_description, $pkl_uri, $asset_id, $asset_description, $asset_uri, $id_source, $name_source, $status, $dcp_dir, $ftp_username, $ftp_password, $ip)
     {
         $cpl_size = 0;// $this->getFileSize($ip, $ftp_username, $ftp_password, $cpl_uri);
-
         $pkl_size = 0;// $this->getFileSize($ip, $ftp_username, $ftp_password, $pkl_uri);
-
         $asset_size = 0;// $this->getFileSize($ip, $ftp_username, $ftp_password, $asset_uri);
-
         // $tms_dir = $this->getPathFolder(str_replace(' ', '', $name_source) . '_' . (substr($cpl_id, 9)), "dcp");
         // $tms_dir = '/data/assets/' . (substr($cpl_id, 9));
         $this->DeleteDcpByUuidCpl($cpl_id);
@@ -552,13 +622,40 @@ class IngesterManager extends Controller
 
         $date_create_ingest = date('Y-m-d H:i:s');
         echo $date_create_ingest . '-----';
-        $q = $this->_db->prepare("INSERT INTO ingests (id,cpl_id,cpl_description,is3D,cpl_uri,cpl_size,pkl_id, pkl_description,pkl_uri,pkl_size, asset_id, asset_description, asset_uri,asset_size,id_source,name_source,tms_dir,date_create_ingest,status ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+
+        /*$q = $this->_db->prepare("INSERT INTO ingests (id,cpl_id,cpl_description,is3D,cpl_uri,cpl_size,pkl_id, pkl_description,pkl_uri,pkl_size, asset_id, asset_description, asset_uri,asset_size,id_source,name_source,tms_dir,date_create_ingest,status ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
         try {
             $q->execute([$id, $cpl_id, $cpl_description, $is3D, $cpl_uri, $cpl_size, $pkl_id, $pkl_description, $pkl_uri, $pkl_size, $asset_id, $asset_description, $asset_uri, $asset_size, $id_source, $name_source, $dcp_dir, $date_create_ingest, $status]);
             // return $tms_dir;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
+        */
+        DB::table('ingests')->insert(
+            [
+                'id' => $id ,
+                'cpl_id' => $cpl_id ,
+                'cpl_description' => $cpl_description ,
+                'is3D' => $is3D ,
+                'cpl_uri' => $cpl_uri ,
+                'cpl_size' => $cpl_size ,
+                'pkl_id' => $pkl_id ,
+                'pkl_description' => $pkl_description ,
+                'pkl_uri' => $pkl_uri ,
+                'pkl_size' => $pkl_size ,
+                'asset_id' => $asset_id ,
+                'asset_description' => $asset_description ,
+                'asset_uri' => $asset_uri ,
+                'asset_size' => $asset_size ,
+                'id_source' => $id_source ,
+                'name_source' => $name_source ,
+                'tms_dir' => $dcp_dir ,
+                'date_create_ingest' => $date_create_ingest ,
+                'status'  => $status ,
+            ]
+        );
+
+
     }
 
     public function createDcpDirectory($cpl_id)
@@ -676,10 +773,9 @@ class IngesterManager extends Controller
         ->where('cpl_id', $cpl_id)
         ->select('ingests.status')
         ->get();
-	
-	
 
-        if (count($result) > 0 ) {
+
+        if ($result !== false) {
             return $result->status;
         } else {
             return 0;
@@ -706,7 +802,7 @@ class IngesterManager extends Controller
 
         // check if object exists by id
         $q = $this->_db->prepare('SELECT COUNT(*) FROM spl_files WHERE file_size = file_progress AND uuid = :uuid');
-	
+
         $q->bindParam(':uuid', $uuid);
         $q->execute();
         $res = $q->fetchColumn();
@@ -719,7 +815,6 @@ class IngesterManager extends Controller
 
     public function refreshLibrary($id_server, $server_ip, $usernameServer, $passwordServer, $remotePath)
     {
-
         // ******************* DCP
         $this->removeScannedFiles($id_server);
         $dcp_files = $this->scanLibraryDcpContent($id_server, $server_ip, $usernameServer, $passwordServer, $remotePath); //scan for dcp (cpl,pkl,asset,volIndex
@@ -827,7 +922,7 @@ class IngesterManager extends Controller
                                                         $chunk = $asset_item2['ChunkList']['Chunk'];
                                                         $path = $chunk['Path'];
                                                         $cpl_url = 'ftp://' . $usernameServer . ':' . $passwordServer . '@' . $server_ip . $item_directory . '/' . $this->removeQuot($path);
-                    //                                                    $cpl_uri = $item_directory . '/' . $this->removeQuot($path);
+                                                    // $cpl_uri = $item_directory . '/' . $this->removeQuot($path);
                                                         $cpl_content_file = @file_get_contents(($this->removeQuot($cpl_url)));
                                                         if ($cpl_content_file === false) {
                                                             $cpl_file = simplexml_load_string($cpl_content_file);
@@ -845,7 +940,6 @@ class IngesterManager extends Controller
 
                                             }
                                         }
-                                   
                                         if ($targetAsset !== null) {
                                             $cpl_uuid = (string)$targetAsset->Id;
                                             foreach ($my_asset2 as $asset_item2) {
@@ -912,6 +1006,7 @@ class IngesterManager extends Controller
                         $type = "Assetmap";
                         $asset_uri = $this->removeQuot($file);
                         $this->saveScannedFiles($id_file, $asset_description, $asset_uuid, 0, 0, 0, 1, 0, $type, $asset_uri, $id_server);
+
                         $my_asset = $array_asset['AssetList']['Asset'];
                         $my_asset2 = $array_asset['AssetList']['Asset'];
                         foreach ($my_asset as $asset_item) {
@@ -1003,16 +1098,12 @@ class IngesterManager extends Controller
                                                     }
                                                 }
                                             } else {
-                                   
                                                 $this->removeFiles($asset_uuid, $id_server);
                                                 $this->removeFiles($uuid_pkl, $id_server);
                                             }
                                         } else {
                                             $Dcp_packs = $this->generateSeparatePKLFiles($pkl_file, $my_asset, $id_server, $usernameServer, $passwordServer, $server_ip, $item_directory);
-                                        
                                             $this->removeFiles($asset_uuid, $id_server);
-                                             
-                                               
                                             foreach ($Dcp_packs as $pack) {
 
                                                 $id_asset = uniqid();
@@ -1043,7 +1134,6 @@ class IngesterManager extends Controller
 
                                     } else {
                                         $this->removeFiles($asset_uuid, $id_server);
-                                      
                                     }
                                 }
                             }
@@ -1338,17 +1428,17 @@ class IngesterManager extends Controller
     public function checkIngestExist($cpl_id)
     {
 
-        return DB::table('ingests')
+        $res =  DB::table('ingests')
         ->where('cpl_id', $cpl_id)
         ->get();
 
-	if (count($res) > 0) {
+        if (count($res) > 0) {
             return "exists";
         } else {
             // Handle query error
             return "no";
         }
-        
+
         /*$query = "SELECT *     FROM ingests   WHERE cpl_id = :cpl_id";
 
         $stmt = $this->_db->prepare($query);
@@ -2222,7 +2312,7 @@ class IngesterManager extends Controller
     public function updateIngestCplData($cpl_uuid)
     {
 
-        $playlist_builder_manager = new  PlaylistBuilderManager(getdb());
+        //$playlist_builder_manager = new  PlaylistBuilderManager(getdb());
         $data_dcp = $this->getDcpData($cpl_uuid);
 
         $fileInfo = $this->getMediaInfo2(escapeshellarg($data_dcp['tms_dir'] . '/' . basename($data_dcp['cpl_uri'])));
@@ -2311,22 +2401,22 @@ class IngesterManager extends Controller
         $FrameRate_String = (string)$VideoTrack->FrameRate_String;
         $FrameCount = (string)$VideoTrack->FrameCount;
 
-        $edit_rate_duration = $playlist_builder_manager->getCplDuration3($cpl_file);
+        $edit_rate_duration = $this->getCplDuration3($cpl_file);
 
-        $edit_rate = $playlist_builder_manager->getEditRate2($cpl_file);
+        $edit_rate = $this->getEditRate2($cpl_file);
         if (intval($edit_rate['editRate_numerator']) != 0) {
             $durationFormatted = round(intval($edit_rate_duration) * intval($edit_rate['editRate_denominator']) / intval($edit_rate['editRate_numerator']));
         } else {
             $durationFormatted = 0;
         }
 
-        $playlist_builder_manager->updateCplData((string)$cpl_file->Creator,
+        $this->updateCplData((string)$cpl_file->Creator,
             (string)$edit_rate['edit_rate'], $edit_rate['editRate_numerator'], $edit_rate['editRate_denominator'],
             $FrameRate, $FrameRate_String, $FrameCount,
-            $edit_rate_duration, $durationFormatted, $playlist_builder_manager->secondsToHms($durationFormatted),
+            $edit_rate_duration, $durationFormatted, $this->secondsToHms($durationFormatted),
             $channels,
             $DisplayAspectRatio, $Width, $Height, $cpl_uuid);
-        $playlist_builder_manager->updateCplNeedKdm($cpl_uuid, $playlist_builder_manager->checkLocalCplNeedsKdm($array_cpl['ReelList']));
+        $this->updateCplNeedKdm($cpl_uuid, $this->checkLocalCplNeedsKdm($array_cpl['ReelList']));
 
     }
     public function getMediaInfo2($cpl_path)
@@ -2341,6 +2431,25 @@ class IngesterManager extends Controller
 
     public function getDcpData($cpl_id)
     {
+        try {
+            $result = DB::table('ingests')
+                ->select('ingests.id', 'ingests.cpl_id', 'ingests.cpl_description', 'ingests.id_source', 'ingests.tms_dir', 'ingests.cpl_uri', 'server.serverType', 'server.serverName AS name_source')
+                ->leftJoin('server', 'ingests.id_source', '=', 'server.idserver')
+                ->where('status', 'Complete')
+                ->whereNotExists(function ($query) {
+                    $query->select(DB::raw(1))
+                        ->from('ingest_dcp_large as l')
+                        ->whereColumn('l.id_cpl', 'ingests.cpl_id')
+                        ->where('l.hash_verified', 0);
+                })
+                ->where('ingests.cpl_id', $cpl_id)
+                ->first();
+
+            return $result;
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
+        /*
         $q = $this
             ->_db
             ->prepare('SELECT ingests.id,ingests.cpl_id, ingests.cpl_description,
@@ -2358,7 +2467,7 @@ class IngesterManager extends Controller
             return $q->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             echo $e->getMessage();
-        }
+        }*/
     }
     public function check_DcpIsDownloaded($cpl_id)
     {
@@ -2631,6 +2740,316 @@ class IngesterManager extends Controller
             ->orderBy('ingests.order', 'ASC')
             ->get();
     }
+
+
+
+    public function updateDownloadStatusByIdCpl($id_cpl, $status)
+    {
+
+        DB::table('ingests')
+        ->where('cpl_id', $id_cpl)
+        ->update(array('status' => $status ));
+
+        /*
+        $q = $this
+            ->_db->prepare('UPDATE ingests SET status = ?  WHERE cpl_id = ?  ');
+        $q->execute([$status, $id_cpl]);*/
+    }
+
+    public function getDcpTmsDirByCplUuid($cpl_uuid)
+    {
+        $res = DB::table('ingests')
+            ->where('cpl_id', $cpl_uuid)
+            ->select('tms_dir')
+            ->get();
+
+        return $res->tms_dir;
+
+        /*$stmt = $this->_db->prepare('select tms_dir from `ingests` WHERE cpl_id=:cpl_id');
+        $stmt->execute(['cpl_id' => $cpl_uuid]);
+        return $stmt->fetch()['tms_dir'];*/
+    }
+
+    public function removeDcpFiles($tms_dir)
+    {
+        $command = "rm -rf $tms_dir";
+        $output = shell_exec($command);
+        echo $output;
+
+    }
+    public function deleteMxfByCplUuid($cpl_uuid)
+    {
+
+        DB::table('ingest_dcp_large')
+        ->where('id_cpl', $cpl_uuid)
+        ->delete();
+
+        /*$q2 = $this->_db->prepare('DELETE  FROM ingest_dcp_large   WHERE ingest_dcp_large.id_cpl = :id_cpl');
+        try {
+            $q2->execute(array(':id_cpl' => $cpl_uuid));
+        } catch (PDOException $e) {
+        }*/
+
+    }
+
+    public function getDcpLogsDetails($cpl_id_pack)
+    {
+        $q_ingest = $this->_db->prepare('  SELECT ingests.*   FROM  ingests  WHERE  cpl_id =  :cpl_id  ');
+        try {
+
+            $q_ingest->execute(['cpl_id' => $cpl_id_pack]);
+            $dcp = $q_ingest->fetchAll();
+
+            $q_large_files = $this->_db
+                ->prepare('
+            SELECT  ingest_dcp_large.* ,ROUND((ingest_dcp_large.progress*100/ingest_dcp_large.Size),2) AS percentage
+            FROM  ingest_dcp_large
+            WHERE  id_cpl =  :id_cpl  ');
+            $q_large_files->execute(['id_cpl' => $cpl_id_pack]);
+            $mxf = $q_large_files->fetchAll();
+            $response = array("dcp" => $dcp, "mxf" => $mxf);
+            echo json_encode($response);
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        try {
+
+            $dcp = DB::table('ingests')
+                ->where('cpl_id', $cpl_id_pack)
+                ->get();
+
+            // Fetching ingest_dcp_large records based on id_cpl
+            $mxf = DB::table('ingest_dcp_large')
+                ->select('*', DB::raw('ROUND((progress*100/Size),2) AS percentage'))
+                ->where('id_cpl', $cpl_id_pack)
+                ->get();
+
+            $response = ["dcp" => $dcp, "mxf" => $mxf];
+            return response()->json($response);
+
+        } catch (Exception $e) {
+            // Handle exceptions
+            return response()->json(["error" => $e->getMessage()], 500);
+        }
+
+    }
+
+    public function DeleteLogsById($id)
+    {
+        /*$q2 = $this->_db->prepare('DELETE  FROM ingest_scan_errors   WHERE ingest_scan_errors.id = :id');
+        try {
+            $q2->execute(array(':id' => $id));
+        } catch (PDOException $e) {
+        }
+        */
+        DB::table('ingest_scan_errors')
+        ->where('id', $id)
+        ->delete();
+
+    }
+
+    // playlist builder manager methods
+
+    public function getCplDuration3($cpl_file)
+    {
+        $totalDuration = 0;
+        $namespaces = $cpl_file->getNamespaces(true);
+        $namespace = isset($namespaces['msp-cpl']) ? $namespaces['msp-cpl'] : null;
+
+        // Check if the namespace exists and register it
+        if ($namespace) {
+            $cpl_file->registerXPathNamespace('msp', $namespace);
+        }
+
+        foreach ($cpl_file->ReelList->Reel as $reelElement) {
+            $reelDuration = 0;
+
+            // Check if MainStereoscopicPicture exists and calculate the duration
+            if ($namespace) {
+                $mainStereoscopicPicture = $cpl_file->xpath('//msp:MainStereoscopicPicture');
+            } else {
+                $mainStereoscopicPicture = null;
+            }
+
+
+            if ($mainStereoscopicPicture && isset($mainStereoscopicPicture[0]->Duration)) {
+                $stereoscopicPictureDuration = (int)$mainStereoscopicPicture[0]->Duration;
+                $reelDuration = max($reelDuration, $stereoscopicPictureDuration);
+            } else {
+                // Check if MainPicture exists and calculate the duration
+                $mainPicture = $reelElement->AssetList->MainPicture;
+
+                if ($mainPicture && isset($mainPicture->Duration)) {
+                    $mainPictureDuration = (int)$mainPicture->Duration;
+                    $reelDuration = max($reelDuration, $mainPictureDuration);
+                }
+            }
+
+            // Check if MainSound exists and calculate the duration
+            $mainSound = $reelElement->AssetList->MainSound;
+
+            if ($mainSound && isset($mainSound->Duration)) {
+                $mainSoundDuration = (int)$mainSound->Duration;
+                $reelDuration = max($reelDuration, $mainSoundDuration);
+            } elseif ($mainSound && isset($mainSound->IntrinsicDuration)) {
+                $mainSoundIntrinsicDuration = (int)$mainSound->IntrinsicDuration;
+                $reelDuration = max($reelDuration, $mainSoundIntrinsicDuration);
+            }
+
+            // Accumulate the reel duration to the total duration
+            $totalDuration += $reelDuration;
+        }
+
+        return $totalDuration;
+    }
+
+    public function getEditRate2($cpl_file)
+    {
+        $assetList = $cpl_file->ReelList->Reel->AssetList;
+
+        // Check if MainPicture or MainSound or MainStereoscopicPicture exists
+        $mainPictureExists = isset($assetList->MainPicture);
+        $mainSoundExists = isset($assetList->MainSound);
+        // Check if the msp-cpl namespace exists
+        $namespaces = $cpl_file->getNamespaces(true);
+        $namespace = isset($namespaces['msp-cpl']) ? $namespaces['msp-cpl'] : null;
+
+        // Check if the namespace exists and register it
+
+        if ($namespace) {
+            $cpl_file->registerXPathNamespace('msp', $namespace);
+            $mainStereoscopicPictureExists = $cpl_file->xpath('//msp:MainStereoscopicPicture');
+        } else {
+            $mainStereoscopicPictureExists = null;
+        }
+
+        // Initialize the edit rate values
+        $editRate = "";
+        $numerator = "";
+        $denominator = "";
+
+        // Determine the edit rate
+        if ($mainPictureExists) {
+            $editRate = (string)$assetList->MainPicture->EditRate;
+        } elseif ($mainSoundExists) {
+            $editRate = (string)$assetList->MainSound->EditRate;
+        } elseif ($mainStereoscopicPictureExists && isset($mainStereoscopicPictureExists[0]->EditRate)) {
+            $editRate = (string)$mainStereoscopicPictureExists[0]->EditRate;
+        }
+
+        // Extract the numerator and denominator values
+        if ($editRate !== "") {
+            list($numerator, $denominator) = explode(" ", $editRate);
+        }
+
+        // Create an array with the edit rate values
+        return array(
+            'edit_rate' => $editRate,
+            'editRate_numerator' => $numerator,
+            'editRate_denominator' => $denominator
+        );
+    }
+
+
+    /*public function updateCplData($Creator, $EditRate, $editRate_numerator, $editRate_denominator,
+                                  $FrameRate, $FrameRate_String, $FrameCount, $edit_rate_duration, $Duration_seconds, $Duration,
+                                  $soundChannelCount,
+                                  $ScreenAspectRatio, $Width, $Height, $uuid)
+    {
+        $data = ['Creator' => $Creator,
+            'EditRate' => $EditRate, 'editRate_numerator' => $editRate_numerator, 'editRate_denominator' => $editRate_denominator,
+            'FrameRate' => $FrameRate, 'FrameRate_String' => $FrameRate_String, 'FrameCount' => $FrameCount,
+            'edit_rate_duration' => $edit_rate_duration, 'Duration_seconds' => $Duration_seconds, 'Duration' => $Duration,
+            'soundChannelCount' => $soundChannelCount,
+            'ScreenAspectRatio' => $ScreenAspectRatio, 'Width' => $Width, 'Height' => $Height,
+            'uuid' => $uuid];
+
+        $sql = "UPDATE cpl_data SET
+                     Creator=:Creator ,
+                     EditRate=:EditRate,editRate_numerator=:editRate_numerator ,editRate_denominator=:editRate_denominator,
+                     FrameRate=:FrameRate,FrameRate_String=:FrameRate_String, FrameCount=:FrameCount,
+                     edit_rate_duration=:edit_rate_duration,Duration_seconds=:Duration_seconds,Duration=:Duration,
+                     soundChannelCount=:soundChannelCount,
+                     ScreenAspectRatio=:ScreenAspectRatio,Width=:Width,Height=:Height
+                     WHERE  uuid=:uuid";
+        $q = $this->_db->prepare($sql);
+        $q->execute($data);
+    }*/
+
+    public function updateCplData($Creator, $EditRate, $editRate_numerator, $editRate_denominator, $FrameRate, $FrameRate_String, $FrameCount, $edit_rate_duration, $Duration_seconds, $Duration, $soundChannelCount, $ScreenAspectRatio, $Width, $Height, $uuid)
+    {
+        $data = [
+            'Creator' => $Creator,
+            'EditRate' => $EditRate,
+            'editRate_numerator' => $editRate_numerator,
+            'editRate_denominator' => $editRate_denominator,
+            'FrameRate' => $FrameRate,
+            'FrameRate_String' => $FrameRate_String,
+            'FrameCount' => $FrameCount,
+            'edit_rate_duration' => $edit_rate_duration,
+            'Duration_seconds' => $Duration_seconds,
+            'Duration' => $Duration,
+            'soundChannelCount' => $soundChannelCount,
+            'ScreenAspectRatio' => $ScreenAspectRatio,
+            'Width' => $Width,
+            'Height' => $Height,
+            'uuid' => $uuid
+        ];
+
+        DB::table('cpl_data')
+            ->where('uuid', $uuid)
+            ->update($data);
+    }
+
+
+    function secondsToHms($seconds)
+    {
+        $hours = floor($seconds / 3600);
+        $minutes = floor(($seconds % 3600) / 60);
+        $seconds = $seconds % 60;
+
+        return sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
+    }
+
+
+
+    public function updateCplNeedKdm($uuid, $kdm_required)
+    {
+
+        DB::table('cpl_data')
+        ->where('uuid', $uuid)
+        ->update(array('kdm_required' => $kdm_required ));
+
+        /*$q = $this->_db->prepare('UPDATE cpl_data SET  kdm_required = ?  WHERE uuid = ?  ');
+        $q->execute([$kdm_required, $uuid]);*/
+    }
+
+
+    public function checkLocalCplNeedsKdm($reelList)
+    {
+        $hasKeyId = false;
+
+        // Check if ReelList contains more than one reel
+        if (isset($reelList['Reel'][0])) {
+            foreach ($reelList['Reel'] as $reel) {
+                if (isset($reel['AssetList']['MainPicture']['KeyId'])) {
+                    $hasKeyId = true;
+                    break;
+                }
+            }
+        } else {
+            // If there's only one reel, directly check its KeyId
+            $reel = $reelList['Reel'];
+            if (isset($reel['AssetList']['MainPicture']['KeyId'])) {
+                $hasKeyId = true;
+            }
+        }
+
+        return $hasKeyId ? 1 : 0;
+
+    }
+
+
 
 
 }
