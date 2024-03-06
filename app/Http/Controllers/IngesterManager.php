@@ -1184,24 +1184,30 @@ class IngesterManager extends Controller
 
                         $cpl_url = 'ftp://' . $usernameServer . ':' . $passwordServer . '@' . $server_ip . $item_directory . '/' . $this->removeQuot($cpl_path);
                         $cpl_uri = $item_directory . '/' . $this->removeQuot($cpl_path);
-                        $cpl_content = file_get_contents(($this->removeQuot($cpl_url)));
-                        $cpl_file = simplexml_load_string(file_get_contents(($this->removeQuot($cpl_url))));
-                        $assets = "";
-                        $chunks = "";
-                        $ContentTitleText = (string)$cpl_file->ContentTitleText;
-                        foreach ($cpl_file->ReelList->Reel as $reel) {
-                            if (isset($reel->AssetList->MainPicture)) {
-                                $mainPictureId = (string)$reel->AssetList->MainPicture->Id;
-                                foreach ($copy_pkl->AssetList->Asset as $asset) {
-                                    $assetId = (string)$asset->Id;
-                                    $AnnotationText = (string)$asset->AnnotationText;
-                                    $Hash = (string)$asset->Hash;
-                                    $Size = (string)$asset->Size;
-                                    $Type = (string)$asset->Type;
-                                    if ($assetId === $mainPictureId) {
-                                        if (isset($asset->OriginalFileName)) {
-                                            $OriginalFileName = $asset->OriginalFileName;
-                                            $assets = $assets . '<Asset>
+
+                        try {
+                            $cpl_content = @file_get_contents(($this->removeQuot($cpl_url)));
+                            if ($cpl_content === false) {
+                                $this->saveScanErrors("COULDN'T LOAD CPL PATH", "Function file_get_contents(), in function generateSeparatePKLFiles(), IngesterManager,  Failed to get contents from  path  ", $cpl_uri, $id_server, "Scan-DCP");
+
+                            } else {
+                                $cpl_file = simplexml_load_string(file_get_contents(($this->removeQuot($cpl_url))));
+                                $assets = "";
+                                $chunks = "";
+                                $ContentTitleText = (string)$cpl_file->ContentTitleText;
+                                foreach ($cpl_file->ReelList->Reel as $reel) {
+                                    if (isset($reel->AssetList->MainPicture)) {
+                                        $mainPictureId = (string)$reel->AssetList->MainPicture->Id;
+                                        foreach ($copy_pkl->AssetList->Asset as $asset) {
+                                            $assetId = (string)$asset->Id;
+                                            $AnnotationText = (string)$asset->AnnotationText;
+                                            $Hash = (string)$asset->Hash;
+                                            $Size = (string)$asset->Size;
+                                            $Type = (string)$asset->Type;
+                                            if ($assetId === $mainPictureId) {
+                                                if (isset($asset->OriginalFileName)) {
+                                                    $OriginalFileName = $asset->OriginalFileName;
+                                                    $assets = $assets . '<Asset>
                                                      <Id>' . $mainPictureId . '</Id>
                                                      <AnnotationText>' . $AnnotationText . '</AnnotationText>
                                                      <Hash>' . $Hash . '</Hash>
@@ -1209,8 +1215,8 @@ class IngesterManager extends Controller
                                                      <Type>' . $Type . '</Type>
                                                      <OriginalFileName>' . $OriginalFileName . '</OriginalFileName>
                                                  </Asset>';
-                                            $chunks = $chunks .
-                                                ' <Asset>
+                                                    $chunks = $chunks .
+                                                        ' <Asset>
                                                         <Id>' . $mainPictureId . '</Id>
                                                         <ChunkList>
                                                            <Chunk>
@@ -1220,12 +1226,12 @@ class IngesterManager extends Controller
                                                        </ChunkList>
                                                      </Asset>';
 
-                                        } else {
-                                            foreach ($copy_asset_file as $item) {
-                                                $Path = (string)$item['ChunkList']['Chunk']['Path'];
+                                                } else {
+                                                    foreach ($copy_asset_file as $item) {
+                                                        $Path = (string)$item['ChunkList']['Chunk']['Path'];
 
-                                                if ($item['Id'] == $mainPictureId) {
-                                                    $assets = $assets . '<Asset>
+                                                        if ($item['Id'] == $mainPictureId) {
+                                                            $assets = $assets . '<Asset>
                                                      <Id>' . $mainPictureId . '</Id>
                                                      <AnnotationText>' . $AnnotationText . '</AnnotationText>
                                                      <Hash>' . $Hash . '</Hash>
@@ -1233,8 +1239,8 @@ class IngesterManager extends Controller
                                                      <Type>' . $Type . '</Type>
                                                      <OriginalFileName>' . $Path . '</OriginalFileName>
                                                  </Asset>';
-                                                    $chunks = $chunks .
-                                                        ' <Asset>
+                                                            $chunks = $chunks .
+                                                                ' <Asset>
                                                         <Id>' . $mainPictureId . '</Id>
                                                         <ChunkList>
                                                            <Chunk>
@@ -1243,25 +1249,25 @@ class IngesterManager extends Controller
                                                            </Chunk>
                                                        </ChunkList>
                                                      </Asset>';
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
                                     }
-                                }
-                            }
-                            if (isset($reel->AssetList->MainSound)) {
-                                $mainSoundId = (string)$reel->AssetList->MainSound->Id;
-                                foreach ($copy_pkl->AssetList->Asset as $asset) {
-                                    $assetId = (string)$asset->Id;
-                                    $AnnotationText = (string)$asset->AnnotationText;
-                                    $Hash = (string)$asset->Hash;
-                                    $Size = (string)$asset->Size;
-                                    $Type = (string)$asset->Type;
+                                    if (isset($reel->AssetList->MainSound)) {
+                                        $mainSoundId = (string)$reel->AssetList->MainSound->Id;
+                                        foreach ($copy_pkl->AssetList->Asset as $asset) {
+                                            $assetId = (string)$asset->Id;
+                                            $AnnotationText = (string)$asset->AnnotationText;
+                                            $Hash = (string)$asset->Hash;
+                                            $Size = (string)$asset->Size;
+                                            $Type = (string)$asset->Type;
 
-                                    if ($assetId === $mainSoundId) {
-                                        if (isset($asset->OriginalFileName)) {
-                                            $OriginalFileName = $asset->OriginalFileName;
-                                            $assets = $assets . '<Asset>
+                                            if ($assetId === $mainSoundId) {
+                                                if (isset($asset->OriginalFileName)) {
+                                                    $OriginalFileName = $asset->OriginalFileName;
+                                                    $assets = $assets . '<Asset>
                                                      <Id>' . $mainSoundId . '</Id>
                                                      <AnnotationText>' . $AnnotationText . '</AnnotationText>
                                                      <Hash>' . $Hash . '</Hash>
@@ -1269,8 +1275,8 @@ class IngesterManager extends Controller
                                                      <Type>' . $Type . '</Type>
                                                      <OriginalFileName>' . $OriginalFileName . '</OriginalFileName>
                                                  </Asset>';
-                                            $chunks = $chunks .
-                                                ' <Asset>
+                                                    $chunks = $chunks .
+                                                        ' <Asset>
                                                         <Id>' . $mainSoundId . '</Id>
                                                         <ChunkList>
                                                            <Chunk>
@@ -1279,11 +1285,11 @@ class IngesterManager extends Controller
                                                            </Chunk>
                                                        </ChunkList>
                                                      </Asset>';
-                                        } else {
-                                            foreach ($copy_asset_file as $item) {
-                                                if ($item['Id'] == $mainSoundId) {
-                                                    $Path = (string)$item['ChunkList']['Chunk']['Path'];
-                                                    $assets = $assets . '<Asset>
+                                                } else {
+                                                    foreach ($copy_asset_file as $item) {
+                                                        if ($item['Id'] == $mainSoundId) {
+                                                            $Path = (string)$item['ChunkList']['Chunk']['Path'];
+                                                            $assets = $assets . '<Asset>
                                                      <Id>' . $mainSoundId . '</Id>
                                                      <AnnotationText>' . $AnnotationText . '</AnnotationText>
                                                      <Hash>' . $Hash . '</Hash>
@@ -1291,8 +1297,8 @@ class IngesterManager extends Controller
                                                      <Type>' . $Type . '</Type>
                                                      <OriginalFileName>' . $Path . '</OriginalFileName>
                                                  </Asset>';
-                                                    $chunks = $chunks .
-                                                        ' <Asset>
+                                                            $chunks = $chunks .
+                                                                ' <Asset>
                                                         <Id>' . $mainSoundId . '</Id>
                                                         <ChunkList>
                                                            <Chunk>
@@ -1301,17 +1307,17 @@ class IngesterManager extends Controller
                                                            </Chunk>
                                                        </ChunkList>
                                                      </Asset>';
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
                                     }
                                 }
-                            }
-                        }
-                        $generated_pkl_uuid = $this->generateUuid();
-                        $generated_asset_uuid = $this->generateUuid();
+                                $generated_pkl_uuid = $this->generateUuid();
+                                $generated_asset_uuid = $this->generateUuid();
 
-                        $pkl_content = '<?xml version="1.0" encoding="UTF-8"?>
+                                $pkl_content = '<?xml version="1.0" encoding="UTF-8"?>
                                          <PackingList xmlns="http://www.digicine.com/PROTO-ASDCP-PKL-20040311#">
                      <Id>' . $generated_pkl_uuid . '</Id>
                      <AnnotationText>' . $ContentTitleText . '</AnnotationText>
@@ -1319,7 +1325,7 @@ class IngesterManager extends Controller
                      <Issuer>TMS</Issuer>
                      <Creator>TMS</Creator>
                      <AssetList>' . $assets .
-                            ' <Asset>
+                                    ' <Asset>
                          <Id>' . $pkl_asset->Id . '</Id>
                          <AnnotationText>' . $pkl_asset->AnnotationText . ' </AnnotationText>
                          <Hash>' . $pkl_asset->Hash . '/Rmxc=</Hash>
@@ -1330,7 +1336,7 @@ class IngesterManager extends Controller
                      </AssetList>
                 </PackingList>';
 
-                        $asset_content = '<?xml version="1.0" encoding="UTF-8"?>
+                                $asset_content = '<?xml version="1.0" encoding="UTF-8"?>
                                          <AssetMap xmlns="http://www.digicine.com/PROTO-ASDCP-AM-20040311#">
                             <Id>' . $generated_asset_uuid . '</Id>
                             <AnnotationText>' . $ContentTitleText . '</AnnotationText>
@@ -1339,8 +1345,8 @@ class IngesterManager extends Controller
                             <Issuer>TMS</Issuer>
                             <Creator>TMS</Creator>
                             <AssetList>' .
-                            $chunks .
-                            ' <Asset>
+                                    $chunks .
+                                    ' <Asset>
                                  <Id>' . $pkl_asset->Id . '</Id>
                                   <ChunkList>
                                     <Chunk>
@@ -1361,21 +1367,30 @@ class IngesterManager extends Controller
                               </Asset>
                             </AssetList>
                           </AssetMap>';
-                        $dcp_item = array(
-                            "ContentTitleText" => $ContentTitleText,
-                            "asset_uuid" => $generated_asset_uuid,
-                            "asset" => $asset_content,
-                            "pkl_uuid" => $generated_pkl_uuid,
-                            "pkl" => $pkl_content,
-                            "cpl_uuid" => $asset_item['Id'],
-                            "cpl" => $cpl_content);
+                                $dcp_item = array(
+                                    "ContentTitleText" => $ContentTitleText,
+                                    "asset_uuid" => $generated_asset_uuid,
+                                    "asset" => $asset_content,
+                                    "pkl_uuid" => $generated_pkl_uuid,
+                                    "pkl" => $pkl_content,
+                                    "cpl_uuid" => $asset_item['Id'],
+                                    "cpl" => $cpl_content);
 
-                        array_push($packs, $dcp_item);
+                                array_push($packs, $dcp_item);
+                            }
+
+                        } catch (Exception $e) {
+
+                            $this->saveScanErrors("COULDN'T LOAD CPL PATH", $e->getMessage(), $cpl_uri, $id_server, "Scan-DCP");
+
+                        }
+
 
                     }
                 }
             }
         }
+
         return $packs;
 
     }
@@ -1815,7 +1830,22 @@ class IngesterManager extends Controller
     public function saveScanErrors($error, $content, $file_path, $id_server, $type)
     {
         $date_time = date("Y-m-d H:i:s");
-        $this->_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        try {
+            DB::table('ingest_scan_errors')->insert([
+                'title' => $error,
+                'content' => $content,
+                'file_path' => $file_path,
+                'date_time' => $date_time,
+                'id_server' => $id_server,
+                'type' => $type
+            ]);
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
+
+
+        /*$this->_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $q = $this
             ->_db
             ->prepare('INSERT INTO
@@ -1833,8 +1863,10 @@ class IngesterManager extends Controller
 
         } catch (PDOException $e) {
             echo $e->getMessage();
-        }
+        }*/
     }
+
+
 
     public function checkSplExistByUuid($uuid)
     {
@@ -2279,7 +2311,7 @@ class IngesterManager extends Controller
 
     }
 
-    public function startDownloadPackIngest($mxf_pack, $cpl_uuid, $server_ip, $usernameServer, $passwordServer)
+     public function startDownloadPackIngest($mxf_pack, $cpl_uuid, $server_ip, $usernameServer, $passwordServer)
     {
         echo "=============================================" . PHP_EOL;
         echo " download pack , cpl uuid : " . $cpl_uuid . PHP_EOL;
@@ -2292,20 +2324,20 @@ class IngesterManager extends Controller
                 // if ($this->checkFileDownloadedIdMxfIdCPl($mxf['id_file'],$cpl_uuid) == 0) {
                 // if ($this->checkFileDownloaded($mxf['id_file']) == 0) {
 
-                if ($this->checkFileDownloadedByIdAndCPl($mxf['id_file'], $cpl_uuid) == 0) {
-                    $check = $this->downloadLargeIngest($mxf['id_file'], $cpl_uuid, $server_ip, $usernameServer, $passwordServer, $mxf['pkl_uri'], $mxf['tms_dir'], $mxf['OriginalFileName'], $mxf['Size'], $i);
+                if ($this->checkFileDownloadedByIdAndCPl($mxf->id_file, $cpl_uuid) == 0) {
+                    $check = $this->downloadLargeIngest($mxf->id_file, $cpl_uuid, $server_ip, $usernameServer, $passwordServer, $mxf->pkl_uri, $mxf->tms_dir, $mxf->OriginalFileName, $mxf->Size, $i);
                     if ($check == "Failed") {
-                        $this->updateIngestStatusByCplUuid($mxf['id_cpl'], "Failed");
+                        $this->updateIngestStatusByCplUuid($mxf->id_cpl, "Failed");
                         $check_status = "Failed";
                         break;
                     }
                     if ($check == "pending") {
-                        $this->updateIngestStatusByCplUuid($mxf['id_cpl'], "pending");
+                        $this->updateIngestStatusByCplUuid($mxf->id_cpl, "pending");
                         $check_status = "pending";
                         break;
                     }
                     if ($check == "Paused") {
-                        $this->updateIngestStatusByCplUuid($mxf['id_cpl'], "Paused");
+                        $this->updateIngestStatusByCplUuid($mxf->id_cpl, "Paused");
                         $check_status = "Paused";
                         break;
                     }
@@ -2657,7 +2689,7 @@ $data_dcp = json_decode(json_encode($data_dcp), true);
             }
         }
         $bytesRead = ftell($localFile);
-        $this->updateProgressLargeFile($id_file, $bytesRead);
+        $this->updateProgressLargeFileByIdAndCplId($id_file, $bytesRead, $cpl_id);
         if ($bytesRead == $file_size) {
             if ($this->hashFile($localFilePath) == $this->getHashMxf($id_file)) {
                 $this->updateHashStatus(1, $id_file);
@@ -2828,6 +2860,28 @@ $data_dcp = json_decode(json_encode($data_dcp), true);
 
     public function getDcpLogsDetails($cpl_id_pack)
     {
+        try {
+            // Fetching ingest records based on cpl_id
+            $dcp = DB::table('ingests')
+                ->where('cpl_id', $cpl_id_pack)
+                ->get();
+
+            // Fetching ingest_dcp_large records based on id_cpl
+            $mxf = DB::table('ingest_dcp_large')
+                ->select('*', DB::raw('ROUND((progress*100/Size),2) AS percentage'))
+                ->where('id_cpl', $cpl_id_pack)
+                ->get();
+
+            $response = ["dcp" => $dcp, "mxf" => $mxf];
+            return  $response;
+            //return response()->json($response);
+
+        } catch (\Exception $e) {
+            // Handle exceptions
+            return response()->json(["error" => $e->getMessage()], 500);
+        }
+
+        /*
         $q_ingest = $this->_db->prepare('  SELECT ingests.*   FROM  ingests  WHERE  cpl_id =  :cpl_id  ');
         try {
 
@@ -2864,7 +2918,7 @@ $data_dcp = json_decode(json_encode($data_dcp), true);
         } catch (Exception $e) {
             // Handle exceptions
             return response()->json(["error" => $e->getMessage()], 500);
-        }
+        } */
 
     }
 
@@ -3053,7 +3107,7 @@ $data_dcp = json_decode(json_encode($data_dcp), true);
 
 
 
-        function secondsToHms($seconds)
+    function secondsToHms($seconds)
     {
         $hours = floor($seconds / 3600);
         $minutes = floor(($seconds % 3600) / 60);
@@ -3075,11 +3129,11 @@ $data_dcp = json_decode(json_encode($data_dcp), true);
 
 
     }
-        public function checkLocalCplNeedsKdm($reelList)
+    public function checkLocalCplNeedsKdm($reelList)
     {
         $hasKeyId = false;
 
-// Check if ReelList contains more than one reel
+        // Check if ReelList contains more than one reel
         if (isset($reelList['Reel'][0])) {
             foreach ($reelList['Reel'] as $reel) {
                 if (isset($reel['AssetList']['MainPicture']['KeyId'])) {
@@ -3113,56 +3167,352 @@ $data_dcp = json_decode(json_encode($data_dcp), true);
         $q->execute([$date_end_ingest, $uuid_cpl]); */
     }
 
- public function script_ingester()
- {
-    // $soapManagement = new SoapManagement();
-    $ingester_manager = new IngesterManager();
-    //$manager_server = new ServerManager(getdb());
-    $counter = 0;
+    public function script_ingester()
+    {
+        // $soapManagement = new SoapManagement();
+        $ingester_manager = new IngesterManager();
+        //$manager_server = new ServerManager(getdb());
+        $counter = 0;
 
 
-    while ($counter < 16) {
-        $list_ingests=$this->getListIngest();
-        foreach ($list_ingests AS $ingest){
-            $pack_ingest=$this->getIngestFiles($ingest['cpl_id']);
-            $this->ingestHasMxf($ingest['cpl_id']);
+        while ($counter < 16) {
+            $list_ingests=$this->getListIngest();
+            foreach ($list_ingests AS $ingest){
+                $pack_ingest=$this->getIngestFiles($ingest->cpl_id);
+                $this->ingestHasMxf($ingest->cpl_id);
 
-            if ($this->ingestHasMxf($ingest['cpl_id'])==0) {
-                $this->updateIngestStatusByCplUuid($ingest['cpl_id'], "Complete");
-                $date_start_ingest = date('Y-m-d H:i:s');
-                $this-> updateIngestStartDownloadByCplUuid($ingest['cpl_id'],$date_start_ingest);
-                $date_end_ingest = date('Y-m-d H:i:s');
-                $this-> updateIngestEndDownloadByCplUuid($ingest['cpl_id'],$date_end_ingest);
-                $this->updateIngestHasMxf($ingest['cpl_id'],0);
-
-            }
-        else{
-                if($this->checkRunningExist()==0){
-                    if($this->checkDownloadStatus($ingest['cpl_id'])=="Paused"){
-                        continue;
-                    }
-                    $this->updateIngestStatusByCplUuid($ingest['cpl_id'], "running");
+                if ($this->ingestHasMxf($ingest->cpl_id)==0) {
+                    $this->updateIngestStatusByCplUuid($ingest->cpl_id, "Complete");
                     $date_start_ingest = date('Y-m-d H:i:s');
-                    $this-> updateIngestStartDownloadByCplUuid($ingest['cpl_id'],$date_start_ingest);
-                    $this->updateIngestHasMxf($ingest['cpl_id'],1);
-                    $this->startDownloadPackIngest($pack_ingest,$ingest['cpl_id'],$ingest['server_ip'],$ingest['usernameServer'],$ingest['passwordServer'] );
-                    break;
+                    $this-> updateIngestStartDownloadByCplUuid($ingest->cpl_id,$date_start_ingest);
+                    $date_end_ingest = date('Y-m-d H:i:s');
+                    $this-> updateIngestEndDownloadByCplUuid($ingest->cpl_id,$date_end_ingest);
+                    $this->updateIngestHasMxf($ingest->cpl_id,0);
+
                 }
+            else{
+                    if($this->checkRunningExist()==0){
+                        if($this->checkDownloadStatus($ingest->cpl_id)=="Paused"){
+                            continue;
+                        }
+                        $this->updateIngestStatusByCplUuid($ingest->cpl_id, "running");
+                        $date_start_ingest = date('Y-m-d H:i:s');
+                        $this-> updateIngestStartDownloadByCplUuid($ingest->cpl_id,$date_start_ingest);
+                        $this->updateIngestHasMxf($ingest->cpl_id,1);
+                        $this->startDownloadPackIngest($pack_ingest,$ingest->cpl_id,$ingest->server_ip,$ingest->usernameServer,$ingest->passwordServer );
+                        break;
+                    }
+                }
+
             }
+            usleep(3000000); // Sleep for 4 seconds (4,000,000 microseconds)
 
+            $counter++;
         }
-        usleep(3000000); // Sleep for 4 seconds (4,000,000 microseconds)
 
-        $counter++;
+
     }
 
 
- }
+
+
+    public function getErrorsScan()
+    {
+        $errors = DB::table('ingest_scan_errors')
+            ->select(
+                'ingest_scan_errors.id',
+                'ingest_scan_errors.title',
+                'ingest_scan_errors.content',
+                'ingest_scan_errors.file_path',
+                'ingest_scan_errors.date_time',
+                'ingest_scan_errors.type',
+                'ingestsources.serverName'
+            )
+            ->leftJoin('ingestsources', 'ingest_scan_errors.id_server', '=', 'ingestsources.id')
+            ->orderBy('ingest_scan_errors.id', 'DESC')
+            ->get();
+
+            if(count($errors) > 0 )
+            {
+                return $errors ;
+            }else
+            {
+                return 0 ;
+            }
+        //return Response()->json(compact('errors'));
+
+        /*$dbDetails = getdb();
+        $table = <<<EOT
+        (
+            SELECT
+            ingest_scan_errors.id  ,
+            ingest_scan_errors.title,
+            ingest_scan_errors.content ,
+            ingest_scan_errors.file_path,
+            ingest_scan_errors.date_time,
+            ingest_scan_errors.type,
+            server.serverName
+        FROM
+            ingest_scan_errors
+        LEFT JOIN server ON ingest_scan_errors.id_server = server.idserver
+            ORDER BY ingest_scan_errors.id DESC
+         )AS temp
+        EOT;
+        $primaryKey = 'id';
+        $columns = array(
+            array('db' => 'id', 'dt' => 0),
+            array('db' => 'title', 'dt' => 1),
+            array('db' => 'content', 'dt' => 2),
+            array('db' => 'file_path', 'dt' => 3),
+            array('db' => 'date_time', 'dt' => 4),
+            array('db' => 'type', 'dt' => 5),
+            array('db' => 'serverName', 'dt' => 6),
+        );
+
+        echo json_encode(
+            SSP::simple($_GET, $dbDetails, $table, $primaryKey, $columns));
+
+
+            */
+    }
+
+
+    public function prepareLocalPath($OriginalFileName, $tms_dir)
+    {
+        $isDirectory = (strpos($OriginalFileName, '/') !== false);
+        if ($isDirectory) {
+            $directory = dirname($OriginalFileName);
+            $localDirectoryPath = $tms_dir . '/' . $directory;
+            if (!is_dir($localDirectoryPath)) {
+                mkdir($localDirectoryPath, 0777, true);
+            }
+            $localFilePath = $tms_dir . '/' . $OriginalFileName;
+        } else {
+            $localFilePath = $tms_dir . '/' . $OriginalFileName;
+        }
+        return $localFilePath;
+    }
+
+
+    public function prepareRemotePathUri($pkl_uri)
+    {
+        $prefix = 'data/';
+        if (substr($pkl_uri, 0, strlen($prefix)) == $prefix) {
+            $uri = substr($pkl_uri, strlen($prefix));
+        } else {
+            $uri = $pkl_uri;
+        }
+        return $uri;
+    }
+
+    public function getDirectory($file)
+    {
+        return pathinfo($file, PATHINFO_DIRNAME);
+    }
+
+
+    public function updateMxfFileStatusByIdAndCPlId($status, $id_file, $cpl_id)
+    {
+
+        DB::table('ingest_dcp_large')
+        ->where('id_file', $id_file)
+        ->where('id_cpl', $cpl_id)
+        ->update(array('status' => $status));
+
+        /*$q = $this
+            ->_db->prepare('UPDATE ingest_dcp_large SET status = ?  WHERE id_file = ? AND id_cpl=? ');
+        $q->execute([$status, $id_file, $cpl_id]); */
+    }
 
 
 
+    public function updateProgressLargeFileByIdAndCplId($id, $progress, $id_cpl)
+    {
+
+        $date_create_ingest = date('Y-m-d H:i:s');
+
+        DB::table('ingest_dcp_large')
+        ->where('id_file', $id)
+        ->where('id_cpl', $id_cpl)
+        ->update(array('progress' => $progress, 'date_create_ingest' => $date_create_ingest ));
+
+        /*$q = $this
+            ->_db->prepare('UPDATE ingest_dcp_large SET progress = ?,  date_create_ingest = ? WHERE id_file = ? AND id_cpl =? ');
+        $q->execute([$progress, $date_create_ingest, $id, $id_cpl]);*/
+    }
 
 
+    public function hashFile($file_path)
+    {
+        $sha1Checksum = sha1_file($file_path, true);
 
+        // Encode the binary checksum using base64
+        $base64Checksum = base64_encode($sha1Checksum);
+        // echo $base64Checksum;
+        return $base64Checksum;
+    }
+
+    public function getHashMxf($id_file)
+    {
+
+
+        try {
+            $result = DB::table('ingest_dcp_large')
+                ->select('Hash')
+                ->where('id_file', $id_file)
+                ->first();
+
+            if ($result) {
+                return $result->Hash;
+            } else {
+                return null; // or handle the case where no result is found
+            }
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
+
+        /*$q = $this->_db->prepare('SELECT  Hash  FROM ingest_dcp_large WHERE  id_file  = ? ');
+        try {
+            $q->execute(array($id_file));
+            $result = $q->fetch();
+            return ($result['Hash']);
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }*/
+
+    }
+
+    public function updateHashStatus($status, $id_file)
+    {
+
+        DB::table('ingest_dcp_large')
+            ->where('id_file', $id_file)
+            ->update(['hash_verified' => $status]);
+
+        /*$q = $this
+            ->_db->prepare('UPDATE ingest_dcp_large SET hash_verified = ?  WHERE id_file = ?  ');
+        $q->execute([$status, $id_file]);*/
+    }
+
+
+    public function updateMxfFileStatus($status, $id_file)
+    {
+        DB::table('ingest_dcp_large')
+            ->where('id_file', $id_file)
+            ->update(['status' => $status]);
+        /*
+        $q = $this
+            ->_db->prepare('UPDATE ingest_dcp_large SET status = ?  WHERE id_file = ?  ');
+        $q->execute([$status, $id_file]);*/
+    }
+
+    public function countPackMxfFiles($id_cpl)
+    {
+        try {
+            $result = DB::table('ingest_dcp_large')
+                ->selectRaw('COUNT(*) AS pack_nbr')
+                ->where('id_cpl', $id_cpl)
+                ->first();
+
+            if ($result) {
+                return $result->pack_nbr;
+            } else {
+                return 0; // or handle the case where no result is found
+            }
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
+
+
+        /*
+        $q = $this->_db->prepare('SELECT COUNT(*)  AS pack_nbr FROM  ingest_dcp_large where id_cpl = ?');
+        try {
+            $q->execute(array($id_cpl));
+            $result = $q->fetch(PDO::FETCH_ASSOC);
+            return $result['pack_nbr'];
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }*/
+    }
+
+    public function customErrorHandler($errno, $errstr, $errfile, $errline)
+    {
+        // Check if the error message matches the specific warning
+        if (stripos($errstr, 'ftp_nb_fget(): Failed to open file.') !== false) {
+            // Save the error in the database or perform any other desired action
+            // Example: code to save the error in a database table
+            $errorMessage = 'FTP file open error: ' . $errstr;
+            // Your code to save the error message in the database goes here
+            // ...
+            // Output the error message for debugging or logging purposes
+            echo $errorMessage;
+        }
+        // You can also log the error to a file or perform other actions for different error types if needed
+    }
+
+
+    public function getDcpLogs()
+    {
+        /*
+                $q = $this
+                    ->_db
+                    ->prepare(' SELECT *  ,"DCP" AS type , server.serverName As "source",
+                                (SELECT MAX(date_create_ingest) FROM ingest_dcp_large where ingest_dcp_large.id_cpl=ingests.cpl_id )
+                                AS date_finished_ingest ,
+                                IFNULL( (select sum(ingest_dcp_large.Size) from ingest_dcp_large where ingest_dcp_large.id_cpl = ingests.cpl_id),0) as Total_size ,
+                                IFNULL( (select sum(ingest_dcp_large.progress) from ingest_dcp_large where ingest_dcp_large.id_cpl = ingests.cpl_id),0) as Total_progress ,
+                                IFNULL(ROUND(
+                                        IFNULL( (select sum(ingest_dcp_large.progress) from ingest_dcp_large where ingest_dcp_large.id_cpl = ingests.cpl_id),0) *100  /
+                                        IFNULL( (select sum(ingest_dcp_large.Size) from ingest_dcp_large where ingest_dcp_large.id_cpl = ingests.cpl_id),0)
+                                        ,2),
+                                    0)AS "percentage",
+                    (SELECT IF(COUNT(*) = SUM(ingest_dcp_large.hash_verified), 1, 0) FROM ingest_dcp_large WHERE ingest_dcp_large.id_cpl = ingests.cpl_id) AS all_verified
+
+
+        FROM tms.ingests
+            LEFT JOIN   server ON ingests.id_source   = server.idserver
+
+        where ingests.status   not IN ("Running" ,"pending","Pending","running") ORDER BY ingests.order DESC ;  ');
+                try {
+                    $q->execute();
+                    return $q->fetchAll();
+
+                } catch (PDOException $e) {
+                    echo $e->getMessage();
+                }
+        }
+        */
+
+        try {
+            $result = DB::table('ingests')
+                ->select(
+                    '*',
+                    DB::raw('"DCP" AS type'),
+                    'ingestsources.serverName AS source',
+                    DB::raw('(SELECT MAX(date_create_ingest) FROM ingest_dcp_large WHERE ingest_dcp_large.id_cpl = ingests.cpl_id) AS date_finished_ingest'),
+                    DB::raw('IFNULL((SELECT SUM(ingest_dcp_large.Size) FROM ingest_dcp_large WHERE ingest_dcp_large.id_cpl = ingests.cpl_id), 0) AS Total_size'),
+                    DB::raw('IFNULL((SELECT SUM(ingest_dcp_large.progress) FROM ingest_dcp_large WHERE ingest_dcp_large.id_cpl = ingests.cpl_id), 0) AS Total_progress'),
+                    DB::raw('IFNULL(ROUND(
+                                    IFNULL((SELECT SUM(ingest_dcp_large.progress) FROM ingest_dcp_large WHERE ingest_dcp_large.id_cpl = ingests.cpl_id), 0) * 100 /
+                                    IFNULL((SELECT SUM(ingest_dcp_large.Size) FROM ingest_dcp_large WHERE ingest_dcp_large.id_cpl = ingests.cpl_id), 0)
+                                    ,2),
+                                0) AS percentage'),
+                    DB::raw('(SELECT IF(COUNT(*) = SUM(ingest_dcp_large.hash_verified), 1, 0) FROM ingest_dcp_large WHERE ingest_dcp_large.id_cpl = ingests.cpl_id) AS all_verified')
+                )
+                ->leftJoin('ingestsources', 'ingests.id_source', '=', 'ingestsources.id')
+                ->whereNotIn('ingests.status', ['Running', 'pending', 'Pending', 'running'])
+                ->orderByDesc('ingests.order')
+                ->get();
+
+            return $result;
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
+    }
 
 }
+
+
+
+
+

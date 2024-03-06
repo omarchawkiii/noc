@@ -41,6 +41,7 @@ return new class extends Migration
              $table->string('attempt', 255)->nullable();
              $table->string('order', 255)->nullable();
              $table->string('hasMxf', 255)->nullable();
+             $table->string('date_end_ingest', 255)->nullable();
              $table->timestamps();
         });
     }

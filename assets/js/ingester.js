@@ -436,175 +436,108 @@ $(document).on('click', '#start_ingest', function () {
 //*************************** scan logs
 
 $(document).on('click', '#scan_error-tab', function () {
-    $(document).ready(function () {
-        let height_parent = $('.tab-content').height();
-        var height_tab = height_parent - 149;
+    let height_parent = $('.tab-content').height();
+    var height_tab = height_parent - 149;
 
-        //$("#errors_scan_table").dataTable().fnDestroy();
-        // $('#errors_scan_table').html(""); // Clear the table body
-        var table = $('#errors_scan_table').DataTable();
-        table.clear().draw(); // Clear DataTables content and redraw
-        table.destroy();
-        $('#errors_scan_table').DataTable({
-            // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
-            "paging": true,
-            "lengthChange": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "order": [[1, 'DESC']],
+    $.ajax({
+        data: {
+            action_control: "get_scan_errors",
+        },
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
 
-            "responsive": true,
-            "processing": true,
-            "serverSide": true,
-            // "iDisplayLength": 20,
-            "scrollY": height_tab, // Set the height of the scrolling area
-            "createdRow": function (row, data, dataIndex) {
-                $(row).addClass('scan-error-item');
-                $(row).attr('data-id', data[0]);
-            },
-            "ajax": '/noc/ingester/action_contoller?action_control=get_scan_errors',
-            'columnDefs': [
-                {"targets": "_all", "className": "dt-head-nowrap"},
-                {
-                    'targets': 0,
+        url: '/noc/ingester/action_contoller',
+        method: 'POST',
+       // dataType: 'json',
+        success: function (data) {
+            console.log(data) ;
+  var obj = JSON.parse(data);
+       $('#errors_scan_table tbody').empty();
+    if (data === "null" || obj.length === 0 || data === []) {
 
 
-                    'render': function (data, type, row) {
-                        return row[0]
+            }else{
+                 let box = "";
+                       for (var i = 0; i < obj.length; i++) {
+                     box += '' +
+                    '<tr class="scan-error-item" data-id="'+obj[i].id+'">' +
+                        '<td>' + obj[i].id + '</td>' +
+                        '<td>' + obj[i].title + '</td>' +
+                        '<td>' + obj[i].type + '</td>' +
+                        '<td>' + obj[i].source + '</td>' +
+                        '<td>' + obj[i].date_time + '</td>' +
+                        '<td>' + obj[i].content + '</td>' +
+                        '<td>' + obj[i].file_path + '</td>' +
+                    '</tr>';
                     }
-                },
-                {
-                    'targets': 1,
-                    'render': function (data, type, row) {
-                        return row[1];
-                    }
-                },
-                {
-                    'targets': 2,
-                    'render': function (data, type, row) {
-                        return '<span>' + row[5] + '</span>';
-                    }
-                },
-                {
-                    'targets': 3,
+                       $('#errors_scan_table tbody').html(box);
+            }
+            // Clear existing table content
 
-                    'render': function (data, type, row) {
-                        return '<span>' + row[6] + '</span>';
-                    }
-                },
-                {
-                    'targets': 4,
-                    'render': function (data, type, row) {
-                        return row[4];
-                    }
-                },
-                {
-                    'targets': 5,
-                    'render': function (data, type, row) {
 
-                        return '<span>' + row[2] + '</span>';
-                    }
-                },
-                {
-                    'targets': 6,
 
-                    'render': function (data, type, row) {
-                        return row[3];
-                    }
-                }
-            ]
-            // "aoColumns": [{},{},{"bSortable": true, "sType": "date"}]
-        }).columns.adjust();
-        ;
-        // Force a CSS refresh after DataTables initialization
-        $('#errors_scan_table').css('display', 'block');
+        },
+        error: function (xhr, status, error) {
+            console.error(error);
+        }
     });
 
+    // Adjust the height and display the table
+    $('#errors_scan_table').css('height', height_tab + 'px');
+    $('#errors_scan_table').css('display', 'block');
 });
 function getScanLogs(){
     $(document).ready(function () {
         let height_parent = $('.tab-content').height();
         var height_tab = height_parent - 149;
 
-        //$("#errors_scan_table").dataTable().fnDestroy();
-        // $('#errors_scan_table').html(""); // Clear the table body
-        var table = $('#errors_scan_table').DataTable();
-        table.clear().draw(); // Clear DataTables content and redraw
-        table.destroy();
-        $('#errors_scan_table').DataTable({
-            // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
-            "paging": true,
-            "lengthChange": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "order": [[1, 'DESC']],
-
-            "responsive": true,
-            "processing": true,
-            "serverSide": true,
-            // "iDisplayLength": 20,
-            "scrollY": height_tab, // Set the height of the scrolling area
-            "createdRow": function (row, data, dataIndex) {
-                $(row).addClass('scan-error-item');
-                $(row).attr('data-id', data[0]);
+        $.ajax({
+            data: {
+                action_control: "get_scan_errors",
             },
-            "ajax": '/noc/ingester/action_contoller?action_control=get_scan_errors',
-            'columnDefs': [
-                {"targets": "_all", "className": "dt-head-nowrap"},
-                {
-                    'targets': 0,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+
+            url: '/noc/ingester/action_contoller',
+            method: 'POST',
+           // dataType: 'json',
+            success: function (data) {
+                console.log(data) ;
+      var obj = JSON.parse(data);
+           $('#errors_scan_table tbody').empty();
+        if (data === "null" || obj.length === 0 || data == []) {
 
 
-                    'render': function (data, type, row) {
-                        return row[0]
-                    }
-                },
-                {
-                    'targets': 1,
-                    'render': function (data, type, row) {
-                        return row[1];
-                    }
-                },
-                {
-                    'targets': 2,
-                    'render': function (data, type, row) {
-                        return '<span>' + row[5] + '</span>';
-                    }
-                },
-                {
-                    'targets': 3,
-
-                    'render': function (data, type, row) {
-                        return '<span>' + row[6] + '</span>';
-                    }
-                },
-                {
-                    'targets': 4,
-                    'render': function (data, type, row) {
-                        return row[4];
-                    }
-                },
-                {
-                    'targets': 5,
-                    'render': function (data, type, row) {
-
-                        return '<span>' + row[2] + '</span>';
-                    }
-                },
-                {
-                    'targets': 6,
-
-                    'render': function (data, type, row) {
-                        return row[3];
-                    }
+                }else{
+                     let box = "";
+                           for (var i = 0; i < obj.length; i++) {
+                         box += '' +
+                        '<tr class="scan-error-item" data-id="'+obj[i].id+'">' +
+                            '<td>' + obj[i].id + '</td>' +
+                            '<td>' + obj[i].title + '</td>' +
+                            '<td>' + obj[i].type + '</td>' +
+                            '<td>' + obj[i].source + '</td>' +
+                            '<td>' + obj[i].date_time + '</td>' +
+                            '<td>' + obj[i].content + '</td>' +
+                            '<td>' + obj[i].file_path + '</td>' +
+                        '</tr>';
+                        }
+                           $('#errors_scan_table tbody').html(box);
                 }
-            ]
-            // "aoColumns": [{},{},{"bSortable": true, "sType": "date"}]
-        }).columns.adjust();
-        ;
-        // Force a CSS refresh after DataTables initialization
+                // Clear existing table content
+
+
+
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+            }
+        });
+
+        // Adjust the height and display the table
+        $('#errors_scan_table').css('height', height_tab + 'px');
         $('#errors_scan_table').css('display', 'block');
     });
 }
@@ -834,19 +767,20 @@ $(document).on('click', '#delete_scan_logs', function (event) {
         array_logs.push(id);
     });
 
+
+
     if (array_logs.length ==  0) {
         $("#empty-logs-warning-modal").modal('show');
     }else{
         $.ajax({
             url: '/noc/ingester/action_contoller',
-            type: 'post',
+            type: 'POST',
             data: {
                 action_control: "delete_scan_logs",
                 array_logs: array_logs
             },
-            data:{
-                'action_control':  action_control,
-                //'_token': $('meta[name="csrf-token"]').attr('content'),
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             beforeSend: function () {
             },
@@ -887,9 +821,8 @@ $(document).on('click', '#details_ingest', function (event) {
                 idCpl: idCpl,
                 idServer: idServer
             },
-            data:{
-                'action_control':  action_control,
-                //'_token': $('meta[name="csrf-token"]').attr('content'),
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             beforeSend: function () {
 
@@ -1093,15 +1026,14 @@ $(document).on('click', '#details_logs', function (event) {
                 action_control: "details_ingest",
                 idCpl: idCpl
             },
-            data:{
-                'action_control':  action_control,
-                //'_token': $('meta[name="csrf-token"]').attr('content'),
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             beforeSend: function () {
 
             },
             success: function (response) {
-
+            console.log(response)
                 try {
                     $("#details-ingest-modal").modal('show');
                     var obj = JSON.parse(response);
@@ -1792,3 +1724,6 @@ $("#div_ingest_monitor").css("overflow-y", "auto");
 $("#div_ingest_logs").css("height", parent - 70);
 $("#div_ingest_logs").css("max-height", parent - 70);
 $("#div_ingest_logs").css("overflow-y", "auto");
+
+
+

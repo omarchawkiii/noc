@@ -341,7 +341,8 @@ class IngersterController extends Controller
             }
             if ($_POST["action_control"] == "details_ingest") {
                 $ingester_manager = new IngesterManager();
-                    $ingester_manager->getDcpLogsDetails($_POST["idCpl"]);
+                $response =   $ingester_manager->getDcpLogsDetails($_POST["idCpl"]);
+                echo json_encode($response);
             }
 
             if ($_POST["action_control"] == "get_logs") {
@@ -356,9 +357,16 @@ class IngersterController extends Controller
                     $ingester_manager-> DeleteLogsById($id);
                 }
             }
+            if ($_POST["action_control"] == "get_scan_errors") {
+             //$manager_server = new ServerManager(getdb());
+                $ingester_manager = new IngesterManager();
+               $response= $ingester_manager->getErrorsScan();
+                    echo json_encode($response);
+            }
+
         }
 
-        if (isset($_GET['action_control'])) {
+       /* if (isset($_GET['action_control'])) {
 
             if ($_GET["action_control"] == "get_scan_errors") {
                 //$manager_server = new ServerManager(getdb());
@@ -366,7 +374,7 @@ class IngersterController extends Controller
                 $ingester_manager->getErrorsScan();
             }
 
-        }
+        }*/
     }
 
 }

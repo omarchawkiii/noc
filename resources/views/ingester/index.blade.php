@@ -370,6 +370,114 @@
     </div>
 
 
+<div class="modal fade show" id="details-ingest-modal" tabindex="-1" role="dialog" aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+   <div class="modal-dialog  modal-xl" role="document">
+       <div class="modal-content">
+           <div class="modal-header">
+               <h5 class="modal-title" id="ModalLabel">
+                   <i class="btn btn-primary mdi mdi-magnify" style="margin-right: 5px"></i>
+                    Ingest Details
+               </h5>
+               <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                   <span aria-hidden="true">×</span>
+               </button>
+           </div>
+           <div class="modal-body">
+               <div class="tab-pane fade active show" id="home-1" role="tabpanel" aria-labelledby="home-tab">
+                   <div class="row">
+                       <div class="col-md-12 ">
+                           <div class="form-group custom-form-group" style="text-align: center">
+
+                               <div class="row tab-pane fade show active"  id="ingest_details_content"   >
+
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+                   <div class="row mt-2">
+                       <div class="col" style="text-align: center">
+                           <button class="btn btn-secondary btn-fw close" data-bs-dismiss="modal"
+                                   aria-label="Close">Close
+                           </button>
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
+</div>
+
+<div class="modal fade show" id="no-select-modal" tabindex="-1" role="dialog"
+    aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+       <div class="modal-content">
+           <div class="modal-header">
+               <h5 class="modal-title" id="ModalLabel">
+                   <i class="mdi mdi-alert btn btn-warning " style="margin-right: 5px"></i>
+                  Warning
+               </h5>
+               <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                   <span aria-hidden="true">×</span>
+               </button>
+           </div>
+           <div class="modal-body">
+               <div class="tab-pane fade active show" id="home-1" role="tabpanel" aria-labelledby="home-tab">
+                   <div class="row">
+                       <div class="col-md-12 ">
+                           <div class="form-group custom-form-group" style="text-align: center">
+                               <label id="modal_no_select_text"> No Task Selected </label>
+
+                           </div>
+                       </div>
+                   </div>
+                   <div class="row mt-2">
+                       <div class="col" style="text-align: center">
+                           <button class="btn btn-secondary btn-fw close" data-bs-dismiss="modal"
+                                   aria-label="Close">Close
+                           </button>
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
+</div>
+
+<div class="modal fade show" id="empty-logs-warning-modal" tabindex="-1" role="dialog"
+    aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+       <div class="modal-content">
+           <div class="modal-header">
+               <h5 class="modal-title" id="ModalLabel">
+                   <i class="mdi mdi-alert btn btn-warning " style="margin-right: 5px"></i>
+                   Warning
+               </h5>
+               <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                   <span aria-hidden="true">×</span>
+               </button>
+           </div>
+           <div class="modal-body">
+               <div class="tab-pane fade active show" id="home-1" role="tabpanel" aria-labelledby="home-tab">
+                   <div class="row">
+                       <div class="col-md-12 ">
+                           <div class="form-group custom-form-group" style="text-align: center">
+                               <label id="modal_no_select_text"> No Log Selected </label>
+
+                           </div>
+                       </div>
+                   </div>
+                   <div class="row mt-2">
+                       <div class="col" style="text-align: center">
+                           <button class="btn btn-secondary btn-fw close" data-bs-dismiss="modal"
+                                   aria-label="Close">Close
+                           </button>
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
+</div>
 
 @endsection
 
