@@ -83,6 +83,7 @@ class CplController extends Controller
                             'markersCount' => $cpl['markersCount'] ,
                             'pictureWidth' => $cpl['pictureWidth'],
                             'pictureHeight' => $cpl['pictureHeight'] ,
+                            'type' => $cpl['type'] ,
                         ]);
                     }
 
@@ -124,6 +125,7 @@ class CplController extends Controller
         $country = $request->country;
         $screen = $request->screen;
         $lms= $request->lms ;
+        $multiplex=$request->multiplex ;
         $playlist_builder= $request->playlist_builder ;
         $macros = null ;
 
@@ -189,6 +191,31 @@ class CplController extends Controller
 
 
         }
+
+        if(isset($multiplex) && $multiplex != 'null' )
+        {
+            if($multiplex =='linked')
+            {
+                $cpls =$cpls->where('cpl_is_linked',1);
+            }
+            if($multiplex =='unlinked')
+            {
+                $cpls =$cpls->where('cpl_is_linked',0);
+            }
+            if($multiplex =='Encryped')
+            {
+                $cpls =$cpls->where('pictureEncryptionAlgorithm','!=','None')->where('pictureEncryptionAlgorithm','!=','0')->where('pictureEncryptionAlgorithm','!=',null);
+
+            }
+            if($multiplex =='NoEncryped')
+            {
+                $cpls =$cpls->where('pictureEncryptionAlgorithm','None')->orWhere('pictureEncryptionAlgorithm','0')->orWhere('pictureEncryptionAlgorithm',null);
+            }
+
+
+        }
+
+
         $cpls = $cpls->get() ;
         return Response()->json(compact('cpls','screens','macros'));
 

@@ -44,7 +44,7 @@ class Cpl extends Model
         'markersCount',
         'pictureWidth',
         'pictureHeight',
-
+        'type',
     ];
 
     protected $primaryKey = 'id';

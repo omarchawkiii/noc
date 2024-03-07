@@ -38,7 +38,7 @@ class LmscplController extends Controller
                             'contentKind' => $cpl['contentKindMajuscule'] ,
                             //'EditRate' => $cpl['EditRate'] ,
                             //'is_3D'=> $cpl['is_3D'] ,
-                            //'totalSize' => $cpl['totalSize'] ,
+                            'totalSize' => $cpl['totalSize'] ,
                             'soundChannelCount'=> $cpl['soundChannelCount'] ,
                             'durationEdits' => $cpl['durationEdits'] ,
                             'ScreenAspectRatio'=> $cpl['ScreenAspectRatio'] ,
@@ -49,7 +49,7 @@ class LmscplController extends Controller
                             'pictureEncryptionAlgorithm'=> $cpl['pictureEncryptionAlgorithm'] ,
                             'Width'=> $cpl['pictureWidth'] ,
                             'Height' => $cpl['pictureHeight'] ,
-                            'type' => $cpl['type_ScreenAspectRatio']['type'],
+                            'type' => $cpl['type'],
                             'cinema_DCP' => $cpl['type_ScreenAspectRatio']['Cinema_DCP'],
                             'aspect_Ratio' => $cpl['type_ScreenAspectRatio']['Aspect_Ratio'],
                             'duration_seconds' => $cpl['Duration_seconds'],
@@ -58,6 +58,7 @@ class LmscplController extends Controller
                             'editRate_denominator' => $cpl['editRate_denominator'] ,
                             'kdm_required' => $cpl['kdm_required'] ,
                             'location_id'=> $location->id,
+
 
                         ]);
                     }

@@ -70,8 +70,6 @@ class ScheduleContoller extends Controller
                                         $spl_id =null ;
                                    }
                                 }
-
-
                                 Schedule::updateOrCreate([
                                     'scheduleId' => $schedule["id"],
                                     'location_id' => $location->id,
@@ -103,8 +101,6 @@ class ScheduleContoller extends Controller
 
                         }
                         $uuid_schedule = array_column($content, 'id');
-
-
                         foreach($location->schedules as $schedule)
                         {
                             if (! in_array( $schedule->scheduleId , $uuid_schedule) &&  strtotime($schedule->date_start) > strtotime('now')  )

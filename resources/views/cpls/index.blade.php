@@ -52,6 +52,21 @@
                             </select>
                         </div>
                     </div>
+                    <div class="col-xl-2">
+                        <div class="input-group mb-2 mr-sm-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text"><i class="mdi mdi-monitor"></i></div>
+                            </div>
+                            <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="multiplex">
+                                <option value="null">Multiplex</option>
+                                <option value="linked">Linked</option>
+                                <option value="unlinked">Unlinked</option>
+                                <option value="Encryped">Encryped</option>
+                                <option value="NoEncryped">No Encryped</option>
+                            </select>
+                        </div>
+                    </div>
+
 
                     <div class="col-xl-2">
                         <button type="button" id="refresh_lms"  class="btn btn-icon-text " style="color: #6f6f6f;background: #2a3038; height: 37px; display:none">
@@ -727,177 +742,108 @@ function formatSize(sizeInBytes) {
             }
         });
 
-        $('#screen').change(function(){
+        function get_cpls(location , screen , lms , multiplex,refresh_screen)
+        {
 
-            $("#location-listing").dataTable().fnDestroy();
-            $('#location-listing tbody').html('')
-
-            var loader_content  =
-           '<div class="jumping-dots-loader">'
-               +'<span></span>'
-               +'<span></span>'
-               +'<span></span>'
-               +'</div>'
-            $('#location-listing tbody').html(loader_content)
-
-            var country =  $('#country').val();
-            var screen =  $('#screen').val();
-            window.lms = false ;
-            var location =  $('#location').val();
-
-            var url = "{{  url('') }}"+ '/get_cpl_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen;
-
-            result =" " ;
-
+            result ="" ;
+            var url = "{{  url('') }}"+ '/get_cpl_with_filter/';
             $.ajax({
                 url: url,
                 method: 'GET',
-                success:function(response)
-                {
-
-                    $.each(response.cpls, function( index, value ) {
-                        index++;
-                        available_on_array =  value.available_on.split(",");
-                        available_on_content=""
-                        for(i = 0 ; i< available_on_array.length ; i++ )
-                        {
-                            if(i != 0 &&  i % 9 == 0 )
-                            {
-                                available_on_content = available_on_content + '<br />'
-                            }
-                            available_on_content = available_on_content + '<div class="badge badge-outline-primary m-1">'+ available_on_array[i]+'</div>'
-                        }
-
-                        playable =""
-                        if(value.playable == 1)
-                        {
-                            playable = "bg-playable" ;
-                        }
-                        else
-                        {
-                            playable = "bg-no-playable";
-                        }
-
-                        result = result
-                            +'<tr class="'+playable+' odd">'
-                                +'<td class="sorting_1">'+ index+' </td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.contentTitleText+'</a></td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">'+value.contentKind+'</a></td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">' + formatSize(value.totalSize) + '</a></td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">' + available_on_content + '</a></td>'
-                                +'<td><a class="btn btn-primary infos_modal text-center" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+'" data-location="'+value.location.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
-                            +'</tr>';
-                    });
-                    console.log(response.cpls)
-                    $('#location-listing tbody').html(result)
-
-                    /***** refresh datatable ***** */
-
-                    var cpl_datatable = $('#location-listing').DataTable({
-
-                        "iDicplayLength": 10,
-                        destroy: true,
-                        "bDestroy": true,
-                        "language": {
-                            search: "_INPUT_",
-                            searchPlaceholder: "Search..."
-                        }
-
-                    });
-
+                data: {
+                    location: location,
+                    screen_id: screen,
+                    multiplex: multiplex,
+                    lms : lms,
                 },
-                error: function(response) {
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
 
-                }
-            })
-
-
-
-
-        });
-
-        $(' #location').change(function(){
-            $("#location-listing").dataTable().fnDestroy();
-             $('#screen').find('option')
-            .remove()
-            .end()
-            .append('<option value="null">All Screens</option>')
-
-            var loader_content  =
-           '<div class="jumping-dots-loader">'
-               +'<span></span>'
-               +'<span></span>'
-               +'<span></span>'
-               +'</div>'
-            $('#location-listing tbody').html(loader_content)
-            //$('#location-listing tbody').html('')
-            var location =  $('#location').val();
-            var country =  $('#country').val();
-            var screen =  null;
-            window.lms = false ;
-            if(location != "Locations")
-            {
-                $('#refresh_lms').show();
-            }
-            else
-            {
-                $('#refresh_lms').hide();
-            }
-
-            var url = "{{  url('') }}"+ '/get_cpl_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen;
-            result =" " ;
-
-            $.ajax({
-                url: url,
-                method: 'GET',
                 success:function(response)
                 {
+                    console.log(refresh_screen)
+                    if(refresh_screen != false)
+                    {
+                        screens = '<option value="null" selected>All screen </option>';
+                        $.each(response.screens, function( index_screen, screen ) {
 
-                    screens = '<option value="null" selected>All screen </option>';
-                    $.each(response.screens, function( index_screen, screen ) {
+                            screens = screens
+                                +'<option  value="'+screen.id+'">'+screen.screen_name+'</option>';
+                        });
+                            $('#screen').html(screens)
+                    }
 
-                        screens = screens
-                            +'<option  value="'+screen.id+'">'+screen.screen_name+'</option>';
-                    });
-                        $('#screen').html(screens)
-
-                    $.each(response.cpls, function( index, value ) {
-                        index ++ ;
-                        available_on_array =  value.available_on.split(",");
-                        available_on_content=""
-                        for(i = 0 ; i< available_on_array.length ; i++ )
-                        {
-                            if(i != 0 &&  i % 9 == 0 )
+                    if(response.cpls.length>0)
+                    {
+                        $.each(response.cpls, function( index, value ) {
+                            index ++ ;
+                            if( value.available_on)
                             {
-                                available_on_content = available_on_content + '<br />'
+                                available_on_array =  value.available_on.split(",");
+                                available_on_content=""
+                                for(i = 0 ; i< available_on_array.length ; i++ )
+                                {
+                                    if(i != 0 &&  i % 9 == 0 )
+                                    {
+                                        available_on_content = available_on_content + '<br />'
+                                    }
+                                    available_on_content = available_on_content + '<div class="badge badge-outline-primary m-1">'+ available_on_array[i]+'</div>'
+                                }
                             }
-                            available_on_content = available_on_content + '<div class="badge badge-outline-primary m-1">'+ available_on_array[i]+'</div>'
-                        }
+                            else
+                            {
+                                available_on_content=""
+                            }
 
-                        playable =""
-                        if(value.playable == 1)
-                        {
-                            playable = "bg-playable" ;
-                        }
-                        else
-                        {
-                            playable = "bg-no-playable";
-                        }
 
-                        result = result
-                            +'<tr class="odd  '+playable+' text-center">'
-                            +'<td class="sorting_1">'+ index+' </td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.contentTitleText+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">'+value.contentKind+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">' +formatSize(value.totalSize)+ '</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">' + available_on_content + '</a></td>'
-                            +'<td><a class="btn btn-primary infos_modal text-center" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+' " data-location="'+value.location.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
-                            +'</tr>';
-                    });
-                    console.log(response.cpls)
+                            playable =""
+                            if(value.playable == 1)
+                            {
+                                playable = "bg-playable" ;
+                            }
+                            else
+                            {
+                                playable = "bg-no-playable";
+                            }
+
+                            var encrypted="";
+                                if(value.pictureEncryptionAlgorithm=="None" || value.pictureEncryptionAlgorithm=="0"){
+                                    encrypted="";
+                                }else{
+                                    encrypted="<i class=\"cpl_need_kdm mdi btn-success mdi-lock-outline p-1 m-1 rounded\"  ></i> ";
+                                }
+
+
+                                var style = (value.pictureEncryptionAlgorithm == "Flat") ? "color:#52d4f7;" :
+                                (value.pictureEncryptionAlgorithm == "Scope") ? "color:#36ffb9;" :
+                                    "color:white;";
+
+                                var title= '<span '+style+'>' + value.contentTitleText +
+                                    encrypted +
+                                    (value.cpl_is_linked == "1" ? ' <span class=\"mdi mdi-calendar-clock custom-calendar p-1 m-1 btn-primary rounded\"  ></span>':"  ")
+                                    +
+
+                                    '  </span>';
+
+
+
+
+                            result = result
+                                +'<tr class="odd  '+playable+' text-center">'
+                                +'<td class="sorting_1">'+ index+' </td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+title+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">'+value.contentKind+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">' +formatSize(value.totalSize)+ '</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">' + available_on_content + '</a></td>'
+                                +'<td><a class="btn btn-primary infos_modal text-center" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+' " data-location="'+value.location.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
+                                +'</tr>';
+                        });
+                    }
+
                     $('#location-listing tbody').html(result)
 
-                    console.log(response.cpls)
+
                     /***** refresh datatable **** **/
 
                     var cpl_datatable = $('#location-listing').DataTable({
@@ -915,8 +861,68 @@ function formatSize(sizeInBytes) {
 
                 }
             })
+        }
+
+
+        $('#screen').change(function(){
+
+            $("#location-listing").dataTable().fnDestroy();
+            $('#location-listing tbody').html('')
+
+            var loader_content  =
+           '<div class="jumping-dots-loader">'
+               +'<span></span>'
+               +'<span></span>'
+               +'<span></span>'
+               +'</div>'
+            $('#location-listing tbody').html(loader_content)
+
+            var country =  $('#country').val();
+            var screen =  $('#screen').val();
+            window.lms = false ;
+            var location =  $('#location').val();
+            var multiplex =  $('#multiplex').val();
+
+            get_cpls(location , screen , false , multiplex,false)
+
+
 
         });
+
+        $('#location').change(function(){
+            $("#location-listing").dataTable().fnDestroy();
+             $('#screen').find('option')
+            .remove()
+            .end()
+            .append('<option value="null">All Screens</option>')
+
+            var loader_content  =
+           '<div class="jumping-dots-loader">'
+               +'<span></span>'
+               +'<span></span>'
+               +'<span></span>'
+               +'</div>'
+            $('#location-listing tbody').html(loader_content)
+            //$('#location-listing tbody').html('')
+            var location =  $('#location').val();
+            var country =  $('#country').val();
+            var multiplex =  $('#multiplex').val();
+            var screen =  null;
+            window.lms = false ;
+            if(location != "Locations")
+            {
+                $('#refresh_lms').show();
+            }
+            else
+            {
+                $('#refresh_lms').hide();
+            }
+
+            get_cpls(location , screen , false , multiplex,true)
+
+        });
+
+
 
         $('#refresh_lms').click(function(){
 
@@ -937,87 +943,46 @@ function formatSize(sizeInBytes) {
             //$('#location-listing tbody').html('')
             var location =  $('#location').val();
             var country =  $('#country').val();
+            var multiplex =  $('#multiplex').val();
             window.lms = true ;
             var screen =  null;
+            get_cpls(location , screen , true , multiplex,true)
 
-            var url = "{{  url('') }}"+ '/get_cpl_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen+'&lms='+ lms;
-            result =" " ;
-
-            $.ajax({
-                url: url,
-                method: 'GET',
-                success:function(response)
-                {
-
-                    screens = '<option value="null" selected>All screen </option>';
-                    $.each(response.screens, function( index_screen, screen ) {
-
-                        screens = screens
-                            +'<option  value="'+screen.id+'">'+screen.screen_name+'</option>';
-                    });
-                        $('#screen').html(screens)
-
-                    $.each(response.cpls, function( index, value ) {
-                        index++;
-                        available_on_content="";
-                        if(value.available_on != null)
-                        {    if (value.available_on.indexOf(',') > -1)
-                            {
-                                available_on_array =  value.available_on.split(",");
-                                available_on_content=""
-                                for(i = 0 ; i< available_on_array.length ; i++ )
-                                {
-                                    if(i != 0 &&  i % 9 == 0 )
-                                    {
-                                        available_on_content = available_on_content + '<br />'
-                                    }
-                                    available_on_content = available_on_content + '<div class="badge badge-outline-primary m-1">'+ available_on_array[i]+'</div>'
-                                }
-                            }
-                            else
-                            {
-                                available_on_content = '<div class="badge badge-outline-primary m-1">'+ value.available_on+'</div>'
-                            }
-                        }
-                        else
-                        {
-                            available_on_content ="" ;
-                        }
-
-
-                        result = result
-                            +'<tr class="odd text-center">'
-                            +'<td class="sorting_1">'+ index+' </td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.contentTitleText+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">'+value.contentKind+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">' +formatSize(value.totalSize)+ '</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">' + available_on_content + '</a></td>'
-                            +'<td><a class="btn btn-primary infos_modal text-center" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+'" data-location="'+value.location.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
-                            +'</tr>';
-                    });
-                    console.log(response.cpls)
-                    $('#location-listing tbody').html(result)
-
-                    console.log(response.cpls)
-                    /***** refresh datatable **** **/
-
-                    var cpl_datatable = $('#location-listing').DataTable({
-                        "iDicplayLength": 10,
-                        destroy: true,
-                        "bDestroy": true,
-                        "language": {
-                            search: "_INPUT_",
-                            searchPlaceholder: "Search..."
-                        }
-                    });
-
-                },
-                error: function(response) {
-
-                }
-            })
 
         });
+
+        $('#multiplex').change(function(){
+            $("#location-listing").dataTable().fnDestroy();
+
+            var loader_content  =
+           '<div class="jumping-dots-loader">'
+               +'<span></span>'
+               +'<span></span>'
+               +'<span></span>'
+               +'</div>'
+            $('#location-listing tbody').html(loader_content)
+            //$('#location-listing tbody').html('')
+            var location =  $('#location').val();
+            var country =  $('#country').val();
+            var multiplex =  $('#multiplex').val();
+            var screen =  null;
+            window.lms = false ;
+            if(location != "Locations")
+            {
+                $('#refresh_lms').show();
+                get_cpls(location , screen , false , multiplex ,false)
+            }
+            else
+            {
+                $('#refresh_lms').hide();
+            }
+
+
+
+
+
+        });
+
 
     })(jQuery);
 

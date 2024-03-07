@@ -1116,7 +1116,6 @@
             $('[data-toggle="tooltip"]').tooltip()
         })
 
-
         $(".preview-item").click(function() {
 
             $(this).toggleClass("selected");
@@ -3651,484 +3650,484 @@
         });
     </script>
 
-<script>
-    $(document).on('click', '.infos_modal , .cpl-details', function () {
-        $("#infos_modal").modal('show');
-       var loader_content  =
-           '<div class="jumping-dots-loader">'
-               +'<span></span>'
-               +'<span></span>'
-               +'<span></span>'
-            +'</div>'
-       $('#Properties').html(loader_content)
+    <script>
+        $(document).on('click', '.infos_modal , .cpl-details', function () {
+                $("#infos_modal").modal('show');
+            var loader_content  =
+                '<div class="jumping-dots-loader">'
+                    +'<span></span>'
+                    +'<span></span>'
+                    +'<span></span>'
+                    +'</div>'
+            $('#Properties').html(loader_content)
+
+                $('#Properties-tab').addClass('active');
+                $('#spls-tab').removeClass('active');
+                $('#kdms-tab').removeClass('active');
+                $('#Properties').addClass('show active ');
+                $('#spls').removeClass('show active');
+                $('#kdms').removeClass('show active');
+
+            window.cpl_id = $(this).attr("id") ;
+            window.location_id = $(this).attr("data-location")
+
+            if(true)
+                {
+                    var url = "{{  url('') }}"+   "/get_lmscpl_infos/"+cpl_id;
+                    $('#kdms-tab').hide();
+                }
 
-        $('#Properties-tab').addClass('active');
-        $('#spls-tab').removeClass('active');
-        $('#kdms-tab').removeClass('active');
-        $('#Properties').addClass('show active ');
-        $('#spls').removeClass('show active');
-        $('#kdms').removeClass('show active');
-
-       window.cpl_id = $(this).attr("id") ;
-       window.location_id = $(this).attr("data-location")
-
-       if(true)
-        {
-            var url = "{{  url('') }}"+   "/get_lmscpl_infos/"+cpl_id;
-            $('#kdms-tab').hide();
-        }
-
-
-       $.ajax({
-               url: url,
-               method: 'GET',
-               success:function(response)
-               {
-                console.log(response)
-                       result =
-                       '<div class="card rounded border mb-2">'
-                               +'<div class="card-body p-3">'
-                                   +'<div class="media  justify-content-start">'
-                                       +'<div class="media-body d-flex align-items-center">'
-                                           +'<i class=" mdi mdi-star icon-sm align-self-center me-3"></i>'
-                                           +'<h6 class="mb-1">Title :  </h6>'
-                                       +'</div>'
-                                       +'<div class="media-body">'
-                                           +'<p class="mb-0 text-muted m-1">   </p>'
-                                       +'</div>'
-                                       +'<div class="media-body">'
-                                           +'<p class="mb-0 text-muted"> '+ response.cpl.contentTitleText + ' </p>'
-                                       +'</div>'
-                                   +'</div>'
-                               +'</div>'
-                           +'</div>'
-                           +'<div class="card rounded border mb-2">'
-                               +'<div class="card-body p-3">'
-                                   +'<div class="media  d-flex justify-content-start">'
-                                       +'<div class="media-body d-flex align-items-center">'
-                                           +'<i class="mdi mdi-star icon-sm align-self-center me-3"></i>'
-                                           +'<h6 class="mb-1">UUID : </h6>'
-                                       +'</div>'
-                                       +'<div class="media-body">'
-                                           +'<p class="mb-0 text-muted m-1">   </p>'
-                                       +'</div>'
-                                       +'<div class="media-body">'
-                                           +'<p class="mb-0 text-muted"> '+ response.cpl.uuid + ' </p>'
-                                       +'</div>'
-                                   +'</div>'
-                               +'</div>'
-                           +'</div>'
-                           +'<div class="card rounded border mb-2">'
-                               +'<div class="card-body p-3">'
-                                   +'<div class="media  d-flex justify-content-start mr-5">'
-                                       +'<div class="media-body d-flex align-items-center">'
-                                           +'<i class="mdi mdi-timer icon-sm align-self-center me-3"></i>'
-                                           +'<h6 class="mb-1">Kind : </h6>'
-                                       +'</div>'
-                                       +'<div class="media-body">'
-                                           +'<p class="mb-0 text-muted m-1">   </p>'
-                                       +'</div>'
-                                       +'<div class="media-body">'
-                                           +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
-                                       +'</div>'
-                                   +'</div>'
-                               +'</div>'
-                           +'</div>'
-
-                           +'<div class="card rounded border mb-2">'
-                               +'<div class="card-body p-3">'
-                                   +'<div class="media  d-flex justify-content-start mr-5 row">'
-
-                                        +'<div class="col-md-4 text-center" >'
-                                            +'<div class="media-body ">'
-                                                +'<h6 class="mb-1">Duration   </h6>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted m-1">   </p>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted"> '+ response.cpl.durationEdits + '   </p>'
-                                            +'</div>'
-                                        +'</div>'
-
-                                        +'<div class="col-md-4 text-center" >'
-                                            +'<div class="media-body ">'
-                                                +'<h6 class="mb-1">Edit Rate   </h6>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted m-1">   </p>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted"> '+ response.cpl.EditRate + '   </p>'
-                                            +'</div>'
-                                        +'</div>'
-
-                                        +'<div class="col-md-4 text-center" >'
-                                            +'<div class="media-body ">'
-                                                +'<h6 class="mb-1">Disk size   </h6>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted m-1">   </p>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted"> '+ response.cpl.totalSize + '   </p>'
-                                            +'</div>'
-                                        +'</div>'
-
-
-
-                                   +'</div>'
-                               +'</div>'
-                           +'</div>'
-
-
-
-                           +'<div class="card rounded border mb-2">'
-                               +'<div class="card-body p-3">'
-                                   +'<div class="media  d-flex justify-content-start mr-5 row">'
-
-                                        +'<div class="col-md-3 text-center" >'
-                                            +'<div class="media-body ">'
-                                                +'<h6 class="mb-1">Picture Height  </h6>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted m-1">   </p>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
-                                            +'</div>'
-                                        +'</div>'
-
-                                        +'<div class="col-md-3 text-center" >'
-                                            +'<div class="media-body ">'
-                                                +'<h6 class="mb-1">Picture width  </h6>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted m-1">   </p>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
-                                            +'</div>'
-                                        +'</div>'
-
-                                        +'<div class="col-md-3 text-center" >'
-                                            +'<div class="media-body ">'
-                                                +'<h6 class="mb-1">Picture Encoding Algorithm   </h6>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted m-1">   </p>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
-                                            +'</div>'
-                                        +'</div>'
-
-                                        +'<div class="col-md-3 text-center" >'
-                                            +'<div class="media-body ">'
-                                                +'<h6 class="mb-1">Picture Encryption Algorithm  </h6>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted m-1">   </p>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
-                                            +'</div>'
-                                        +'</div>'
-
-                                   +'</div>'
-                               +'</div>'
-                           +'</div>'
-
-                           +'<div class="card rounded border mb-2">'
-                               +'<div class="card-body p-3">'
-                                   +'<div class="media  d-flex justify-content-start mr-5 row">'
-
-                                        +'<div class="col-md-3 text-center" >'
-                                            +'<div class="media-body ">'
-                                                +'<h6 class="mb-1">Sound Channel Count  </h6>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted m-1">   </p>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted"> '+ response.cpl.soundChannelCount + '   </p>'
-                                            +'</div>'
-                                        +'</div>'
-
-                                        +'<div class="col-md-3 text-center" >'
-                                            +'<div class="media-body ">'
-                                                +'<h6 class="mb-1">Sound Encoding Algorithm </h6>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted m-1">   </p>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
-                                            +'</div>'
-                                        +'</div>'
-
-                                        +'<div class="col-md-3 text-center" >'
-                                            +'<div class="media-body ">'
-                                                +'<h6 class="mb-1">Sound Encryption   </h6>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted m-1">   </p>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
-                                            +'</div>'
-                                        +'</div>'
-
-                                        +'<div class="col-md-3 text-center" >'
-                                            +'<div class="media-body ">'
-                                                +'<h6 class="mb-1"> Algorithm  </h6>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted m-1">   </p>'
-                                            +'</div>'
-                                            +'<div class="media-body">'
-                                                +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
-                                            +'</div>'
-                                        +'</div>'
-
-                                   +'</div>'
-                               +'</div>'
-                           +'</div>'
-
-
-
-                   $('#infos_modal #Properties').html(result)
-
-
-
-
-
-               },
-               error: function(response) {
-
-               }
-       })
-
-    });
-
-    $(document).on('click', '#spls-tab', function () {
-
-       var loader_content  =
-           '<div class="jumping-dots-loader">'
-               +'<span></span>'
-               +'<span></span>'
-               +'<span></span>'
-               +'</div>'
-       $('#spls').html(loader_content)
-
-
-       if( true )
-        {
-            var url = "{{  url('') }}"+   "/get_lmscpl_infos/"+cpl_id;
-            $('#kdms-tab').hide();
-        }
-        else
-        {
-            var url = "{{  url('') }}"+ "/get_cpl_infos/"+location_id+"/"+cpl_id ;
-            $('#kdms-tab').show();
-        }
-
-       $.ajax({
-               url: url,
-               method: 'GET',
-               success:function(response)
-               {
-                   console.log(response.spls) ;
-                   result =
-                       '<div class="">'
-                           +'<table class="table">'
-                               +'<thead>'
-                                   +'<tr>'
-                                       +'<th>UUID</th>'
-                                       +'<th>CPL Name</th>'
-
-                                   +'</tr>'
-                               +'</thead>'
-                               +'<tbody>'
-
-                   $.each(response.spls, function( index, value ) {
-
-                   result = result
-                                   +'<tr>'
-                                       +'<th>'+value.uuid+'</th>'
-                                       +'<th>'+value.name+'</th>'
-
-                                   +'</tr>'
-                   });
-                   result = result
-                               +'</tbody>'
-                           +'</table>'
-                       +'</div>'
-                   $('#spls').html(result)
-
-
-
-
-
-               },
-               error: function(response) {
-
-               }
-       })
-
-   });
-
-   $(document).on('click', '#kdms-tab', function () {
-
-       var loader_content  =
-           '<div class="jumping-dots-loader">'
-               +'<span></span>'
-               +'<span></span>'
-               +'<span></span>'
-               +'</div>'
-       $('#kdms').html(loader_content)
-
-       var url = "{{  url('') }}"+ "/get_cpl_infos/"+location_id+"/"+cpl_id ;
-
-
-       $.ajax({
-               url: url,
-               method: 'GET',
-               success:function(response)
-               {
-                   console.log(response) ;
-                   if(response.kdms.length)
-                   {
-                       result =
-                           '<div class="">'
-                               +'<table class="table">'
-                                   +'<thead>'
-                                       +'<tr>'
-                                           +'<th>Screen</th>'
-                                           +'<th>Note Valide Before </th>'
-                                           +'<th>Note Valid After</th>'
-                                           +'<th>UUID</th>'
-                                       +'</tr>'
-                                   +'</thead>'
-                                   +'<tbody>'
-
-                       $.each(response.kdms, function( index, value ) {
-
-                       result = result
-                                       +'<tr>'
-                                           +'<th>'+value.screen.screen_name+'</th>'
-                                           +'<th>'+value.ContentKeysNotValidBefore+'</th>'
-                                           +'<th>'+value.ContentKeysNotValidAfter+'</th>'
-                                           +'<th>'+value.uuid+'</th>'
-
-                                       +'</tr>'
-                       });
-                       result = result
-                                   +'</tbody>'
-                               +'</table>'
-                           +'</div>'
-                       $('#kdms').html(result)
-                   }
-                   else
-                   {
-                       $('#kdms').html('No data ')
-                   }
-
-
-
-               },
-               error: function(response) {
-
-               }
-       })
-
-   });
-
-
-   $(document).on('click', '#submit-ingest-form', function ()
-        {
-            var spl_id = $('#nos-spl').val() ;
-            var location =  $('#ingest-location').val();
-            var url = "{{  url('') }}"+   "/sendXmlFileToApi";
-
-            /*var uuid =  $('#nos-spl').val();
-            var ingest_location =  $('#ingest-location').val();
-            var duration = $('#nos-spl option').data('duration');
-            var title = $('#nos-spl option').data('title');
-            var apiUrl = $('#ingest-location option').data('locationip');*/
-
-
-           // var apiUrl ="http://localhost/tms/system/api2.php" ;
-            //path = $('#nos-spl option:selected').data('filepath');
 
             $.ajax({
-                url:url,
+                    url: url,
+                    method: 'GET',
+                    success:function(response)
+                    {
+                        console.log(response)
+                            result =
+                            '<div class="card rounded border mb-2">'
+                                    +'<div class="card-body p-3">'
+                                        +'<div class="media  justify-content-start">'
+                                            +'<div class="media-body d-flex align-items-center">'
+                                                +'<i class=" mdi mdi-star icon-sm align-self-center me-3"></i>'
+                                                +'<h6 class="mb-1">Title :  </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.cpl.contentTitleText + ' </p>'
+                                            +'</div>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                                +'<div class="card rounded border mb-2">'
+                                    +'<div class="card-body p-3">'
+                                        +'<div class="media  d-flex justify-content-start">'
+                                            +'<div class="media-body d-flex align-items-center">'
+                                                +'<i class="mdi mdi-star icon-sm align-self-center me-3"></i>'
+                                                +'<h6 class="mb-1">UUID : </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.cpl.uuid + ' </p>'
+                                            +'</div>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+                                +'<div class="card rounded border mb-2">'
+                                    +'<div class="card-body p-3">'
+                                        +'<div class="media  d-flex justify-content-start mr-5">'
+                                            +'<div class="media-body d-flex align-items-center">'
+                                                +'<i class="mdi mdi-timer icon-sm align-self-center me-3"></i>'
+                                                +'<h6 class="mb-1">Kind : </h6>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted m-1">   </p>'
+                                            +'</div>'
+                                            +'<div class="media-body">'
+                                                +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                            +'</div>'
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
 
-                method: 'POST',
-                cache: false,
-                data: {
-                    spl_id: spl_id,
-                    location:location,
-                    "_token": "{{ csrf_token() }}",
-                },
-                success: function (response) {
+                                +'<div class="card rounded border mb-2">'
+                                    +'<div class="card-body p-3">'
+                                        +'<div class="media  d-flex justify-content-start mr-5 row">'
 
-                    try {
-                        var missing_cpls  ;
-                        $("#ingest-modal").modal('hide');
-                        if(response.status == 1)
+                                                +'<div class="col-md-4 text-center" >'
+                                                    +'<div class="media-body ">'
+                                                        +'<h6 class="mb-1">Duration   </h6>'
+                                                    +'</div>'
+                                                    +'<div class="media-body">'
+                                                        +'<p class="mb-0 text-muted m-1">   </p>'
+                                                    +'</div>'
+                                                    +'<div class="media-body">'
+                                                        +'<p class="mb-0 text-muted"> '+ response.cpl.durationEdits + '   </p>'
+                                                    +'</div>'
+                                                +'</div>'
+
+                                                +'<div class="col-md-4 text-center" >'
+                                                    +'<div class="media-body ">'
+                                                        +'<h6 class="mb-1">Edit Rate   </h6>'
+                                                    +'</div>'
+                                                    +'<div class="media-body">'
+                                                        +'<p class="mb-0 text-muted m-1">   </p>'
+                                                    +'</div>'
+                                                    +'<div class="media-body">'
+                                                        +'<p class="mb-0 text-muted"> '+ response.cpl.EditRate + '   </p>'
+                                                    +'</div>'
+                                                +'</div>'
+
+                                                +'<div class="col-md-4 text-center" >'
+                                                    +'<div class="media-body ">'
+                                                        +'<h6 class="mb-1">Disk size   </h6>'
+                                                    +'</div>'
+                                                    +'<div class="media-body">'
+                                                        +'<p class="mb-0 text-muted m-1">   </p>'
+                                                    +'</div>'
+                                                    +'<div class="media-body">'
+                                                        +'<p class="mb-0 text-muted"> '+ response.cpl.totalSize + '   </p>'
+                                                    +'</div>'
+                                                +'</div>'
+
+
+
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+
+
+
+                                +'<div class="card rounded border mb-2">'
+                                    +'<div class="card-body p-3">'
+                                        +'<div class="media  d-flex justify-content-start mr-5 row">'
+
+                                                +'<div class="col-md-3 text-center" >'
+                                                    +'<div class="media-body ">'
+                                                        +'<h6 class="mb-1">Picture Height  </h6>'
+                                                    +'</div>'
+                                                    +'<div class="media-body">'
+                                                        +'<p class="mb-0 text-muted m-1">   </p>'
+                                                    +'</div>'
+                                                    +'<div class="media-body">'
+                                                        +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                                    +'</div>'
+                                                +'</div>'
+
+                                                +'<div class="col-md-3 text-center" >'
+                                                    +'<div class="media-body ">'
+                                                        +'<h6 class="mb-1">Picture width  </h6>'
+                                                    +'</div>'
+                                                    +'<div class="media-body">'
+                                                        +'<p class="mb-0 text-muted m-1">   </p>'
+                                                    +'</div>'
+                                                    +'<div class="media-body">'
+                                                        +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                                    +'</div>'
+                                                +'</div>'
+
+                                                +'<div class="col-md-3 text-center" >'
+                                                    +'<div class="media-body ">'
+                                                        +'<h6 class="mb-1">Picture Encoding Algorithm   </h6>'
+                                                    +'</div>'
+                                                    +'<div class="media-body">'
+                                                        +'<p class="mb-0 text-muted m-1">   </p>'
+                                                    +'</div>'
+                                                    +'<div class="media-body">'
+                                                        +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                                    +'</div>'
+                                                +'</div>'
+
+                                                +'<div class="col-md-3 text-center" >'
+                                                    +'<div class="media-body ">'
+                                                        +'<h6 class="mb-1">Picture Encryption Algorithm  </h6>'
+                                                    +'</div>'
+                                                    +'<div class="media-body">'
+                                                        +'<p class="mb-0 text-muted m-1">   </p>'
+                                                    +'</div>'
+                                                    +'<div class="media-body">'
+                                                        +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                                    +'</div>'
+                                                +'</div>'
+
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+
+                                +'<div class="card rounded border mb-2">'
+                                    +'<div class="card-body p-3">'
+                                        +'<div class="media  d-flex justify-content-start mr-5 row">'
+
+                                                +'<div class="col-md-3 text-center" >'
+                                                    +'<div class="media-body ">'
+                                                        +'<h6 class="mb-1">Sound Channel Count  </h6>'
+                                                    +'</div>'
+                                                    +'<div class="media-body">'
+                                                        +'<p class="mb-0 text-muted m-1">   </p>'
+                                                    +'</div>'
+                                                    +'<div class="media-body">'
+                                                        +'<p class="mb-0 text-muted"> '+ response.cpl.soundChannelCount + '   </p>'
+                                                    +'</div>'
+                                                +'</div>'
+
+                                                +'<div class="col-md-3 text-center" >'
+                                                    +'<div class="media-body ">'
+                                                        +'<h6 class="mb-1">Sound Encoding Algorithm </h6>'
+                                                    +'</div>'
+                                                    +'<div class="media-body">'
+                                                        +'<p class="mb-0 text-muted m-1">   </p>'
+                                                    +'</div>'
+                                                    +'<div class="media-body">'
+                                                        +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                                    +'</div>'
+                                                +'</div>'
+
+                                                +'<div class="col-md-3 text-center" >'
+                                                    +'<div class="media-body ">'
+                                                        +'<h6 class="mb-1">Sound Encryption   </h6>'
+                                                    +'</div>'
+                                                    +'<div class="media-body">'
+                                                        +'<p class="mb-0 text-muted m-1">   </p>'
+                                                    +'</div>'
+                                                    +'<div class="media-body">'
+                                                        +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                                    +'</div>'
+                                                +'</div>'
+
+                                                +'<div class="col-md-3 text-center" >'
+                                                    +'<div class="media-body ">'
+                                                        +'<h6 class="mb-1"> Algorithm  </h6>'
+                                                    +'</div>'
+                                                    +'<div class="media-body">'
+                                                        +'<p class="mb-0 text-muted m-1">   </p>'
+                                                    +'</div>'
+                                                    +'<div class="media-body">'
+                                                        +'<p class="mb-0 text-muted"> '+ response.cpl.contentKind + '   </p>'
+                                                    +'</div>'
+                                                +'</div>'
+
+                                        +'</div>'
+                                    +'</div>'
+                                +'</div>'
+
+
+
+                        $('#infos_modal #Properties').html(result)
+
+
+
+
+
+                    },
+                    error: function(response) {
+
+                    }
+            })
+
+            });
+
+            $(document).on('click', '#spls-tab', function () {
+
+            var loader_content  =
+                '<div class="jumping-dots-loader">'
+                    +'<span></span>'
+                    +'<span></span>'
+                    +'<span></span>'
+                    +'</div>'
+            $('#spls').html(loader_content)
+
+
+            if( true )
+                {
+                    var url = "{{  url('') }}"+   "/get_lmscpl_infos/"+cpl_id;
+                    $('#kdms-tab').hide();
+                }
+                else
+                {
+                    var url = "{{  url('') }}"+ "/get_cpl_infos/"+location_id+"/"+cpl_id ;
+                    $('#kdms-tab').show();
+                }
+
+            $.ajax({
+                    url: url,
+                    method: 'GET',
+                    success:function(response)
+                    {
+                        console.log(response.spls) ;
+                        result =
+                            '<div class="">'
+                                +'<table class="table">'
+                                    +'<thead>'
+                                        +'<tr>'
+                                            +'<th>UUID</th>'
+                                            +'<th>CPL Name</th>'
+
+                                        +'</tr>'
+                                    +'</thead>'
+                                    +'<tbody>'
+
+                        $.each(response.spls, function( index, value ) {
+
+                        result = result
+                                        +'<tr>'
+                                            +'<th>'+value.uuid+'</th>'
+                                            +'<th>'+value.name+'</th>'
+
+                                        +'</tr>'
+                        });
+                        result = result
+                                    +'</tbody>'
+                                +'</table>'
+                            +'</div>'
+                        $('#spls').html(result)
+
+
+
+
+
+                    },
+                    error: function(response) {
+
+                    }
+            })
+
+        });
+
+        $(document).on('click', '#kdms-tab', function () {
+
+            var loader_content  =
+                '<div class="jumping-dots-loader">'
+                    +'<span></span>'
+                    +'<span></span>'
+                    +'<span></span>'
+                    +'</div>'
+            $('#kdms').html(loader_content)
+
+            var url = "{{  url('') }}"+ "/get_cpl_infos/"+location_id+"/"+cpl_id ;
+
+
+            $.ajax({
+                    url: url,
+                    method: 'GET',
+                    success:function(response)
+                    {
+                        console.log(response) ;
+                        if(response.kdms.length)
                         {
-                            missing_cpls ='<p class="text-success">'+response.success+'</p>' ;
-                            if(response.missing_cpls.length > 0)
-                            {
-                                missing_cpls +=
-                                    '<p> there are CPLs missing in this location</p>'
+                            result =
+                                '<div class="">'
                                     +'<table class="table">'
                                         +'<thead>'
                                             +'<tr>'
-                                                +'<th>UUID </th>'
-                                                +'<th>Title</th>'
+                                                +'<th>Screen</th>'
+                                                +'<th>Note Valide Before </th>'
+                                                +'<th>Note Valid After</th>'
+                                                +'<th>UUID</th>'
                                             +'</tr>'
                                         +'</thead>'
                                         +'<tbody>'
 
+                            $.each(response.kdms, function( index, value ) {
 
-                                $.each(response.missing_cpls, function(index, value) {
-                                    missing_cpls +=
-                                            '<tr>'
-                                                +'<td style="font-size: 14px;">'+value.CPLId+'</td>'
-                                                +'<td style="font-size: 14px;">'+value.AnnotationText+'</td>'
-                                            +'</tr>' ;
+                            result = result
+                                            +'<tr>'
+                                                +'<th>'+value.screen.screen_name+'</th>'
+                                                +'<th>'+value.ContentKeysNotValidBefore+'</th>'
+                                                +'<th>'+value.ContentKeysNotValidAfter+'</th>'
+                                                +'<th>'+value.uuid+'</th>'
 
-                                })
-                                missing_cpls +=
-                                    '</tbody>'
-                                    +'</table>' ;
-
-                            }
-                            $("#ingest-response").modal('show');
-                                $('#ingest-response #ingest-response-content ').html(missing_cpls)
+                                            +'</tr>'
+                            });
+                            result = result
+                                        +'</tbody>'
+                                    +'</table>'
+                                +'</div>'
+                            $('#kdms').html(result)
                         }
                         else
                         {
-                            $("#ingest-response").modal('show');
-                            $('#ingest-response #ingest-response-content ').html('<p class="text-danger">Error occurred while sending the request.</p>')
+                            $('#kdms').html('No data ')
                         }
 
-                    } catch (e) {
-                        console.log(e);
+
+
+                    },
+                    error: function(response) {
+
                     }
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.log(errorThrown);
-                },
-                complete: function (jqXHR, textStatus) {
-                }
-            });
+            })
+
+        });
+
+
+        $(document).on('click', '#submit-ingest-form', function ()
+            {
+                var spl_id = $('#nos-spl').val() ;
+                var location =  $('#ingest-location').val();
+                var url = "{{  url('') }}"+   "/sendXmlFileToApi";
+
+                /*var uuid =  $('#nos-spl').val();
+                var ingest_location =  $('#ingest-location').val();
+                var duration = $('#nos-spl option').data('duration');
+                var title = $('#nos-spl option').data('title');
+                var apiUrl = $('#ingest-location option').data('locationip');*/
+
+
+            // var apiUrl ="http://localhost/tms/system/api2.php" ;
+                //path = $('#nos-spl option:selected').data('filepath');
+
+                $.ajax({
+                    url:url,
+
+                    method: 'POST',
+                    cache: false,
+                    data: {
+                        spl_id: spl_id,
+                        location:location,
+                        "_token": "{{ csrf_token() }}",
+                    },
+                    success: function (response) {
+
+                        try {
+                            var missing_cpls  ;
+                            $("#ingest-modal").modal('hide');
+                            if(response.status == 1)
+                            {
+                                missing_cpls ='<p class="text-success">'+response.success+'</p>' ;
+                                if(response.missing_cpls.length > 0)
+                                {
+                                    missing_cpls +=
+                                        '<p> there are CPLs missing in this location</p>'
+                                        +'<table class="table">'
+                                            +'<thead>'
+                                                +'<tr>'
+                                                    +'<th>UUID </th>'
+                                                    +'<th>Title</th>'
+                                                +'</tr>'
+                                            +'</thead>'
+                                            +'<tbody>'
+
+
+                                    $.each(response.missing_cpls, function(index, value) {
+                                        missing_cpls +=
+                                                '<tr>'
+                                                    +'<td style="font-size: 14px;">'+value.CPLId+'</td>'
+                                                    +'<td style="font-size: 14px;">'+value.AnnotationText+'</td>'
+                                                +'</tr>' ;
+
+                                    })
+                                    missing_cpls +=
+                                        '</tbody>'
+                                        +'</table>' ;
+
+                                }
+                                $("#ingest-response").modal('show');
+                                    $('#ingest-response #ingest-response-content ').html(missing_cpls)
+                            }
+                            else
+                            {
+                                $("#ingest-response").modal('show');
+                                $('#ingest-response #ingest-response-content ').html('<p class="text-danger">Error occurred while sending the request.</p>')
+                            }
+
+                        } catch (e) {
+                            console.log(e);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    },
+                    complete: function (jqXHR, textStatus) {
+                    }
+                });
 
 
         });
-</script>
+    </script>
 
 @endsection
 

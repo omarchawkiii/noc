@@ -40,6 +40,7 @@ class Lmscpl extends Model
         'editRate_denominator',
         'kdm_required',
 
+
     ];
 
     public function location(): BelongsTo

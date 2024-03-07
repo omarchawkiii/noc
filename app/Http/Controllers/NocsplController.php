@@ -278,7 +278,7 @@ class NocsplController extends Controller
         $file .= '<PackList>' .
             $this->generatePacks($array_cpl) .
             '</PackList>
-</ShowPlaylist>';
+        </ShowPlaylist>';
 
 
         return $file;
