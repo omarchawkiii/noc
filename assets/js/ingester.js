@@ -454,7 +454,7 @@ $(document).on('click', '#scan_error-tab', function () {
             console.log(data) ;
   var obj = JSON.parse(data);
        $('#errors_scan_table tbody').empty();
-    if (data === "null" || obj.length === 0 || data === []) {
+    if (data === "null" || obj.length === 0 || data ==[]) {
 
 
             }else{

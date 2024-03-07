@@ -23569,6 +23569,12 @@ footer .footer-box
   color: #00a5ff;
 }
 
+.sidebar .nav .menu-items .nav-link .menu-icon.icon-box-console i
+{
+  color: #ffab00;
+}
+
+
 .sidebar .nav .menu-items .nav-link .menu-icon.icon-box-yallow i
 {
   color: #feff00;

@@ -46,8 +46,8 @@
       </li>
       <li class="nav-item menu-items">
         <a class="nav-link" href="{{ route('ingester.index') }}">
-          <span class="menu-icon icon-box-blue">
-            <i class="mdi mdi-calendar-today "></i>
+          <span class="menu-icon icon-box-console">
+            <i class="mdi mdi-console "></i>
           </span>
           <span class="menu-title">Ingester</span>
         </a>
@@ -109,14 +109,22 @@
       </li>
       @endif
 
-      <li class="nav-item menu-items">
-        <a class="nav-link" href="{{ route('ingestersources.index') }}">
-          <span class="menu-icon icon-box-performance">
-            <i class="mdi mdi-bookmark-check "></i>
+      <li class="nav-item menu-items ">
+        <a class="nav-link" data-bs-toggle="collapse" href="#showm_configuration" aria-expanded="false" aria-controls="icons">
+          <span class="menu-icon icon-box-blue">
+            <i class="mdi mdi-contacts"></i>
           </span>
-          <span class="menu-title">Ingest Source</span>
+          <span class="menu-title">Configuration</span>
+          <i class="menu-arrow"></i>
         </a>
+        <div class="collapse " id="showm_configuration">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link  " href="{{ route('ingestersources.index') }}"> <i class="mdi mdi-checkbox-blank-circle me-1"></i> Ingest Sources</a></li>
+          </ul>
+        </div>
       </li>
+
+
 
       <li>
         <br />

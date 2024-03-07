@@ -142,7 +142,7 @@ Route::get('get_logstitle/{location}', [App\Http\Controllers\LogstitleController
 
 Route::get('user/create', [App\Http\Controllers\UserController::class , 'create'])->name('users.create')->middleware(['auth']);
 Route::post('user/store', [App\Http\Controllers\UserController::class , 'store'])->name('users.store')->middleware(['auth']);
-Route::get('user/index', [App\Http\Controllers\UserController::class , 'index'])->name('users.index')->middleware(['auth']);
+Route::get('user', [App\Http\Controllers\UserController::class , 'index'])->name('users.index')->middleware(['auth']);
 Route::delete('user/{id}/destroy', [App\Http\Controllers\UserController::class , 'destroy'])->name('users.destroy')->middleware(['auth']);
 Route::get('user/{id}/show', [App\Http\Controllers\UserController::class , 'show'])->name('users.show')->middleware(['auth']);
 Route::get('get_users', [App\Http\Controllers\UserController::class , 'get_users'])->name('users.get_users')->middleware(['auth']);
@@ -150,8 +150,8 @@ Route::put('user/update', [App\Http\Controllers\UserController::class , 'update'
 Route::put('user/update_password', [App\Http\Controllers\UserController::class , 'update_password'])->name('users.update_password')->middleware(['auth']);
 
 
-Route::get('ingester/index', [App\Http\Controllers\IngersterController::class , 'index'])->name('ingester.index')->middleware(['auth']);
+Route::get('ingester/', [App\Http\Controllers\IngersterController::class , 'index'])->name('ingester.index')->middleware(['auth']);
 Route::post('ingester/action_contoller', [App\Http\Controllers\IngersterController::class , 'action_contoller'])->name('ingester.action_contoller')->middleware(['auth']);
 
-Route::get('ingestersources/index', [App\Http\Controllers\IngestsourceController::class , 'index'])->name('ingestersources.index')->middleware(['auth']);
+Route::get('sources', [App\Http\Controllers\IngestsourceController::class , 'index'])->name('ingestersources.index')->middleware(['auth']);
 Route::post('ingestersources/store', [App\Http\Controllers\IngestsourceController::class , 'store'])->name('ingestersources.store')->middleware(['auth']);
