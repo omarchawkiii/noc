@@ -1089,6 +1089,38 @@
         </div>
 
     </div>
+    <!--  empty-spl-modal -->
+    <div class="modal fade" id="empty-spl-modal" tabindex="-1" aria-labelledby="delete_client_modalLabel" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ModalLabel"><i class="mdi mdi-alert btn btn-warning"></i> Warning
+                    </h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="tab-pane fade active show" id="home-1" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="row">
+                            <div class="col-md-12 ">
+                                <div class="form-group custom-form-group" style="text-align: center">
+                                    <label> PlayList can't be empty </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col" style="text-align: center">
+                                <button class="btn btn-secondary btn-fw close" data-bs-dismiss="modal" aria-label="Close">Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @section('custom_script')
@@ -2330,33 +2362,36 @@
         });
 
         $(document).on('click', '#display_spl_properties', function() {
-
-            var opened_spl_status = $('#opened_spl').attr("data-opened_spl_status");
-            if (opened_spl_status == 1) {
-
-                $('#spl_action').val("edit");
-
-                var id_spl = $('#opened_spl').data("uuid");
-                $('#spl_uuid_edit').val(id_spl);
-                var title = $('#opened_spl').text();
-                var mod = $('#opened_spl').attr("data-mod");
-                var hfr = $('#opened_spl').attr("data-hfr");
-                if (hfr == 1) {
-                    $('#spl_properties_hfr').prop('checked', true);
-                } else {
-                    $('#spl_properties_hfr').prop('checked', false);
-
-                }
-                $('#uuid_spl_edit').val(id_spl);
-                $('#spl_title').val(title);
-                $('#display_mode').val(mod);
-                $("#spl-properties-modal").modal('show');
+            if ($('#dragula-right').children().length === 0) {
+                $("#empty-spl-modal").modal('show');
             } else {
-                $('#spl_action').val("insert");
-                $('#spl_uuid_edit').val(0);
-                $('#spl_title').val(" ");
-                $('#spl_properties_hfr').prop('checked', false);
-                $("#spl-properties-modal").modal('show');
+            var opened_spl_status = $('#opened_spl').attr("data-opened_spl_status");
+                if (opened_spl_status == 1) {
+
+                    $('#spl_action').val("edit");
+
+                    var id_spl = $('#opened_spl').data("uuid");
+                    $('#spl_uuid_edit').val(id_spl);
+                    var title = $('#opened_spl').text();
+                    var mod = $('#opened_spl').attr("data-mod");
+                    var hfr = $('#opened_spl').attr("data-hfr");
+                    if (hfr == 1) {
+                        $('#spl_properties_hfr').prop('checked', true);
+                    } else {
+                        $('#spl_properties_hfr').prop('checked', false);
+
+                    }
+                    $('#uuid_spl_edit').val(id_spl);
+                    $('#spl_title').val(title);
+                    $('#display_mode').val(mod);
+                    $("#spl-properties-modal").modal('show');
+                } else {
+                    $('#spl_action').val("insert");
+                    $('#spl_uuid_edit').val(0);
+                    $('#spl_title').val(" ");
+                    $('#spl_properties_hfr').prop('checked', false);
+                    $("#spl-properties-modal").modal('show');
+                }
             }
 
         });

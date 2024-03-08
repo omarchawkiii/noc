@@ -61,12 +61,19 @@
                                 <option value="null">Multiplex</option>
                                 <option value="linked">Linked</option>
                                 <option value="unlinked">Unlinked</option>
+                                <option value="Flate">Flate</option>
+                                <option value="Scope">Scope</option>
                                 <option value="Encryped">Encryped</option>
-                                <option value="NoEncryped">No Encryped</option>
+                                <option value="NoEncryped">Non Encryped</option>
+
                             </select>
                         </div>
                     </div>
-
+                    <div class="col-xl-2">
+                        <button type="button" class="btn btn-danger btn-icon-text" id="delete_cpl">
+                            <i class="mdi mdi-delete-forever btn-icon-prepend"></i> Delete
+                        </button>
+                    </div>
 
                     <div class="col-xl-2">
                         <button type="button" id="refresh_lms"  class="btn btn-icon-text " style="color: #6f6f6f;background: #2a3038; height: 37px; display:none">
@@ -313,6 +320,88 @@
         <!--end modal-content-->
         </div>
     </div>
+
+    <div class="modal fade " id="empty-warning-modal" tabindex="-1" role="dialog" aria-labelledby="delete_client_modalLabel"  aria-modal="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ModalLabel"><i class="mdi mdi-alert btn btn-warning"></i> Warning
+                    </h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="tab-pane fade active show" id="home-1" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="row">
+                            <div class="col-md-12 ">
+                                <div class="form-group custom-form-group" style="text-align: center">
+                                    <label id="warning-content"> No File Selected </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col" style="text-align: center">
+                                <button class="btn btn-secondary btn-fw close" data-bs-dismiss="modal" aria-label="Close">Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade " id="cpl_delete_model" tabindex="-1" aria-labelledby="ModalLabel"aria-modal="true" role="dialog">
+        <div class="modal-dialog" style="max-width: 60%; width: 60%;" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 15px;">
+                    <h5 class="modal-title" id=" " style="font-size: 23px;">
+                        <i class="mdi mdi-delete-sweep custom-search  btn-inverse-danger "></i>CPL Deletion </h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="list_s">
+                    <form class="row">
+
+                        <div class="form-group col-md-12">
+                            <button type="button" class="btn btn-inverse-primary btn-fw" style="background: none;  border-radius: 0;  text-align: left;margin-bottom: 9px;">
+                                <input type="checkbox" class="check_all form-check-input " name="check_all_server" id="check_all_server" style="font-size: 20px;">
+                                <label for="check_all_server" class="style_label_deletion" style="font-size: 20px;">
+                                    All Screens Storage </label>
+                            </button>
+                            <ul class="list_deletion all_screens" id="list_servers_cpls_to_delete">
+                                <li>
+                                    <button type="button" class="btn btn-outline-secondary btn-fw" style="text-align: left;">
+                                        <label class="form-check-label custom-check2">
+                                            <input type="checkbox" class="form-check-input check_all" name="screen_to_ingest" id="" value="" style="font-size: 20px;margin-bottom:  3px">
+                                            <span style="font-weight: bold;">Screen-01</span> <i class="input-helper"></i>
+                                        </label>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </form>
+                    <div class="spinner-border text-danger  " id="delete_cpl_progress" style="display: none;" role="status">
+                        <span class="sr-only"> </span>
+                    </div>
+
+                    <div class="row" id="deleted_cpls"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="confirm_delete_cpl_group" class="btn btn-danger" style=" margin: auto;font-size: 21px;font-weight: bold;" data-dismiss="modal">
+                        Create Delete Task
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
 @endsection
 
 @section('custom_script')
@@ -830,7 +919,7 @@ function formatSize(sizeInBytes) {
 
 
                             result = result
-                                +'<tr class="odd  '+playable+' text-center">'
+                                +'<tr class=" cpl-item odd  '+playable+' text-center" data-id="'+value.id+'">'
                                 +'<td class="sorting_1">'+ index+' </td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+title+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">'+value.contentKind+'</a></td>'
@@ -952,25 +1041,30 @@ function formatSize(sizeInBytes) {
         });
 
         $('#multiplex').change(function(){
-            $("#location-listing").dataTable().fnDestroy();
 
-            var loader_content  =
-           '<div class="jumping-dots-loader">'
-               +'<span></span>'
-               +'<span></span>'
-               +'<span></span>'
-               +'</div>'
-            $('#location-listing tbody').html(loader_content)
-            //$('#location-listing tbody').html('')
+
             var location =  $('#location').val();
-            var country =  $('#country').val();
-            var multiplex =  $('#multiplex').val();
-            var screen =  null;
-            window.lms = false ;
+                var country =  $('#country').val();
+                var multiplex =  $('#multiplex').val();
+                var screen =  null;
+                window.lms = false ;
+
             if(location != "Locations")
             {
-                $('#refresh_lms').show();
-                get_cpls(location , screen , false , multiplex ,false)
+                $("#location-listing").dataTable().fnDestroy();
+
+                var loader_content  =
+            '<div class="jumping-dots-loader">'
+                +'<span></span>'
+                +'<span></span>'
+                +'<span></span>'
+                +'</div>'
+                $('#location-listing tbody').html(loader_content)
+                //$('#location-listing tbody').html('')
+
+
+                    $('#refresh_lms').show();
+                    get_cpls(location , screen , false , multiplex ,false)
             }
             else
             {
@@ -981,6 +1075,84 @@ function formatSize(sizeInBytes) {
 
 
 
+        });
+
+        $(document).on('click', '.cpl-item', function (event) {
+            $(this).toggleClass('selected');
+        });
+        $(document).ready(function() {
+            // Handle the change event of the #check_all_server checkbox
+            $('#check_all_server').change(function() {
+                // Check if the #check_all_server checkbox is checked
+                if ($(this).is(':checked')) {
+                    // If checked, set all checkboxes within the list to checked
+                    $('#list_servers_cpls_to_delete').find('input[type="checkbox"]').prop('checked', true);
+                } else {
+                    // If unchecked, set all checkboxes within the list to unchecked
+                    $('#list_servers_cpls_to_delete').find('input[type="checkbox"]').prop('checked', false);
+                }
+            });
+        });
+
+        $(document).on('click', '#delete_cpl', function (event) {
+
+            var array_cpls = [];
+            var location = $('#location').val() ;
+            $("#location-listing .cpl-item.selected").each(function() {
+                var id = $(this).data("id");
+                array_cpls.push(id);
+            });
+            console.log(array_cpls)
+            if (array_cpls.length ==  0) {
+                $("#empty-warning-modal").modal('show');
+            }else{
+                var url = "{{  url('') }}"+ '/get_screens_from_cpls/';
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    data: {
+                        array_cpls:array_cpls,
+                        location :location
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    beforeSend: function () {
+                    },
+                    success: function (response) {
+
+                        var result ="" ;
+                        if(response.screens.length>0)
+                        {
+                            $.each(response.screens, function( index, value ) {
+
+                                result =  result +
+                                '<li>'
+                                    +'<button type="button" class="btn btn-outline-secondary btn-fw" style="text-align: left;">'
+                                        +'<label class="form-check-label custom-check2">'
+                                            +'<input type="checkbox" class="form-check-input" name="screen_to_ingest" id="'+value.id+'" value="'+value.id+'" style="font-size: 20px;margin-bottom:  3px">'
+                                            +'<span style="font-weight: bold;">'+value.name+'</span> <i class="input-helper"></i>'
+                                        +'</label>'
+                                    +'</button>'
+                                +'</li>'
+
+                            });
+
+                            $('#list_servers_cpls_to_delete').html(result)
+                            $('#cpl_delete_model').modal('show')
+
+                            $('#confirm_delete_cpl_group').click(function(){
+                                alert('tset');
+                            });
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    },
+                    complete: function (jqXHR, textStatus) {
+                    }
+                });
+            }
         });
 
 
@@ -995,4 +1167,189 @@ function formatSize(sizeInBytes) {
 
 <link rel="stylesheet" href="{{asset('/assets/vendors/datatables.net-bs4/dataTables.bootstrap4.css')}}">
 <link rel="stylesheet" href="{{asset('/assets/vendors/jquery-toast-plugin/jquery.toast.min.css')}}">
+
+<style>
+    .adapt-text {
+        line-height: 22px!important;
+
+        white-space: pre-wrap !important;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        color: white;
+
+    }
+    .selected .text-success {
+        color: white !important;
+    }
+    .preview-list.multiplex, .fixed-hight {
+        margin: 5px;
+        padding: 5px;
+
+
+        text-align: justify;
+        overflow-x: hidden;
+    }
+    .preview-list.multiplex, .fixed-hight {
+        margin: 5px;
+        padding: 5px;
+
+
+        text-align: justify;
+        overflow-x: hidden;
+    }
+    .download_spl{
+        margin-left: 2px;
+    }
+
+    .custom-search {
+        font-size: 23px !important;
+
+        padding: 1px 4px 1px 4px!important;
+    }
+    .download_spl{
+        font-size: 23px !important;
+
+        padding: 1px 4px 1px 4px!important;
+    }
+    .cpl-details {
+        font-size: 22px;
+        color: white;
+        text-shadow: 0px 0px #ffffff;
+        font-weight: bold;
+
+        cursor: pointer;
+    }
+    .not-playable{
+        background: #9f2222b8!important;
+    }
+    table.dataTable td, table.dataTable th {
+        -webkit-box-sizing: content-box;
+        box-sizing: content-box;
+         font-size: 13px !important;
+        font-weight: bold !important;  ;
+        color: white !important;  ;
+    }
+    .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+        color: #ffffff;
+
+        border-color: #2c2e33 #2c2e33 black;
+        font-weight: bold;
+        background: #18263e;
+        font-size: 15px;
+    }
+    .time_valide {
+        background: rgb(0 210 91 / 76%);
+
+    }
+
+    .time_passed {
+        background: rgb(252 66 74 / 65%);
+
+    }
+
+    .time_normal {
+        background: #ffab00;
+
+    }
+    .custom-col{
+        text-align: center;
+    }
+    .hide-table{
+        display: none!important;
+    }
+    .hide-select{
+        display: none!important;
+    }
+   .custom-text {
+        font-size: 17px!important;
+        font-weight: bold!important;
+        color: white!important;
+    }
+    .close-cpl-details {
+        border: solid #5f95cce0;
+        padding: 8px;
+        line-height: 0;
+    }
+    .hide-div{
+        display: none!important;
+    }
+    .style_label_deletion {
+        font-size: 20px !important ];
+        line-height: 1.5 !important;
+        margin-left: 5px;
+        font-weight: bold;
+    }
+    .custom-check2 {
+        line-height: 2 !important;
+        font-size: 16px !important;
+    }
+    #list_servers_cpls_to_delete ,#list_servers_spls_to_delete{
+        list-style: none;
+    }
+
+    #list_servers_cpls_to_delete li {
+        float: left;
+        font-size: 20px;
+        margin: 3px;
+    }
+    #list_servers_spls_to_delete li {
+        float: left;
+        font-size: 20px;
+        margin: 3px;
+    }
+    #list_servers_cpls_to_delete li button {
+        width: 171px !important;
+    }
+    #list_servers_spls_to_delete li button {
+        width: 171px !important;
+    }
+    .custom-calendar{
+        padding: 4px 4px 0px 4px!important;
+        border-radius: 6px;
+        font-size: 23px;
+        margin-left: 8px;
+    }
+    .cpl_need_kdm{
+        font-size: 22px;
+        margin-left: 7px;
+        padding: 4px 4px 0px 4px!important;
+        border-radius: 6px;
+    }
+
+    .custom-top-menu-icon{
+        float: left;
+        margin-right: 0px;
+        padding-left: 0px!important;
+        width: 23px;
+        margin-top: 6px;
+        font-weight: bold;
+        font-size: 14px;
+        line-height: 0;
+        height: 32px;
+        text-align: left;
+    }
+    .item-menu{
+        display: inline-block;
+        margin-top: 8px;
+    }
+    .parent-item{
+        font-weight: bold;
+        color: white;
+        font-size: 15px;
+        line-height: 0;
+        height: 34px;
+        text-align: left;
+        padding-right: 9px;
+        padding-left: 5px;
+    }
+    #delete_kdms:hover .mdi-delete-forever {
+        color: white;
+        height: 12px;
+    }
+    #delete_kdms:hover .item-menu {
+        color: white;
+
+    }
+
+</style>
 @endsection

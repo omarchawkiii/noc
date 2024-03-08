@@ -13,6 +13,7 @@ use App\Models\Spl;
 use App\Models\splcomponents;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 
@@ -212,6 +213,16 @@ class CplController extends Controller
                 $cpls =$cpls->where('pictureEncryptionAlgorithm','None')->orWhere('pictureEncryptionAlgorithm','0')->orWhere('pictureEncryptionAlgorithm',null);
             }
 
+            if($multiplex =='Flate')
+            {
+                $cpls =$cpls->where('type','Flate');
+            }
+
+            if($multiplex =='Scope')
+            {
+                $cpls =$cpls->where('type','Scope');
+            }
+
 
         }
 
@@ -257,5 +268,28 @@ class CplController extends Controller
         $schedules = null ;
         return Response()->json(compact('cpl','spls','kdms'));
     }
+
+    public function get_screens_from_cpls(Request $request )
+    {
+        $location = $request->location ;
+        $screens = array() ;
+        foreach($request->array_cpls as $cpl)
+        {
+            $cpl = Cpl::find($cpl) ;
+            $screen = $cpl->screen ;
+            if ( ! in_array($screen->id,  array_column($screens, 'id')))
+            {
+                array_push($screens,  array("id" => $screen->id , "name" => $screen->screen_name));
+            }
+
+
+
+
+        }
+        return Response()->json(compact('screens'));
+
+
+    }
+
 
 }

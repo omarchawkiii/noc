@@ -87,4 +87,8 @@ class Cpl extends Model
     {
         return $this->hasMany(Kdm::class);
     }
+    public function screen(): BelongsTo
+    {
+        return $this->belongsTo(Screen::class);
+    }
 }
