@@ -724,7 +724,7 @@ function formatSize(sizeInBytes) {
                    result = result
                                    +'<tr>'
                                         +'<th>'+value.uuid_spl+'</th>'
-                                        +'<th>'+value.spl.name+'</th>'
+                                        +'<th>'+value.name+'</th>'
 
 
                                    +'</tr>'
@@ -833,6 +833,7 @@ function formatSize(sizeInBytes) {
 
         function get_cpls(location , screen , lms , multiplex,refresh_screen)
         {
+
 
             result ="" ;
             var url = "{{  url('') }}"+ '/get_cpl_with_filter/';
@@ -1013,13 +1014,15 @@ function formatSize(sizeInBytes) {
             if(location != "Locations")
             {
                 $('#refresh_lms').show();
+                get_cpls(location , screen , false , multiplex,true)
             }
             else
             {
                 $('#refresh_lms').hide();
+                $('#location-listing tbody').html('')
             }
 
-            get_cpls(location , screen , false , multiplex,true)
+
 
         });
 

@@ -173,7 +173,7 @@
                         aria-label="Close"><span aria-hidden="true"
                             style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
                 </div>
-                <div class="modal-body  p-4">
+                <div class="modal-body  row p-4">
 
 
                 </div>
@@ -283,13 +283,17 @@
                 },
                 success: function(response) {
 
+                    var progress= '<div class="progress progress-lg p-0 col-md-8" style="margin-top:15px">'
+                        +'<div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" role="progressbar" style="height: 17px ; width: '+response.playback.progress_bar+'%; " aria-valuenow="'+response.playback.progress_bar+'" aria-valuemin="0" aria-valuemax="100">'+ response.playback.progress_bar+'%</div>'
+                      +'</div>'
+
                     $('#infos_modal .modal-header h4').html("Playback : " + response.playback.serverName)
                  //   $('#infos_modal .modal-body').html("Playback :" + response.playback.serverName)
-                    data = '<p> <i class="align-middle icon-md mdi mdi-playlist-play"> </i> <span> Curent SPL :</span> '+response.playback.spl_title+' </p> '
-                    +'<p> <i class="align-middle icon-md mdi mdi-play-circle"> </i> <span>  Curent CPL : </span>'+response.playback.cpl_title+' </p> '
-                    +'<p> <i class="align-middle icon-md mdi mdi-timer"> </i> <span>  Time : </span> '+response.playback.elapsed_runtime+' / '+response.playback.remaining_runtime+' </p> '
-                    +'<p> <i class="align-middle icon-md mdi mdi-assistant"> </i> <span>  playback generale status is :  </span>'+response.playback.storage_generale_status+'</p>'
-                    +'<p> <i class="align-middle icon-md mdi mdi-security"> </i> <span>  Security Manager status is :  </span>'+response.playback.securityManager+'</p>'
+                    data = '<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-playlist-play"> </i> <span> Curent SPL :</span></p><p class="col-md-9"  style="margin-top:15px"> '+response.playback.spl_title+' </p> '
+                    +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-play-circle"> </i> <span>  Curent CPL : </span></p><p class="col-md-9"  style="margin-top:15px">'+response.playback.cpl_title+' </p> '
+                    +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-timer"> </i> <span>  Time : </span></p>'+ progress
+                    +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-assistant"> </i> <span>  playback generale status  :  </span></p><p class="col-md-9"  style="margin-top:15px">'+response.playback.storage_generale_status+'</p>'
+                    +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-security"> </i> <span>  Security Manager status  :  </span></p><p class="col-md-9"  style="margin-top:15px">'+response.playback.securityManager+'</p>'
 
                     $('#infos_modal .modal-body').html(data) ;
 

@@ -179,7 +179,7 @@ class SnmpController extends Controller
                 }
                 if($schedule->status != 'linked' )
                 {
-                    $infos .="<li>  session : ".$schedule->name." Strat on: ".$schedule->date_start." Is Not Linked </li> ";
+                    $infos .="<li>  session : ".$schedule->name." Start At: ".$schedule->date_start." Is Not Linked </li> ";
                 }
 
                 if($schedule->status == 'linked'  && $schedule->kdm != 1   &&  !$missing_kdms )
@@ -196,14 +196,14 @@ class SnmpController extends Controller
 
                 if($schedule->status == 'linked' && $schedule->kdm != 1)
                 {
-                    $infos .="<li>  session : ".$schedule->name." Strat on: ".$schedule->date_start." Has missing   KDMs </li> ";
+                    $infos .="<li>  session : ".$schedule->name." Start At: ".$schedule->date_start." Has missing   KDMs </li> ";
                 }
 
 
                 if( $schedule->status == 'linked'  && $schedule->cpls != 1 )
                 {
                     $count_missing_cpl_error++ ;
-                    $infos .="<li>  session : ".$schedule->name." Strat on: ".$schedule->date_start." Has missing CPLs  </li> ";
+                    $infos .="<li>  session : ".$schedule->name." Start At: ".$schedule->date_start." Has missing CPLs  </li> ";
                 }
             }
 

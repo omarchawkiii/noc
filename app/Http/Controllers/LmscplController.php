@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cpl;
 use App\Models\Lmscpl;
 use App\Models\Location;
 use App\Models\splcomponents;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 
 class LmscplController extends Controller
@@ -79,13 +81,40 @@ class LmscplController extends Controller
         return Redirect::back()->with('message' ,' The LMS cpls  has been updated');
     }
 
-    public function get_lmscpl_infos($cpl )
+    public function get_lmscpl_infos($cplid )
     {
-        $cpl = Lmscpl::find($cpl) ;
-       // $spls = $cpl->lmsspls ;
-        $kdms =null ;
-        $schedules = null ;
-        $spls = splcomponents::where('CompositionPlaylistId',$cpl->uuid)->get() ;
+        $cpl = Lmscpl::find($cplid) ;
+
+        if($cpl)
+        {
+
+            $kdms =null ;
+              $schedules = null ;
+              //$spls = splcomponents::where('CompositionPlaylistId',$cpl->uuid)->get() ;
+
+              $spls = DB::table('splcomponents')
+              ->leftJoin('spls', 'splcomponents.uuid_spl', '=', 'spls.uuid')
+              ->where('splcomponents.CompositionPlaylistId',$cpl->uuid)
+              ->select('splcomponents.uuid_spl','spls.name')
+              ->groupBy('splcomponents.uuid_spl')
+              ->get();
+        }
+        else
+        {
+            $cpl = Cpl::find($cplid) ;
+              // $spls = $cpl->lmsspls ;
+              $kdms =null ;
+              $schedules = null ;
+              //$spls = splcomponents::where('CompositionPlaylistId',$cpl->uuid)->get() ;
+              $spls = DB::table('splcomponents')
+              ->leftJoin('spls', 'splcomponents.uuid_spl', '=', 'spls.uuid')
+              ->where('splcomponents.CompositionPlaylistId',$cpl->uuid)
+              ->select('splcomponents.uuid_spl','spls.name')
+              ->groupBy('splcomponents.uuid_spl')
+              ->get();
+
+        }
+
 
         return Response()->json(compact('cpl','spls','kdms'));
     }

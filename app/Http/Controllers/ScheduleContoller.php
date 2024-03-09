@@ -20,7 +20,6 @@ class ScheduleContoller extends Controller
     public function getschedules($location)
     {
             $location = Location::find($location) ;
-
             $url = $location->connection_ip."?request=getListSessionsScheduleFromNow";
             $client = new Client();
             $response = $client->request('GET', $url);
@@ -127,14 +126,34 @@ class ScheduleContoller extends Controller
         if($date)
         {
             $date = Carbon::createFromFormat('d/m/Y H', $date);
+            if($date->isToday())
+            {
+                $current_datetime = date('Y-m-d H:i:s');
+                if (date('H', strtotime($current_datetime)) >= 5) {
+                    // If the current time is after 5 AM, consider it as the start of the day
+                    $startDate = date('Y-m-d 05:00:00', strtotime($current_datetime));
+                    $nextDayStart = date('Y-m-d 04:59:59', strtotime('+1 day', strtotime($current_datetime)));
+                } else {
+                    // If the current time is before 5 AM, consider it as the end of the previous day
+                    $startDate = date('Y-m-d 05:00:00', strtotime('-1 day', strtotime($current_datetime)));
+                    $nextDayStart = date('Y-m-d 04:59:59', strtotime($current_datetime));
+                }
+
+
+            }
+            else
+            {
+                $startDate = date('Y-m-d 05:00:00', strtotime($date));
+                $nextDayStart = date('Y-m-d 04:59:59', strtotime('+1 day', strtotime($date)));
+
+                //dd($startDate , $nextDayStart) ;
+            }
         }
         else
         {
             $date = Carbon::now();
         }
         //dd($schedules) ;
-
-
 
         if(isset($location) &&  $location != 'null' )
         {
@@ -143,27 +162,23 @@ class ScheduleContoller extends Controller
             $schedules =Schedule::with('screen','spls')->where('location_id',$location->id)->get();
 
             $next_date = $date ;
-            $schedules = $schedules->where('date_start','>',$date->addHours(3)->toDateTimeString())->where('date_start','<',$next_date->addHours(28)->toDateTimeString());
+            $schedules = $schedules->where('date_start','>',$startDate)->where('date_start','<',$nextDayStart);
 
             if(isset($screen) && $screen != 'null' )
             {
-
-
                 $schedules = $schedules->where('screen_id',$screen) ;
-
             }
 
             return Response()->json(compact('schedules','screens'));
         }
         else
         {
-
             if(isset($screen) && $screen != 'null' )
             {
                 //$schedules = Screen::find($screen)->schedules ;
                 $schedules =Schedule::with('screen','spls')->where('screen_id',$screen)->get();
                 $next_date = $date ;
-                $schedules = $schedules->where('date_start','>',$date->addHours(3)->toDateTimeString())->where('date_start','<',$next_date->addHours(28)->toDateTimeString());
+                $schedules = $schedules->where('date_start','>',$startDate)->where('date_start','<',$nextDayStart);
                 return Response()->json(compact('schedules'));
             }
             else
@@ -178,7 +193,6 @@ class ScheduleContoller extends Controller
                 }
                 $schedules =null ;
                 $screens = null ;
-
                 return view('schedules.index', compact('screen','screens','locations'));
             }
         }

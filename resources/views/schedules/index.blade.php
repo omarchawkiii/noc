@@ -664,6 +664,7 @@
             var screen =  null;
             var date = new Date($('#scheduleDatePicker').val());
 
+
             if(location != "Locations")
             {
                 $('#scheduleDate').show();

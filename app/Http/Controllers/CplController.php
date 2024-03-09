@@ -15,6 +15,7 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 
 class CplController extends Controller
@@ -243,9 +244,15 @@ class CplController extends Controller
         $locations= explode(',', $location);
 
         $screens=null ;
-        $cpls =Lmscpl::with('location')->whereIn('location_id',$locations)->groupBy('uuid');
+        $cpls = DB::table('cpls','lmscpls')->whereIn('location_id',$locations)->groupBy('uuid')
+        ->orderBy('contentKind', 'ASC')->orderBy('contentTitleText', 'ASC') ;
 
-        $cpls = $cpls->orderBy('contentKind', 'ASC')->orderBy('contentTitleText', 'ASC') ;
+      ///  ->select('lmscpls.*') ;
+
+       // $cpls =Lmscpl::with('location')->whereIn('location_id',$locations)->groupBy('uuid');
+
+        //cpls = $cpls->orderBy('contentKind', 'ASC')->orderBy('contentTitleText', 'ASC') ;
+
         $cpls = $cpls->get() ;
         $macros = Macro::whereIn('location_id',$locations)->groupBy('idmacro_config')->orderBy('section_title', 'ASC')->get() ;
         return Response()->json(compact('cpls','screens','macros'));
@@ -257,8 +264,16 @@ class CplController extends Controller
 
         //$spls = $cpl->spls ;
         //dd($cpl->uuid) ;
-        $spls = splcomponents::with('spl')->where('CompositionPlaylistId',$cpl->uuid)->get() ;
+        //$spls = splcomponents::with('spl')->where('CompositionPlaylistId',$cpl->uuid)->get() ;
+        $spls = DB::table('splcomponents')
+            ->leftJoin('spls', 'splcomponents.uuid_spl', '=', 'spls.uuid')
+            ->where('splcomponents.CompositionPlaylistId',$cpl->uuid)
+            ->select('splcomponents.uuid_spl','spls.name')
+            ->groupBy('splcomponents.uuid_spl')
+            ->get();
 
+
+        //dd($spls) ;
         //dd($cpl);
         $kdms = $cpl->kdms ;
 
