@@ -37,7 +37,7 @@ class LmscplController extends Controller
                             // 'id_dcp' => $cpl['id_dcp'] ,
                             'contentTitleText' => $cpl['contentTitleText'] ,
                             'contentKind' => $cpl['contentKindMajuscule'] ,
-                            //'EditRate' => $cpl['EditRate'] ,
+                            'EditRate' => $cpl['EditRate'] ,
                             //'is_3D'=> $cpl['is_3D'] ,
                             'totalSize' => $cpl['totalSize'] ,
                             'soundChannelCount'=> $cpl['soundChannelCount'] ,
@@ -50,7 +50,7 @@ class LmscplController extends Controller
                             'pictureEncryptionAlgorithm'=> $cpl['pictureEncryptionAlgorithm'] ,
                             'Width'=> $cpl['pictureWidth'] ,
                             'Height' => $cpl['pictureHeight'] ,
-                            'type' => $cpl['type'],
+                            'type' => $cpl['type_ScreenAspectRatio']['type'],
                             'cinema_DCP' => $cpl['type_ScreenAspectRatio']['Cinema_DCP'],
                             'aspect_Ratio' => $cpl['type_ScreenAspectRatio']['Aspect_Ratio'],
                             'duration_seconds' => $cpl['Duration_seconds'],
@@ -93,9 +93,9 @@ class LmscplController extends Controller
               //$spls = splcomponents::where('CompositionPlaylistId',$cpl->uuid)->get() ;
 
               $spls = DB::table('splcomponents')
-              ->leftJoin('spls', 'splcomponents.uuid_spl', '=', 'spls.uuid')
+              ->leftJoin('lmsspls', 'splcomponents.uuid_spl', '=', 'lmsspls.uuid')
               ->where('splcomponents.CompositionPlaylistId',$cpl->uuid)
-              ->select('splcomponents.uuid_spl','spls.name')
+              ->select('splcomponents.uuid_spl','lmsspls.name')
               ->groupBy('splcomponents.uuid_spl')
               ->get();
         }

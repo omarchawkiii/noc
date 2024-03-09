@@ -94,7 +94,8 @@ class ScheduleContoller extends Controller
                                    'screen_id' => $screen->id ,
                                     'spl_id' => $spl_id ,
                                     'location_id' => $location->id ,
-
+                                    'kdm_status' => $schedule['list_kdm_notes']['status'],
+                                    'date_expired' => $schedule['list_kdm_notes']['date_expired'],
                                 ]);
                             }
 

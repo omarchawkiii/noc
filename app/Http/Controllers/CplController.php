@@ -260,6 +260,7 @@ class CplController extends Controller
     }
     public function get_cpl_infos($location , $cpl )
     {
+
         $cpl = Cpl::where('id',$cpl)->where('location_id',$location)->first() ;
 
         //$spls = $cpl->spls ;

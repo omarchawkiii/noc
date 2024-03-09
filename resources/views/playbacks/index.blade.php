@@ -237,6 +237,42 @@
 
     <script>
 
+    function calculateRuntimeDifference(remainingTime, elapsedTime) {
+
+        if(elapsedTime=="0")
+        {
+            return "00:00:00";
+        }
+
+        // Parse time strings into Date objects
+        const remainingTimeParts = remainingTime.split(':').map(part => parseInt(part, 10));
+        const elapsedParts = elapsedTime.split(':').map(part => parseInt(part, 10));
+
+        // Convert time parts into milliseconds
+        const remainingMilliseconds = (remainingTimeParts[0] * 3600 + remainingTimeParts[1] * 60 + remainingTimeParts[2]) * 1000;
+        const elapsedMilliseconds = (elapsedParts[0] * 3600 + elapsedParts[1] * 60 + elapsedParts[2]) * 1000;
+
+        // Calculate the difference
+        const differenceMilliseconds = remainingMilliseconds - elapsedMilliseconds;
+
+        // Calculate hours, minutes, and seconds
+        let hours = Math.floor(differenceMilliseconds / (1000 * 60 * 60));
+        let minutes = Math.floor((differenceMilliseconds % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((differenceMilliseconds % (1000 * 60)) / 1000);
+        console.log(hours)
+        // Ensure leading zeros if necessary
+        //hours = (hours < 10) ? 0 ${hours} : hours;
+        hours = (hours < 10) ? '0'+hours:hours;
+        minutes = (minutes < 10) ? '0'+minutes:minutes;
+        seconds = (seconds < 10) ? '0'+seconds:seconds;
+        /*minutes = (minutes < 10) ? 0${minutes} : minutes;
+        seconds = (seconds < 10) ? 0${seconds} : seconds;*/
+
+        // Return the formatted difference
+        return hours+':'+minutes+':'+seconds;
+    }
+
+
     (function($) {
   'use strict';
   $(function() {
@@ -282,16 +318,22 @@
                     id: id,
                 },
                 success: function(response) {
+                    var _time = calculateRuntimeDifference(response.playback.remaining_runtime ,response.playback.elapsed_runtime)
+                      var progress_bar= '<div class="col-md-8">'
+                                        +'<div class="progress progress-lg p-0 " style="margin-top:15px">'
+                                            +'<div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" role="progressbar" style="height: 17px ; width: '+response.playback.progress_bar+'%; " aria-valuenow="'+response.playback.progress_bar+'" aria-valuemin="0" aria-valuemax="100">'+ parseFloat(response.playback.progress_bar).toFixed(2) +'%</div>'
+                                        +'</div>'
+                                        +'<div class="d-flex justify-content-between mt-2">'
+                                            +'<span>'+response.playback.elapsed_runtime+'</span>'
+                                            +'<span>'+ response.playback.elapsed_runtime+'/'+ response.playback.remaining_runtime+'</span>'
+                                        +'</div>'
+                                    +'</div>'
 
-                    var progress= '<div class="progress progress-lg p-0 col-md-8" style="margin-top:15px">'
-                        +'<div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" role="progressbar" style="height: 17px ; width: '+response.playback.progress_bar+'%; " aria-valuenow="'+response.playback.progress_bar+'" aria-valuemin="0" aria-valuemax="100">'+ response.playback.progress_bar+'%</div>'
-                      +'</div>'
-
-                    $('#infos_modal .modal-header h4').html("Playback : " + response.playback.serverName)
-                 //   $('#infos_modal .modal-body').html("Playback :" + response.playback.serverName)
+                   // $('#infos_modal .modal-header h4').html("Playback : " + response.playback.serverName)
+                   $('#infos_modal .modal-body').html("Playback :" + response.playback.serverName)
                     data = '<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-playlist-play"> </i> <span> Curent SPL :</span></p><p class="col-md-9"  style="margin-top:15px"> '+response.playback.spl_title+' </p> '
                     +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-play-circle"> </i> <span>  Curent CPL : </span></p><p class="col-md-9"  style="margin-top:15px">'+response.playback.cpl_title+' </p> '
-                    +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-timer"> </i> <span>  Time : </span></p>'+ progress
+                    +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-timer"> </i> <span>  Time : </span></p>'+ progress_bar
                     +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-assistant"> </i> <span>  playback generale status  :  </span></p><p class="col-md-9"  style="margin-top:15px">'+response.playback.storage_generale_status+'</p>'
                     +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-security"> </i> <span>  Security Manager status  :  </span></p><p class="col-md-9"  style="margin-top:15px">'+response.playback.securityManager+'</p>'
 

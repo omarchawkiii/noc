@@ -702,16 +702,22 @@
                         icon_cpl = ""
                         icon_kdm = ""
                         statu_content=""
+
+
+
                         if(value.status !="linked" )
                         {
                             icon_spl = '<i class="mdi mdi-playlist-play text-danger"> </i>'
-                            statu_content = '<spn class="text-danger" >Unlinked  </span>'
+
                             icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
                             icon_cpl = '<i class="mdi mdi-filmstrip text-warning ">'
+
+                            statu_content = ''
+
                         }
                         else
                         {
-                            statu_content = '<spn class="text-success" > Linled</span>'
+
                             icon_spl =  '<i class="mdi mdi-playlist-play text-success"> </i>'
                             if(value.cpls ==1)
                             {
@@ -719,6 +725,8 @@
                                 if(value.kdm  ==1 )
                                 {
                                     icon_kdm = '</i> <i class="mdi mdi-key-change text-success"> </i>'
+
+
                                 }
                                 else
                                 {
@@ -732,8 +740,22 @@
                                 icon_cpl = '<i class="mdi mdi-filmstrip text-danger   spl_not_linked" data-scheduleidd = "'+value.id+'">'
                             }
                         }
-
-
+                        if(value.kdm_status =="not_valid_yet")
+                        {
+                            statu_content = '<button type="button" class="btn btn-warning btn-fw">'+value.date_expired+'</button>'
+                        }
+                        if(value.kdm_status =="expired")
+                        {
+                            statu_content = '<button type="button" class="btn btn-danger  btn-fw"> KDM Already Expired'+value.date_expired+'</button>'
+                        }
+                        if(value.kdm_status =="warning")
+                        {
+                            statu_content = '<button type="button" class="btn btn-warning btn-fw">KDM Expired in '+value.date_expired+'</button>'
+                        }
+                        if(value.kdm_status =="valid")
+                        {
+                            statu_content = '<button type="button" class="btn btn-success  btn-fw"> KDM Expired in '+value.date_expired+'</button>'
+                        }
                         result = result
                             +'<tr class="odd ">'
                             +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.type+' </td>'

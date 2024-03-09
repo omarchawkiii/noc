@@ -32,6 +32,8 @@ class Schedule extends Model
     'screen_id' ,
     'spl_id' ,
     'location_id' ,
+    'kdm_status',
+    'date_expired',
 
 
     ] ;

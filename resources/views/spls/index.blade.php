@@ -247,9 +247,10 @@
 
         });
 
-        $('#screen').change(function(){
 
-
+        function get_spls(location , screen , lms , refresh_screen)
+        {
+            result =" " ;
             $("#location-listing").dataTable().fnDestroy();
             $('#location-listing tbody').html('')
             var loader_content  =
@@ -259,137 +260,31 @@
                 +'<span></span>'
                 +'</div>'
             $('#location-listing tbody').html(loader_content)
-
-            var country =  $('#country').val();
-            var location =  $('#location').val();
-
-            if(this.id == "screen")
-            {
-                lms=false ;
-                $('#lms_screen').hide();
-                var screen =  $('#screen').val();
-            }
-            else
-            {
-                lms= true ;
-                var screen =  $('#lms_screen_content').val();
-            }
-            var url = "{{  url('') }}"+ '/get_spl_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen+'&lms='+ lms;
-
-            result =" " ;
-
+            var url = "{{  url('') }}"+ '/get_spl_with_filter';
             $.ajax({
                 url: url,
-                method: 'GET',
-                success:function(response)
-                {
-                    key = 0 ;
-                    $.each(response.spls, function( index , value ) {
-                        key++ ;
-                        if(value.available_on)
-                        {
-                            available_on_array =  value.available_on.split(",");
-                            available_on_content=""
-                            for(i = 0 ; i< available_on_array.length ; i++ )
-                            {
-                                if(i != 0 &&  i % 9 == 0 )
-                                {
-                                    available_on_content = available_on_content + '<br />'
-                                }
-                                available_on_content = available_on_content + '<div class="badge badge-outline-primary m-1">'+ available_on_array[i]+'</div>'
-                            }
-                        }
-                        else
-                        {
-                            available_on_content="" ;
-                        }
-
-
-
-                        result = result
-                            +'<tr class="odd">'
-                            +'<td class="sorting_1">'+ key+' </td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"  style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+available_on_content+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.duration+'</a></td>'
-                            +'<td><a class="btn btn-primary infos_modal" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
-                            +'</tr>';
-                    });
-                    console.log(response.spls)
-
-                    $('#location-listing tbody').html(result)
-                    /***** refresh datatable ***** */
-
-                    var spl_datatable = $('#location-listing').DataTable({
-
-                        "iDisplayLength": 10,
-                        destroy: true,
-                        "bDestroy": true,
-                        "language": {
-                            search: "_INPUT_",
-                            searchPlaceholder: "Search..."
-                        }
-                    });
-
+                data: {
+                    location: location,
+                    screen_id: screen,
+                    lms : lms,
                 },
-                error: function(response) {
-
-                }
-            })
-
-
-
-
-        });
-
-        $('#location').change(function(){
-
-            $("#location-listing").dataTable().fnDestroy();
-            var loader_content  =
-            '<div class="jumping-dots-loader">'
-                +'<span></span>'
-                +'<span></span>'
-                +'<span></span>'
-                +'</div>'
-            $('#location-listing tbody').html(loader_content)
-
-             $('#screen').find('option')
-            .remove()
-            .end()
-            .append('<option value="null">All Screens</option>')
-
-            //$('#location-listing tbody').html('')
-
-            var location =  $('#location').val();
-            var country =  $('#country').val();
-            var screen =  null;
-            window.lms = false ;
-
-            if(location != "Locations")
-            {
-                $('#refresh_lms').show();
-            }
-            else
-            {
-                $('#refresh_lms').hide();
-            }
-            var url = "{{  url('') }}"+ '/get_spl_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen;
-            result =" " ;
-
-            $.ajax({
-                url: url,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 method: 'GET',
                 success:function(response)
                 {
-
-                    screens = '<option value="null" selected>All Screens</option>';
-                    $.each(response.screens, function( index_screen, screen ) {
-
-                        screens = screens
-                            +'<option  value="'+screen.id+'">'+screen.screen_name+'</option>';
-                    });
+                    console.log(response)
+                    if(refresh_screen)
+                    {
+                        screens = '<option value="null" selected>All Screens</option>';
+                        $.each(response.screens, function( index_screen, screen ) {
+                            screens = screens
+                                +'<option  value="'+screen.id+'">'+screen.screen_name+'</option>';
+                        });
                         $('#screen').html(screens)
                         $('#lms_screen_content').html(screens)
+                    }
                     $.each(response.spls, function( index, value ) {
                         index++ ;
                         if(value.available_on)
@@ -441,6 +336,62 @@
 
                 }
             })
+
+        }
+
+        $('#screen').change(function(){
+
+            var location =  $('#location').val();
+            if(this.id == "screen")
+            {
+                lms=false ;
+                $('#lms_screen').hide();
+                var screen =  $('#screen').val();
+                get_spls(location , screen , lms , false)
+            }
+            else
+            {
+                lms= true ;
+                var screen =  $('#lms_screen_content').val();
+                get_spls(location , screen , lms , false)
+            }
+        });
+
+        $('#location').change(function(){
+
+            $("#location-listing").dataTable().fnDestroy();
+            var loader_content  =
+            '<div class="jumping-dots-loader">'
+                +'<span></span>'
+                +'<span></span>'
+                +'<span></span>'
+                +'</div>'
+            $('#location-listing tbody').html(loader_content)
+
+             $('#screen').find('option')
+            .remove()
+            .end()
+            .append('<option value="null">All Screens</option>')
+
+            //$('#location-listing tbody').html('')
+
+            var location =  $('#location').val();
+            var country =  $('#country').val();
+            var screen =  null;
+            window.lms = false ;
+
+            if(location != "Locations")
+            {
+                $('#refresh_lms').show();
+            }
+            else
+            {
+                $('#refresh_lms').hide();
+            }
+
+            get_spls(location , screen , false , true)
+
+
 
         });
 
