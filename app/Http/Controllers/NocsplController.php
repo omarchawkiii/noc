@@ -14,13 +14,24 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use App\Models\splcomponents;
 
 class NocsplController extends Controller
 {
 
     public function createlocalspl(Request $request)
     {
+        if($request->action_type =="edit")
+        {
+            Nocspl::where('uuid',$request->spl_uuid_edit)->delete() ;
+            splcomponents::where('uuid_spl',$request->spl_uuid_edit)->delete() ;
+            $uuid =  $request->spl_uuid_edit;
+        }
+        else{
         $uuid =  $this->generateUuid();
+        }
+
+
 
         $IssueDate = Carbon::now();
 
@@ -40,6 +51,8 @@ class NocsplController extends Controller
             'location_id'=> null,
             'source'=> "NOC",
         ]) ;
+
+
         /*
         foreach($request->items_spl as $noccpl)
         {
@@ -49,11 +62,54 @@ class NocsplController extends Controller
                 }
 
         }*/
+        if($new_nocspl)
+        {
+        ////////////dd(Auth::user()->id , Auth::user()->email ) ;
+            $this->savePlayListBuilderLogs("New SPL File  Saved ", $file,Auth::user()->id, Auth::user()->email);
 
-        $response = array("status" => "saved");
+            $path =  storage_path().'/app/xml_file/'.$new_nocspl->xmlpath ;
+            $spl_file = simplexml_load_file($path);
+                $cpls = $this->getCplsFromSplArray($spl_file);
+                foreach ($cpls as $cpl) {
+
+                    splcomponents::updateOrCreate([
+
+                        'uuid_spl' => $uuid,
+                        'CompositionPlaylistId' => $cpl['CompositionPlaylistId'],
+                    ],[
+                        //'id_splcomponent' => $cpl['Id'],
+                        'CompositionPlaylistId' => $cpl['CompositionPlaylistId'],
+                        'AnnotationText' => $cpl['AnnotationText'],
+                        'EditRate' => $cpl['EditRate'],
+                        'editRate_numerator' => $cpl['editRate_numerator'],
+                        'editRate_denominator' => $cpl['editRate_denominator'],
+                        'uuid_spl' => $uuid,
+
+
+                    ]);
+                }
+            $response = array("status" => 1 , "title" =>$new_nocspl->spl_title, "uuid"=>$new_nocspl->uuid );
+        }
+        else
+        {
+            $response = array("status" => 0 , "title" =>"null" , "uuid"=>"null" );
+        }
+
         echo json_encode($response);
 
     }
+    public function savePlayListBuilderLogs($task,$logs,$user_id,$username){
+
+            // Add a timestamp to the log entry
+            $logEntry ="\n".
+                "#########################################".
+                "\n" . date('[Y-m-d H:i:s]') . ' '."\n".$task . ' '.
+                "\n" ."BY Username : ".$username." -ID :  ".$user_id. "\n".
+                "\n" . $logs . "\n";
+
+            // Append the log entry to the log file
+            error_log($logEntry, 3, '/DATA/logs/playlistBuilder.log');
+        }
 
     public function updatelocalspl(Request $request)
     {
@@ -973,13 +1029,13 @@ class NocsplController extends Controller
 
     public function sendXmlFileToApi(Request $request)
     {
-        $nos_spl = Nocspl::where('id',$request->spl_id)->first() ;
+        $nos_spl = Nocspl::where('uuid',$request->spl_id)->first() ;
         $location = Location::where('id',$request->location)->first() ;
-        // Check if the file exists
+
 
 
         $xmlFilePath =    storage_path().'/app/xml_file/'.$nos_spl->xmlpath ;
-            //dd($xmlFilePath);
+
          if (!file_exists($xmlFilePath)) {
                 return ['error' => 'File not found.'];
             }
@@ -1005,16 +1061,7 @@ class NocsplController extends Controller
 
             if($response->status== 1 )
             {
-               Lmsspl::updateOrCreate([
-                    'uuid' =>$nos_spl->uuid,
-                    'location_id'     =>$location->id,
-                    ],[
-                    'uuid'     => $nos_spl->uuid,
-                    'name'     =>$nos_spl->spl_title,
-                    'duration'     => gmdate("H:i:s", $nos_spl->duration) ,
-                    'available_on'     => 'null',
-                    'location_id'     =>$location->id,
-                ]);
+
 
             }
             return $response;
@@ -1035,6 +1082,55 @@ class NocsplController extends Controller
                 return json_decode($response, true);
             }
 
+    }
+
+    public function getCplsFromSplArray($xml)
+    {
+        $compositions = [];
+        if (property_exists($xml, 'EventList')) {
+            foreach ($xml->EventList->Event as $event) {
+                foreach ($event->ElementList->MainElement->Composition as $composition) {
+                    $id = (string)$composition->Id;
+                    $CompositionPlaylistId = (string)$composition->CompositionPlaylistId;
+                    $annotation = (string)$composition->AnnotationText;
+                    $duration = (int)$composition->IntrinsicDuration;
+                    $editRate = (string)$composition->EditRate;
+                    list($editRate_numerator, $editRate_denominator) = explode(" ", $editRate);
+                    $compositions[] = [
+                        'Id' => $id,
+                        'CompositionPlaylistId' => $CompositionPlaylistId,
+                        'AnnotationText' => $annotation,
+                        'IntrinsicDuration' => $duration,
+                        'EditRate' => $editRate,
+                        'editRate_numerator' => $editRate_numerator,
+                        'editRate_denominator' => $editRate_denominator
+                    ];
+                }
+            }
+
+        } elseif (property_exists($xml, 'PackList')) {
+            foreach ($xml->PackList->Pack->EventList->Event as $event) {
+                foreach ($event->ElementList->MainElement->Composition as $composition) {
+                    $id = (string)$composition->Id;
+                    $CompositionPlaylistId = (string)$composition->CompositionPlaylistId;
+                    $annotation = (string)$composition->AnnotationText;
+                    $duration = (int)$composition->IntrinsicDuration;
+                    $editRate = (string)$composition->EditRate;
+                    list($editRate_numerator, $editRate_denominator) = explode(" ", $editRate);
+                    $compositions[] = [
+                        'Id' => $id,
+                        'CompositionPlaylistId' => $CompositionPlaylistId,
+                        'AnnotationText' => $annotation,
+                        'IntrinsicDuration' => $duration,
+                        'EditRate' => $editRate,
+                        'editRate_numerator' => $editRate_numerator,
+                        'editRate_denominator' => $editRate_denominator
+                    ];
+                }
+            }
+        }
+
+        return $compositions;
     }
     public function checkAvailability(Request $request)
     {
@@ -1105,6 +1201,26 @@ class NocsplController extends Controller
                                     'source'=> "flash disk",
                                     'location_id'=> null,
                                 ]) ;
+                                    $path =  storage_path().'/app/xml_file/'.$new_nocspl->xmlpath ;
+                                    $spl_file = simplexml_load_file($path);
+                                    $cpls = $this->getCplsFromSplArray($spl_file);
+                                    foreach ($cpls as $cpl) {
+
+                                        splcomponents::updateOrCreate([
+                                            'uuid_spl' => $cpl['Id'],
+                                            'CompositionPlaylistId' => $cpl['CompositionPlaylistId'],
+                                        ],[
+                                          //  'id_splcomponent' => $cpl['id'],
+                                            'CompositionPlaylistId' => $cpl['CompositionPlaylistId'],
+                                            'AnnotationText' => $cpl['AnnotationText'],
+                                            'EditRate' => $cpl['EditRate'],
+                                            'editRate_numerator' => $cpl['editRate_numerator'],
+                                            'editRate_denominator' => $cpl['editRate_denominator'],
+                                            'uuid_spl' => $cpl['Id'],
+
+                                        ]);
+                                    }
+
                             }
 
                         }

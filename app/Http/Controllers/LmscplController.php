@@ -26,7 +26,6 @@ class LmscplController extends Controller
                 {
                     foreach($content as $cpl)
                     {
-
                         Lmscpl::updateOrCreate([
                             'uuid' => $cpl["uuid"],
                             'location_id'     =>$location->id,
@@ -86,7 +85,7 @@ class LmscplController extends Controller
        // $spls = $cpl->lmsspls ;
         $kdms =null ;
         $schedules = null ;
-        $spls = splcomponents::where('CompositionPlaylistId',$cpl->uuid)->where('location_id',$cpl->location_id)->get() ;
+        $spls = splcomponents::where('CompositionPlaylistId',$cpl->uuid)->get() ;
 
         return Response()->json(compact('cpl','spls','kdms'));
     }

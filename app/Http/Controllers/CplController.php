@@ -213,9 +213,9 @@ class CplController extends Controller
                 $cpls =$cpls->where('pictureEncryptionAlgorithm','None')->orWhere('pictureEncryptionAlgorithm','0')->orWhere('pictureEncryptionAlgorithm',null);
             }
 
-            if($multiplex =='Flate')
+            if($multiplex =='Flat')
             {
-                $cpls =$cpls->where('type','Flate');
+                $cpls =$cpls->where('type','Flat');
             }
 
             if($multiplex =='Scope')
@@ -257,7 +257,7 @@ class CplController extends Controller
 
         //$spls = $cpl->spls ;
         //dd($cpl->uuid) ;
-        $spls = splcomponents::with('spl')->where('CompositionPlaylistId',$cpl->uuid)->where('location_id',$cpl->location_id)->get() ;
+        $spls = splcomponents::with('spl')->where('CompositionPlaylistId',$cpl->uuid)->get() ;
 
         //dd($cpl);
         $kdms = $cpl->kdms ;

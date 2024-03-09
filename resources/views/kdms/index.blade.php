@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title') connexion  @endsection
+@section('title') KDMs  @endsection
 @section('content')
     <div class="page-header playlistbuilder-shadow">
         <h3 class="page-title">KDMs </h3>

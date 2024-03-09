@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title')
-    Upload SPL
+    Upload
 @endsection
 @section('content')
     <div class="page-header library-shadow">

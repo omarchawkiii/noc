@@ -2,11 +2,11 @@
 @section('title') connexion  @endsection
 @section('content')
     <div class="page-header">
-        <h3 class="page-title"> Location </h3>
+        <h3 class="page-title"> Create Screen  </h3>
         <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="#">Tables</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Location</li>
+            <li class="breadcrumb-item"><a href="#">Screen</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Create Screen</li>
         </ol>
         </nav>
     </div>

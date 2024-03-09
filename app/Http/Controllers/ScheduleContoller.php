@@ -191,13 +191,9 @@ class ScheduleContoller extends Controller
         $screen = $schedule->screen ;
         //dd($schedule, $schedule->uuid_spl ,$schedule->location_id,$schedule->screen_id) ;
         $spl = Spl::where('uuid',$schedule->uuid_spl)->where('screen_id',$schedule->screen_id)->where('location_id',$schedule->location_id)->first() ;
-        $cpls_from_splcomponent = splcomponents::where('uuid_spl',$spl->uuid)->where('location_id',$spl->location_id)->get() ;
-
-
+        $cpls_from_splcomponent = splcomponents::where('uuid_spl',$spl->uuid)->get() ;
         //$cpls_spl = $spl->cpls;
-
         $cpls_screen= $screen->cpls ;
-
         $missing_cpls = array();
         $unplayable_cpls = array();
         //$location = $schedule->location ;
@@ -205,53 +201,21 @@ class ScheduleContoller extends Controller
 
         foreach($cpls_from_splcomponent as $cpl_from_splcomponent)
         {
-                $cpl = Cpl::where('uuid',$cpl_from_splcomponent->CompositionPlaylistId)->where('location_id',$schedule->location_id)->first() ;
+            $cpl = Cpl::where('uuid',$cpl_from_splcomponent->CompositionPlaylistId)->where('location_id',$schedule->location_id)->first() ;
 
-                if($cpl == null)
-                {
-                    array_push($missing_cpls,array("uuid" => $cpl_from_splcomponent->CompositionPlaylistId, "contentTitleText" => $cpl_from_splcomponent->AnnotationText, "playable" => 1) ) ;
-
-                }
-                else
-                {
-                    if($cpl->playable != 1)
-                    {
-                        array_push($unplayable_cpls,array("uuid" => $cpl->uuid, "contentTitleText" => $cpl->contentTitleText, "playable" => $cpl->playable) ) ;
-                    }
-                }
-
-        }
-
-
-
-        /*$url = $location->connection_ip."?request=getCplsBySpl&spl_uuid=".$spl->uuid;
-
-
-        $client = new Client();
-        $response = $client->request('GET', $url);
-        $contents = json_decode($response->getBody(), true);
-        //$spl->cpls()->detach() ;
-        /*if($contents)
-        {
-            foreach($contents as $content)
+            if($cpl == null)
             {
-                if($content)
-                {
-                    foreach($content as $cpl_content)
-                    {
-                        $cpl = Cpl::where('uuid','=',$cpl_content['CompositionPlaylistId'])->where('location_id','=',$location->id)->first() ;
+                array_push($missing_cpls,array("uuid" => $cpl_from_splcomponent->CompositionPlaylistId, "contentTitleText" => $cpl_from_splcomponent->AnnotationText, "playable" => 1) ) ;
 
-                        if($cpl == null )
-                        {
-                            array_push($missing_cpls,array("uuid" => $cpl_content['CompositionPlaylistId'], "contentTitleText" => $cpl_content['AnnotationText'] , "playable" => 1) ) ;
-                        }
-                    }
+            }
+            else
+            {
+                if($cpl->playable != 1)
+                {
+                    array_push($unplayable_cpls,array("uuid" => $cpl->uuid, "contentTitleText" => $cpl->contentTitleText, "playable" => $cpl->playable) ) ;
                 }
             }
         }
-*/
-
-
         return Response()->json(compact('missing_cpls','unplayable_cpls'));
 
     }
@@ -262,22 +226,30 @@ class ScheduleContoller extends Controller
         $screen = $schedule->screen ;
         //dd($schedule, $schedule->uuid_spl ,$schedule->location_id,$schedule->screen_id) ;
         $spl = Spl::where('uuid',$schedule->uuid_spl)->where('screen_id',$schedule->screen_id)->where('location_id',$schedule->location_id)->first() ;
-        $cpls_spl = $spl->cpls;
+
+       // $cpls_spl = $spl->cpls;
+        $cpls_spl = splcomponents::where('uuid_spl',$spl->uuid)->get() ;
 
         $cpls_screen= $screen->cpls ;
         $missing_kdms = array();
 
         foreach($cpls_spl as $cpl_spl)
         {
-            if($cpl_spl->pictureEncryptionAlgorithm != "None")
-            {
-                $kdm = Kdm::where('cpl_id',$cpl_spl->id)->where('screen_id', $screen->id )->get() ;
+            $cpl_screen = Cpl::where('uuid',$cpl_spl->CompositionPlaylistId)->where('screen_id', $screen->id)->where('location_id', $schedule->location_id)->first();
 
-                if($kdm->count() ==0)
+            if($cpl_screen != null )
+            {
+                if($cpl_screen->pictureEncryptionAlgorithm != "None")
                 {
-                    array_push($missing_kdms,array("uuid" => $cpl_spl->uuid, "contentTitleText" => $cpl_spl->contentTitleText, "playable" => $cpl_spl->playable) ) ;
+                    $kdm = Kdm::where('cpl_id',$cpl_screen->id)->where('screen_id', $screen->id )->get() ;
+
+                    if($kdm->count() ==0)
+                    {
+                        array_push($missing_kdms,array("uuid" => $cpl_screen->uuid, "contentTitleText" => $cpl_screen->contentTitleText, "playable" => $cpl_screen->playable) ) ;
+                    }
                 }
             }
+
         }
         return Response()->json(compact('missing_kdms'));
 

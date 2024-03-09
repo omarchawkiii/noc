@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title') connexion  @endsection
+@section('title') Playback  @endsection
 @section('content')
     <div class="page-header ingester-shadow">
         <h3 class="page-title  ">Playback </h3>

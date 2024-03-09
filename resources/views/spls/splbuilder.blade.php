@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title')
-    connexion
+   Show Playlist Builder
 @endsection
 @section('content')
     <div class="page-header playbck-shadow">
@@ -248,7 +248,7 @@
         <div class="modal-dialog modal-dialog-centered  modal-xl">
             <div class="modal-content border-0">
 
-                <div class="modal-header p-4 pb-0">
+                <div class="modal-header">
                     <h5>Playlists Available on NOC</h5>
                     <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
                 </div>
@@ -484,7 +484,7 @@
 
                     <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body minauto ">
         <!--           <h5 class="modal-title" id="ModalLabel">Please Select a Playlist  </h5>-->
                     <h4 class="text-center"> No SPL Selected!</h4>
                 </div>
@@ -896,8 +896,11 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="ModalLabel">Save New Playlist Properties</h5>
-                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
+          <h5 class="modal-title" id="save_spl_title">
+                            <i class="mdi mdi-library-plus btn btn-primary"></i> Save New Playlist Properties</h5>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
                 </div>
                 <div class="modal-body">
                     <div class="tab-pane fade active show" id="home-1" role="tabpanel" aria-labelledby="home-tab">
@@ -931,17 +934,40 @@
                                                 class="input-helper"></i><i class="input-helper"></i></label>
                                 </div>
                             </div>
+                            <div class="col-md-12">
+                                    <div class="form-group custom-form-group">
+                                        <div class="edit-status" id="status_edit"></div>
+                                    </div>
+                           </div>
+                           <div class="col-md-12 row " id="auto_ingest_on_after_edit">
+
+                           </div>
+                           <div class="col-md-12 row " id="available_on_after_edit">
+
+                           </div>
+                           <div class="col-md-12 row " id="available_on_after_edit_ingest_result">
+
+                           </div>
                         </div>
 
                     </div>
-                    <div class="row mt-2">
-                        <div class="col" style="text-align: center">
-                            <button type="button" class="btn btn-primary btn-fw" id="save_new_spl">Confirm</button>
-                            <button class="btn btn-secondary btn-fw close" data-bs-dismiss="modal"
-                                    aria-label="Close">Cancel
-                            </button>
+                         <div class="row mt-2">
+                            <div class="col hide_div"  id="parent_upload_spl_after_edit" style="text-align: center"  >
+                                <button type="button" class="btn btn-primary btn-fw" id="upload_spl_after_edit">Upload</button>
+                            </div>
+                            <div class="col" style="text-align: center" id="block_save_new_spl">
+                                <button type="button" class="btn btn-primary btn-fw" id="save_new_spl">Save</button>
+                                <button class="btn btn-secondary btn-fw close" data-bs-dismiss="modal"
+                                        aria-label="Close" style="font-size: 16px;font-weight: bold;">Cancel
+                                </button>
+                            </div>
+                            <div class="col hide_div" style="text-align: center" id="block_edit_spl">
+                                <button type="button" class="btn btn-primary btn-fw" id="save_edited_spl">Save</button>
+                                <button type="button" class="btn btn-primary btn-fw" id="save_as_new_spl">Save As New
+                                    SPL
+                                </button>
+                            </div>
                         </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -1008,10 +1034,10 @@
         <div class="modal-dialog modal-dialog-centered  modal-xl">
             <div class="modal-content border-0">
 
-                <div class="modal-header p-4 pb-0">
+                <div class="modal-header">
                     <h5>Playlists Available on NOC</h5>
                     <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
+                        aria-label="Close"><span aria-hidden="true" style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
                 </div>
                 <div class="modal-body text-center p-4">
 
@@ -1026,7 +1052,7 @@
 
                         </div>
                     </div>
-                    <div class="row mt-2">
+                    <div class="row mt-5">
                         <div class="col" style="text-align: center">
                             <button type="button" class="btn btn-primary btn-fw" id="submit-ingest-form">Ingest</button>
                             <button class="btn btn-secondary btn-fw close" data-bs-dismiss="modal"
@@ -1075,7 +1101,7 @@
                     </button>
                 </div>
                 <input type="hidden" id="id_spl_delete">
-                <div class="modal-body">
+                <div class="modal-body minauto">
                     <p id="spl_title_to_delete">You will not be able to recover this .</p>
                     <p id="spl_uuid_to_delete">You will not be able to recover this .</p>
                     <p>You will not be able to recover this .</p>
@@ -1100,7 +1126,7 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body minauto">
                     <div class="tab-pane fade active show" id="home-1" role="tabpanel" aria-labelledby="home-tab">
                         <div class="row">
                             <div class="col-md-12 ">
@@ -2300,6 +2326,12 @@
         {
 
             $("#spl-list").modal('show');
+
+            get_spl_list_data()
+
+        });
+        function get_spl_list_data()
+        {
             var loader_content  =
             '<div class="jumping-dots-loader">'
                 +'<span></span>'
@@ -2357,41 +2389,52 @@
 
                     }
             })
-
-
-        });
-
+        }
         $(document).on('click', '#display_spl_properties', function() {
             if ($('#dragula-right').children().length === 0) {
                 $("#empty-spl-modal").modal('show');
+            }
+             else {
+         $("#status_edit").html("");
+        $("#status_edit").removeClass("badge-danger");
+        $("#status_edit").removeClass("badge-success");
+        var opened_spl_status = $('#opened_spl').attr("data-opened_spl_status");
+        $("#auto_ingest_on_after_edit").html("");
+        $("#available_on_after_edit").html("");
+        $("#available_on_after_edit_ingest_result").html(" ");
+        $("#parent_upload_spl_after_edit").addClass('hide_div');
+
+        if (opened_spl_status == 1) {
+            $('#spl_action').val("edit");
+            $('#block_save_new_spl').addClass("hide_div");
+            $('#block_edit_spl').removeClass("hide_div");
+
+            $('#save_spl_title').html("<i class=\"btn btn-primary mdi mdi-tooltip-edit  \"  ></i> Edit Playlist");
+            var id_spl = $('#opened_spl').data("uuid");
+            $('#spl_uuid_edit').val(id_spl);
+            var title = $('#opened_spl').text();
+            var mod = $('#opened_spl').attr("data-mod");
+            var hfr = $('#opened_spl').attr("data-hfr");
+            if (hfr == 1) {
+                $('#spl_properties_hfr').prop('checked', true);
             } else {
-            var opened_spl_status = $('#opened_spl').attr("data-opened_spl_status");
-                if (opened_spl_status == 1) {
+                $('#spl_properties_hfr').prop('checked', false);
 
-                    $('#spl_action').val("edit");
-
-                    var id_spl = $('#opened_spl').data("uuid");
-                    $('#spl_uuid_edit').val(id_spl);
-                    var title = $('#opened_spl').text();
-                    var mod = $('#opened_spl').attr("data-mod");
-                    var hfr = $('#opened_spl').attr("data-hfr");
-                    if (hfr == 1) {
-                        $('#spl_properties_hfr').prop('checked', true);
-                    } else {
-                        $('#spl_properties_hfr').prop('checked', false);
-
-                    }
-                    $('#uuid_spl_edit').val(id_spl);
-                    $('#spl_title').val(title);
-                    $('#display_mode').val(mod);
-                    $("#spl-properties-modal").modal('show');
-                } else {
-                    $('#spl_action').val("insert");
-                    $('#spl_uuid_edit').val(0);
-                    $('#spl_title').val(" ");
-                    $('#spl_properties_hfr').prop('checked', false);
-                    $("#spl-properties-modal").modal('show');
-                }
+            }
+            $('#uuid_spl_edit').val(id_spl);
+            $('#spl_title').val(title);
+            $('#display_mode').val(mod);
+            $("#spl-properties-modal").modal('show');
+        } else {
+            $('#block_edit_spl').addClass("hide_div");
+            $('#block_save_new_spl').removeClass("hide_div");
+            $('#save_spl_title').html(" <i class=\"mdi mdi-library-plus btn btn-primary\"></i>  Save New Playlist Properties");
+            $('#spl_action').val("insert");
+            $('#spl_uuid_edit').val(0);
+            $('#spl_title').val(" ");
+            $('#spl_properties_hfr').prop('checked', false);
+            $("#spl-properties-modal").modal('show');
+        }
             }
 
         });
@@ -2528,40 +2571,24 @@
                             try {
                                 console.log(response);
                                 var obj = JSON.parse(response);
-                                // $('#actual_spl_title').text(title_spl);
-                                // $('#id_spl_opened').text(obj['uuid']);
-                                $('#opened_spl').attr('data-uuid', obj['uuid']);
-                                $(jQuery.parseJSON(response)).each(function() {
-                                    status = this.status;
-                                });
-                                if (status === "Failed") {
-                                    $("#success_message_update").css("background-color",
-                                        "rgb(224 114 114)");
-                                    $('#success_message_update').fadeIn().html("Execution Failed");
-                                    setTimeout(function() {
-                                        $('#success_message_update').fadeOut("slow");
-                                    }, 2000);
-                                }
-                                if (status === "saved") {
-                                    $('#container2 > .div_list').map(function() {
-                                        if ($(this).data('version') === "new_item") {
-                                            this.setAttribute('data-version', "old");
-                                        }
-                                    });
+                         if (obj['status'] == 1) {
 
-                                    array_spl = [];
-                                    array_length = 0;
-                                    window.array_length = 0;
+                            $("#status_edit").html("SPL List Saved Successfully");
+                            $("#status_edit").removeClass("badge-danger");
+                            $("#status_edit").addClass("badge-success");
+                            $('#opened_spl').text(spl_title);
+                            $('#opened_spl').attr('data-title', spl_title);
+                            $('#opened_spl').attr('data-opened_spl_status', 1);
+                            $('#opened_spl').attr('data-uuid', obj['uuid']);
+                        } else {
+                            $("#status_edit").html("SPL List wasn't saved  Correctly ");
+                            $("#status_edit").removeClass("badge-success");
+                            $("#status_edit").addClass("badge-danger");
 
-                                    $('#success_message_update').css({
-                                        "background": "#CCF5CC"
-                                    });
-                                    $('#success_message_update').fadeIn().html(
-                                    "SPL saved successfully");
-                                    setTimeout(function() {
-                                        $('#success_message_update').fadeOut("slow");
-                                    }, 2000);
-                                }
+                            $('#opened_spl').attr('data-title', spl_title);
+                            $('#opened_spl').attr('data-opened_spl_status', 0);
+                        }
+
                             } catch (e) {
                                 console.log(e);
                             }
@@ -2579,6 +2606,369 @@
 
             }
         });
+        $(document).on('click', '#save_as_new_spl', function () {
+    let array_spl = [];
+    let items_spl = [];
+    let items_macro = [];
+    let items_marker = [];
+    let items_intermission = [];
+    var title_spl = $('#spl_title').val();
+    var action_type = $('#spl_action').val();
+    if (title_spl == "") {
+        $('#spl_title').next().text("SPL Title can't be empty.");
+    } else {
+        $('#spl_title').next().text(" ");
+        var display_mode = $('#display_mode').val();
+
+        var hfr = 0;
+        if ($('#spl_properties_hfr').is(":checked")) {
+            hfr = 1;
+        }
+        $('#dragula-right > .left-side-item').map(function () {
+            items_macro = [];
+            items_marker = [];
+            items_intermission = [];
+            var edit_rate_denominator = $(this).data('editrate_denominator');
+            var edit_rate_numerator = $(this).data('editrate_numerator');
+            var marco_divs = $(this).find('.macro-box');
+            var marker_divs = $(this).find('.marker-box');
+
+            let intermission_divs = $(this).children('.intermission_list').children('.intermission_style');
+            marco_divs.map(function () {
+                console.log($(this).data('time'));
+                console.log($(this));
+                items_macro.push({
+                    'id': $(this).data('uuid'),
+                    'uuid': $(this).data('uuid'),
+                    'title': $(this).data('title'),
+                    'offset': $(this).data('offset'),
+                    'time': $(this).data('time'),
+                    'time_frames': convertStringToSeconds($(this).data('time')) * edit_rate_numerator / edit_rate_denominator
+                });
+            });
+            if (items_macro.length == 0) {
+                items_macro = null;
+            }
+            marker_divs.map(function () {
+                items_marker.push({
+                    'uuid': $(this).data('uuid'),
+                    'title': $(this).data('title'),
+                    'offset': $(this).data('offset'),
+                    'time': $(this).data('time'),
+                    'time_frames': convertStringToSeconds($(this).data('time')) * edit_rate_numerator / edit_rate_denominator
+
+                });
+            });
+            if (items_marker.length == 0) {
+                items_marker = null;
+            }
+            intermission_divs.map(function () {
+                items_intermission.push({
+                    'uuid': $(this).data('uuid'),
+                    'title': $(this).data('title'),
+                    'offset': $(this).data('offset'),
+                    'time': $(this).data('time'),
+                    'time_frames': convertStringToSeconds($(this).data('time')) * edit_rate_numerator / edit_rate_denominator
+                });
+            });
+            if (items_intermission.length == 0) {
+                items_intermission = null;
+            }
+            array_spl.push($(this).data('uuid'));
+            items_spl.push({
+                'kind': $(this).data('type'),
+                'id': $(this).data('id'),
+                'uuid': $(this).data('uuid'),
+                'source': $(this).data('source'),
+                'title': $(this).data('title'),
+                'IntrinsicDuration': $(this).data('time'),
+                'start_time': $(this).data('starttime'),
+                'time_seconds': $(this).data('time_seconds'),
+                'editrate_denominator': $(this).data('editrate_denominator'),
+                'editrate_numerator': $(this).data('editrate_numerator'),
+                'id_server': $(this).data('id_server'),
+                'macro_list': items_macro,
+                'marker_list': items_marker,
+                'items_intermission': items_intermission
+            });
+        });
+        var array_length = 0;
+        array_length = array_spl.length;
+
+
+        if (array_length > 0) {
+
+            var spl_title = $('#spl_title').val();
+
+            var display_mode = $('#display_mode').val();
+            $('#opened_spl').attr('data-mod', display_mode);
+            var hfr = 0;
+            if ($('#spl_properties_hfr').is(":checked")) {
+                hfr = 1;
+                $('#opened_spl').attr('data-hfr', 1);
+            } else {
+                $('#opened_spl').attr('data-hfr', 0);
+            }
+
+            //console.log(items_spl);
+            $.ajax({
+
+                url:"{{  url('') }}"+ "/createlocalspl",
+                type: 'post',
+                cache: false,
+                data: {
+                    array_spl: array_spl,
+                    title_spl: spl_title,
+                    display_mode: display_mode,
+                    action_type: action_type,
+                    hfr: hfr,
+                    action_control: "save_as_new_spl",
+                    items_spl: items_spl,
+                     "_token": "{{ csrf_token() }}",
+
+
+                },
+                success: function (response) {
+                    try {
+                        var obj = JSON.parse(response);
+                        if (obj['status'] == 1) {
+
+                            $("#status_edit").html("SPL List Saved Successfully");
+                            $("#status_edit").removeClass("badge-danger");
+                            $("#status_edit").addClass("badge-success");
+                            $('#opened_spl').text(spl_title);
+                            $('#opened_spl').attr('data-title', spl_title);
+                            $('#opened_spl').attr('data-opened_spl_status', 1);
+                            $('#opened_spl').attr('data-uuid', obj['uuid']);
+                        } else {
+                            $("#status_edit").html("SPL List wasn't saved  Correctly ");
+                            $("#status_edit").removeClass("badge-success");
+                            $("#status_edit").addClass("badge-success");
+
+                            $('#opened_spl').attr('data-title', spl_title);
+                            $('#opened_spl').attr('data-opened_spl_status', 0);
+                        }
+
+
+                    } catch (e) {
+                        console.log(e);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                },
+                complete: function (jqXHR, textStatus) {
+                }
+            });
+        }
+        array_spl = [];
+        window.array_length = 0;
+        $("#save_spl_form").trigger('reset');
+
+
+    }
+});
+
+$(document).on('click', '#save_edited_spl', function () {
+    let array_spl = [];
+    let items_spl = [];
+    let items_macro = [];
+    let items_marker = [];
+    let items_intermission = [];
+    var title_spl = $('#spl_title').val();
+    var action_type = $('#spl_action').val();
+    if (title_spl == "") {
+        $('#spl_title').next().text("SPL Title can't be empty.");
+    } else {
+        $('#spl_title').next().text(" ");
+        var display_mode = $('#display_mode').val();
+
+        var hfr = 0;
+        if ($('#spl_properties_hfr').is(":checked")) {
+            hfr = 1;
+        }
+        $('#dragula-right > .left-side-item').map(function () {
+            items_macro = [];
+            items_marker = [];
+            items_intermission = [];
+            var edit_rate_denominator = $(this).data('editrate_denominator');
+            var edit_rate_numerator = $(this).data('editrate_numerator');
+            var marco_divs = $(this).find('.macro-box');
+            var marker_divs = $(this).find('.marker-box');
+
+            let intermission_divs = $(this).children('.intermission_list').children('.intermission_style');
+            marco_divs.map(function () {
+                console.log($(this).data('time'));
+                console.log($(this));
+                items_macro.push({
+                    'id': $(this).data('uuid'),
+                    'uuid': $(this).data('uuid'),
+                    'title': $(this).data('title'),
+                    'offset': $(this).data('offset'),
+                    'time': $(this).data('time'),
+                    'time_frames': convertStringToSeconds($(this).data('time')) * edit_rate_numerator / edit_rate_denominator
+                });
+            });
+            if (items_macro.length == 0) {
+                items_macro = null;
+            }
+            marker_divs.map(function () {
+                items_marker.push({
+                    'uuid': $(this).data('uuid'),
+                    'title': $(this).data('title'),
+                    'offset': $(this).data('offset'),
+                    'time': $(this).data('time'),
+                    'time_frames': convertStringToSeconds($(this).data('time')) * edit_rate_numerator / edit_rate_denominator
+
+                });
+            });
+            if (items_marker.length == 0) {
+                items_marker = null;
+            }
+            intermission_divs.map(function () {
+                items_intermission.push({
+                    'uuid': $(this).data('uuid'),
+                    'title': $(this).data('title'),
+                    'offset': $(this).data('offset'),
+                    'time': $(this).data('time'),
+                    'time_frames': convertStringToSeconds($(this).data('time')) * edit_rate_numerator / edit_rate_denominator
+                });
+            });
+            if (items_intermission.length == 0) {
+                items_intermission = null;
+            }
+            array_spl.push($(this).data('uuid'));
+            items_spl.push({
+                'kind': $(this).data('type'),
+                'id': $(this).data('id'),
+                'uuid': $(this).data('uuid'),
+                'source': $(this).data('source'),
+                'title': $(this).data('title'),
+                'IntrinsicDuration': $(this).data('time'),
+                'start_time': $(this).data('starttime'),
+                'time_seconds': $(this).data('time_seconds'),
+                'editrate_denominator': $(this).data('editrate_denominator'),
+                'editrate_numerator': $(this).data('editrate_numerator'),
+                'id_server': $(this).data('id_server'),
+                'macro_list': items_macro,
+                'marker_list': items_marker,
+                'items_intermission': items_intermission
+            });
+        });
+        var array_length = 0;
+        array_length = array_spl.length;
+
+
+        if (array_length > 0) {
+            var action_control = "edit_existing_spl";
+            var spl_title = $('#spl_title').val();
+            var spl_uuid_edit = $('#spl_uuid_edit').val();
+            var file_name = $('#file_name').val();
+            var display_mode = $('#display_mode').val();
+            $('#opened_spl').attr('data-mod', display_mode);
+            var hfr = 0;
+            if ($('#spl_properties_hfr').is(":checked")) {
+                hfr = 1;
+                $('#opened_spl').attr('data-hfr', 1);
+            } else {
+                $('#opened_spl').attr('data-hfr', 0);
+            }
+            $('#opened_spl').text(spl_title);
+
+
+            $('#opened_spl').attr('data-title', spl_title);
+
+
+            //console.log(items_spl);
+            $.ajax({
+
+
+                type: 'post',
+                cache: false,
+
+
+                url:"{{  url('') }}"+ "/createlocalspl",
+                type: 'post',
+                cache: false,
+                data: {
+                    array_spl: array_spl,
+                    title_spl: spl_title,
+                    spl_uuid_edit: spl_uuid_edit,
+                    display_mode: display_mode,
+                    action_type: action_type,
+                    hfr: hfr,
+                    action_control: action_control,
+                    items_spl: items_spl,
+                     "_token": "{{ csrf_token() }}",
+                },
+                success: function (response) {
+                    try {
+                        console.log(response);
+                        var obj = JSON.parse(response);
+                        // $('#actual_spl_title').text(title_spl);
+                        // $('#id_spl_opened').text(obj['uuid']);
+                        $('#opened_spl').attr('data-uuid', obj.uuid);
+                        if (obj.status == "1") {
+                            $("#status_edit").html("SPL List Edited Successfully");
+                            $("#status_edit").removeClass("badge-danger");
+                            $("#status_edit").addClass("badge-success");
+                            $("#available_on_after_edit").html(" ");
+                            $("#auto_ingest_on_after_edit").html("");
+                            if (obj.auto_ingest == "0") {
+                                var list_available_in = obj.available_in;
+                                var available_on = "";
+
+                                $("#auto_ingest_on_after_edit").html(
+                                    '<div class="col-md-12 style-modal-edit"  >PlayListBuilder Auto Ingest Offline'+'</div>'+
+                                    '<div class="col-md-12 style-modal-edit">SPL Title : <span data-uuid="'+obj.uuid+'">'+obj.title+'</span> </div>'+
+                                    '<div class="col-md-12">  Available in the below screens : </div>'
+                                     );
+                                for (var i = 0; i < list_available_in.length; i++) {
+                                    available_on+=
+                                        '<div class="row style-modal-edit item-available_in" data-id="'+list_available_in[i].id_server+'">' +
+                                          '<div class="col-md-4">'+list_available_in[i].server_name+'</div>' +
+                                           (list_available_in[i].session_id !== null ? "<div class='col-md-4' style='color:green'>Screen Online</div>"
+                                              :"<div  class='col-md-4'  style='color:red'>Screen Offline</div>"
+                                          ) +
+                                        '</div>';
+                                }
+                                $("#available_on_after_edit").html(available_on);
+                                $("#parent_upload_spl_after_edit").removeClass('hide_div');
+                                $("#block_edit_spl").addClass('hide_div');
+
+                            }
+                        } else {
+                            $("#status_edit").html("SPL List wasn't Updated Correctly ");
+                            $("#status_edit").removeClass("badge-success");
+                            $("#status_edit").addClass("badge-success");
+                        }
+
+
+                        array_spl = [];
+                        array_length = 0;
+                        window.array_length = 0;
+
+
+                    } catch (e) {
+                        console.log(e);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                },
+                complete: function (jqXHR, textStatus) {
+                }
+            });
+        }
+        array_spl = [];
+        window.array_length = 0;
+        $("#save_spl_form").trigger('reset');
+
+
+    }
+});
+
+
 
         $(document).on('input', '#spl_title', function() {
             checkAvailability();
@@ -2687,6 +3077,7 @@
                 var spl_uuid = $("#id_spl_delete").val();
                 deleteSplSelected(spl_uuid);
                 $("#delete-spl").modal("hide");
+                get_spl_list_data()
             });
         });
 

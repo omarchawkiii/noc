@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title')
-    connexion
+    Performance Logs
 @endsection
 @section('content')
 

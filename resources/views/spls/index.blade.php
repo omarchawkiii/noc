@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title') connexion  @endsection
+@section('title') Show Playlist  @endsection
 @section('content')
     <div class="page-header playlistbuilder-shadow">
         <h3 class="page-title">SPLS </h3>

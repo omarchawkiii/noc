@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title') connexion  @endsection
+@section('title') Schedules  @endsection
 @section('content')
     <div class="page-header scheduler-shadow">
         <h3 class="page-title">Schedules </h3>

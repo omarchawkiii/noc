@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title')
-    connexion
+    Ingester Sources
 @endsection
 @section('content')
     <div class="page-header user-shadow">

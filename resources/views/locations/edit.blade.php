@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title') connexion  @endsection
+@section('title') Edit Location  @endsection
 @section('content')
 
 <div class="jq-toast-wrap top-right">

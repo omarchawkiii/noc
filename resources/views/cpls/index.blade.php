@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title') connexion  @endsection
+@section('title') Composition Playlist  @endsection
 @section('content')
     <div class="page-header playlistbuilder-shadow">
         <h3 class="page-title">CPLS </h3>
@@ -61,7 +61,7 @@
                                 <option value="null">Multiplex</option>
                                 <option value="linked">Linked</option>
                                 <option value="unlinked">Unlinked</option>
-                                <option value="Flate">Flate</option>
+                                <option value="Flat">Flat</option>
                                 <option value="Scope">Scope</option>
                                 <option value="Encryped">Encryped</option>
                                 <option value="NoEncryped">Non Encryped</option>
@@ -887,7 +887,7 @@ function formatSize(sizeInBytes) {
 
 
                             playable =""
-                            if(value.playable == 1)
+                            if(value.playable == 1 || lms == true )
                             {
                                 playable = "bg-playable" ;
                             }
@@ -902,13 +902,25 @@ function formatSize(sizeInBytes) {
                                 }else{
                                     encrypted="<i class=\"cpl_need_kdm mdi btn-success mdi-lock-outline p-1 m-1 rounded\"  ></i> ";
                                 }
-
-
-                                var style = (value.pictureEncryptionAlgorithm == "Flat") ? "color:#52d4f7;" :
-                                (value.pictureEncryptionAlgorithm == "Scope") ? "color:#36ffb9;" :
+                                var style = "" ;
+                                if(value.type == "Flat")
+                                {
+                                    style = "color:#52d4f7;" ;
+                                }
+                                else if(value.type == "Scope")
+                                {
+                                    style = "color:#36ffb9;" ;
+                                }
+                                else
+                                {
+                                    style = "color:white;" ;
+                                }
+                               /* var style = (value.type == "Flat") ? "color:#52d4f7;" :
+                                (value.type == "Scope") ? "color:#36ffb9;" :
                                     "color:white;";
+                                    */
 
-                                var title= '<span '+style+'>' + value.contentTitleText +
+                                var title= '<span style="'+style+'"">' + value.contentTitleText +
                                     encrypted +
                                     (value.cpl_is_linked == "1" ? ' <span class=\"mdi mdi-calendar-clock custom-calendar p-1 m-1 btn-primary rounded\"  ></span>':"  ")
                                     +

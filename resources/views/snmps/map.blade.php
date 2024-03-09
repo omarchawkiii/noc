@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title')
-    connexion
+    Dashboard
 @endsection
 @section('content')
     <div class="page-header playbck-shadow">

@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title') connexion  @endsection
+@section('title') Create Location  @endsection
 @section('content')
     <div class="page-header playbck-shadow">
         <h3 class="page-title "> Location </h3>

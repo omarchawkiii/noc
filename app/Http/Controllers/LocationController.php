@@ -205,9 +205,6 @@ class LocationController extends Controller
         echo "All schedules imported<br />" ;
     }
 
-
-
-
     public function refresh_content_of_location( $location)
     {
         $start_time = Carbon::now();
@@ -536,13 +533,15 @@ class LocationController extends Controller
             {
                 foreach($contents as $content)
                 {
+
                     if($content)
                     {
                         foreach($content as $cpl_content)
                         {
                             splcomponents::updateOrCreate([
-                                'id_splcomponent' => $cpl_content['id'],
-                                'location_id' => $location->id
+                                'uuid_spl' => $cpl_content['uuid_spl'],
+                                'CompositionPlaylistId' => $cpl_content['CompositionPlaylistId'],
+                               // 'location_id' => $location->id
                             ],[
                                 'id_splcomponent' => $cpl_content['id'],
                                 'CompositionPlaylistId' => $cpl_content['CompositionPlaylistId'],
@@ -551,18 +550,20 @@ class LocationController extends Controller
                                 'editRate_numerator' => $cpl_content['editRate_numerator'],
                                 'editRate_denominator' => $cpl_content['editRate_denominator'],
                                 'uuid_spl' => $cpl_content['uuid_spl'],
-                                'spl_id' => $spl->id,
-                                'location_id'     =>$location->id,
+                                //'spl_id' => $spl->id,
+                                //'location_id'     =>$location->id,
                             ]);
 
                         }
                     }
                 }
 
-                if(count($contents) != $spl->splcomponents->count() )
+                $splcomponents = splcomponents::where('uuid_spl',$spl->uuid)->get() ;
+                //dd($splcomponents) ;
+                if(count($contents) != count($splcomponents) )
                 {
                     $uuid_spls = array_column($content, 'id');
-                        foreach($spl->splcomponents as $splcomponent)
+                        foreach($splcomponents as $splcomponent)
                         {
                             if (! in_array( $splcomponent->id_splcomponent , $uuid_spls))
                             {
@@ -580,9 +581,7 @@ class LocationController extends Controller
     public function sync_lms_spl_cpl( $location )
     {
         $lms_spls = Lmsspl::all() ;
-
         $location = Location::find($location) ;
-
         foreach($lms_spls as $lms_spl)
         {
             $url = $location->connection_ip."?request=getCplsBySpl&spl_uuid=".$lms_spl->uuid;
@@ -611,8 +610,6 @@ class LocationController extends Controller
                     }
                 }
             }
-
-
 
         }
     }

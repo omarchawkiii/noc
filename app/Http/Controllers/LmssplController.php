@@ -64,7 +64,7 @@ class LmssplController extends Controller
     {
         $spl = Lmsspl::find($spl) ;
         //$cpls = $spl->lmscpls ;
-        $cpls = splcomponents::where('uuid_spl',$spl->uuid)->where('location_id',$spl->location_id)->get() ;
+        $cpls = splcomponents::where('uuid_spl',$spl->uuid)->get() ;
       //  $schedules =  $spl->schedules ;
         $schedules =null ; //Schedule::with('screen')->where('spl_id',$spl->id)->get();
         return Response()->json(compact('spl','cpls','schedules'));
