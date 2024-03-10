@@ -13,7 +13,9 @@ use App\Models\splcomponents;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 
 class ScheduleContoller extends Controller
@@ -284,6 +286,96 @@ class ScheduleContoller extends Controller
         }
         return Response()->json(compact('missing_kdms'));
 
+    }
+
+
+    public function get_schedule_infos(Request $request)
+    {
+        $cpls_with_kdms=array() ;
+        $schedule = Schedule::with('screen')->where('id',  $request->schedule_idd)->first() ;
+
+
+        $spl = Spl::where('uuid',$schedule->uuid_spl)->where('screen_id',$schedule->screen_id)->where('location_id',$schedule->location_id)->first() ;
+        if($spl)
+        {
+            $cpls_from_splcomponent = splcomponents::where('uuid_spl',$spl->uuid)->get() ;
+
+            foreach($cpls_from_splcomponent as $cpl_from_splcomponent)
+            {
+                $cpl = Cpl::where('uuid',$cpl_from_splcomponent->CompositionPlaylistId)->where('location_id',$schedule->location_id)->first() ;
+
+                $kdm_infos = array() ;
+                if($cpl == null)
+                {
+                    $cpl_present = "No" ;
+                // array_push($missing_cpls,array("uuid" => $cpl_from_splcomponent->CompositionPlaylistId, "contentTitleText" => $cpl_from_splcomponent->AnnotationText, "playable" => 1) ) ;
+                }
+
+                else
+                {
+                    $cpl_present = "Yes" ;
+                    if($cpl->playable != 1)
+                    {
+                        //array_push($unplayable_cpls,array("uuid" => $cpl->uuid, "contentTitleText" => $cpl->contentTitleText, "playable" => $cpl->playable) ) ;
+                        $cpl_playable = "No" ;
+                    }
+                    else
+                    {
+                        $cpl_playable = "Yes" ;
+                    }
+                }
+
+                if($cpl != null )
+                {
+                    if($cpl->pictureEncryptionAlgorithm != "None")
+                    {
+                        $kdm = Kdm::where('cpl_id',$cpl->id)->where('screen_id', $schedule->screen_id )->first() ;
+
+                        if($kdm->count() == 0)
+                        {
+                            $kdm_response = "KDM Missing" ;
+                        }
+                        else
+                        {
+
+                            if($schedule->kdm_status =="not_valid_yet")
+                            {
+                                $kdm_status = '<button  type="button" class="btn btn-warning btn-fw get_schedule_infos"> KDM Valide in :  '.$schedule->date_expired.'</button>' ;
+                            }
+                            if($schedule->kdm_status =="expired")
+                            {
+                                $kdm_status = '<button type="button" class="btn btn-danger get_schedule_infos  btn-fw"> KDM Already Expired : '.$schedule->date_expired.'</button>';
+                            }
+                            if($schedule->kdm_status =="warning")
+                            {
+                                $kdm_status = '<button type="button" class="btn btn-warning get_schedule_infos btn-fw">KDM Expired in : '.$schedule->date_expired.'</button>';
+                            }
+                            if($schedule->kdm_status =="valid")
+                            {
+                                $kdm_status = '<button type="button" class="btn btn-success get_schedule_infos btn-fw"> KDM Expired in  : '.$schedule->date_expired.'</button>';
+                            }
+
+                            $kdm_response = "KDM Available" ;
+                            $kdm_infos ['kdm_uuid'] = $kdm->uuid ;
+                            $kdm_infos ['device_target'] = $kdm->device_target ;
+                        //  $kdm_infos ['ContentKeysNotValidBefore'] = $kdm->ContentKeysNotValidBefore ;
+                            $kdm_infos ['kdm_status'] = $kdm_status ;
+                        }
+                    }
+                    else
+                    {
+                        $kdm_response = "Non Encrypted" ;
+                    }
+                }
+                array_push($cpls_with_kdms,array("title" => $cpl->contentTitleText, "cpl_present" => $cpl_present , "cpl_playable" => $cpl_playable , "cpl_uuid" => $cpl->uuid , "available_on" => $cpl->available_on , "kdm" => $kdm_response , 'kdm_infos' =>$kdm_infos) ) ;
+            }
+        }
+        else
+        {
+            $cpls_with_kdms = null ;
+            $spl =null ;
+        }
+        return Response()->json(compact('cpls_with_kdms', 'spl' , 'schedule'));
     }
 
 }

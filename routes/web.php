@@ -76,6 +76,7 @@ Route::get('get_schedules_with_filter', [App\Http\Controllers\ScheduleContoller:
 Route::get('get_unlinked_spl', [App\Http\Controllers\ScheduleContoller::class , 'get_unlinked_spl'])->name('schedules.get_unlinked_spl')->middleware(['auth']);
 Route::get('get_need_kdm', [App\Http\Controllers\ScheduleContoller::class , 'get_need_kdm'])->name('schedules.get_need_kdm')->middleware(['auth']);
 
+Route::get('get_schedule_infos', [App\Http\Controllers\ScheduleContoller::class , 'get_schedule_infos'])->name('schedules.get_schedule_infos')->middleware(['auth']);
 
 
 Route::get('lmsspls/{location}/getlmsspls', [App\Http\Controllers\LmssplController::class , 'getlmsspls'])->name('lmsspls.getlmsspls');

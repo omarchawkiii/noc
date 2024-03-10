@@ -432,6 +432,131 @@
     </div>
 
 
+    <!-- schedule Info -->
+
+
+    <div class=" modal fade " id="sessions_details_modal" role="dialog" aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered  modal-xl" >
+            <div class="modal-content border-0">
+
+                <div class="modal-header">
+                    <h5>Session Details </h5>
+                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
+                </div>
+                <div class="modal-body ">
+                    <div class=" border row">
+                        <div class="card-body col-md-4">
+                            <div class="media  justify-content-start">
+                                <div class="media-body d-flex align-items-center">
+                                    <i class=" mdi mdi-star icon-sm align-self-center me-3"></i>
+                                    <h6 class="mb-1 custom-text">SPL Title :   <span id="spl_title_details">PEMANDI JENAZAH [7-3]</span> </h6>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="card-body col-md-5">
+                            <div class="media  d-flex justify-content-start">
+                                <div class="media-body d-flex align-items-center">
+                                    <i class="mdi mdi-star icon-sm align-self-center me-3"></i>
+                                    <h6 class="mb-1 custom-text" style="text-align: left!important;font-size: 13px">SPL UUID :   <span id="details_spl_uuid">urn:uuid:555b13dd-3dd0-4656-a87f-7805996e3933</span></h6>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="card-body col-md-3">
+                            <div class="media  d-flex justify-content-start">
+                                <div class="media-body d-flex align-items-center">
+                                    <i class="mdi mdi-star icon-sm align-self-center me-3"></i>
+                                    <h6 class="mb-1 custom-text">Screen : <span id="session_screen_details">4</span></h6>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" border row">
+                        <div class="card-body col-md-4">
+                            <div class="media  justify-content-start">
+                                <div class="media-body d-flex align-items-center">
+                                    <i class=" mdi mdi-star icon-sm align-self-center me-3"></i>
+                                    <h6 class="mb-1 custom-text">Session Start : <span id="session_start_details">2024-03-09 16:45:00</span> </h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body col-md-4">
+                            <div class="media  d-flex justify-content-start">
+                                <div class="media-body d-flex align-items-center">
+                                    <i class="mdi mdi-star icon-sm align-self-center me-3"></i>
+                                    <h6 class="mb-1 custom-text">Session End : <span id="session_end_details">2024-03-09 18:46:50</span></h6>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="card-body col-md-4">
+                            <div class="media  d-flex justify-content-start">
+                                <div class="media-body d-flex align-items-center">
+                                    <i class="mdi mdi-star icon-sm align-self-center me-3"></i>
+                                    <h6 class="mb-1 custom-text">Type :  <span id="session_type_details">POS</span></h6>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" border row">
+                        <div class=" row  ">
+                            <!--<h4 class="card-title col-md-7 " style="padding-bottom: 8px;   margin-top: 20px; text-align: left">
+                                <i class="mdi mdi-star icon-sm align-self-center me-3"></i>
+                                Current CPL : <span id="current_cpl_details" style="font-size: 15px"> </span> <span id="current_cpl_playback_details"> </span>
+                            </h4>
+
+                            <h4 class="card-title col-md-5 " style="margin-top: 28px;">
+                                <div class="progress " style="height: 19px">
+                                    <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" style="height: 19px ; width: 0%; " id="progress_play_details" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100">0%</div>
+                                </div>
+                                <div class="d-flex justify-content-between mt-2 col-12">
+                                    <small id="details_elapsed_runtime"> </small>
+                                    <small id="details_remaining_runtime"> </small>
+                                </div>
+                            </h4>-->
+                            <h4 class="card-title col-md-4 " style="margin-top: 20px;">
+                                <span class="mdi mdi-filmstrip   monitor-icons btn btn-primary " style="border-bottom: 1px solid white;margin-right: 7px; font-size: 24px;  padding: 4px;"></span>
+                                <span style="border-bottom: 1px solid white;padding-bottom: 8px;">Composition Playlist :</span>
+                            </h4>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table" id="table_cpls_details">
+                                <thead>
+                                    <tr>
+                                        <th> Title</th>
+                                        <th>CPL Present</th>
+                                        <th style="z-index: 999999;">Playable</th>
+                                        <th>KDM</th>
+                                        <th> CompositionPlaylistId</th>
+                                        <th> Content Available On</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="body_cpls_details" style="height: 600px;max-height: 600px;overflow-y: scroll">
+                                    <tr style="  ">
+                                        <td class="text-white">Pemandijenaza_FTR-V1_S_IND-en_MLY_71_2K_ST_20240221_RIC_IOP_VF</td>
+                                        <td class="text-white" style="font-weight: bold;font-size: 15px;color:#00d25b!important "> YES </td>
+                                        <td class="text-white custom-td" style="font-weight: bold;font-size: 15px;color:#00d25b!important "> YES  </td>
+                                        <td class="text-white" style="color: white!important">  <span style="color:#00d25b">KDM Available </span> <hr class="custom-hr"> KDM UUID : urn:uuid:2514183c-dbcf-4ba0-a359-02644c016d7a <hr class="custom-hr"> Device Target : IMS3000 <hr class="custom-hr"> <span class="btn btn-danger notes ">KDM Already Expired :2024-03-06 15:59:00</span> </td>
+                                        <td style="color: white!important">urn:uuid:9b1d037d-e822-408b-b408-ce024a303c1c</td>
+                                        <td class="text-white"> BEAN-02, S-1, S-2, S-3, S-4, S-5, S-6, S-7, S-8, S-9 </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--end modal-content-->
+        </div>
+    </div>
+
+
+
+
 
 @endsection
 
@@ -603,19 +728,19 @@
                         }
                         if(value.kdm_status =="not_valid_yet")
                         {
-                            statu_content = '<button type="button" class="btn btn-warning btn-fw"> KDM Valide in :  '+value.date_expired+'</button>'
+                            statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-warning btn-fw get_schedule_infos"> KDM Valide in :  '+value.date_expired+'</button>'
                         }
                         if(value.kdm_status =="expired")
                         {
-                            statu_content = '<button type="button" class="btn btn-danger  btn-fw"> KDM Already Expired : '+value.date_expired+'</button>'
+                            statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-danger get_schedule_infos  btn-fw"> KDM Already Expired : '+value.date_expired+'</button>'
                         }
                         if(value.kdm_status =="warning")
                         {
-                            statu_content = '<button type="button" class="btn btn-warning btn-fw">KDM Expired in : '+value.date_expired+'</button>'
+                            statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-warning get_schedule_infos btn-fw">KDM Expired in : '+value.date_expired+'</button>'
                         }
                         if(value.kdm_status =="valid")
                         {
-                            statu_content = '<button type="button" class="btn btn-success  btn-fw"> KDM Expired in  : '+value.date_expired+'</button>'
+                            statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-success get_schedule_infos btn-fw"> KDM Expired in  : '+value.date_expired+'</button>'
                         }
 
                         result = result
@@ -757,20 +882,22 @@
                         }
                         if(value.kdm_status =="not_valid_yet")
                         {
-                            statu_content = '<button type="button" class="btn btn-warning btn-fw"> KDM Valide in :  '+value.date_expired+'</button>'
+                            statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-warning btn-fw get_schedule_infos"> KDM Valide in :  '+value.date_expired+'</button>'
                         }
                         if(value.kdm_status =="expired")
                         {
-                            statu_content = '<button type="button" class="btn btn-danger  btn-fw"> KDM Already Expired : '+value.date_expired+'</button>'
+                            statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-danger get_schedule_infos  btn-fw"> KDM Already Expired : '+value.date_expired+'</button>'
                         }
                         if(value.kdm_status =="warning")
                         {
-                            statu_content = '<button type="button" class="btn btn-warning btn-fw">KDM Expired in : '+value.date_expired+'</button>'
+                            statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-warning get_schedule_infos btn-fw">KDM Expired in : '+value.date_expired+'</button>'
                         }
                         if(value.kdm_status =="valid")
                         {
-                            statu_content = '<button type="button" class="btn btn-success  btn-fw"> KDM Expired in  : '+value.date_expired+'</button>'
+                            statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-success get_schedule_infos btn-fw"> KDM Expired in  : '+value.date_expired+'</button>'
                         }
+
+
                         result = result
                             +'<tr class="odd ">'
                             +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.type+' </td>'
@@ -1278,6 +1405,83 @@
 
         });
 
+        // get schedule infos
+        $(document).on('click', '.get_schedule_infos', function ()
+        {
+            var schedule_idd = $(this).attr('data-scheduleidd') ;
+            var location =  $('#location').val();
+            var url = "{{  url('') }}"+   "/get_schedule_infos";
+            $('#sessions_details_modal').modal('show') ;
+            $.ajax({
+                url:url,
+                method: 'GET',
+                cache: false,
+                data: {
+                    schedule_idd: schedule_idd,
+                    location:location,
+                    "_token": "{{ csrf_token() }}",
+                },
+                success: function (response) {
+                   //alert(response.spl)
+                    if(response.spl == null)
+                    {
+                        $('.modal-body').html('No Data') ;
+                    }
+                    else
+                    {
+                        $('#spl_title_details').html(response.spl.name)
+                        $('#details_spl_uuid').html(response.spl.uuid)
+                        $('#session_screen_details').html(response.schedule.screen.screen_name)
+                        $('#session_start_details').html(response.schedule.date_start)
+                        $('#session_end_details').html(response.schedule.date_end)
+                        $('#session_type_details').html(response.schedule.type)
+                        var result ="" ;
+                        $.each(response.cpls_with_kdms, function( index, value ) {
+                            var kdm_data_info ="" ;
+
+                            if(value.kdm_infos.length !=0)
+                            {
+                                kdm_data_info ='<span style="color:#00d25b">KDM Available </span>'
+                                            +'<hr class="custom-hr">'
+                                            +'KDM UUID : '+value.kdm_infos['kdm_uuid'] +' '
+                                            +'<hr class="custom-hr">'
+                                            +' Device Target : '+value.kdm_infos['device_target'] +' '
+                                            +'<hr class="custom-hr">'
+                                            +'<span class="">'+value.kdm_infos['kdm_status'] +'</span>'
+                            }
+                            else
+                            {
+                                kdm_data_info =value.kdm ;
+                            }
+                            result = result
+
+                                +'<tr class="odd ">'
+                                +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.title+' </td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.cpl_present+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.cpl_playable+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+kdm_data_info+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.cpl_uuid+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.available_on+'</a></td>'
+
+
+                                +'</tr>';
+
+                        });
+                        $('#body_cpls_details').html(result)
+                    }
+
+
+                    console.log(response)
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                },
+                complete: function (jqXHR, textStatus) {
+                }
+            });
+
+        })
+
 
 
     })(jQuery);
@@ -1610,19 +1814,19 @@
                         }
                         if(value.kdm_status =="not_valid_yet")
                         {
-                            statu_content = '<button type="button" class="btn btn-warning btn-fw"> KDM Valide in :  '+value.date_expired+'</button>'
+                            statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-warning btn-fw get_schedule_infos"> KDM Valide in :  '+value.date_expired+'</button>'
                         }
                         if(value.kdm_status =="expired")
                         {
-                            statu_content = '<button type="button" class="btn btn-danger  btn-fw"> KDM Already Expired : '+value.date_expired+'</button>'
+                            statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-danger get_schedule_infos  btn-fw"> KDM Already Expired : '+value.date_expired+'</button>'
                         }
                         if(value.kdm_status =="warning")
                         {
-                            statu_content = '<button type="button" class="btn btn-warning btn-fw">KDM Expired in : '+value.date_expired+'</button>'
+                            statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-warning get_schedule_infos btn-fw">KDM Expired in : '+value.date_expired+'</button>'
                         }
                         if(value.kdm_status =="valid")
                         {
-                            statu_content = '<button type="button" class="btn btn-success  btn-fw"> KDM Expired in  : '+value.date_expired+'</button>'
+                            statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-success get_schedule_infos btn-fw"> KDM Expired in  : '+value.date_expired+'</button>'
                         }
                         result = result
                             +'<tr class="odd ">'
@@ -1738,19 +1942,19 @@
                         }
                         if(value.kdm_status =="not_valid_yet")
                         {
-                            statu_content = '<button type="button" class="btn btn-warning btn-fw"> KDM Valide in :  '+value.date_expired+'</button>'
+                            statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-warning btn-fw get_schedule_infos"> KDM Valide in :  '+value.date_expired+'</button>'
                         }
                         if(value.kdm_status =="expired")
                         {
-                            statu_content = '<button type="button" class="btn btn-danger  btn-fw"> KDM Already Expired : '+value.date_expired+'</button>'
+                            statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-danger get_schedule_infos  btn-fw"> KDM Already Expired : '+value.date_expired+'</button>'
                         }
                         if(value.kdm_status =="warning")
                         {
-                            statu_content = '<button type="button" class="btn btn-warning btn-fw">KDM Expired in : '+value.date_expired+'</button>'
+                            statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-warning get_schedule_infos btn-fw">KDM Expired in : '+value.date_expired+'</button>'
                         }
                         if(value.kdm_status =="valid")
                         {
-                            statu_content = '<button type="button" class="btn btn-success  btn-fw"> KDM Expired in  : '+value.date_expired+'</button>'
+                            statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-success get_schedule_infos btn-fw"> KDM Expired in  : '+value.date_expired+'</button>'
                         }
                         result = result
                             +'<tr class="odd ">'
@@ -1806,4 +2010,328 @@
         display: none !important ;
     }
 </style>
+
+<style>
+    .custom-td {
+        display: block;
+        text-decoration: none;
+        font-size: 0.9375rem;
+        position: relative;
+        padding: 0.75rem 1.7rem 0.75rem 1.25rem;
+        padding-right: 1.7rem;
+        color: #ffffff;
+        font-weight: 500;
+    }
+
+    .custom-hr {
+        width: 50%;
+        margin-top: 9px;
+        margin-bottom: 9px;
+        color: white;
+        height: 1px;
+    }
+
+    .notes {
+        font-weight: bold;
+    }
+
+    .custom-btn {
+        font-weight: bold;
+        font-size: 17px;
+    }
+
+    #ingest_result {
+        height: 400px;
+        max-height: 400px;
+        overflow-y: scroll;
+        overflow-x: hidden;
+    }
+
+    #list_servers li button {
+        width: 171px !important;
+    }
+
+    #list_servers {
+        list-style: none;
+    }
+
+    #list_servers li {
+        float: left;
+        font-size: 20px;
+
+        margin: 3px;
+    }
+
+    #list_servers .custom-check {
+        line-height: 2 !important;
+        font-size: 17px !important;
+    }
+
+    .select2-container--open {
+        z-index: 9999; /* Adjust z-index as needed */
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        background-color: #007bff;
+        border: 1px solid #aaa;
+        border-radius: 4px;
+        cursor: default;
+        float: left;
+        margin-right: 5px;
+        margin-top: 5px;
+        font-size: 14px;
+        padding: 4px;
+        font-weight: bold;
+    }
+
+    /*calendar */
+
+    #schedule {
+        display: grid;
+        grid-template-rows: 30px repeat(4, 1fr);
+
+        grid-template-columns: repeat(289, 1fr);
+        border: 1px solid black;
+
+        max-width: 2000px;
+        width: 2000px;
+
+        flex-grow: 1;
+        position: relative;
+
+        padding: 0px;
+
+        /* adjust as needed */
+    }
+
+
+    .time-header, .auditorium {
+        border: 1px solid black;
+        text-align: center;
+        position: sticky;
+    }
+
+    .time-header {
+        border: 1px solid black;
+        text-align: center;
+        font-size: 11px;
+        color: #e8e5e5;
+        position: sticky;
+        top: 0;
+
+    }
+
+    .fixed-width {
+        width: 10px;
+        font-size: 6px;
+    }
+
+    .cell > .event {
+        grid-row: unset;
+        grid-column: unset;
+    }
+
+    .auditorium, .cell {
+        border: 1px solid #0000004f;
+        text-align: center;
+        height: 52px;
+        color: white;
+        padding: 2px;
+    }
+
+    .close-icon {
+        cursor: pointer;
+
+        font-size: 22px;
+        width: 5%;
+        float: right;
+        margin: 2px;
+        margin-top: -2px;
+
+        color: #8b2424;
+    }
+
+    .cell.event-container {
+        border: none;
+    }
+
+    .type_session_calendar {
+        position: relative;
+        top: -3px;
+        font-size: 15px;
+        font-weight: bolder;
+        margin: 3px;
+        float: left;
+    }
+
+    .event {
+        cursor: pointer;
+        border: 1px solid black;
+        text-align: center;
+        width: 100%;
+        overflow: hidden;
+        float: left;
+    }
+
+    .auditorium-header {
+        left: 0;
+        width: 109px;
+        text-align: center;
+        line-height: 4;
+    }
+
+    .header-hours {
+        border: 1px solid #b1ffc67a;
+        line-height: 2;
+        font-size: 13px;
+        z-index: 999999999 !important;
+    }
+
+    .sticky-header {
+        position: -webkit-sticky; /* For Safari */
+        position: sticky;
+        z-index: 10; /* optional, to ensure headers are displayed above other content */
+    }
+
+    .sticky-header.hour {
+
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        border: 1px solid #b1ffc67a;
+    }
+
+    .sticky-header.min {
+        top: 20px; /* Adjust this value based on the height of the "hours" row */
+    }
+
+    .header-minutes {
+        height: 25px !important;
+    }
+
+    .time-header {
+        top: 0;
+    }
+
+    .current-time {
+        ont-weight: bold;
+        font-size: 12px;
+        margin-top: 12px;
+        display: block;
+        color: #dbedec;
+        background: black;
+        width: 42px;
+    }
+
+    .time-header, .auditorium-header {
+        position: sticky;
+        z-index: 9999999;
+        background-color: black;
+        color: white;
+    }
+
+    .session_warning {
+        color: yellow;
+        height: 26px;
+        padding: 4px;
+        width: 26px;
+        float: right;
+        margin-left: 4px;
+        margin-bottom: 7px;
+        display: block;
+    }
+
+    .session-warning:hover {
+        color: red; /* Change the color to red when hovered */
+    }
+
+    #parentContainer {
+        display: flex;
+    }
+
+    .preview-list.multiplex, .fixed-hight {
+        margin: 5px;
+        padding: 5px;
+        height: auto;
+        overflow: auto;
+        text-align: justify;
+        overflow-x: hidden;
+    }
+
+    .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+        color: #ffffff;
+        font-weight: bold;
+        background-color: #18263e;
+        border-color: #2c2e33 #2c2e33 black;
+    }
+
+    .close-cpl-details {
+        border: solid #5f95cce0;
+        padding: 8px;
+        line-height: 0;
+    }
+    #table_cpls_details {
+        width: 100%;
+    }
+
+    #table_cpls_details thead th {
+        position: sticky;
+        top: 0;
+        background-color: #18263e;
+        font-weight: bold;
+        font-size: 17px;
+        color: white;
+    }
+
+    .table-responsive {
+        max-height: 600px;
+        overflow-y: auto;
+    }
+    #table_cpls_details td:nth-child(2),
+    #table_cpls_details th:nth-child(2) {
+        width: 160px; /* Set the desired width */
+        max-width: 160px; /* Optionally, set a maximum width */
+        overflow: hidden; /* Hide overflow content */
+        text-overflow: ellipsis; /* Display ellipsis for overflow content */
+        text-align: center;
+    }
+
+    /* Adjust the width of the "Playable" column */
+    #table_cpls_details td:nth-child(3),
+    #table_cpls_details th:nth-child(3) {
+        width: 160px; /* Set the desired width */
+        max-width: 160px; /* Optionally, set a maximum width */
+        overflow: hidden; /* Hide overflow content */
+        text-overflow: ellipsis; /* Display ellipsis for overflow content */
+    }
+    #table_cpls_details td:nth-child(1),
+    #table_cpls_details th:nth-child(1) {
+        width: 340px; /* Set the desired width */
+        max-width: 340px; /* Optionally, set a maximum width */
+       /* Hide overflow content */
+        white-space: normal; /* Allow text to wrap */
+    }
+    #table_cpls_details td {
+        height: 60px; /* Set the height you prefer */
+        vertical-align: top; /* Align content vertically */
+    }
+    .hidden-icon {
+        opacity: 0 !important;
+    }
+    .running-icon {
+        opacity: 1;
+        transition: opacity 0.5s ease; /* Smooth transition over 0.5 seconds */
+    }
+    .playback-tab-view{
+        padding: 0px!important;
+        margin-left: 4px!important;
+        font-size: 20px!important;
+
+        border: 0!important;
+
+        line-height: 1!important;
+    }
+</style>
+
 @endsection
