@@ -31,12 +31,8 @@ class NocsplController extends Controller
         $uuid =  $this->generateUuid();
         }
 
-
-
         $IssueDate = Carbon::now();
-
         $file = $this->generateSplXml($uuid, $request->title_spl, $request->hfr, $request->display_mode, $request->items_spl, $IssueDate, 'add') ;
-
         $file_name = "$uuid.xml" ;
         $file_url = Storage::disk('local')->put( $file_name, $file) ;
 
@@ -52,26 +48,15 @@ class NocsplController extends Controller
             'source'=> "NOC",
         ]) ;
 
-
-        /*
-        foreach($request->items_spl as $noccpl)
-        {
-            $cpl = Lmscpl::where('uuid', $noccpl['uuid'] )->first() ;
-                if($noccpl['kind']!="segment" OR $noccpl['kind']!="Pattern"){
-                 $new_nocspl->lmscpls()->syncWithoutDetaching([$cpl->id]);
-                }
-
-        }*/
         if($new_nocspl)
         {
-        ////////////dd(Auth::user()->id , Auth::user()->email ) ;
+            ////////////dd(Auth::user()->id , Auth::user()->email ) ;
             $this->savePlayListBuilderLogs("New SPL File  Saved ", $file,Auth::user()->id, Auth::user()->email);
 
             $path =  storage_path().'/app/xml_file/'.$new_nocspl->xmlpath ;
             $spl_file = simplexml_load_file($path);
                 $cpls = $this->getCplsFromSplArray($spl_file);
                 foreach ($cpls as $cpl) {
-
                     splcomponents::updateOrCreate([
 
                         'uuid_spl' => $uuid,

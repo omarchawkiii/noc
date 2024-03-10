@@ -601,7 +601,22 @@
                             }
 
                         }
-
+                        if(value.kdm_status =="not_valid_yet")
+                        {
+                            statu_content = '<button type="button" class="btn btn-warning btn-fw"> KDM Valide in :  '+value.date_expired+'</button>'
+                        }
+                        if(value.kdm_status =="expired")
+                        {
+                            statu_content = '<button type="button" class="btn btn-danger  btn-fw"> KDM Already Expired : '+value.date_expired+'</button>'
+                        }
+                        if(value.kdm_status =="warning")
+                        {
+                            statu_content = '<button type="button" class="btn btn-warning btn-fw">KDM Expired in : '+value.date_expired+'</button>'
+                        }
+                        if(value.kdm_status =="valid")
+                        {
+                            statu_content = '<button type="button" class="btn btn-success  btn-fw"> KDM Expired in  : '+value.date_expired+'</button>'
+                        }
 
                         result = result
                             +'<tr class="odd ">'
@@ -742,19 +757,19 @@
                         }
                         if(value.kdm_status =="not_valid_yet")
                         {
-                            statu_content = '<button type="button" class="btn btn-warning btn-fw">'+value.date_expired+'</button>'
+                            statu_content = '<button type="button" class="btn btn-warning btn-fw"> KDM Valide in :  '+value.date_expired+'</button>'
                         }
                         if(value.kdm_status =="expired")
                         {
-                            statu_content = '<button type="button" class="btn btn-danger  btn-fw"> KDM Already Expired'+value.date_expired+'</button>'
+                            statu_content = '<button type="button" class="btn btn-danger  btn-fw"> KDM Already Expired : '+value.date_expired+'</button>'
                         }
                         if(value.kdm_status =="warning")
                         {
-                            statu_content = '<button type="button" class="btn btn-warning btn-fw">KDM Expired in '+value.date_expired+'</button>'
+                            statu_content = '<button type="button" class="btn btn-warning btn-fw">KDM Expired in : '+value.date_expired+'</button>'
                         }
                         if(value.kdm_status =="valid")
                         {
-                            statu_content = '<button type="button" class="btn btn-success  btn-fw"> KDM Expired in '+value.date_expired+'</button>'
+                            statu_content = '<button type="button" class="btn btn-success  btn-fw"> KDM Expired in  : '+value.date_expired+'</button>'
                         }
                         result = result
                             +'<tr class="odd ">'
@@ -1593,6 +1608,22 @@
                                 icon_cpl = '<i class="mdi mdi-filmstrip text-danger   spl_not_linked" data-scheduleidd = "'+value.id+'">'
                             }
                         }
+                        if(value.kdm_status =="not_valid_yet")
+                        {
+                            statu_content = '<button type="button" class="btn btn-warning btn-fw"> KDM Valide in :  '+value.date_expired+'</button>'
+                        }
+                        if(value.kdm_status =="expired")
+                        {
+                            statu_content = '<button type="button" class="btn btn-danger  btn-fw"> KDM Already Expired : '+value.date_expired+'</button>'
+                        }
+                        if(value.kdm_status =="warning")
+                        {
+                            statu_content = '<button type="button" class="btn btn-warning btn-fw">KDM Expired in : '+value.date_expired+'</button>'
+                        }
+                        if(value.kdm_status =="valid")
+                        {
+                            statu_content = '<button type="button" class="btn btn-success  btn-fw"> KDM Expired in  : '+value.date_expired+'</button>'
+                        }
                         result = result
                             +'<tr class="odd ">'
                             +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.type+' </td>'
@@ -1705,7 +1736,22 @@
                                 icon_cpl = '<i class="mdi mdi-filmstrip text-danger   spl_not_linked" data-scheduleidd = "'+value.id+'">'
                             }
                         }
-
+                        if(value.kdm_status =="not_valid_yet")
+                        {
+                            statu_content = '<button type="button" class="btn btn-warning btn-fw"> KDM Valide in :  '+value.date_expired+'</button>'
+                        }
+                        if(value.kdm_status =="expired")
+                        {
+                            statu_content = '<button type="button" class="btn btn-danger  btn-fw"> KDM Already Expired : '+value.date_expired+'</button>'
+                        }
+                        if(value.kdm_status =="warning")
+                        {
+                            statu_content = '<button type="button" class="btn btn-warning btn-fw">KDM Expired in : '+value.date_expired+'</button>'
+                        }
+                        if(value.kdm_status =="valid")
+                        {
+                            statu_content = '<button type="button" class="btn btn-success  btn-fw"> KDM Expired in  : '+value.date_expired+'</button>'
+                        }
                         result = result
                             +'<tr class="odd ">'
                             +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.type+' </td>'

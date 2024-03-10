@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Config;
 use App\Models\Cpl;
 use App\Models\Kdm;
 use App\Models\Location;
@@ -69,6 +70,17 @@ class ScheduleContoller extends Controller
                                         $spl_id =null ;
                                    }
                                 }
+
+                                if(count($schedule['list_kdm_notes']) > 0 )
+                                {
+                                    $kdm_status = $schedule['list_kdm_notes'][0]['status'] ;
+                                    $date_expired = $schedule['list_kdm_notes'][0]['date_expired'] ;
+                                }
+                                else
+                                {
+                                    $kdm_status ="";
+                                    $date_expired ="";
+                                }
                                 Schedule::updateOrCreate([
                                     'scheduleId' => $schedule["id"],
                                     'location_id' => $location->id,
@@ -94,8 +106,8 @@ class ScheduleContoller extends Controller
                                    'screen_id' => $screen->id ,
                                     'spl_id' => $spl_id ,
                                     'location_id' => $location->id ,
-                                    'kdm_status' => $schedule['list_kdm_notes']['status'],
-                                    'date_expired' => $schedule['list_kdm_notes']['date_expired'],
+                                    'kdm_status' => $kdm_status,
+                                    'date_expired' => $date_expired,
                                 ]);
                             }
 
@@ -123,7 +135,9 @@ class ScheduleContoller extends Controller
         $location = $request->location;
         $screen = $request->screen;
         $date = $request->date;
-
+        $setting = Config::all()->first() ;
+        $setting_schedule_timeStart = "Y-m-d ".$setting->timeStart.":00" ;
+        $setting_schedule_timeEnd = "Y-m-d ".$setting->timeEnd.":00" ;
         if($date)
         {
             $date = Carbon::createFromFormat('d/m/Y H', $date);
@@ -132,20 +146,20 @@ class ScheduleContoller extends Controller
                 $current_datetime = date('Y-m-d H:i:s');
                 if (date('H', strtotime($current_datetime)) >= 5) {
                     // If the current time is after 5 AM, consider it as the start of the day
-                    $startDate = date('Y-m-d 05:00:00', strtotime($current_datetime));
-                    $nextDayStart = date('Y-m-d 04:59:59', strtotime('+1 day', strtotime($current_datetime)));
+                    $startDate = date("$setting_schedule_timeStart", strtotime($current_datetime));
+                    $nextDayStart = date("$setting_schedule_timeEnd", strtotime('+1 day', strtotime($current_datetime)));
                 } else {
                     // If the current time is before 5 AM, consider it as the end of the previous day
-                    $startDate = date('Y-m-d 05:00:00', strtotime('-1 day', strtotime($current_datetime)));
-                    $nextDayStart = date('Y-m-d 04:59:59', strtotime($current_datetime));
+                    $startDate = date("$setting_schedule_timeStart", strtotime('-1 day', strtotime($current_datetime)));
+                    $nextDayStart = date("$setting_schedule_timeEnd", strtotime($current_datetime));
                 }
 
 
             }
             else
             {
-                $startDate = date('Y-m-d 05:00:00', strtotime($date));
-                $nextDayStart = date('Y-m-d 04:59:59', strtotime('+1 day', strtotime($date)));
+                $startDate = date("$setting_schedule_timeStart", strtotime($date));
+                $nextDayStart = date("$setting_schedule_timeEnd", strtotime('+1 day', strtotime($date)));
 
                 //dd($startDate , $nextDayStart) ;
             }
@@ -154,6 +168,8 @@ class ScheduleContoller extends Controller
         {
             $date = Carbon::now();
         }
+
+
         //dd($schedules) ;
 
         if(isset($location) &&  $location != 'null' )

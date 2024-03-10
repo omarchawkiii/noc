@@ -119,7 +119,8 @@
         </a>
         <div class="collapse " id="showm_configuration">
           <ul class="nav flex-column sub-menu">
-            <li class="nav-item"> <a class="nav-link  " href="{{ route('ingestersources.index') }}"> <i class="mdi mdi-checkbox-blank-circle me-1"></i> Ingest Sources</a></li>
+            <li class="nav-item"> <a class="nav-link " href="{{ route('ingestersources.index') }}"> <i class="mdi mdi-checkbox-blank-circle me-1"></i> Ingest Sources</a></li>
+            <li class="nav-item"> <a class="nav-link " href="{{ route('config.edit') }}"> <i class="mdi mdi-checkbox-blank-circle me-1"></i> Noc Settings</a></li>
           </ul>
         </div>
       </li>

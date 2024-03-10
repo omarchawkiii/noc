@@ -156,3 +156,8 @@ Route::post('ingester/action_contoller', [App\Http\Controllers\IngersterControll
 
 Route::get('sources', [App\Http\Controllers\IngestsourceController::class , 'index'])->name('ingestersources.index')->middleware(['auth']);
 Route::post('ingestersources/store', [App\Http\Controllers\IngestsourceController::class , 'store'])->name('ingestersources.store')->middleware(['auth']);
+
+
+Route::get('settings', [App\Http\Controllers\ConfigController::class , 'edit'])->name('config.edit');
+Route::put('settings/update', [App\Http\Controllers\ConfigController::class , 'update'])->name('config.update')->middleware(['auth']);
+Route::put('settings/update_auto_ingest', [App\Http\Controllers\ConfigController::class , 'update_auto_ingest'])->name('config.update_auto_ingest')->middleware(['auth']);
