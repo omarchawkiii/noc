@@ -321,9 +321,18 @@ class NockdmController extends Controller
     public function destroy($id)
     {
         $nockdm= Nockdm::find($id) ;
+        $path = storage_path(). '/app/xml_file/'.$nockdm->xmlpath ;
         if($nockdm->delete())
         {
-            echo 'Success' ;
+            $res =unlink($path);
+            if($res)
+            {
+                echo 'Success' ;
+            }
+            else
+            {
+                echo 'Failed' ;
+            }
         }
         else
         {

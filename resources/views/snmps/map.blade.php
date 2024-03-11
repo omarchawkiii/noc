@@ -176,8 +176,11 @@
     <!-- -------END  DATA TABLE ---- -->
 
     <script src="{{ asset('/assets/vendors/jquery-toast-plugin/jquery.toast.min.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.8/jquery.inputmask.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/ol@v8.2.0/dist/ol.js"></script>
+    <script src="{{ asset('/assets/js/jquery.inputmask.min.js') }}"></script>
+    <script src="{{ asset('/assets/js/ol.js') }}"></script>
+
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.8/jquery.inputmask.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ol@v8.2.0/dist/ol.js"></script> -->
 
 
     <script src="{{ asset('/assets/js/jquery.fullscreen-min.js') }}"></script>
@@ -335,5 +338,6 @@
 @endsection
 
 @section('custom_css')
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v8.2.0/ol.css">
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v8.2.0/ol.css">-->
+    <link rel="stylesheet" href="{{asset('/assets/css/ol.css')}}">
 @endsection

@@ -3453,36 +3453,6 @@ $data_dcp = json_decode(json_encode($data_dcp), true);
 
     public function getDcpLogs()
     {
-        /*
-                $q = $this
-                    ->_db
-                    ->prepare(' SELECT *  ,"DCP" AS type , server.serverName As "source",
-                                (SELECT MAX(date_create_ingest) FROM ingest_dcp_large where ingest_dcp_large.id_cpl=ingests.cpl_id )
-                                AS date_finished_ingest ,
-                                IFNULL( (select sum(ingest_dcp_large.Size) from ingest_dcp_large where ingest_dcp_large.id_cpl = ingests.cpl_id),0) as Total_size ,
-                                IFNULL( (select sum(ingest_dcp_large.progress) from ingest_dcp_large where ingest_dcp_large.id_cpl = ingests.cpl_id),0) as Total_progress ,
-                                IFNULL(ROUND(
-                                        IFNULL( (select sum(ingest_dcp_large.progress) from ingest_dcp_large where ingest_dcp_large.id_cpl = ingests.cpl_id),0) *100  /
-                                        IFNULL( (select sum(ingest_dcp_large.Size) from ingest_dcp_large where ingest_dcp_large.id_cpl = ingests.cpl_id),0)
-                                        ,2),
-                                    0)AS "percentage",
-                    (SELECT IF(COUNT(*) = SUM(ingest_dcp_large.hash_verified), 1, 0) FROM ingest_dcp_large WHERE ingest_dcp_large.id_cpl = ingests.cpl_id) AS all_verified
-
-
-        FROM tms.ingests
-            LEFT JOIN   server ON ingests.id_source   = server.idserver
-
-        where ingests.status   not IN ("Running" ,"pending","Pending","running") ORDER BY ingests.order DESC ;  ');
-                try {
-                    $q->execute();
-                    return $q->fetchAll();
-
-                } catch (PDOException $e) {
-                    echo $e->getMessage();
-                }
-        }
-        */
-
         try {
             $result = DB::table('ingests')
                 ->select(
@@ -3509,6 +3479,39 @@ $data_dcp = json_decode(json_encode($data_dcp), true);
             echo $e->getMessage();
         }
     }
+
+
+    public function get_transfere_content()
+    {
+        try {
+            $result = DB::table('ingests')
+                ->select(
+                    '*',
+                    DB::raw('"DCP" AS type'),
+                    'ingestsources.serverName AS source',
+                    DB::raw('(SELECT MAX(date_create_ingest) FROM ingest_dcp_large WHERE ingest_dcp_large.id_cpl = ingests.cpl_id) AS date_finished_ingest'),
+                    DB::raw('IFNULL((SELECT SUM(ingest_dcp_large.Size) FROM ingest_dcp_large WHERE ingest_dcp_large.id_cpl = ingests.cpl_id), 0) AS Total_size'),
+                    DB::raw('IFNULL((SELECT SUM(ingest_dcp_large.progress) FROM ingest_dcp_large WHERE ingest_dcp_large.id_cpl = ingests.cpl_id), 0) AS Total_progress'),
+                    DB::raw('IFNULL(ROUND(
+                                    IFNULL((SELECT SUM(ingest_dcp_large.progress) FROM ingest_dcp_large WHERE ingest_dcp_large.id_cpl = ingests.cpl_id), 0) * 100 /
+                                    IFNULL((SELECT SUM(ingest_dcp_large.Size) FROM ingest_dcp_large WHERE ingest_dcp_large.id_cpl = ingests.cpl_id), 0)
+                                    ,2),
+                                0) AS percentage'),
+                    DB::raw('(SELECT IF(COUNT(*) = SUM(ingest_dcp_large.hash_verified), 1, 0) FROM ingest_dcp_large WHERE ingest_dcp_large.id_cpl = ingests.cpl_id) AS all_verified')
+                )
+                ->leftJoin('ingestsources', 'ingests.id_source', '=', 'ingestsources.id')
+                ->leftJoin('ingest_dcp_large', 'ingest_dcp_large.id_cpl', '=', 'ingests.cpl_id')
+                ->where('ingests.status', 'Complete')
+                ->where('ingest_dcp_large.hash_verified','!=', 0)
+                ->orderByDesc('ingests.order')
+                ->get();
+
+            return $result;
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+
 
 }
 

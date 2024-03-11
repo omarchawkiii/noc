@@ -316,8 +316,8 @@
 
                 var id_content = $('#search_content_by_title').attr('data-id')
 
-                console.log(id_content)
-                if(id_content =='' || typeof id_content == 'undefined' )
+                console.log(id_location.length)
+                if(id_content =='' || typeof id_content == 'undefined' || id_location.length ==0 )
                 {
                     swal({
                                     title: 'Failed!',

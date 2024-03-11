@@ -55,7 +55,7 @@ class MoviescodController extends Controller
         //$location = Location::find($location) ;
         $movies = Moviescod::where('location_id',$request->location)->where('status','unlinked')->get() ;
         $nos_spls = Nocspl::all() ;
-        $spl_location = Spl::where('location_id' ,$location )->select('spls.*','spls.name as spl_title')->orderBy('spl_title', 'ASC')->get() ;
+        $spl_location = Spl::where('location_id' ,$location )->select('spls.*','spls.name as spl_title')->groupBy('uuid')->orderBy('spl_title', 'ASC')->get() ;
 
         $noc_and_location_spls = $nos_spls->merge($spl_location);
         $nos_spls =  $noc_and_location_spls ;

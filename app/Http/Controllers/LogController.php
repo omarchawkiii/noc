@@ -1,6 +1,9 @@
 <?php
 
+
 namespace App\Http\Controllers;
+
+ini_set('max_execution_time', 1800);
 
 use App\Models\Cpl;
 use App\Models\Location;
@@ -47,6 +50,7 @@ class LogController extends Controller
                 ]);
 
                 $contents = json_decode($response->getBody(), true);
+
                 if(count($contents['result']) > 0 )
                 {
                     foreach($contents['result'] as $log)

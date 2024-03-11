@@ -353,6 +353,13 @@ class IngersterController extends Controller
                 $response = array("dcp" => $ingester_manager->getDcpLogs(), "spl" => []);
                 echo json_encode($response);
             }
+            if ($_POST["action_control"] == "get_transfere_content") {
+                $ingester_manager = new IngesterManager();
+                //$response = array("dcp" => $ingester_manager->getDcpLogs(), "spl" => $ingester_manager->getSplLogs());
+                $response = array("dcp" => $ingester_manager->getDcpLogs(), "spl" => []);
+                echo json_encode($response);
+            }
+
             if ($_POST["action_control"] == "delete_scan_logs") {
                 $ingester_manager = new IngesterManager();
                 foreach ($_POST["array_logs"] as $id) {
@@ -382,11 +389,8 @@ class IngersterController extends Controller
 
     public function transfere_content()
     {
-        $files = DB::table('ingest_dcp_large')
-                ->where('status', 'Complete')
-                ->get();
-        //dd($files) ;
-        return view('ingester.transfere_content',compact('files'));
+
+        return view('ingester.transfere_content');
     }
 
     public function delete_transfered_file(Request $request)
@@ -397,13 +401,20 @@ class IngersterController extends Controller
             ->where('Id',$file)
             ->first();
             //dd($file_to_delete) ;
+            //    dd($file_to_delete);
+            $path = '/DATA/assets/'.$file_to_delete->tms_dir ;
+            $file = escapeshellarg($path);
 
-            $file = escapeshellarg($file_to_delete->tms_dir);
+
             $del = shell_exec("rm -rf $file");
-
+            //$file_to_delete->delete() ;
+            dd($del) ;
            // $response = Storage::deleteDirectory();
         }
         dd($del ) ;
     }
+
+
+
 
 }

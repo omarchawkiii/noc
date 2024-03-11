@@ -1227,9 +1227,19 @@ class NocsplController extends Controller
     {
 
         $nocspl = Nocspl::find($id) ;
+        $path = storage_path(). '/app/xml_file/'.$nocspl->xmlpath ;
         if($nocspl->delete())
         {
-            echo 'Success' ;
+            $res =unlink($path);
+            if($res)
+            {
+                echo 'Success' ;
+            }
+            else
+            {
+                echo 'Failed' ;
+            }
+
         }
         else
         {

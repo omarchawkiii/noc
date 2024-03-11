@@ -14,48 +14,78 @@
     <div class="card">
         <div class="card-body">
 
-            <div class="row">
+            <div class="row mb-2">
+                <div class="  col-md-12">
+                    <div class="card">
+                        <div class="card-body ">
+                            <!--<div class="row mt-4">
+                                <div class="col-xl-2 ">
+                                    <div class="input-group mb-2 mr-sm-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text"><i class="mdi mdi-monitor"></i></div>
+                                        </div>
+                                        <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="filter_logs_status">
+                                            <option selected="All">All</option>
+                                            <option value="Complete">Complete</option>
+                                            <option value="Failed">Failed</option>
+                                            <option value="Canceled By User">Canceled</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 ">
+                                    <div class="input-group mb-2 mr-sm-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text"><i class="mdi mdi-screwdriver"></i></div>
+                                        </div>
+                                        <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="filter_logs_type">
+                                            <option value="All" selected="">All Elements</option>
+                                            <option value="DCP">Content Playlist</option>
 
-                <div class="d-flex flex-row justify-content-between mt-2 mb-3">
-                    <div>
-                        <h4 class="card-title ">Transfere content</h4>
-                    </div>
+                                            <option value="SPL"> Show Playlist</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-xl-2 ">
+                                    <div class="input-group mb-2 mr-sm-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="mdi mdi-magnify"></i></div>
+                                        </div>
+                                        <button class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="details_logs">
+                                            Details
+                                        </button>
 
-                    <div>
-                        <button class="btn btn-danger  btn-icon-text" id="delete_file">
-                            <i class="mdi mdi-plus btn-icon-prepend"></i> Delete
-                        </button>
-                    </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-5 ">
+                                    <div class="input-group mb-2 mr-sm-2">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text"><i class="mdi mdi-magnify"></i></div>
+                                        </div>
+                                        <input type="text" class="form-control" id="search_logs" placeholder="Search ">
+                                    </div>
+                                </div>
+                            </div> -->
+                            <div class="row">
 
-                </div>
+                                    <div class="preview-list multiplex" id="div_ingest_logs" style="height: 92px; max-height: 92px; overflow-y: auto;">
+                                        <div class="table-responsive">
+                                            <table class="table " id="table_ingest_logs">
+                                                <thead>
+                                                <tr>
+                                                    <th> State</th>
+                                                    <th> File Name</th>
+                                                    <th> size</th>
 
-                    <div class="col-12">
-                    <div class="table-responsive">
-                        <table id="files-listing" class="table">
-                            <thead>
-                                <tr class="text-center">
-                                    <th class="sorting sorting_asc">ID File</th>
-                                    <th class="sorting">OriginalFileName</th>
-                                    <th class="sorting">Size</th>
-                                    <th class="sorting">Created Date</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="body_ingest_logs"></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
 
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($files as $key => $file )
-
-                                    <tr class="odd text-center file-item " data-id="{{ $file->id_file }}">
-                                        <td class="sorting_1"> {{ $file->id_file }}  </td>
-                                        <td class="sorting_1"> {{ $file->OriginalFileName }}  </td>
-                                        <td class="sorting_1"> {{ $file->Size }}  </td>
-                                        <td class="sorting_1"> {{ $file->date_create_ingest }}  </td>
-
-                                    </tr>
-                                @endforeach
-
-                            </tbody>
-                        </table>
-
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -132,6 +162,56 @@
             timeout: 5000
         })
     @endif
+
+    function displayFileTransfere() {
+        $.ajax({
+            url: '/noc/ingester/action_contoller',
+            method: "POST",
+            data: {action_control: "get_transfere_content"},
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function (response) {
+                console.log(response)
+                try {
+                    let box_logs = "";
+                    let box_pending = "";
+                    var obj = JSON.parse(response);
+                    var dcp = obj.dcp;
+                    var spl = obj.spl;
+                    if (dcp.length === 0) {
+                        $('#body_ingest_logs').html("");
+                    } else {
+                        for (var i = 0; i < dcp.length; i++) {
+                            box_logs += '<tr class="item_to_select logs-item" ' +
+                                '  data-task_status="' + dcp[i].status + '" ' +
+                                ' data-type="DCP"' +
+                                '  data-id_cpl="' + dcp[i].cpl_id + '"   style="font-weight: bold">' +
+                                '    <td class="status_control">' + getStatusDownload(dcp[i].status) + ' </td>  ' +
+                                '    <td>' + dcp[i].cpl_description + '</td>\n' +
+                                '    <td></td>\n' +
+                                '</tr>';
+
+                        }
+                        $('#body_ingest_logs').html(box_logs);
+                    }
+                    let height_parent = $('.background-content').height();
+                    $("#tab2-1").css("max-height", height_parent - 30);
+                    $("#tab2-1").css("overflow-y", "auto");
+                    $("#tab2-1").css("max-height", height_parent - 30);
+                    $("#tab2-1").css("overflow-y", "auto");
+                } catch (e) {
+                    console.log(e);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(errorThrown);
+            },
+            complete: function (jqXHR, textStatus) {
+            }
+        });
+    }
+    displayFileTransfere()
 
     //select element to Delete
     $(document).on('click', '.file-item', function (event) {

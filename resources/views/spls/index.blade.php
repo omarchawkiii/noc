@@ -388,18 +388,8 @@
             else
             {
                 $('#refresh_lms').hide();
-                $('#location-listing tbody').html('<tr class="odd"><td valign="top" colspan="5" class="">Please Select Location</td></tr>')
-                var spl_datatable = $('#location-listing').DataTable({
+                $('#location-listing tbody').html('<h5 class="m-2">Please Select Location</h5>')
 
-                    "iDisplayLength": 10,
-                        destroy: true,
-                        "bDestroy": true,
-                        "language": {
-                            search: "_INPUT_",
-                            searchPlaceholder: "Search..."
-                        }
-
-                    });
             }
 
 

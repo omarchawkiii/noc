@@ -1201,7 +1201,7 @@ function formatSize(sizeInBytes) {
             else
             {
                 $('#refresh_lms').hide();
-                $('#location-listing tbody').html('<tr class="odd"><td valign="top" colspan="5" class="dataTables_empty">Please Select Location</td></tr>')
+                $('#location-listing tbody').html('<h5 class="m-2">Please Select Location</h5>')
             }
 
 
@@ -1321,16 +1321,22 @@ function formatSize(sizeInBytes) {
                     },
                     success: function (response) {
 
-                        var result ="" ;
-                        if(response.screens.length>0)
-                        {
+                        var result = '<li>'
+                                    +'<button type="button" class="btn btn-outline-secondary btn-fw" style="text-align: left;">'
+                                        +'<label class="form-check-label custom-check2">'
+                                            +'<input id="delete_from_lms" type="checkbox" class="form-check-input" name="lms" style="font-size: 20px;margin-bottom:  3px; margin-right:  5px">'
+                                            +'<span style="font-weight: bold;">LMS</span> <i class="input-helper"></i>'
+                                        +'</label>'
+                                    +'</button>'
+                                +'</li>' ;
+
                             $.each(response.screens, function( index, value ) {
 
                                 result =  result +
                                 '<li>'
                                     +'<button type="button" class="btn btn-outline-secondary btn-fw" style="text-align: left;">'
                                         +'<label class="form-check-label custom-check2">'
-                                            +'<input type="checkbox" class="form-check-input" name="screen_to_ingest" data-id="'+value.screen_number+'" value="'+value.id+'" style="font-size: 20px;margin-bottom:  3px">'
+                                            +'<input type="checkbox" class="form-check-input" name="screen_to_ingest" data-id="'+value.screen_number+'" value="'+value.id+'" style="font-size: 20px;margin-bottom:  3px; margin-right:  5px">'
                                             +'<span style="font-weight: bold;">'+value.name+'</span> <i class="input-helper"></i>'
                                         +'</label>'
                                     +'</button>'
@@ -1342,12 +1348,15 @@ function formatSize(sizeInBytes) {
                             $('#cpl_delete_model').modal('show')
 
                             $('#confirm_delete_cpl_group').click(function(){
-                                console.log(array_cpls) ;
+
                                 var array_screens = [];
                                $("#list_servers_cpls_to_delete [name='screen_to_ingest']:checked").each(function() {
                                     var screen_id = $(this).data("id");
                                     array_screens.push(screen_id);
                                 });
+
+                                var delete_from_lms = $('#delete_from_lms' ).is(":checked")
+
 
                                 $.ajax({
                                     url : "{{  url('') }}"+ '/delete_cpls/',
@@ -1356,7 +1365,7 @@ function formatSize(sizeInBytes) {
                                         array_cpls:array_cpls,
                                         location :location,
                                         array_screens:array_screens,
-                                        lms:lms
+                                        lms:delete_from_lms
                                     },
                                     headers: {
                                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1412,7 +1421,7 @@ function formatSize(sizeInBytes) {
                                 console.log(array_screens)
 
                             });
-                        }
+
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         console.log(errorThrown);
