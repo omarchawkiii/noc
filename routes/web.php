@@ -67,6 +67,8 @@ Route::get('get_cpl_with_filter', [App\Http\Controllers\CplController::class , '
 Route::get('get_cpl_infos/{location}/{cpl}', [App\Http\Controllers\CplController::class , 'get_cpl_infos'])->name('cpls.get_cpl_infos')->middleware(['auth']);
 Route::get('get_cpl_with_filter_for_noc', [App\Http\Controllers\CplController::class , 'get_cpl_with_filter_for_noc'])->name('cpls.get_cpl_with_filter_for_noc')->middleware(['auth']);
 Route::get('get_screens_from_cpls', [App\Http\Controllers\CplController::class , 'get_screens_from_cpls'])->name('cpls.get_screens_from_cpls')->middleware(['auth']);
+Route::get('delete_cpls', [App\Http\Controllers\CplController::class , 'delete_cpl'])->name('cpls.delete_cpl')->middleware(['auth']);
+
 
 Route::get('kdms/{location}/{cpls}/get_kdms', [App\Http\Controllers\KdmController::class , 'getkdms'])->name('kdms.get_kdms');
 Route::get('get_kdms_with_filter', [App\Http\Controllers\KdmController::class , 'get_Kdm_with_filter'])->name('kdms.get_Kdm_with_filter')->middleware(['auth']);
@@ -154,6 +156,11 @@ Route::put('user/update_password', [App\Http\Controllers\UserController::class ,
 
 Route::get('ingester/', [App\Http\Controllers\IngersterController::class , 'index'])->name('ingester.index')->middleware(['auth']);
 Route::post('ingester/action_contoller', [App\Http\Controllers\IngersterController::class , 'action_contoller'])->name('ingester.action_contoller')->middleware(['auth']);
+Route::get('ingester/transfere_content', [App\Http\Controllers\IngersterController::class , 'transfere_content'])->name('ingester.transfere_content')->middleware(['auth']);
+Route::delete('ingester/delete_transfered_file', [App\Http\Controllers\IngersterController::class , 'delete_transfered_file'])->name('ingester.delete_transfered_file')->middleware(['auth']);
+
+
+
 
 Route::get('sources', [App\Http\Controllers\IngestsourceController::class , 'index'])->name('ingestersources.index')->middleware(['auth']);
 Route::post('ingestersources/store', [App\Http\Controllers\IngestsourceController::class , 'store'])->name('ingestersources.store')->middleware(['auth']);

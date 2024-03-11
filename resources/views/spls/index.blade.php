@@ -265,7 +265,7 @@
                 url: url,
                 data: {
                     location: location,
-                    screen_id: screen,
+                    screen: screen,
                     lms : lms,
                 },
                 headers: {
@@ -383,13 +383,26 @@
             if(location != "Locations")
             {
                 $('#refresh_lms').show();
+                get_spls(location , screen , false , true)
             }
             else
             {
                 $('#refresh_lms').hide();
+                $('#location-listing tbody').html('<tr class="odd"><td valign="top" colspan="5" class="">Please Select Location</td></tr>')
+                var spl_datatable = $('#location-listing').DataTable({
+
+                    "iDisplayLength": 10,
+                        destroy: true,
+                        "bDestroy": true,
+                        "language": {
+                            search: "_INPUT_",
+                            searchPlaceholder: "Search..."
+                        }
+
+                    });
             }
 
-            get_spls(location , screen , false , true)
+
 
 
 

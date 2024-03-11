@@ -291,21 +291,89 @@ class CplController extends Controller
         $screens = array() ;
         foreach($request->array_cpls as $cpl)
         {
-            $cpl = Cpl::find($cpl) ;
-            $screen = $cpl->screen ;
-            if ( ! in_array($screen->id,  array_column($screens, 'id')))
+            $cpls = Cpl::where('uuid',$cpl)->where('location_id',$location)->orderBy('screen_id', 'ASC')->get() ;
+            foreach( $cpls as $cpl)
             {
-                array_push($screens,  array("id" => $screen->id , "name" => $screen->screen_name));
+                $screen = $cpl->screen ;
+                if ( ! in_array($screen->id,  array_column($screens, 'id')))
+                {
+                    array_push($screens,  array("id" => $screen->id ,"screen_number" => $screen->screen_number , "name" => $screen->screen_name));
+                }
             }
-
-
-
-
         }
+        $screens_id = array_column($screens, 'id');
+        array_multisort($screens_id, SORT_ASC, $screens);
         return Response()->json(compact('screens'));
 
 
     }
+
+    public function delete_cpl(Request $request )
+    {
+        $location = Location::findOrFail($request->location) ;
+        $response = $this->delete_cplRequest($request->connection_ip, $request->lms, $request->array_cpls, $request->array_screens, $location->email , $location->password);
+        if($response['result'] === 1 )
+        {
+            foreach($request->array_cpls as $cpl_uuid)
+            {
+                if($request->lms)
+                {
+                    Lmscpl::where('uuid',$cpl_uuid)->delete() ;
+                }
+                else
+                {
+                    Cpl::where('uuid',$cpl_uuid)->whereIn('screen_id',$request->array_screens)->delete() ;
+                }
+
+            }
+                echo "Success" ;
+        }
+        else
+        {
+            echo "Failed" ;
+        }
+    }
+
+    function delete_cplRequest($apiUrl,$lms, $array_cpls, $array_screens,$username,$password) {
+        // Prepare the request data
+        $requestData = [
+            'action' => 'delete_cpl',
+            'lms' => $lms,
+            'array_cpls' => $array_cpls,
+            'array_screens' => $array_screens,
+            'username' =>$username,
+            'password' =>$password
+
+        ];
+
+        // Initialize cURL session
+        $ch = curl_init($apiUrl);
+
+        // Set cURL options
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($requestData));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        // Execute cURL session and get the response
+        $response = curl_exec($ch);
+       // print_r($response);
+
+        // Check for cURL errors
+        if (curl_errno($ch)) {
+            return ['error' => 'Curl error: ' . curl_error($ch)];
+        }
+
+        // Close cURL session
+        curl_close($ch);
+
+        // Process the API response
+        if (!$response) {
+            return ['error' => 'Error occurred while sending the request.'];
+        } else {
+            return json_decode($response, true);
+        }
+    }
+
 
 
 }

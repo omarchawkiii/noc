@@ -178,7 +178,7 @@ class ScheduleContoller extends Controller
         {
             $location = Location::find($location) ;
             $screens =$location->screens ;
-            $schedules =Schedule::with('screen','spls')->where('location_id',$location->id)->get();
+            $schedules =Schedule::with('screen','spls')->where('location_id',$location->id) ;
 
             $next_date = $date ;
             $schedules = $schedules->where('date_start','>',$startDate)->where('date_start','<',$nextDayStart);
@@ -187,6 +187,7 @@ class ScheduleContoller extends Controller
             {
                 $schedules = $schedules->where('screen_id',$screen) ;
             }
+            $schedules = $schedules->orderBy('screen_id')->orderBy('date_start')->get();
 
             return Response()->json(compact('schedules','screens'));
         }
@@ -195,9 +196,10 @@ class ScheduleContoller extends Controller
             if(isset($screen) && $screen != 'null' )
             {
                 //$schedules = Screen::find($screen)->schedules ;
-                $schedules =Schedule::with('screen','spls')->where('screen_id',$screen)->get();
+                $schedules =Schedule::with('screen','spls')->where('screen_id',$screen);
                 $next_date = $date ;
                 $schedules = $schedules->where('date_start','>',$startDate)->where('date_start','<',$nextDayStart);
+                $schedules = $schedules->orderBy('screen_id')->orderBy('date_start')->get();
                 return Response()->json(compact('schedules'));
             }
             else

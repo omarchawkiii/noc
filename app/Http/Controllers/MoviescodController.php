@@ -7,6 +7,7 @@ use App\Models\Lmsspl;
 use App\Models\Location;
 use App\Models\Moviescod;
 use App\Models\Nocspl;
+use App\Models\Spl;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 
@@ -54,6 +55,10 @@ class MoviescodController extends Controller
         //$location = Location::find($location) ;
         $movies = Moviescod::where('location_id',$request->location)->where('status','unlinked')->get() ;
         $nos_spls = Nocspl::all() ;
+        $spl_location = Spl::where('location_id' ,$location )->select('spls.*','spls.name as spl_title')->orderBy('spl_title', 'ASC')->get() ;
+
+        $noc_and_location_spls = $nos_spls->merge($spl_location);
+        $nos_spls =  $noc_and_location_spls ;
         return Response()->json(compact('nos_spls','movies'));
 
     }
@@ -69,7 +74,6 @@ class MoviescodController extends Controller
         if($check_lms_spl)
         {
             $location = Location::findOrFail($check_lms_spl->location_id) ;
-
             //$this->sendUpdateLinksRequest($location->connection_ip, $moviescod->moviescods_id, $splnoc->uuid);
             $response = $this->sendUpdateLinksRequest($apiUrl, $moviescod->code, $splnoc->uuid, $location->email , $location->password);
 

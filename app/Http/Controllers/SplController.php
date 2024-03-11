@@ -41,7 +41,8 @@ class SplController extends Controller
                     {
                         Spl::updateOrCreate([
                             'uuid' => $spl["uuid"],
-                            'screen_id' => $screen->id
+                            'screen_id' => $screen->id,
+
                         ],[
                             'uuid'     => $spl["uuid"],
                             'name'     => $spl["title"],
@@ -105,15 +106,16 @@ class SplController extends Controller
         $location = $request->location;
         $country = $request->country;
         $screen = $request->screen;
+
         $lms= $request->lms ;
 
         if( $lms == 'true')
         {
-            $spls =Lmsspl::all();
+            $spls =Lmsspl::groupBy('uuid');
         }
         else
         {
-            $spls =Spl::all();
+            $spls =Spl::groupBy('uuid');
         }
         if(isset($location) &&  $location != 'null' )
         {
@@ -143,6 +145,9 @@ class SplController extends Controller
             $spls =$spls->where('screen_id',$screen);
 
         }
+       // $spls =$spls->groupBy('uuid') ;
+
+        $spls = $spls->get() ;
         return Response()->json(compact('spls','screens'));
     }
 

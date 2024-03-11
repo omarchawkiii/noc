@@ -331,7 +331,7 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body minauto">
                     <div class="tab-pane fade active show" id="home-1" role="tabpanel" aria-labelledby="home-tab">
                         <div class="row">
                             <div class="col-md-12 ">
@@ -1114,7 +1114,7 @@ function formatSize(sizeInBytes) {
 
 
                             result = result
-                                +'<tr class=" cpl-item odd  '+playable+' text-center" data-id="'+value.id+'">'
+                                +'<tr class=" cpl-item odd  '+playable+' text-center" data-id="'+value.uuid+'">'
                                 +'<td class="sorting_1">'+ index+' </td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+title+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">'+value.contentKind+'</a></td>'
@@ -1201,14 +1201,12 @@ function formatSize(sizeInBytes) {
             else
             {
                 $('#refresh_lms').hide();
-                $('#location-listing tbody').html('')
+                $('#location-listing tbody').html('<tr class="odd"><td valign="top" colspan="5" class="dataTables_empty">Please Select Location</td></tr>')
             }
 
 
 
         });
-
-
 
         $('#refresh_lms').click(function(){
 
@@ -1232,7 +1230,7 @@ function formatSize(sizeInBytes) {
             var multiplex =  $('#multiplex').val();
             window.lms = true ;
             var screen =  null;
-            get_cpls(location , screen , true , multiplex,true)
+                get_cpls(location , screen , true , multiplex,true)
 
 
         });
@@ -1292,14 +1290,19 @@ function formatSize(sizeInBytes) {
         });
 
         $(document).on('click', '#delete_cpl', function (event) {
+            console.log(lms)
 
+            var screen =  $('#screen').val();
+           // window.lms = false ;
+            var multiplex =  $('#multiplex').val();
             var array_cpls = [];
             var location = $('#location').val() ;
+
             $("#location-listing .cpl-item.selected").each(function() {
                 var id = $(this).data("id");
                 array_cpls.push(id);
             });
-            console.log(array_cpls)
+            //console.log(array_cpls)
             if (array_cpls.length ==  0) {
                 $("#empty-warning-modal").modal('show');
             }else{
@@ -1327,7 +1330,7 @@ function formatSize(sizeInBytes) {
                                 '<li>'
                                     +'<button type="button" class="btn btn-outline-secondary btn-fw" style="text-align: left;">'
                                         +'<label class="form-check-label custom-check2">'
-                                            +'<input type="checkbox" class="form-check-input" name="screen_to_ingest" id="'+value.id+'" value="'+value.id+'" style="font-size: 20px;margin-bottom:  3px">'
+                                            +'<input type="checkbox" class="form-check-input" name="screen_to_ingest" data-id="'+value.screen_number+'" value="'+value.id+'" style="font-size: 20px;margin-bottom:  3px">'
                                             +'<span style="font-weight: bold;">'+value.name+'</span> <i class="input-helper"></i>'
                                         +'</label>'
                                     +'</button>'
@@ -1339,7 +1342,75 @@ function formatSize(sizeInBytes) {
                             $('#cpl_delete_model').modal('show')
 
                             $('#confirm_delete_cpl_group').click(function(){
-                                alert('tset');
+                                console.log(array_cpls) ;
+                                var array_screens = [];
+                               $("#list_servers_cpls_to_delete [name='screen_to_ingest']:checked").each(function() {
+                                    var screen_id = $(this).data("id");
+                                    array_screens.push(screen_id);
+                                });
+
+                                $.ajax({
+                                    url : "{{  url('') }}"+ '/delete_cpls/',
+                                    type: 'GET',
+                                    data: {
+                                        array_cpls:array_cpls,
+                                        location :location,
+                                        array_screens:array_screens,
+                                        lms:lms
+                                    },
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                    },
+                                    beforeSend: function () {
+                                    },
+                                    success: function (response) {
+                                        if (response == 'Success') {
+
+                                            swal({
+                                                title: 'Done!',
+                                                text: 'Cpls Deleted Successfully ',
+                                                icon: 'success',
+                                                button: {
+                                                    text: "Continue",
+                                                    value: true,
+                                                    visible: true,
+                                                    className: "btn btn-primary"
+                                                }
+                                            })
+                                            get_cpls(location , screen , false , multiplex)
+
+                                        } else {
+                                            swal({
+                                                title: 'Failed',
+                                                text: "Error occurred while sending the request.",
+                                                icon: 'warning',
+                                                showCancelButton: true,
+                                                confirmButtonColor: '#3f51b5',
+                                                cancelButtonColor: '#ff4081',
+                                                confirmButtonText: 'Great ',
+                                                buttons: {
+                                                    cancel: {
+                                                        text: "Cancel",
+                                                        value: null,
+                                                        visible: true,
+                                                        className: "btn btn-danger",
+                                                        closeModal: true,
+                                                    },
+                                                }
+                                            })
+                                        }
+
+                                    },
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        console.log(errorThrown);
+                                    },
+                                    complete: function (jqXHR, textStatus) {
+                                    }
+                                });
+
+
+                                console.log(array_screens)
+
                             });
                         }
                     },

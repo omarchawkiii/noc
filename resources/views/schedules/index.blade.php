@@ -252,7 +252,7 @@
                                     </tbody>
                                     </table>
                                 </div>
-                                <div class="col-md-6  preview-list multiplex">
+                                <div class="col-md-5 preview-list multiplex">
                                     <table class="table" id="spls_table">
                                         <thead>
                                             <tr>
@@ -302,7 +302,7 @@
         </div>
     </div>
 
-    <div class="modal fade " id="no-location-selected" tabindex="-1" role="dialog" aria-labelledby="delete_client_modalLabel" aria-hidden="true">>
+    <div class="modal fade " id="no-location-selected" tabindex="-1" role="dialog" aria-labelledby="delete_client_modalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -311,7 +311,7 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body minauto">
                     <h4 class="text-center"> No Location Selected!</h4>
                 </div>
                 <div class="modal-footer">
@@ -384,7 +384,7 @@
                     </button>
                 </div>
                 <input type="hidden" id="id-mivie-to-unlink">
-                <div class="modal-body">
+                <div class="modal-body minauto">
 
                 </div>
                 <div class="modal-footer" style="display: block;text-align: center">
@@ -648,7 +648,7 @@
     (function($) {
 
         var spl_datatable = $('#location-listing').DataTable({
-        "iDisplayLength": 10,
+        "iDisplayLength": 100,
             destroy: true,
             "bDestroy": true,
             "language": {
@@ -760,7 +760,7 @@
 
                     var spl_datatable = $('#location-listing').DataTable({
 
-                        "iDisplayLength": 10,
+                        "iDisplayLength": 100,
                         destroy: true,
                         "bDestroy": true,
                         "language": {
@@ -914,7 +914,7 @@
                     /***** refresh datatable **** **/
 
                     var spl_datatable = $('#location-listing').DataTable({
-                        "iDisplayLength": 10,
+                        "iDisplayLength": 100,
                         destroy: true,
                         "bDestroy": true,
                         "language": {
@@ -960,7 +960,7 @@
 
                     success:function(response)
                     {
-                        //console.log(response.spl.name) ;
+
                         $.each(response.movies, function( index, value ) {
                             movies_table +=
                             '<tr>'
@@ -976,6 +976,7 @@
                             '</tr >'
 
                         });
+
                         $('#spls_table tbody').html(noc_spl_table)
 
                     },
@@ -1844,7 +1845,7 @@
                     /***** refresh datatable **** **/
 
                     var spl_datatable = $('#location-listing').DataTable({
-                        "iDisplayLength": 10,
+                        "iDisplayLength": 100,
                         destroy: true,
                         "bDestroy": true,
                         "language": {
@@ -1972,7 +1973,7 @@
                     /***** refresh datatable **** **/
 
                     var spl_datatable = $('#location-listing').DataTable({
-                        "iDisplayLength": 10,
+                        "iDisplayLength": 100,
                         destroy: true,
                         "bDestroy": true,
                         "language": {

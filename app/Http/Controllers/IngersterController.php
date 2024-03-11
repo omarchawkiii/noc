@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Ingestsource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class IngersterController extends Controller
 {
@@ -375,6 +377,33 @@ class IngersterController extends Controller
             }
 
         }*/
+    }
+
+
+    public function transfere_content()
+    {
+        $files = DB::table('ingest_dcp_large')
+                ->where('status', 'Complete')
+                ->get();
+        //dd($files) ;
+        return view('ingester.transfere_content',compact('files'));
+    }
+
+    public function delete_transfered_file(Request $request)
+    {
+        foreach($request->array_files as $file)
+        {
+            $file_to_delete = DB::table('ingest_dcp_large')
+            ->where('Id',$file)
+            ->first();
+            //dd($file_to_delete) ;
+
+            $file = escapeshellarg($file_to_delete->tms_dir);
+            $del = shell_exec("rm -rf $file");
+
+           // $response = Storage::deleteDirectory();
+        }
+        dd($del ) ;
     }
 
 }
