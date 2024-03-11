@@ -514,8 +514,6 @@ class LocationController extends Controller
             app(\App\Http\Controllers\ScheduleContoller::class)->getschedules($location->id);
         }
     }
-
-
     public function sync_spl_cpl( $location )
     {
         //$spls = Spl::all() ;
@@ -576,8 +574,6 @@ class LocationController extends Controller
         }
     }
 
-
-
     public function sync_lms_spl_cpl( $location )
     {
         $lms_spls = Lmsspl::all() ;
@@ -613,6 +609,8 @@ class LocationController extends Controller
 
         }
     }
+
+
 
     public function refresh_playback_data()
     {
@@ -659,6 +657,17 @@ class LocationController extends Controller
 
     }
 
+    public function refresh_logs_data()
+    {
+        $start_time = Carbon::now();
+        echo $start_time->toDateTimeString();
+        $locations = Location::all() ;
+        foreach($locations as $location)
+        {
+            app(\App\Http\Controllers\LogController::class)->get_logs($location->id);
+        }
+
+    }
 
 
 }

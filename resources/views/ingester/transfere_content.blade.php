@@ -68,7 +68,7 @@
                             </div> -->
                             <div class="row">
 
-                                    <div class="preview-list multiplex" id="div_ingest_logs" style="height: 92px; max-height: 92px; overflow-y: auto;">
+                                    <div class="preview-list multiplex" id="div_ingest_logs">
                                         <div class="table-responsive">
                                             <table class="table " id="table_ingest_logs">
                                                 <thead>
@@ -162,6 +162,17 @@
             timeout: 5000
         })
     @endif
+    function getStatusDownload(status)
+    {
+        let icon =
+            (status == "running") ? "<i class=\"btn btn-primary running-icon custom-icon mdi mdi-play-circle-outline\"   style='margin-left: 1px; font-size: 23px; background: none;      border: 0; color: #297EEE;'   \"></i> Running"
+                : status == "Complete" ? "<i class='fa fa-check ' aria-hidden='true' style='color: #60eb47'></i> Complete"
+                    : status == "Failed" ? "<i class='fa  fa-exclamation-triangle' aria-hidden='true' style='color: #ff4545 '></i> Failed"
+                        : status == "Canceled By User" ? "<i class='fa fa-close' aria-hidden='true' style='color:#b7b7b7;'></i> <span >Canceled By User</span>"
+                            : "<i class='fa fa-clock-o' aria-hidden='true' style='color:#ffcb57;'></i> Pending";
+
+        return icon;
+    }
 
     function displayFileTransfere() {
         $.ajax({

@@ -356,7 +356,7 @@ class IngersterController extends Controller
             if ($_POST["action_control"] == "get_transfere_content") {
                 $ingester_manager = new IngesterManager();
                 //$response = array("dcp" => $ingester_manager->getDcpLogs(), "spl" => $ingester_manager->getSplLogs());
-                $response = array("dcp" => $ingester_manager->getDcpLogs(), "spl" => []);
+                $response = array("dcp" => $ingester_manager->get_transfere_content(), "spl" => []);
                 echo json_encode($response);
             }
 
