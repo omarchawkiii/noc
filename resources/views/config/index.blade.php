@@ -76,14 +76,30 @@
 
                                                                             <div class="col-xl-4 ">
                                                                                 <div class="form-group">
-                                                                                    <label>Time Start :</label>
-                                                                                    <div class="input-group date"  data-target-input="nearest">
-                                                                                        <div class="input-group" data-bs-target="#timepicker-example" data-toggle="datetimepicker">
-                                                                                            <input type="time" id="timeEnd" class="form-control form-control-sm datetimepicker-input" data-bs-target="#timepicker-example" name="timeEnd"  value="{{ $config->timeStart}}">
-                                                                                            <div class="input-group-addon input-group-append"><i class="mdi mdi-clock input-group-text"></i></div>
-                                                                                        </div>
-                                                                                    </div>
-
+                                                                                    <label>Day Start :</label>
+                                                                                    <select type="text" class="form-control" id="dayStart" name="dayStart"  value="{{ $config->dayStart}}">
+                                                                                        <option @if($config->dayStart =="Monday") selected @endif value="Monday">
+                                                                                            Monday
+                                                                                        </option>
+                                                                                        <option @if($config->dayStart =="Tuesday") selected @endif value="Tuesday">
+                                                                                            Tuesday
+                                                                                        </option>
+                                                                                        <option @if($config->dayStart =="Wednesday") selected @endif  value="Wednesday">
+                                                                                            Wednesday
+                                                                                        </option>
+                                                                                        <option @if($config->dayStart =="Thursday") selected @endif  value="Thursday">
+                                                                                            Thursday
+                                                                                        </option>
+                                                                                        <option @if($config->dayStart =="Friday") selected @endif  value="Friday">
+                                                                                            Friday
+                                                                                        </option>
+                                                                                        <option @if($config->dayStart =="Saturday") selected @endif  value="Saturday">
+                                                                                            Saturday
+                                                                                        </option>
+                                                                                        <option @if($config->dayStart =="Sunday") selected @endif  value="Sunday">
+                                                                                            Sunday
+                                                                                        </option>
+                                                                                    </select>
                                                                                     <div class="label-status"></div>
                                                                                 </div>
                                                                             </div>
@@ -188,7 +204,8 @@
 
             event.preventDefault();
             var timeStart = $('#timeStart').val();
-            var timeEnd = $('#timeEnd').val();
+            var timeEnd = $('#timeStart').val();
+            var dayStart = $('#dayStart').val();
 
             var url = '{{ url('') }}' + '/settings/update';
             console.log(timeStart) ;
@@ -201,6 +218,7 @@
                 data: {
                     timeStart: timeStart,
                     timeEnd: timeEnd,
+                    dayStart: dayStart,
                 },
 
                 headers: {

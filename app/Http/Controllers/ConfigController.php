@@ -22,6 +22,7 @@ class ConfigController extends Controller
         $new_config = $config->update([
             'timeStart' => $request->timeStart ,
             'timeEnd' => $request->timeEnd ,
+            'dayStart' => $request->dayStart ,
         ]);
         if($new_config)
         {

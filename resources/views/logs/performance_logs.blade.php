@@ -321,7 +321,7 @@
                 {
                     swal({
                                     title: 'Failed!',
-                                    text: 'Please Select CPL    ',
+                                    text: 'Please Select Location and CPL   ',
                                     icon: 'warning',
                                     buttons: {
                                         cancel: {

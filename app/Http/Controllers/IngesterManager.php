@@ -3500,9 +3500,9 @@ $data_dcp = json_decode(json_encode($data_dcp), true);
                     DB::raw('(SELECT IF(COUNT(*) = SUM(ingest_dcp_large.hash_verified), 1, 0) FROM ingest_dcp_large WHERE ingest_dcp_large.id_cpl = ingests.cpl_id) AS all_verified')
                 )
                 ->leftJoin('ingestsources', 'ingests.id_source', '=', 'ingestsources.id')
-                ->leftJoin('ingest_dcp_large', 'ingest_dcp_large.id_cpl', '=', 'ingests.cpl_id')
+                //->leftJoin('ingest_dcp_large', 'ingest_dcp_large.id_cpl', '=', 'ingests.cpl_id')
                 ->where('ingests.status', 'Complete')
-                ->where('ingest_dcp_large.hash_verified','!=', 0)
+                //->where('ingest_dcp_large.hash_verified','!=', 0)
                 ->orderByDesc('ingests.order')
                 ->get();
 

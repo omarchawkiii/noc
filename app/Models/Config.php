@@ -12,6 +12,7 @@ class Config extends Model
         'timeStart',
         'timeEnd',
         'autoIngest' ,
+        'dayStart',
     ];
 
 

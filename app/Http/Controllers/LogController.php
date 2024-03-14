@@ -20,13 +20,18 @@ class LogController extends Controller
 {
     public function get_logs($location )
     {
+
         $location = Location::find($location) ;
         $screens = $location->screens ;
         $url = $location->connection_ip;
         $url ="http://localhost/tms/system/api2.php" ;
         foreach($screens as $screen)
         {
-            $last_log= Log::latest('created_at')->first() ;
+
+
+            $last_log= Log::latest('created_at')->where('screen_id',4)->first() ;
+            //dd($last_log);
+            //dd($last_log);
             if($last_log != null)
             {
                 $lowID=  $last_log->recId + 1  ;
@@ -35,26 +40,37 @@ class LogController extends Controller
             {
                 $lowID = 0 ;
             }
+
+            //$lowID = 1 ;
             $highID = $lowID + 10000 ;
+
             while ($highID <= 1000000) {
+
                 $client = new Client();
                 $response = $client->request('POST', $url,[
                     'form_params' => [
                         'action' => 'getPerformanceLogs',
                         'username'=>$location->email,
                         'password'=>$location->password,
-                        'screen_number'=>$screen->screen_number,
+                        //'screen_number'=>$screen->screen_number,
+                        'screen_number'=>4,
                         'lowID' =>$lowID,
                         'highID' =>$highID,
                     ]
                 ]);
-
+                $lowID =$highID ;
+                 $highID = $lowID + 10000 ;
                 $contents = json_decode($response->getBody(), true);
-
+               // dd($contents,$highID,$lowID);
+                echo $highID ."<br />" ;
+                echo $lowID ."<br />" ;
+                echo "<br /> __________________ <br />" ;
                 if(count($contents['result']) > 0 )
                 {
+                    //dd($contents);
                     foreach($contents['result'] as $log)
                     {
+                    echo $log['recId'] . "<br />" ;
                         Log::updateOrCreate([
                             'recId' => $log['recId'] ,
                             'location_id' => $location->id,
@@ -74,7 +90,14 @@ class LogController extends Controller
                         ]);
                     }
                 }
+                else
+                {
+                    echo "break ";
+                 //   break ;
+                }
             }
+
+            dd('end first screen' ) ;
         }
 
     }
@@ -291,7 +314,7 @@ class LogController extends Controller
         $pdf->Cell(40, 10, 'recType', 1, 0, 'C');
         $pdf->Cell(40, 10, 'recSubtype', 1, 0, 'C');
         $pdf->Cell(40, 10, 'recPriority', 1, 0, 'C');
-    //    $pdf->Cell(40, 10, 'recKeywords', 1, 0, 'C');
+        //    $pdf->Cell(40, 10, 'recKeywords', 1, 0, 'C');
         $pdf->Cell(40, 10, 'date', 1, 0, 'C');
         $pdf->Cell(40, 10, 'screen', 1, 0, 'C');
         $pdf->Ln();

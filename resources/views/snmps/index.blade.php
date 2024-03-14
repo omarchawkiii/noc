@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title') connexion  @endsection
+@section('title') Snmp  @endsection
 @section('content')
     <div class="page-header playbck-shadow">
         <h3 class="page-title">Snmp </h3>
@@ -40,7 +40,7 @@
                 </div>
 
                 <div class="col-12">
-                    <div class="table-responsive">
+                    <div class="table-responsive preview-list multiplex">
                         <table id="location-listing" class="table text-center">
                             <thead>
                                 <tr>
@@ -144,54 +144,72 @@
             var country =  $('#country').val();
 
 
+            if(location != "Locations")
+            {
+                var url = "{{  url('') }}"+ '/snmp/?location=' + location ;
+                result =" " ;
+
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    success:function(response)
+                    {
+                        $.each(response.snmps, function( index, value ) {
+                            result = result
+                                +'<tr class="odd ">'
+                                +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.serverName+' </td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.snmp_created_at+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;"> '+ extractTextWithinQuotes(value.trap_data)+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.type+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.category+' </i></a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.severity+'</a></td>'
+                                +'</tr>';
+                        });
+                        $('#location-listing tbody').html(result)
 
 
-            var url = "{{  url('') }}"+ '/snmp/?location=' + location ;
-            result =" " ;
+                        var spl_datatable = $('#location-listing').DataTable({
+                            "iDisplayLength": 10,
+                            destroy: true,
+                            "bDestroy": true,
+                            "language": {
+                                search: "_INPUT_",
+                                searchPlaceholder: "Search..."
+                            }
+                        });
 
-            $.ajax({
-                url: url,
-                method: 'GET',
-                success:function(response)
-                {
-                    $.each(response.snmps, function( index, value ) {
-                        result = result
-                            +'<tr class="odd ">'
-                            +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.serverName+' </td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.snmp_created_at+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;"> '+ extractTextWithinQuotes(value.trap_data)+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.type+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.category+' </i></a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.severity+'</a></td>'
-                            +'</tr>';
-                    });
-                    $('#location-listing tbody').html(result)
+                    },
+                    error: function(response) {
 
-
-                    var spl_datatable = $('#location-listing').DataTable({
-                        "iDisplayLength": 10,
-                        destroy: true,
-                        "bDestroy": true,
-                        "language": {
-                            search: "_INPUT_",
-                            searchPlaceholder: "Search..."
-                        }
-                    });
-
-                },
-                error: function(response) {
-
-                }
-            })
+                    }
+                })
+            }
+            else
+            {
+                $('#location-listing tbody').html('<div id="table_logs_processing" class="dataTables_processing card">Please Select Location</div>')
+            }
 
         });
-
 
     })(jQuery);
 
 </script>
 
+<script>
+    let content_height = document.querySelector('.content-wrapper').offsetHeight;
+    let navbar_height = document.querySelector('.navbar').offsetHeight;
+    //let footer_height = document.querySelector('.footer').offsetHeight;
+    let page_header_height = document.querySelector('.page-header ').offsetHeight;
+    let content_max_height = content_height - navbar_height - page_header_height - 150;
+    $(".multiplex").height(content_max_height);
+    $(function() {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
 
+    $(".preview-item").click(function() {
+        $(this).toggleClass("selected");
+    });
+</script>
 
 
 @endsection
@@ -201,6 +219,18 @@
 <link rel="stylesheet" href="{{asset('/assets/vendors/datatables.net-bs4/dataTables.bootstrap4.css')}}">
 <link rel="stylesheet" href="{{asset('/assets/vendors/jquery-toast-plugin/jquery.toast.min.css')}}">
 
-
+<style>
+    .dataTables_processing.card,
+    .jumping-dots-loader {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 200px;
+        margin-left: -100px;
+        margin-top: -26px;
+        text-align: center;
+        padding: 1em 0;
+    }
+</style>
 
 @endsection

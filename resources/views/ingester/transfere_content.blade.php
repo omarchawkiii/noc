@@ -15,6 +15,19 @@
         <div class="card-body">
 
             <div class="row mb-2">
+                <div class="d-flex flex-row justify-content-between mt-2 mb-3">
+
+                    <div>
+                    <h4 class="card-title ">Files</h4>
+                    </div>
+
+                    <div>
+                        <button class="btn btn-danger  btn-icon-text" id="delete_file">
+                            <i class="mdi mdi-plus btn-icon-prepend"></i> Delete
+                        </button>
+                    </div>
+                </div>
+
                 <div class="  col-md-12">
                     <div class="card">
                         <div class="card-body ">
@@ -70,12 +83,12 @@
 
                                     <div class="preview-list multiplex" id="div_ingest_logs">
                                         <div class="table-responsive">
-                                            <table class="table " id="table_ingest_logs">
+                                            <table class="table " id="files-listing">
                                                 <thead>
                                                 <tr>
                                                     <th> State</th>
                                                     <th> File Name</th>
-                                                    <th> size</th>
+                                                    <th> Available On On</th>
 
                                                 </tr>
                                                 </thead>
@@ -225,7 +238,7 @@
     displayFileTransfere()
 
     //select element to Delete
-    $(document).on('click', '.file-item', function (event) {
+    $(document).on('click', '.item_to_select', function (event) {
         $(this).toggleClass('selected');
     });
 
@@ -234,7 +247,7 @@
 
         var array_files = [];
 
-        $("#files-listing .file-item.selected").each(function() {
+        $("#files-listing .item_to_select.selected").each(function() {
                 var id = $(this).data("id");
                 array_files.push(id);
             });

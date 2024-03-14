@@ -52,14 +52,14 @@
           <span class="menu-title">Ingester</span>
         </a>
       </li>
-      <!--<li class="nav-item menu-items">
+      <li class="nav-item menu-items">
         <a class="nav-link" href="{{ route('ingester.transfere_content') }}">
           <span class="menu-icon icon-box-console">
             <i class="mdi mdi-file-import"></i>
           </span>
           <span class="menu-title">Transfrere Content</span>
         </a>
-      </li> -->
+      </li>
 
 
       <li class="nav-item menu-items">

@@ -82,7 +82,7 @@
                 </div>
 
                 <div class="col-12">
-                    <div class="table-responsive">
+                    <div class="table-responsive preview-list multiplex">
                         <table id="location-listing" class="table text-center">
                             <thead>
                                 <tr>
@@ -797,7 +797,6 @@
             .end()
             .append('<option value="null">All Screens</option>')
 
-
             //$('#location-listing tbody').html('')
             var location =  $('#location').val();
             var country =  $('#country').val();
@@ -808,126 +807,128 @@
             if(location != "Locations")
             {
                 $('#scheduleDate').show();
-            }
-            else
-            {
-                $('#scheduleDate').hide();
-            }
+                var url = "{{  url('') }}"+ '/get_schedules_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen+'&date='+ date.toLocaleDateString('en-GB')+' 00';
+                result =" " ;
 
-            var url = "{{  url('') }}"+ '/get_schedules_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen+'&date='+ date.toLocaleDateString('en-GB')+' 00';
-            result =" " ;
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    success:function(response)
+                    {
+                        console.log(response)
+                        screens = '<option value="null" selected>All Screens</option>';
+                        $.each(response.screens, function( index_screen, screen ) {
 
-            $.ajax({
-                url: url,
-                method: 'GET',
-                success:function(response)
-                {
-                    console.log(response)
-                    screens = '<option value="null" selected>All Screens</option>';
-                    $.each(response.screens, function( index_screen, screen ) {
+                            screens = screens
+                                +'<option  value="'+screen.id+'">'+screen.screen_name+'</option>';
+                        });
+                            $('#screen').html(screens)
 
-                        screens = screens
-                            +'<option  value="'+screen.id+'">'+screen.screen_name+'</option>';
-                    });
-                        $('#screen').html(screens)
-
-                    $.each(response.schedules, function( index, value ) {
-                        bg_status="" ;
-                        if(value.status !="linked" )
-                        {
-                            bg_status = "bg-danger"
-                        }
-
-                        icon_spl = ""
-                        icon_cpl = ""
-                        icon_kdm = ""
-                        statu_content=""
-
-
-
-                        if(value.status !="linked" )
-                        {
-                            icon_spl = '<i class="mdi mdi-playlist-play text-danger"> </i>'
-
-                            icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
-                            icon_cpl = '<i class="mdi mdi-filmstrip text-warning ">'
-
-                            statu_content = ''
-
-                        }
-                        else
-                        {
-
-                            icon_spl =  '<i class="mdi mdi-playlist-play text-success"> </i>'
-                            if(value.cpls ==1)
+                        $.each(response.schedules, function( index, value ) {
+                            bg_status="" ;
+                            if(value.status !="linked" )
                             {
-                                icon_cpl = '<i class="mdi mdi-filmstrip text-success">'
-                                if(value.kdm  ==1 )
-                                {
-                                    icon_kdm = '</i> <i class="mdi mdi-key-change text-success"> </i>'
+                                bg_status = "bg-danger"
+                            }
+
+                            icon_spl = ""
+                            icon_cpl = ""
+                            icon_kdm = ""
+                            statu_content=""
 
 
-                                }
-                                else
-                                {
-                                    icon_kdm = '</i> <i class="mdi mdi-key-remove text-danger check_need_kdm" data-scheduleidd = "'+value.id+'"> </i>'
-                                }
+
+                            if(value.status !="linked" )
+                            {
+                                icon_spl = '<i class="mdi mdi-playlist-play text-danger"> </i>'
+
+                                icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
+                                icon_cpl = '<i class="mdi mdi-filmstrip text-warning ">'
+
+                                statu_content = ''
 
                             }
                             else
                             {
-                                icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
-                                icon_cpl = '<i class="mdi mdi-filmstrip text-danger   spl_not_linked" data-scheduleidd = "'+value.id+'">'
+
+                                icon_spl =  '<i class="mdi mdi-playlist-play text-success"> </i>'
+                                if(value.cpls ==1)
+                                {
+                                    icon_cpl = '<i class="mdi mdi-filmstrip text-success">'
+                                    if(value.kdm  ==1 )
+                                    {
+                                        icon_kdm = '</i> <i class="mdi mdi-key-change text-success"> </i>'
+
+
+                                    }
+                                    else
+                                    {
+                                        icon_kdm = '</i> <i class="mdi mdi-key-remove text-danger check_need_kdm" data-scheduleidd = "'+value.id+'"> </i>'
+                                    }
+
+                                }
+                                else
+                                {
+                                    icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
+                                    icon_cpl = '<i class="mdi mdi-filmstrip text-danger   spl_not_linked" data-scheduleidd = "'+value.id+'">'
+                                }
                             }
-                        }
-                        if(value.kdm_status =="not_valid_yet")
-                        {
-                            statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-warning btn-fw get_schedule_infos"> KDM Valide in :  '+value.date_expired+'</button>'
-                        }
-                        if(value.kdm_status =="expired")
-                        {
-                            statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-danger get_schedule_infos  btn-fw"> KDM Already Expired : '+value.date_expired+'</button>'
-                        }
-                        if(value.kdm_status =="warning")
-                        {
-                            statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-warning get_schedule_infos btn-fw">KDM Expired in : '+value.date_expired+'</button>'
-                        }
-                        if(value.kdm_status =="valid")
-                        {
-                            statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-success get_schedule_infos btn-fw"> KDM Expired in  : '+value.date_expired+'</button>'
-                        }
+                            if(value.kdm_status =="not_valid_yet")
+                            {
+                                statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-warning btn-fw get_schedule_infos"> KDM Valide in :  '+value.date_expired+'</button>'
+                            }
+                            if(value.kdm_status =="expired")
+                            {
+                                statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-danger get_schedule_infos  btn-fw"> KDM Already Expired : '+value.date_expired+'</button>'
+                            }
+                            if(value.kdm_status =="warning")
+                            {
+                                statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-warning get_schedule_infos btn-fw">KDM Expired in : '+value.date_expired+'</button>'
+                            }
+                            if(value.kdm_status =="valid")
+                            {
+                                statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-success get_schedule_infos btn-fw"> KDM Expired in  : '+value.date_expired+'</button>'
+                            }
 
 
-                        result = result
-                            +'<tr class="odd ">'
-                            +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.type+' </td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.screen.screen_name+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.name+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.date_start+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+ icon_spl + icon_cpl + icon_kdm +' </i></a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+statu_content+'</a></td>'
-                            +'</tr>';
-                    });
-                    $('#location-listing tbody').html(result)
+                            result = result
+                                +'<tr class="odd ">'
+                                +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.type+' </td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.screen.screen_name+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.name+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.date_start+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+ icon_spl + icon_cpl + icon_kdm +' </i></a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+statu_content+'</a></td>'
+                                +'</tr>';
+                        });
+                        $('#location-listing tbody').html(result)
 
-                    console.log(response.schedules)
-                    /***** refresh datatable **** **/
+                        console.log(response.schedules)
+                        /***** refresh datatable **** **/
 
-                    var spl_datatable = $('#location-listing').DataTable({
-                        "iDisplayLength": 100,
-                        destroy: true,
-                        "bDestroy": true,
-                        "language": {
-                            search: "_INPUT_",
-                            searchPlaceholder: "Search..."
-                        }
-                    });
+                        var spl_datatable = $('#location-listing').DataTable({
+                            "iDisplayLength": 100,
+                            destroy: true,
+                            "bDestroy": true,
+                            "language": {
+                                search: "_INPUT_",
+                                searchPlaceholder: "Search..."
+                            }
+                        });
 
-                },
-                error: function(response) {
+                    },
+                    error: function(response) {
 
-                }
-            })
+                    }
+                })
+
+            }
+            else
+            {
+                $('#scheduleDate').hide();
+                $('#location-listing tbody').html('<div id="table_logs_processing" class="dataTables_processing card">Please Select Location</div>')
+            }
+
 
         });
         $(document).on('click', '#linking_btn , #no_linked_spls_movies_tab', function () {
@@ -1991,6 +1992,24 @@
          });
     })(jQuery);
 </script>
+<script>
+    let content_height = document.querySelector('.content-wrapper').offsetHeight;
+    let navbar_height = document.querySelector('.navbar').offsetHeight;
+    //let footer_height = document.querySelector('.footer').offsetHeight;
+    let page_header_height = document.querySelector('.page-header ').offsetHeight;
+    let content_max_height = content_height - navbar_height - page_header_height - 170;
+
+    $(".multiplex").height(content_max_height);
+
+    $(function() {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+
+    $(".preview-item").click(function() {
+
+        $(this).toggleClass("selected");
+    });
+</script>
 @endsection
 
 @section('custom_css')
@@ -2009,6 +2028,18 @@
     .k-select
     {
         display: none !important ;
+    }
+
+    .dataTables_processing.card,
+    .jumping-dots-loader {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 200px;
+        margin-left: -100px;
+        margin-top: -26px;
+        text-align: center;
+        padding: 1em 0;
     }
 </style>
 
