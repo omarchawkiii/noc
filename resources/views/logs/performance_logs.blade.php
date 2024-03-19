@@ -307,7 +307,7 @@
                 // Get the values of the 'from' and 'to' inputs
                 var id_location =  $('#location').val();
                 var id_screen =  $('#screen').val();
-
+                //console.log('id screen : ' + id_screen) ;
                 var fromDate = $('#from').val();
                 var toDate = $('#to').val();
                 //var id_content = $('#search_content_by_title').attr('data-id')

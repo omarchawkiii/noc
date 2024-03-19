@@ -51,14 +51,12 @@ class SnmpController extends Controller
 
     public function get_snmp_with_filter(Request $request )
     {
-
         $location = $request->location;
-
         if(isset($location) &&  $location != 'null' )
         {
             $location = Location::find($location) ;
-            $snmps =Snmp::all();
-            $snmps =$snmps->where('location_id',$location->id);
+           // $snmps =Snmp::all();
+            $snmps =Snmp::where('location_id',$location->id)->orderBy('id','DESC')->take(1000)->get();//dd($snmps);
             return Response()->json(compact('snmps','location'));
         }
         else

@@ -44,6 +44,8 @@ class Playback extends Model
         "dowser_status" ,
         'location_id',
         'screen_id',
+        'ip_sound_status',
+        'sound_status',
     ];
 
     public function screen(): BelongsTo

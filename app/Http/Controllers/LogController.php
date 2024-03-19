@@ -29,7 +29,7 @@ class LogController extends Controller
         {
 
 
-            $last_log= Log::latest('created_at')->where('screen_id',4)->first() ;
+            $last_log= Log::latest('created_at')->where('screen_id',9)->first() ;
             //dd($last_log);
             //dd($last_log);
             if($last_log != null)
@@ -53,7 +53,7 @@ class LogController extends Controller
                         'username'=>$location->email,
                         'password'=>$location->password,
                         //'screen_number'=>$screen->screen_number,
-                        'screen_number'=>4,
+                        'screen_number'=>9,
                         'lowID' =>$lowID,
                         'highID' =>$highID,
                     ]
@@ -61,16 +61,13 @@ class LogController extends Controller
                 $lowID =$highID ;
                  $highID = $lowID + 10000 ;
                 $contents = json_decode($response->getBody(), true);
-               // dd($contents,$highID,$lowID);
-                echo $highID ."<br />" ;
-                echo $lowID ."<br />" ;
-                echo "<br /> __________________ <br />" ;
+
                 if(count($contents['result']) > 0 )
                 {
                     //dd($contents);
                     foreach($contents['result'] as $log)
                     {
-                    echo $log['recId'] . "<br />" ;
+                    //echo $log['recId'] . "<br />" ;
                         Log::updateOrCreate([
                             'recId' => $log['recId'] ,
                             'location_id' => $location->id,
@@ -86,18 +83,18 @@ class LogController extends Controller
                             'Abbreviation' => $log['Abbreviation'],
                             'serverName' => $log['serverName'],
                             'location_id' => $location->id,
-                            'screen_id' =>$screen->id ,
+                            'screen_id' =>9,//$screen->id ,
                         ]);
                     }
                 }
                 else
                 {
-                    echo "break ";
+                    //echo "break ";
                  //   break ;
                 }
             }
 
-            dd('end first screen' ) ;
+            dd('end  screen 9' ) ;
         }
 
     }
@@ -167,7 +164,7 @@ class LogController extends Controller
         }
         if( $id_screen != 'null' )
         {
-            $logs = $logs->where('screen_id', $id_screen) ;
+            $logs = $logs->where('screen_number', $id_screen) ;
         }
 
         if( isset($fromDate) && $fromDate != 'null' )

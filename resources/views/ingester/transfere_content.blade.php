@@ -160,6 +160,7 @@
 
 <script src="{{asset('/assets/vendors/jquery-toast-plugin/jquery.toast.min.js')}}"></script>
 <script src="{{asset('/assets/js/tooltips.js')}}"></script>
+<script src="{{ asset('/assets/vendors/sweetalert/sweetalert.min.js') }}"></script>
 <script>
     (function($) {
 
@@ -209,6 +210,7 @@
                         for (var i = 0; i < dcp.length; i++) {
                             box_logs += '<tr class="item_to_select logs-item" ' +
                                 '  data-task_status="' + dcp[i].status + '" ' +
+                                '  data-id="' + dcp[i].id + '" ' +
                                 ' data-type="DCP"' +
                                 '  data-id_cpl="' + dcp[i].cpl_id + '"   style="font-weight: bold">' +
                                 '    <td class="status_control">' + getStatusDownload(dcp[i].status) + ' </td>  ' +
@@ -248,7 +250,7 @@
         var array_files = [];
 
         $("#files-listing .item_to_select.selected").each(function() {
-                var id = $(this).data("id");
+                var id = $(this).data("id_cpl");
                 array_files.push(id);
             });
 
@@ -271,31 +273,44 @@
                 beforeSend: function () {
                 },
                 success: function (response) {
-
-                    var result ="" ;
-                    if(response.screens.length>0)
+                    if(response)
                     {
-                        $.each(response.screens, function( index, value ) {
-
-                            result =  result +
-                            '<li>'
-                                +'<button type="button" class="btn btn-outline-secondary btn-fw" style="text-align: left;">'
-                                    +'<label class="form-check-label custom-check2">'
-                                        +'<input type="checkbox" class="form-check-input" name="screen_to_ingest" id="'+value.id+'" value="'+value.id+'" style="font-size: 20px;margin-bottom:  3px">'
-                                        +'<span style="font-weight: bold;">'+value.name+'</span> <i class="input-helper"></i>'
-                                    +'</label>'
-                                +'</button>'
-                            +'</li>'
-
-                        });
-
-                        $('#list_servers_cpls_to_delete').html(result)
-                        $('#cpl_delete_model').modal('show')
-
-                        $('#confirm_delete_cpl_group').click(function(){
-                            alert('tset');
-                        });
+                        displayFileTransfere()
+                                swal({
+                                    title: 'Done!',
+                                    text: 'File Deleted Successfully ',
+                                    icon: 'success',
+                                    button: {
+                                        text: "Continue",
+                                        value: true,
+                                        visible: true,
+                                        className: "btn btn-primary"
+                                    }
+                                })
                     }
+                    else
+                    {
+                        swal({
+                                    title: 'Failed',
+                                    text: "Error occurred while sending the request.",
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3f51b5',
+                                    cancelButtonColor: '#ff4081',
+                                    confirmButtonText: 'Great ',
+                                    buttons: {
+                                        cancel: {
+                                            text: "Cancel",
+                                            value: null,
+                                            visible: true,
+                                            className: "btn btn-danger",
+                                            closeModal: true,
+                                        },
+                                    }
+                                })
+                    }
+
+
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.log(errorThrown);

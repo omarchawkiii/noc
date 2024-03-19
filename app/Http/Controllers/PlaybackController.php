@@ -67,6 +67,11 @@ class PlaybackController extends Controller
 
                             'screen_id' => $screen->id ,
                             'location_id' => $location->id ,
+
+                            'ip_sound_status' => $playback['ip_sound_status'] ,
+                            'sound_status' => $playback['sound_status'] ,
+
+
                         ]);
                     }
                 }
@@ -91,7 +96,10 @@ class PlaybackController extends Controller
     public function get_playbak_detail(Request $request)
     {
         $playback = Playback::find($request->id) ;
-        return Response()->json(compact('playback'));
+        $screen_info = Screen::where('id',$playback->screen_id)
+        ->select('screens.screen_name')->first() ;
+
+        return Response()->json(compact('playback' , 'screen_info' ));
 
     }
 }

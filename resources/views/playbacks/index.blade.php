@@ -318,6 +318,7 @@
                     id: id,
                 },
                 success: function(response) {
+
                     var _time = calculateRuntimeDifference(response.playback.remaining_runtime ,response.playback.elapsed_runtime)
                       var progress_bar= '<div class="col-md-8">'
                                         +'<div class="progress progress-lg p-0 " style="margin-top:15px">'
@@ -329,6 +330,26 @@
                                         +'</div>'
                                     +'</div>'
 
+
+                    var sound_status =""
+                    if(response.playback.ip_sound_status == 0)
+                    {
+                        sound_status = '<button type="button" class="btn btn-inverse-danger btn-icon-text"><i class="mdi mdi-wifi-off btn-icon-prepend"></i> Offline </button>';
+                    }
+                    else
+                    {
+                        if(response.playback.sound_status !="OK")
+                        {
+                            sound_status = '<button type="button" class="btn btn-inverse-warning btn-icon-text"><i class="mdi mdi-alert btn-icon-prepend"></i> ' + response.playback.sound_status + ' </button>' ;
+                        }
+                        else
+                        {
+                            sound_status = '<button type="button" class="btn btn-inverse-success btn-icon-text"><i class="mdi mdi mdi-check btn-icon-prepend"></i> OK </button>' ;
+                        }
+
+                    }
+
+
                    // $('#infos_modal .modal-header h4').html("Playback : " + response.playback.serverName)
                    $('#infos_modal .modal-body').html("Playback :" + response.playback.serverName)
                     data = '<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-playlist-play"> </i> <span> Curent SPL :</span></p><p class="col-md-9"  style="margin-top:15px"> '+response.playback.spl_title+' </p> '
@@ -336,11 +357,13 @@
                     +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-timer"> </i> <span>  Time : </span></p>'+ progress_bar
                     +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-assistant"> </i> <span>  playback generale status  :  </span></p><p class="col-md-9"  style="margin-top:15px">'+response.playback.storage_generale_status+'</p>'
                     +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-security"> </i> <span>  Security Manager status  :  </span></p><p class="col-md-9"  style="margin-top:15px">'+response.playback.securityManager+'</p>'
+                    +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-volume-high"> </i> <span>  Sound Status  :  </span></p><p class="col-md-9"  style="margin-top:15px">'+sound_status+'</p>'
+
 
                     $('#infos_modal .modal-body').html(data) ;
+                    $('#infos_modal .modal-header h4').html("Screen : " + response.screen_info.screen_name) ;
 
 
-                    console.log(response)
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.log(errorThrown);

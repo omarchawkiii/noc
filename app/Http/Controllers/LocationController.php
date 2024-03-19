@@ -659,7 +659,7 @@ class LocationController extends Controller
 
     public function refresh_logs_data()
     {
-        dd('') ;
+        dd('');
         $start_time = Carbon::now();
         echo $start_time->toDateTimeString();
         $locations = Location::all() ;

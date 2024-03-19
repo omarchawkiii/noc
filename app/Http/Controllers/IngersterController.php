@@ -393,27 +393,40 @@ class IngersterController extends Controller
         return view('ingester.transfere_content');
     }
 
-    public function delete_transfered_file(Request $request)
+     public function delete_transfered_file(Request $request)
     {
+
         foreach($request->array_files as $file)
         {
-            $file_to_delete = DB::table('ingest_dcp_large')
-            ->where('Id',$file)
+
+            $file_to_delete = DB::table('ingests')
+            ->where('cpl_id',$file)
             ->first();
-            //dd($file_to_delete) ;
-            //    dd($file_to_delete);
-            $path = '/DATA/assets/'.$file_to_delete->tms_dir ;
-            $file = escapeshellarg($path);
 
+            $command = "rm -rf $file_to_delete->tms_dir";
+            $output = shell_exec($command);
+            $result = true;
+            if ($output === null)
+            {
+                 DB::table('ingest_dcp_large')
+                ->where('id_cpl',$file)->delete() ;
 
-            $del = shell_exec("rm -rf $file");
-            //$file_to_delete->delete() ;
-            dd($del) ;
-           // $response = Storage::deleteDirectory();
+                DB::table('ingests')
+                    ->where('cpl_id',$file)->delete() ;
+
+              //  return true; // Successfully deleted
+
+            }
+            else
+            {
+                $result =false ;
+               // return false; // Failed to delete
+            }
+
         }
-        dd($del ) ;
-    }
+        return $result ;
 
+    }
 
 
 
