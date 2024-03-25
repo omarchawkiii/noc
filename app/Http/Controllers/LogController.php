@@ -29,7 +29,7 @@ class LogController extends Controller
         {
 
 
-            $last_log= Log::latest('created_at')->where('screen_id',9)->first() ;
+            $last_log= Log::latest('created_at')->where('screen_id',13)->first() ;
             //dd($last_log);
             //dd($last_log);
             if($last_log != null)
@@ -53,7 +53,7 @@ class LogController extends Controller
                         'username'=>$location->email,
                         'password'=>$location->password,
                         //'screen_number'=>$screen->screen_number,
-                        'screen_number'=>9,
+                        'screen_number'=>14,
                         'lowID' =>$lowID,
                         'highID' =>$highID,
                     ]
@@ -83,7 +83,7 @@ class LogController extends Controller
                             'Abbreviation' => $log['Abbreviation'],
                             'serverName' => $log['serverName'],
                             'location_id' => $location->id,
-                            'screen_id' =>9,//$screen->id ,
+                            'screen_id' =>13,//$screen->id ,
                         ]);
                     }
                 }
@@ -94,7 +94,7 @@ class LogController extends Controller
                 }
             }
 
-            dd('end  screen 9' ) ;
+            dd('end  screen 13' ) ;
         }
 
     }

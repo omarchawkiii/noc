@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Config;
 use App\Models\Lmsspl;
 use App\Models\Location;
 use App\Models\Nocspl;
@@ -21,15 +22,21 @@ class NocsplController extends Controller
 
     public function createlocalspl(Request $request)
     {
+    //dd($request->action_type);
         if($request->action_type =="edit")
         {
             Nocspl::where('uuid',$request->spl_uuid_edit)->delete() ;
             splcomponents::where('uuid_spl',$request->spl_uuid_edit)->delete() ;
             $uuid =  $request->spl_uuid_edit;
+            $locations_of_spl = Spl::where('uuid',$uuid)->leftJoin('locations', 'locations.id', '=', 'spls.location_id')->select('locations.*' )->groupBy('location_id')->get();
+
         }
         else{
-        $uuid =  $this->generateUuid();
+            $uuid =  $this->generateUuid();
+            $locations_of_spl = null ;
         }
+
+
 
         $IssueDate = Carbon::now();
         $file = $this->generateSplXml($uuid, $request->title_spl, $request->hfr, $request->display_mode, $request->items_spl, $IssueDate, 'add') ;
@@ -73,11 +80,46 @@ class NocsplController extends Controller
 
                     ]);
                 }
-            $response = array("status" => 1 , "title" =>$new_nocspl->spl_title, "uuid"=>$new_nocspl->uuid );
+
+            $config = Config::all()->first() ;
+            $ingest_errors = array() ;
+            $ingest_success = array() ;
+
+            if($config->autoIngest)
+            {
+                $autoIngest = true ;
+                if($request->action_type =="edit")
+                {
+                    if(count($locations_of_spl)> 0 )
+                    {
+                        foreach($locations_of_spl as $location)
+                        {
+                            $response = $this->ingest_spl($new_nocspl->xmlpath,$location->api_url,$location->email, $location->password) ;
+
+                            if($response->status== 1 )
+                            {
+                                array_push($ingest_success,  array("status" => $response->status , "id" =>  $location->id , "location_name" =>  $location->name));
+                            }
+                            else
+                            {
+                                array_push($ingest_errors,  array("status" => $response->status , "id" =>  $location->id , "location_name" =>  $location->name));
+                            }
+
+                        }
+
+                    }
+                }
+
+            }
+            else
+            {
+                $autoIngest = false ;
+            }
+            $response = array("status" => 1 , "title" =>$new_nocspl->spl_title, "uuid"=>$new_nocspl->uuid , "locations_of_spl"=>$locations_of_spl , "autoIngest"=>$autoIngest , "ingest_success"=>$ingest_success , "ingest_errors"=>$ingest_errors );
         }
         else
         {
-            $response = array("status" => 0 , "title" =>"null" , "uuid"=>"null" );
+            $response = array("status" => 0 , "title" =>"null" , "uuid"=>"null" , "ingest_success"=>null , "ingest_errors"=>null  );
         }
 
         echo json_encode($response);
@@ -1017,58 +1059,60 @@ class NocsplController extends Controller
         $nos_spl = Nocspl::where('uuid',$request->spl_id)->first() ;
         $location = Location::where('id',$request->location)->first() ;
 
+        $response  = $this->ingest_spl($nos_spl->xmlpath,$location->api_url,$location->email, $location->password) ;
 
+        return $response ;
+    }
+    public function ingest_spl($xmlpath,$api_url,$user_name, $password)
+    {
+        $xmlFilePath =    storage_path().'/app/xml_file/'.$xmlpath ;
 
-        $xmlFilePath =    storage_path().'/app/xml_file/'.$nos_spl->xmlpath ;
-
-         if (!file_exists($xmlFilePath)) {
-                return ['error' => 'File not found.'];
-            }
+         if (!file_exists($xmlFilePath))
+        {
+            return ['error' => 'File not found.'];
+        }
             // Read XML content from the file
-            $xmlData = file_get_contents($xmlFilePath);
+        $xmlData = file_get_contents($xmlFilePath);
 
-            // Prepare the request data
-            $requestData = [
-                'action' => 'updateSpl',
-                'xmlData' => $xmlData,
-                'username' =>$location->email,
-                'password' =>$location->password,
-            ];
+        // Prepare the request data
+        $requestData = [
+            'action' => 'updateSpl',
+            'xmlData' => $xmlData,
+            'username' =>$user_name,
+            'password' =>$password,
+        ];
             // Initialize cURL session
-            $ch = curl_init("http://localhost/tms/system/api2.php");
-            // Set cURL options
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($requestData));
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            // Execute cURL session and get the response
-            $response = curl_exec($ch);
-            $response = json_decode($response) ;
 
-            if($response->status== 1 )
-            {
-
-
-            }
-            return $response;
-            // Check for cURL errors
+        //$ch = curl_init($api_url);
+        $ch = curl_init("http://localhost/tms/system/api2.php");
+        // Set cURL options
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($requestData));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // Execute cURL session and get the response
+        $response = curl_exec($ch);
+        $response = json_decode($response) ;
 
 
-            if (curl_errno($ch)) {
-                return ['error' => 'Curl error: ' . curl_error($ch)];
-            }
+        return $response;
+        // Check for cURL errors
+
+
+        if (curl_errno($ch)) {
+            return ['error' => 'Curl error: ' . curl_error($ch)];
+        }
 
             // Close cURL session
-            curl_close($ch);
+        curl_close($ch);
 
-            // Process the API response
-            if (!$response) {
-                return ['error' => 'Error occurred while sending the request.'];
-            } else {
-                return json_decode($response, true);
-            }
+        // Process the API response
+        if (!$response) {
+            return ['error' => 'Error occurred while sending the request.'];
+        } else {
+            return json_decode($response, true);
+        }
 
     }
-
     public function getCplsFromSplArray($xml)
     {
         $compositions = [];
@@ -1225,7 +1269,6 @@ class NocsplController extends Controller
 
     public function destroy($id)
     {
-
         $nocspl = Nocspl::find($id) ;
         $path = storage_path(). '/app/xml_file/'.$nocspl->xmlpath ;
         if($nocspl->delete())

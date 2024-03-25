@@ -45,6 +45,9 @@ class Cpl extends Model
         'pictureWidth',
         'pictureHeight',
         'type',
+        'editRate_numerator',
+        'editRate_denominator',
+
     ];
 
     protected $primaryKey = 'id';

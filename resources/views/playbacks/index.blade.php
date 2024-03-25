@@ -173,7 +173,7 @@
                         aria-label="Close"><span aria-hidden="true"
                             style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
                 </div>
-                <div class="modal-body  row p-4">
+                <div class="modal-body  row p-4 pt-0">
 
 
                 </div>
@@ -214,25 +214,6 @@
 <!-- -------END  DATA TABLE ---- -->
 
 
-<script src="{{asset('/assets/vendors/jquery-toast-plugin/jquery.toast.min.js')}}"></script>
-<script src="{{asset('/assets/js/tooltips.js')}}"></script>
-<script>
-    (function($) {
-
-    @if (session('message'))
-
-        $.toast({
-            heading: 'Success',
-            text: '{{ session("message") }}',
-            showHideTransition: 'slide',
-            icon: 'success',
-            loaderBg: '#f96868',
-            position: 'top-right',
-            timeout: 5000
-        })
-    @endif
-})(jQuery);
-</script>
 
 
     <script>
@@ -349,15 +330,53 @@
 
                     }
 
+                    var projector_status =""
+                    var lamp_status =""
+                    var dowser_status=""
+                    if(response.playback.projector_status == 0)
+                    {
+                        projector_status = '<button type="button" class="btn btn-inverse-danger btn-icon-text"><i class="mdi mdi-monitor btn-icon-prepend"></i> Offline </button>';
+                        lamp_status = '<button type="button" class="btn btn-inverse-danger btn-icon-text"><i class="mdi mdi-lightbulb-outline btn-icon-prepend"></i> Off </button>';
+                        dowser_status = '<button type="button" class="btn btn-inverse-danger btn-icon-text"><i class="mdi mdi-wifi-off btn-icon-prepend"></i> Closed </button>';
+                    }
+                    else
+                    {
+                        projector_status = '<button type="button" class="btn btn-inverse-success btn-icon-text"><i class="mdi mdi-monitor btn-icon-prepend"></i> Online  </button>';
+                        if(response.playback.lamp_status !="Off")
+                        {
+                            lamp_status = '<button type="button" class="btn btn-inverse-danger btn-icon-text"><i class="mdi mdi-lightbulb-outline btn-icon-prepend"></i> Off </button>';
+                        }
+                        else
+                        {
+                            lamp_status = '<button type="button" class="btn btn-inverse-success btn-icon-text"><i class="mdi mdi-lightbulb btn-icon-prepend"></i> On </button>';
+                        }
+
+                        if(response.playback.dowser_status !="Closed")
+                        {
+                            dowser_status = '<button type="button" class="btn btn-inverse-danger btn-icon-text"><i class=" btn-icon-prepend"></i> Closed </button>';
+                        }
+                        else
+                        {
+                            dowser_status = '<button type="button" class="btn btn-inverse-success btn-icon-text"><i class=" btn-icon-prepend"></i> Open </button>';
+                        }
+
+                    }
+
+
+
 
                    // $('#infos_modal .modal-header h4').html("Playback : " + response.playback.serverName)
                    $('#infos_modal .modal-body').html("Playback :" + response.playback.serverName)
-                    data = '<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-playlist-play"> </i> <span> Curent SPL :</span></p><p class="col-md-9"  style="margin-top:15px"> '+response.playback.spl_title+' </p> '
-                    +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-play-circle"> </i> <span>  Curent CPL : </span></p><p class="col-md-9"  style="margin-top:15px">'+response.playback.cpl_title+' </p> '
-                    +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-timer"> </i> <span>  Time : </span></p>'+ progress_bar
-                    +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-assistant"> </i> <span>  playback generale status  :  </span></p><p class="col-md-9"  style="margin-top:15px">'+response.playback.storage_generale_status+'</p>'
-                    +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-security"> </i> <span>  Security Manager status  :  </span></p><p class="col-md-9"  style="margin-top:15px">'+response.playback.securityManager+'</p>'
-                    +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-volume-high"> </i> <span>  Sound Status  :  </span></p><p class="col-md-9"  style="margin-top:15px">'+sound_status+'</p>'
+                    data = '<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-playlist-play"> </i> <span> Curent SPL </span></p><p class="col-md-9"  style="margin-top:15px"> '+response.playback.spl_title+' </p> '
+                    +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-play-circle"> </i> <span>  Curent CPL </span></p><p class="col-md-9"  style="margin-top:15px">'+response.playback.cpl_title+' </p> '
+                    +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-timer"> </i> <span>  Time </span></p>'+ progress_bar
+                    +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-assistant"> </i> <span> playback generale status </span></p><p class="col-md-9"  style="margin-top:15px">'+response.playback.storage_generale_status+'</p>'
+                    +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-security"> </i> <span>  Security Manager status </span></p><p class="col-md-9"  style="margin-top:15px">'+response.playback.securityManager+'</p>'
+                    +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-volume-high"> </i> <span>  Sound Status    </span></p><p class="col-md-9"  style="margin-top:15px">'+sound_status+'</p>'
+
+                    +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-projector-screen"> </i> <span>  Projector Status   </span></p><p class="col-md-9"  style="margin-top:15px">'+projector_status+'</p>'
+                    +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi mdi-lightbulb"> </i> <span>  Lamp Status   </span></p><p class="col-md-9"  style="margin-top:15px">'+lamp_status+'</p>'
+                    +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-google-chrome"> </i> <span>  Dowser Status   </span></p><p class="col-md-9"  style="margin-top:15px">'+dowser_status+'</p>'
 
 
                     $('#infos_modal .modal-body').html(data) ;
@@ -393,7 +412,7 @@
     }
     #infos_modal .modal-body p
     {
-        margin-bottom: 8px ;
+        margin-bottom: 0 ;
     }
     </style>
 @endsection

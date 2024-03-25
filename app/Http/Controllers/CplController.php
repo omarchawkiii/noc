@@ -24,9 +24,7 @@ class CplController extends Controller
     {
         $screen = Screen::find($screen);
         $location = Location::find($location) ;
-
         $url = $location->connection_ip."?request=getCplListByScreenNumber&screen_number=".$screen->screen_number;
-
         $client = new Client();
         $response = $client->request('GET', $url);
         $contents = json_decode($response->getBody(), true);
@@ -86,6 +84,8 @@ class CplController extends Controller
                             'pictureWidth' => $cpl['pictureWidth'],
                             'pictureHeight' => $cpl['pictureHeight'] ,
                             'type' => $cpl['type'] ,
+                            'editRate_numerator' => $cpl['editRate_numerator'] ,
+                            'editRate_denominator' => $cpl['editRate_denominator'] ,
                         ]);
                     }
 
@@ -244,9 +244,37 @@ class CplController extends Controller
         $locations= explode(',', $location);
 
         $screens=null ;
-        $cpls = DB::table('cpls','lmscpls')->whereIn('location_id',$locations)->groupBy('uuid')
+        $cpls = DB::table('lmscpls')->whereIn('location_id',$locations)->groupBy('uuid')
         ->orderBy('contentKind', 'ASC')->orderBy('contentTitleText', 'ASC') ;
+        /*
+        $cpls = DB::table('cpls','lmscpls')->whereIn('location_id',$locations)->select('cpls.*', 'lmscpls.*','cpls.ScreenAspectRatio as aspect_Ratio' )->groupBy('uuid')
+        ->orderBy('contentKind', 'ASC')->orderBy('contentTitleText', 'ASC') ;
+        */
 
+
+        /*$cpls = DB::table('cpls')->whereIn('location_id',$locations)->select('cpls.*','cpls.ScreenAspectRatio as aspect_Ratio' )->groupBy('uuid')
+        ->orderBy('contentKind', 'ASC')->orderBy('contentTitleText', 'ASC')->get();
+        $lmscpls = DB::table('lmscpls')->whereIn('location_id',$locations)->groupBy('uuid')
+        ->orderBy('contentKind', 'ASC')->orderBy('contentTitleText', 'ASC')->get();
+
+
+        $cpls = $cpls->merge($lmscpls); */
+        /*
+        $cpls = DB::table('cpls')
+        ->whereIn('location_id',$locations)
+        ->select('cpls.*','cpls.ScreenAspectRatio as aspect_Ratio' );
+
+        $lmscpls = DB::table('lmscpls')
+        ->whereIn('location_id',$locations)
+        ->select( 'lmscpls.*' );
+
+        $all_cpls = $cpls->unionAll($lmscpls);
+
+        $data = DB::table(DB::raw("({$all_cpls->toSql()}) AS all_cpls"))
+        ->mergeBindings($all_cpls)
+        ->groupBy('uuid')
+        ->orderBy('contentKind', 'ASC')->orderBy('contentTitleText', 'ASC') ;
+        */
       ///  ->select('lmscpls.*') ;
 
        // $cpls =Lmscpl::with('location')->whereIn('location_id',$locations)->groupBy('uuid');
@@ -254,6 +282,7 @@ class CplController extends Controller
         //cpls = $cpls->orderBy('contentKind', 'ASC')->orderBy('contentTitleText', 'ASC') ;
 
         $cpls = $cpls->get() ;
+
         $macros = Macro::whereIn('location_id',$locations)->groupBy('idmacro_config')->orderBy('section_title', 'ASC')->get() ;
         return Response()->json(compact('cpls','screens','macros'));
 

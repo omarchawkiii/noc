@@ -948,6 +948,12 @@
                            <div class="col-md-12 row " id="available_on_after_edit_ingest_result">
 
                            </div>
+                            <div class="col-md-12 row " id="spl_ingested_success">
+
+                           </div>
+                           <div class="col-md-12 row " id="spl_ingested_error">
+
+                           </div>
                         </div>
 
                     </div>
@@ -1153,7 +1159,7 @@
     <script src="{{ asset('assets/vendors/dragula/dragula.min.js') }}"></script>
     <script src="{{ asset('assets/js/dragula.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
+    <script src="{{ asset('/assets/vendors/sweetalert/sweetalert.min.js') }}"></script>
 
     <script>
         $(document).ready(function() {
@@ -2613,7 +2619,8 @@
     let items_marker = [];
     let items_intermission = [];
     var title_spl = $('#spl_title').val();
-    var action_type = $('#spl_action').val();
+    //var action_type = $('#spl_action').val();
+    var action_type ='#save_as_new_spl';
     if (title_spl == "") {
         $('#spl_title').next().text("SPL Title can't be empty.");
     } else {
@@ -2880,7 +2887,7 @@ $(document).on('click', '#save_edited_spl', function () {
 
 
             //console.log(items_spl);
-            $.ajax({
+             $.ajax({
 
 
                 type: 'post',
@@ -2937,6 +2944,37 @@ $(document).on('click', '#save_edited_spl', function () {
                                 $("#block_edit_spl").addClass('hide_div');
 
                             }
+                            else
+                            {
+                                if(obj.ingest_errors.length>0)
+                                {
+                                    var ingest_errors_content='' ;
+                                    var ingest_errors = obj.ingest_errors;
+                                    for (var i = 0; i < ingest_errors.length; i++) {
+                                        ingest_errors_content +=
+                                        '<P class="Color-danger"> SPL List wasn\'t Ingested Correctly To this location :   '+ ingest_errors.location_name+' </p> '
+                                    }
+                                    $("#spl_ingested_error").html(available_on);
+
+                                }
+                                if(obj.ingest_success.length>0)
+                                {
+                                    var ingest_success = obj.ingest_success;
+                                    var ingest_success_content ="" ;
+                                    for (var i = 0; i < ingest_success.length; i++) {
+
+                                        ingest_success_content +=
+                                        '<P class="Color-danger"> SPL List Ingested Correctly To this location :   '+ ingest_success.location_name+' </p> '
+                                    }
+                                    $("#spl_ingested_success").html(available_on);
+
+
+                                }
+
+
+                            }
+
+
                         } else {
                             $("#status_edit").html("SPL List wasn't Updated Correctly ");
                             $("#status_edit").removeClass("badge-success");
@@ -3902,7 +3940,8 @@ $(document).on('click', '#save_edited_spl', function () {
                         if (obj['status'] === "success") {
                             $('#'+spl_uuid).remove();
                             swal("Done!", "Playlist deleted successfully!", "success");
-                            $('#order-listing').DataTable().ajax.reload();
+                            //$('#order-listing').DataTable().ajax.reload();
+                            get_spl_list_data()
                         }
                     } catch (e) {
                         console.log(e);
@@ -4466,7 +4505,7 @@ $(document).on('click', '#save_edited_spl', function () {
                         "_token": "{{ csrf_token() }}",
                     },
                     success: function (response) {
-
+                        console.log(response);
                         try {
                             var missing_cpls  ;
                             $("#ingest-modal").modal('hide');
