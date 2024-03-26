@@ -244,21 +244,23 @@ class CplController extends Controller
         $locations= explode(',', $location);
 
         $screens=null ;
-        $cpls = DB::table('lmscpls')->whereIn('location_id',$locations)->groupBy('uuid')
-        ->orderBy('contentKind', 'ASC')->orderBy('contentTitleText', 'ASC') ;
-        /*
-        $cpls = DB::table('cpls','lmscpls')->whereIn('location_id',$locations)->select('cpls.*', 'lmscpls.*','cpls.ScreenAspectRatio as aspect_Ratio' )->groupBy('uuid')
-        ->orderBy('contentKind', 'ASC')->orderBy('contentTitleText', 'ASC') ;
-        */
+        /*$cpls = DB::table('lmscpls')->whereIn('location_id',$locations)->groupBy('uuid')
+        ->orderBy('contentKind', 'ASC')->orderBy('contentTitleText', 'ASC') ; */
+
+        /*$cpls = DB::table('cpls')->whereIn('location_id',$locations)->select('cpls.*', 'lmscpls.*','cpls.ScreenAspectRatio as aspect_Ratio' )->groupBy('uuid')
+        ->orderBy('contentKind', 'ASC')->orderBy('contentTitleText', 'ASC') ;*/
 
 
-        /*$cpls = DB::table('cpls')->whereIn('location_id',$locations)->select('cpls.*','cpls.ScreenAspectRatio as aspect_Ratio' )->groupBy('uuid')
-        ->orderBy('contentKind', 'ASC')->orderBy('contentTitleText', 'ASC')->get();
+
+        $cpls = DB::table('cpls')->whereIn('location_id',$locations)->select('cpls.*','cpls.ScreenAspectRatio as aspect_Ratio' )->groupBy('uuid')
+        ->orderBy('contentKind', 'ASC')->orderBy('contentTitleText', 'ASC')->distinct()->get();
         $lmscpls = DB::table('lmscpls')->whereIn('location_id',$locations)->groupBy('uuid')
-        ->orderBy('contentKind', 'ASC')->orderBy('contentTitleText', 'ASC')->get();
+        ->orderBy('contentKind', 'ASC')->orderBy('contentTitleText', 'ASC')->distinct()->get();
 
 
-        $cpls = $cpls->merge($lmscpls); */
+        $all_cpls = $cpls->merge($lmscpls)->unique('uuid');
+
+
         /*
         $cpls = DB::table('cpls')
         ->whereIn('location_id',$locations)
@@ -281,7 +283,6 @@ class CplController extends Controller
 
         //cpls = $cpls->orderBy('contentKind', 'ASC')->orderBy('contentTitleText', 'ASC') ;
 
-        $cpls = $cpls->get() ;
 
         $macros = Macro::whereIn('location_id',$locations)->groupBy('idmacro_config')->orderBy('section_title', 'ASC')->get() ;
         return Response()->json(compact('cpls','screens','macros'));

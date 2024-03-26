@@ -118,7 +118,7 @@ Route::post('checkAvailability', [App\Http\Controllers\NocsplController::class ,
 Route::post('checkCplsInLocation', [App\Http\Controllers\NocsplController::class , 'checkCplsInLocation'])->name('nocspl.checkCplsInLocation')->middleware(['auth']);
 Route::post('uploadlocalspl', [App\Http\Controllers\NocsplController::class , 'uploadlocalspl'])->name('nocspl.uploadlocalspl')->middleware(['auth']);
 Route::delete('localspl/{id}/destroy', [App\Http\Controllers\NocsplController::class , 'destroy'])->name('nocspl.destroy')->middleware(['auth']);
-
+Route::post('upload_spl_after_edit', [App\Http\Controllers\NocsplController::class , 'upload_spl_after_edit'])->name('nocspl.upload_spl_after_edit')->middleware(['auth']);
 
 
 Route::get('getMoviesCods/{location}', [App\Http\Controllers\MoviescodController::class , 'getMoviesCods'])->name('moviescod.getmoviescods');

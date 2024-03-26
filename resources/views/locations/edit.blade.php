@@ -105,8 +105,8 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label>E-mail Account</label>
-                                <input type="email" class="form-control" placeholder="E-mail Account"  value=" {{  $location->email }}"  name="email">
+                                <label>Username</label>
+                                <input type="text" class="form-control" placeholder="Username"  value=" {{  $location->email }}"  name="email">
                                 @error('email')
                                     <div class="text-danger mt-1 ">{{ $message }}</div>
                                 @enderror

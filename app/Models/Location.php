@@ -141,7 +141,7 @@ class Location extends Model
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(Location::class,'locations_users');
+        return $this->belongsToMany(User::class,'locations_users');
     }
 
 }

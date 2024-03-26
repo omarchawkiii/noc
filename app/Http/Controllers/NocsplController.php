@@ -22,13 +22,13 @@ class NocsplController extends Controller
 
     public function createlocalspl(Request $request)
     {
-    //dd($request->action_type);
+        //dd($request->action_type);
         if($request->action_type =="edit")
         {
             Nocspl::where('uuid',$request->spl_uuid_edit)->delete() ;
             splcomponents::where('uuid_spl',$request->spl_uuid_edit)->delete() ;
             $uuid =  $request->spl_uuid_edit;
-            $locations_of_spl = Spl::where('uuid',$uuid)->leftJoin('locations', 'locations.id', '=', 'spls.location_id')->select('locations.*' )->groupBy('location_id')->get();
+            $locations_of_spl = Lmsspl::where('uuid',$uuid)->leftJoin('locations', 'locations.id', '=', 'lmsspls.location_id')->select('locations.*' )->groupBy('location_id')->get();
 
         }
         else{
@@ -122,6 +122,35 @@ class NocsplController extends Controller
             $response = array("status" => 0 , "title" =>"null" , "uuid"=>"null" , "ingest_success"=>null , "ingest_errors"=>null  );
         }
 
+        echo json_encode($response);
+
+    }
+
+    public function upload_spl_after_edit(Request $request)
+    {
+        $nocspl = Nocspl::where('uuid', $request->spl_uuid)->first();
+        $locations_of_spl = Lmsspl::where('uuid',$nocspl->uuid)->leftJoin('locations', 'locations.id', '=', 'lmsspls.location_id')->select('locations.*' )->groupBy('location_id')->get();
+
+        $ingest_errors = array() ;
+        $ingest_success = array() ;
+
+        if(count($locations_of_spl)> 0 )
+        {
+            foreach($locations_of_spl as $location)
+            {
+                $response = $this->ingest_spl($nocspl->xmlpath,$location->api_url,$location->email, $location->password) ;
+                if($response->status== 1 )
+                {
+                    array_push($ingest_success,  array("status" => $response->status , "id" =>  $location->id , "location_name" =>  $location->name));
+                }
+                else
+                {
+                    array_push($ingest_errors,  array("status" => $response->status , "id" =>  $location->id , "location_name" =>  $location->name));
+                }
+            }
+        }
+
+        $response = array("ingest_success"=>$ingest_success , "ingest_errors"=>$ingest_errors );
         echo json_encode($response);
 
     }
