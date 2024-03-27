@@ -671,4 +671,11 @@ class LocationController extends Controller
     }
 
 
+
+    public function comming_soon(): View
+    {
+        return view('soon');
+    }
+
+
 }

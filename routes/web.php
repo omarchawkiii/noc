@@ -46,6 +46,7 @@ Route::get('refresh_spl_content/{location}', [App\Http\Controllers\LocationContr
 Route::get('refresh_cpl_content/{location}', [App\Http\Controllers\LocationController::class , 'refresh_cpl_content'])->name('refresh_cpl_content');
 Route::get('refresh_kdm_content/{location}', [App\Http\Controllers\LocationController::class , 'refresh_kdm_content'])->name('refresh_kdm_content');
 Route::get('refresh_macro_data_by_location/{location}', [App\Http\Controllers\LocationController::class , 'refresh_macro_data_by_location'])->name('refresh_macro_data_by_location');
+Route::get('comming_soon/', [App\Http\Controllers\LocationController::class , 'comming_soon'])->name('comming_soon');
 
 
 

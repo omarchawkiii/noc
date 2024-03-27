@@ -17,9 +17,52 @@
           <span class="menu-icon icon-box-danger">
             <i class="mdi mdi-map-marker"></i>
           </span>
-          <span class="menu-title">Locations</span>
+          <span class="menu-title">NOC</span>
         </a>
       </li>
+      <li class="nav-item menu-items">
+        <a class="nav-link" href="{{ route('playback.index') }}">
+          <span class="menu-icon icon-box-warning">
+            <i class="mdi mdi-calendar-today "></i>
+          </span>
+          <span class="menu-title">Playback</span>
+        </a>
+      </li>
+      <li class="nav-item menu-items">
+        <a class="nav-link" href="{{ route('snmp.get_snmp_with_filter') }}">
+          <span class="menu-icon icon-box-danger">
+            <i class="mdi mdi-alert-octagon "></i>
+          </span>
+          <span class="menu-title">SNMP Errors</span>
+        </a>
+      </li>
+      <li class="nav-item menu-items ">
+        <a class="nav-link" data-bs-toggle="collapse" href="#showm_reports" aria-expanded="false" aria-controls="icons">
+          <span class="menu-icon icon-box-performance">
+            <i class="mdi mdi-bookmark-check "></i>
+          </span>
+          <span class="menu-title">Reports</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse " id="showm_reports">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link active_playlistbuilder " href="{{ route('logs.get_performance_log') }}"> <i class="mdi mdi-checkbox-blank-circle me-1"></i> Performance Logs</a></li>
+            <li class="nav-item"> <a class="nav-link active_playlistbuilder " href="{{ route('comming_soon') }}"> <i class="mdi mdi-checkbox-blank-circle me-1"></i>  Asset Reports</a></li>
+            <li class="nav-item"> <a class="nav-link active_playlistbuilder " href="{{ route('comming_soon') }}"> <i class="mdi mdi-checkbox-blank-circle  me-1"></i> Lamp Reports</a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="nav-item menu-items">
+        <a class="nav-link" href="{{ route('schedules.get_schedules_with_filter') }}">
+          <span class="menu-icon icon-box-blue">
+            <i class="mdi mdi-calendar-today "></i>
+          </span>
+          <span class="menu-title">Schedule Management</span>
+        </a>
+      </li>
+
+
+
       <li class="nav-item menu-items ">
         <a class="nav-link" data-bs-toggle="collapse" href="#showm_anagement" aria-expanded="false" aria-controls="icons">
           <span class="menu-icon icon-box-playlistbuilder">
@@ -36,12 +79,21 @@
           </ul>
         </div>
       </li>
+
       <li class="nav-item menu-items">
-        <a class="nav-link" href="{{ route('schedules.get_schedules_with_filter') }}">
-          <span class="menu-icon icon-box-blue">
+        <a class="nav-link" href="{{ route('spls.spl_builder') }}">
+          <span class="menu-icon icon-box-danger">
             <i class="mdi mdi-calendar-today "></i>
           </span>
-          <span class="menu-title">Schedule Management</span>
+          <span class="menu-title">Playlist Builder</span>
+        </a>
+      </li>
+      <li class="nav-item menu-items">
+        <a class="nav-link" href="{{ route('spls.upload_spl') }}">
+          <span class="menu-icon icon-box-success">
+            <i class="mdi mdi-upload "></i>
+          </span>
+          <span class="menu-title">File Uploader </span>
         </a>
       </li>
       <li class="nav-item menu-items">
@@ -62,51 +114,7 @@
       </li>
 
 
-      <li class="nav-item menu-items">
-        <a class="nav-link" href="{{ route('snmp.get_snmp_with_filter') }}">
-          <span class="menu-icon icon-box-danger">
-            <i class="mdi mdi-alert-octagon "></i>
-          </span>
-          <span class="menu-title">SNMP Errors</span>
-        </a>
-      </li>
 
-
-      <li class="nav-item menu-items">
-        <a class="nav-link" href="{{ route('playback.index') }}">
-          <span class="menu-icon icon-box-warning">
-            <i class="mdi mdi-calendar-today "></i>
-          </span>
-          <span class="menu-title">Playback</span>
-        </a>
-      </li>
-
-      <li class="nav-item menu-items">
-        <a class="nav-link" href="{{ route('spls.spl_builder') }}">
-          <span class="menu-icon icon-box-danger">
-            <i class="mdi mdi-calendar-today "></i>
-          </span>
-          <span class="menu-title">Playlist Builder</span>
-        </a>
-      </li>
-
-      <li class="nav-item menu-items">
-        <a class="nav-link" href="{{ route('spls.upload_spl') }}">
-          <span class="menu-icon icon-box-success">
-            <i class="mdi mdi-upload "></i>
-          </span>
-          <span class="menu-title">Upload </span>
-        </a>
-      </li>
-
-      <li class="nav-item menu-items">
-        <a class="nav-link" href="{{ route('logs.get_performance_log') }}">
-          <span class="menu-icon icon-box-performance">
-            <i class="mdi mdi-bookmark-check "></i>
-          </span>
-          <span class="menu-title">Performance Logs</span>
-        </a>
-      </li>
       @if (Auth::user()->role == 1 )
       <li class="nav-item menu-items">
         <a class="nav-link" href="{{ route('users.index') }}">
