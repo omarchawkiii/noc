@@ -326,23 +326,26 @@
                     }
                     else
                     {
+
                         projector_status = '<button type="button" class="btn btn-inverse-success btn-icon-text"><i class="mdi mdi-monitor btn-icon-prepend"></i> Online  </button>';
-                        if(response.playback.lamp_status =="Off")
+                        if(response.playback.lamp_status =="On")
+                        {
+                            lamp_status = '<button type="button" class="btn btn-inverse-success btn-icon-text"><i class="mdi mdi-lightbulb btn-icon-prepend"></i> On </button>';
+
+                        }
+                        else
                         {
                             lamp_status = '<button type="button" class="btn btn-inverse-danger btn-icon-text"><i class="mdi mdi-lightbulb-outline btn-icon-prepend"></i> Off </button>';
                         }
-                        else
-                        {
-                            lamp_status = '<button type="button" class="btn btn-inverse-success btn-icon-text"><i class="mdi mdi-lightbulb btn-icon-prepend"></i> On </button>';
-                        }
 
-                        if(response.playback.dowser_status =="Closed")
-                        {
-                            dowser_status = '<button type="button" class="btn btn-inverse-danger btn-icon-text"><i class=" btn-icon-prepend"></i> Closed </button>';
-                        }
-                        else
+                        if(response.playback.dowser_status =="Open")
                         {
                             dowser_status = '<button type="button" class="btn btn-inverse-success btn-icon-text"><i class=" btn-icon-prepend"></i> Open </button>';
+
+                        }
+                        else
+                        {
+                            dowser_status = '<button type="button" class="btn btn-inverse-danger btn-icon-text"><i class=" btn-icon-prepend"></i> Closed </button>';
                         }
 
                     }

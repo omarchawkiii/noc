@@ -117,7 +117,7 @@
             <span class="menu-icon icon-box-console">
                 <i class="mdi mdi-file-import"></i>
             </span>
-            <span class="menu-title">Transfrer Content</span>
+            <span class="menu-title">Transfer Content </span>
             </a>
         </li>
 
