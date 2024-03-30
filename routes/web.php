@@ -46,7 +46,7 @@ Route::get('refresh_spl_content/{location}', [App\Http\Controllers\LocationContr
 Route::get('refresh_cpl_content/{location}', [App\Http\Controllers\LocationController::class , 'refresh_cpl_content'])->name('refresh_cpl_content');
 Route::get('refresh_kdm_content/{location}', [App\Http\Controllers\LocationController::class , 'refresh_kdm_content'])->name('refresh_kdm_content');
 Route::get('refresh_macro_data_by_location/{location}', [App\Http\Controllers\LocationController::class , 'refresh_macro_data_by_location'])->name('refresh_macro_data_by_location');
-Route::get('comming_soon/', [App\Http\Controllers\LocationController::class , 'comming_soon'])->name('comming_soon');
+
 
 
 
@@ -144,6 +144,8 @@ Route::get('generate_pdf_report', [App\Http\Controllers\LogController::class , '
 
 Route::get('get_logstitle/{location}', [App\Http\Controllers\LogstitleController::class , 'get_logstitle'])->name('logstitle.get_logstitle');
 
+Route::get('asset_reports', [App\Http\Controllers\LogstitleController::class , 'asset_reports'])->name('asset_reports');
+Route::get('lamp_reports', [App\Http\Controllers\LogstitleController::class , 'lamp_reports'])->name('lamp_reports');
 
 Route::get('user/create', [App\Http\Controllers\UserController::class , 'create'])->name('users.create')->middleware(['auth']);
 Route::post('user/store', [App\Http\Controllers\UserController::class , 'store'])->name('users.store')->middleware(['auth']);

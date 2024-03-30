@@ -45,4 +45,15 @@ class LogstitleController extends Controller
 
 
     }
+
+    public function asset_reports()
+    {
+        return view('soon');
+    }
+
+    public function lamp_reports()
+    {
+        return view('soon');
+    }
+
 }

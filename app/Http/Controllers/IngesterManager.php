@@ -3516,6 +3516,82 @@ $data_dcp = json_decode(json_encode($data_dcp), true);
     }
 
 
+
+    //method add for next update
+
+    public function getSourceDirByCplUuidANDIdServer($cpl_uuid, $id_server)
+    {
+        /*$q = $this->_db->prepare(' SELECT source_dir FROM scanned_libraries
+                                   WHERE id = :id AND id_server = :id_server ');
+        try {
+            // Bind the parameters
+            $q->bindParam(':id', $cpl_uuid, PDO::PARAM_STR);
+            $q->bindParam(':id_server', $id_server, PDO::PARAM_STR);
+            $q->execute();
+            $result = $q->fetch(PDO::FETCH_ASSOC);
+            return $result['source_dir'];
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            return -1;
+        }*/
+
+        try {
+            $result = DB::table('scanned_libraries')
+                        ->select('source_dir')
+                        ->where('id', '=', $cpl_uuid)
+                        ->where('id_server', '=', $id_server)
+                        ->first();
+
+            if ($result) {
+                return $result->source_dir;
+            } else {
+                return -1;
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            return -1;
+        }
+
+    }
+
+    public function isMultipleCpl($cpl_id_pack, $id_server)
+    {
+        // check first() in this function
+        try {
+            $result = DB::table('scanned_libraries')
+                        ->select(DB::raw('count(*) as row_nbr'))
+                        ->where('scanned_libraries.cpl_id_pack', '=', $cpl_id_pack)
+                        ->where('scanned_libraries.id_server', '=', $id_server)
+                        ->first();
+
+            if ($result && $result->row_nbr > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+
+        /*$q = $this
+            ->_db
+            ->prepare('SELECT count(*) As row_nbr FROM  scanned_libraries
+                     WHERE scanned_libraries.cpl_id_pack =:cpl_id_pack
+                       AND scanned_libraries.id_server  = :id_server');
+        try {
+            $q->execute(['cpl_id_pack' => $cpl_id_pack, 'id_server' => $id_server]);
+            $result = $q->fetch();
+            if ($result['row_nbr'] > 0) {
+                return true;
+            } else
+                return false;
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }*/
+    }
+
+
+
 }
 
 

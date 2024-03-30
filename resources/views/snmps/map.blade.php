@@ -126,7 +126,7 @@
                                     <div class="d-flex d-sm-block d-md-flex align-items-center">
                                         <h3 class="mb-0" id="offline_screen"></h3>
                                     </div>
-                                    <h6 class="font-weight-normal">Currently Offline</h6>
+                                    <h6 class="font-weight-normal">Currently Offline</h6>
                                 </div>
 
                             </div>
@@ -146,10 +146,10 @@
                         <thead>
                             <tr>
                                 <th class="sorting sorting_asc text-center">Location</th>
-                                <th class="sorting text-center" data-bs-toggle="tooltip" data-placement="right" title="" data-bs-original-title="Missing kdm"><i class="icon-md mdi mdi-key-variant  ml-auto"></i></th>
+                                <th class="sorting text-center" data-bs-toggle="tooltip" data-placement="right" title="" data-bs-original-title="Missing kdm in schedules "><i class="icon-md mdi mdi mdi-calendar-today  ml-auto"></i></th>
                                 <th class="sorting text-center" data-bs-toggle="tooltip" data-placement="right" title="" data-bs-original-title="Diskusage"><i class="icon-md mdi mdi-chart-pie  ml-auto"></i></th>
                                 <th class="sorting text-center" data-bs-toggle="tooltip" data-placement="right" title="" data-bs-original-title="Missing cpl"><i class="icon-md mdi mdi-monitor  ml-auto"></i></th>
-                                <th class="sorting text-center" data-bs-toggle="tooltip" data-placement="right" title="" data-bs-original-title="Security Manager Status"><i class="icon-md mdi mdi-camera-rear  ml-auto"></i></th>
+                                <th class="sorting text-center" data-bs-toggle="tooltip" data-placement="right" title="" data-bs-original-title="Security Manager Status"><i class="icon-md mdi mdi-projector  ml-auto"></i></th>
                                 <th class="sorting text-center" data-bs-toggle="tooltip" data-placement="right" title="" data-bs-original-title="Playback Generale Status"><i class="icon-md mdi mdi-volume-high ml-auto"></i></th>
                             </tr>
                         </thead>

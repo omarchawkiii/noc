@@ -43,8 +43,23 @@ class SnmpController extends Controller
                             'location_id' => $location->id ,
                         ]);
                     }
+
+                    if(count($content) != $location->snmps->count() )
+                    {
+                        $snmp_ids = array_column($content, 'id_snmp');
+                            foreach($location->snmps as $snmp)
+                            {
+                                if (! in_array( $snmp->id_snmp , $snmp_ids))
+                                {
+                                    $snmp->delete() ;
+                                }
+                            }
+                    }
+
                 }
             }
+
+
         }
 
     }

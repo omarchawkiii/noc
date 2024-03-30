@@ -160,9 +160,10 @@ class ScheduleContoller extends Controller
             }
             else
             {
+
                 $startDate = date("$setting_schedule_timeStart", strtotime($date));
                 $nextDayStart = date("$setting_schedule_timeEnd", strtotime('+1 day', strtotime($date)));
-
+                //$nextDayStart = date("$setting_schedule_timeEnd", strtotime('-01 seconds', strtotime($nextDayStart)));
                 //dd($startDate , $nextDayStart) ;
             }
         }
@@ -181,7 +182,8 @@ class ScheduleContoller extends Controller
             $schedules =Schedule::with('screen','spls')->where('location_id',$location->id) ;
 
             $next_date = $date ;
-            $schedules = $schedules->where('date_start','>',$startDate)->where('date_start','<',$nextDayStart);
+
+            $schedules = $schedules->where('date_start','>=',$startDate)->where('date_start','<',$nextDayStart);
 
             if(isset($screen) && $screen != 'null' )
             {
@@ -198,7 +200,7 @@ class ScheduleContoller extends Controller
                 //$schedules = Screen::find($screen)->schedules ;
                 $schedules =Schedule::with('screen','spls')->where('screen_id',$screen);
                 $next_date = $date ;
-                $schedules = $schedules->where('date_start','>',$startDate)->where('date_start','<',$nextDayStart);
+                $schedules = $schedules->where('date_start','>=',$startDate)->where('date_start','<',$nextDayStart);
                 $schedules = $schedules->orderBy('screen_id')->orderBy('date_start')->get();
                 return Response()->json(compact('schedules'));
             }

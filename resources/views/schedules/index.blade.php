@@ -53,7 +53,8 @@
                         </div>
                         <div class="col-xl-4">
                             <button type="button" id="linking_btn" class=" btn btn-primary btn-icon-text" >
-                                <i class="mdi mdi-link-variant "></i> Linking </button>
+                                <i class="mdi mdi-link-variant "></i>  Edit Links
+                            </button>
                         </div>
                     </div>
                     <div class="col-md-6 row " id="scheduleDate" style="display: none">
@@ -238,33 +239,45 @@
                     <div class="tab-content border-0">
                         <div class="tab-pane fade show active" id="no_linked_spls_movies" role="tabpanel" aria-labelledby="no_linked_spls_movies_tab-tab">
                             <div class="row " >
-                                <div class="col-md-6  preview-list multiplex" >
-                                    <table class="table" id="movies_table">
-                                        <thead>
-                                            <tr>
-                                                <th>Movies</th>
-
-
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-
-                                    </tbody>
-                                    </table>
-                                </div>
-                                <div class="col-md-5 preview-list multiplex">
+                                <div class="col-md-6 preview-list multiplex">
+                                    <div class="row">
+                                        <h4 class="card-title col-xl-3" style="font-weight: bold;padding-bottom: 8px; width: fit-content">
+                                            <span class="mdi mdi-format-list-bulleted-type   custom-icon " style="color: #26a1eb;"></span>
+                                            SPLs List
+                                        </h4>
+                                        <div class="col-xl-8">
+                                            <div class="input-group mb-2 mr-sm-2">
+                                                <input type="text" class="form-control" id="search_unlinked_spl" placeholder="Search ">
+                                            </div>
+                                        </div>
+                                    </div>
                                     <table class="table" id="spls_table">
-                                        <thead>
-                                            <tr>
-                                                <th>SPL</th>
 
-                                            </tr>
-                                        </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-md-6  preview-list multiplex" >
+                                    <div class="row">
+                                        <h4 class="card-title col-xl-3" style="font-weight: bold;padding-bottom: 8px; width: fit-content ">
+                                            <span class="mdi mdi-movie  custom-icon " style="color: #26a1eb;"></span>
+                                            Films
+                                        </h4>
+                                        <div class="col-xl-8">
+                                            <div class="input-group mb-2 mr-sm-2">
+                                                <input type="text" class="form-control" id="search_unlinked_film" placeholder="Search ">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <table class="table" id="movies_table">
+
                                         <tbody>
 
                                     </tbody>
                                     </table>
                                 </div>
+
                             </div>
                             <div class="row " >
                                 <div class="col-md-12 " >
@@ -1991,6 +2004,29 @@
 
          });
     })(jQuery);
+
+    //search Spls
+
+    $("#search_unlinked_spl").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#spls_table td").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+
+
+
+    //search Films
+    $("#search_unlinked_film").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#movies_table td").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+
+
 </script>
 <script>
     let content_height = document.querySelector('.content-wrapper').offsetHeight;
@@ -2283,7 +2319,7 @@
     }
 
     .preview-list.multiplex, .fixed-hight {
-        margin: 5px;
+
         padding: 5px;
         height: auto;
         overflow: auto;

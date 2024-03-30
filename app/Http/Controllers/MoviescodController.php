@@ -53,7 +53,7 @@ class MoviescodController extends Controller
     {
         $location = $request->location;
         //$location = Location::find($location) ;
-        $movies = Moviescod::where('location_id',$request->location)->where('status','unlinked')->get() ;
+        $movies = Moviescod::where('location_id',$request->location)->where('status','unlinked')->orderBy('title', 'ASC')->get() ;
         $nos_spls = Nocspl::all() ;
         $spl_location = Spl::where('location_id' ,$location )->select('spls.*','spls.name as spl_title')->groupBy('uuid')->orderBy('spl_title', 'ASC')->get() ;
 
@@ -64,9 +64,12 @@ class MoviescodController extends Controller
     }
     public function add_movies_to_spls(Request $request)
     {
-        $apiUrl = 'http://localhost/tms/system/api2.php';
+        //$apiUrl = 'http://localhost/tms/system/api2.php';
         $moviescod = Moviescod::findOrFail($request->movie_id) ;
         $splnoc= Nocspl::findOrFail($request->spl_id) ;
+        $location = $moviescod->location ;
+        $apiUrl = $location->connection_ip;
+
 
         $check_lms_spl = Lmsspl::where('uuid' , $splnoc->uuid)->where('location_id',$moviescod->location_id)->first() ;
 
@@ -117,11 +120,12 @@ class MoviescodController extends Controller
     public function unlink_spl_movie(Request $request)
     {
 
-        $apiUrl = 'http://localhost/tms/system/api2.php';
+        //$apiUrl = 'http://localhost/tms/system/api2.php';
 
         $moviescod = Moviescod::findOrFail($request->movie_id) ;
 
         $location = Location::findOrFail($request->location) ;
+        $apiUrl = $location->connection_ip ;
         $response = $this->sendUnlinkSplRequest($apiUrl, $moviescod->code, $location->email , $location->password);
         if($response['result'] === 1 )
         {

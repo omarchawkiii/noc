@@ -313,6 +313,37 @@
 
 
                     var sound_status =""
+
+                    if(response.playback.projector_status == 0)
+                    {
+                        projector_status = '<button type="button" class="btn btn-inverse-danger btn-icon-text"><i class="mdi mdi-monitor btn-icon-prepend"></i> Offline </button>';
+                        lamp_status = '<button type="button" class="btn btn-inverse-danger btn-icon-text"><i class="mdi mdi-lightbulb-outline btn-icon-prepend"></i> Off </button>';
+                        dowser_status = '<button type="button" class="btn btn-inverse-danger btn-icon-text"><i class="mdi mdi-wifi-off btn-icon-prepend"></i> Closed </button>';
+                    }
+                    else
+                    {
+                        projector_status = '<button type="button" class="btn btn-inverse-success btn-icon-text"><i class="mdi mdi-monitor btn-icon-prepend"></i> Online  </button>';
+                        if(response.playback.lamp_status =="Off")
+                        {
+                            lamp_status = '<button type="button" class="btn btn-inverse-danger btn-icon-text"><i class="mdi mdi-lightbulb-outline btn-icon-prepend"></i> Off </button>';
+                        }
+                        else
+                        {
+                            lamp_status = '<button type="button" class="btn btn-inverse-success btn-icon-text"><i class="mdi mdi-lightbulb btn-icon-prepend"></i> On </button>';
+                        }
+
+                        if(response.playback.dowser_status =="Closed")
+                        {
+                            dowser_status = '<button type="button" class="btn btn-inverse-danger btn-icon-text"><i class=" btn-icon-prepend"></i> Closed </button>';
+                        }
+                        else
+                        {
+                            dowser_status = '<button type="button" class="btn btn-inverse-success btn-icon-text"><i class=" btn-icon-prepend"></i> Open </button>';
+                        }
+
+                    }
+
+
                     if(response.playback.ip_sound_status == 0)
                     {
                         sound_status = '<button type="button" class="btn btn-inverse-danger btn-icon-text"><i class="mdi mdi-wifi-off btn-icon-prepend"></i> Offline </button>';
@@ -333,34 +364,7 @@
                     var projector_status =""
                     var lamp_status =""
                     var dowser_status=""
-                    if(response.playback.projector_status == 0)
-                    {
-                        projector_status = '<button type="button" class="btn btn-inverse-danger btn-icon-text"><i class="mdi mdi-monitor btn-icon-prepend"></i> Offline </button>';
-                        lamp_status = '<button type="button" class="btn btn-inverse-danger btn-icon-text"><i class="mdi mdi-lightbulb-outline btn-icon-prepend"></i> Off </button>';
-                        dowser_status = '<button type="button" class="btn btn-inverse-danger btn-icon-text"><i class="mdi mdi-wifi-off btn-icon-prepend"></i> Closed </button>';
-                    }
-                    else
-                    {
-                        projector_status = '<button type="button" class="btn btn-inverse-success btn-icon-text"><i class="mdi mdi-monitor btn-icon-prepend"></i> Online  </button>';
-                        if(response.playback.lamp_status !="Off")
-                        {
-                            lamp_status = '<button type="button" class="btn btn-inverse-danger btn-icon-text"><i class="mdi mdi-lightbulb-outline btn-icon-prepend"></i> Off </button>';
-                        }
-                        else
-                        {
-                            lamp_status = '<button type="button" class="btn btn-inverse-success btn-icon-text"><i class="mdi mdi-lightbulb btn-icon-prepend"></i> On </button>';
-                        }
 
-                        if(response.playback.dowser_status !="Closed")
-                        {
-                            dowser_status = '<button type="button" class="btn btn-inverse-danger btn-icon-text"><i class=" btn-icon-prepend"></i> Closed </button>';
-                        }
-                        else
-                        {
-                            dowser_status = '<button type="button" class="btn btn-inverse-success btn-icon-text"><i class=" btn-icon-prepend"></i> Open </button>';
-                        }
-
-                    }
 
 
 

@@ -94,7 +94,7 @@ class NocsplController extends Controller
                     {
                         foreach($locations_of_spl as $location)
                         {
-                            $response = $this->ingest_spl($new_nocspl->xmlpath,$location->api_url,$location->email, $location->password) ;
+                            $response = $this->ingest_spl($new_nocspl->xmlpath,$location->connection_ip,$location->email, $location->password) ;
 
                             if($response->status== 1 )
                             {
@@ -138,7 +138,7 @@ class NocsplController extends Controller
         {
             foreach($locations_of_spl as $location)
             {
-                $response = $this->ingest_spl($nocspl->xmlpath,$location->api_url,$location->email, $location->password) ;
+                $response = $this->ingest_spl($nocspl->xmlpath,$location->connection_ip,$location->email, $location->password) ;
                 if($response->status== 1 )
                 {
                     array_push($ingest_success,  array("status" => $response->status , "id" =>  $location->id , "location_name" =>  $location->name));
@@ -1088,7 +1088,7 @@ class NocsplController extends Controller
         $nos_spl = Nocspl::where('uuid',$request->spl_id)->first() ;
         $location = Location::where('id',$request->location)->first() ;
 
-        $response  = $this->ingest_spl($nos_spl->xmlpath,$location->api_url,$location->email, $location->password) ;
+        $response  = $this->ingest_spl($nos_spl->xmlpath,$location->connection_ip,$location->email, $location->password) ;
 
         return $response ;
     }
@@ -1113,7 +1113,8 @@ class NocsplController extends Controller
             // Initialize cURL session
 
         //$ch = curl_init($api_url);
-        $ch = curl_init("http://localhost/tms/system/api2.php");
+        //$ch = curl_init("http://localhost/tms/system/api2.php");
+        $ch = curl_init($api_url);
         // Set cURL options
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($requestData));
