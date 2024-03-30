@@ -299,7 +299,7 @@
                     id: id,
                 },
                 success: function(response) {
-
+                    console.log(response)
                     var _time = calculateRuntimeDifference(response.playback.remaining_runtime ,response.playback.elapsed_runtime)
                       var progress_bar= '<div class="col-md-8">'
                                         +'<div class="progress progress-lg p-0 " style="margin-top:15px">'
@@ -313,6 +313,10 @@
 
 
                     var sound_status =""
+                    var projector_status =""
+                    var lamp_status =""
+                    var dowser_status=""
+
 
                     if(response.playback.projector_status == 0)
                     {
@@ -361,9 +365,7 @@
 
                     }
 
-                    var projector_status =""
-                    var lamp_status =""
-                    var dowser_status=""
+
 
 
 

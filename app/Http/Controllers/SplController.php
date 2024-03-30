@@ -27,7 +27,7 @@ class SplController extends Controller
         $location = Location::find($location) ;
 
         $url = $location->connection_ip . "?request=getSplListInfoByScreenNumber&screen_number=".$screen->screen_number;
-        echo "URL : " . $url . " <br />" ;
+
         $client = new Client();
         $response = $client->request('GET', $url);
         $contents = json_decode($response->getBody(), true);

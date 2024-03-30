@@ -19,7 +19,7 @@ class KdmController extends Controller
         $screen = Screen::find($screen);
         $location = Location::find($location) ;
         $url = $location->connection_ip . "?request=getKdmListByScreenNumber&screen_number=".$screen->screen_number;
-        $url ="http://localhost/tms/system/api2.php?request=getKdmListByScreenNumber&screen_number=".$screen->screen_number;
+        //$url ="http://localhost/tms/system/api2.php?request=getKdmListByScreenNumber&screen_number=".$screen->screen_number;
 
         $client = new Client();
         $response = $client->request('GET', $url);

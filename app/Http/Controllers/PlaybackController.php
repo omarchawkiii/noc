@@ -15,7 +15,8 @@ class PlaybackController extends Controller
     {
         $location = Location::find($location) ;
         //$url ="http://localhost/tms/system/api2.php?request=getPlaybackStatus";
-        $url ="http://localhost/tms/system/api2.php?request=getPlaybackStatus";
+
+        $url = $location->connection_ip."?request=getPlaybackStatus";
         $client = new Client();
         $response = $client->request('GET', $url);
         $contents = json_decode($response->getBody(), true);

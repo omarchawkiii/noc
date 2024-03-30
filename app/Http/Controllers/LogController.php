@@ -24,7 +24,7 @@ class LogController extends Controller
         $location = Location::find($location) ;
         $screens = $location->screens ;
         $url = $location->connection_ip;
-        $url ="http://localhost/tms/system/api2.php" ;
+        //$url ="http://localhost/tms/system/api2.php" ;
         foreach($screens as $screen)
         {
 

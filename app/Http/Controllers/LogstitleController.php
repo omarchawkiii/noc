@@ -14,7 +14,7 @@ class LogstitleController extends Controller
         $location = Location::find($location) ;
 
         $url = $location->connection_ip;
-        $url ="http://localhost/tms/system/api2.php" ;
+        //$url ="http://localhost/tms/system/api2.php" ;
 
                 $client = new Client();
                 $response = $client->request('POST', $url,[
