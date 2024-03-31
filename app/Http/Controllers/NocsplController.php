@@ -1114,6 +1114,7 @@ class NocsplController extends Controller
 
         //$ch = curl_init($api_url);
         //$ch = curl_init("http://localhost/tms/system/api2.php");
+
         $ch = curl_init($api_url);
         // Set cURL options
         curl_setopt($ch, CURLOPT_POST, 1);
@@ -1122,7 +1123,7 @@ class NocsplController extends Controller
         // Execute cURL session and get the response
         $response = curl_exec($ch);
         $response = json_decode($response) ;
-
+           // dd($response);
 
         return $response;
         // Check for cURL errors

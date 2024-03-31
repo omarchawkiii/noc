@@ -89,7 +89,7 @@ class PlaybackController extends Controller
         }
         else
         {
-            $locations = Location::all() ;
+            $locations = Location::orderBy('name', 'DESC')->get() ;
         }
         return view('playbacks.index', compact('locations'));
     }

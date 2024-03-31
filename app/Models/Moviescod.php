@@ -17,7 +17,8 @@ class Moviescod extends Model
         'last_update',
         'status',
         'location_id',
-        'nocspl_id'
+        'spl_uuid'
+
     ];
 
     public function location(): BelongsTo
@@ -25,8 +26,8 @@ class Moviescod extends Model
         return $this->belongsTo(Location::class);
     }
 
-    public function nocspl(): BelongsTo
+    /*public function nocspl(): BelongsTo
     {
         return $this->belongsTo(Nocspl::class);
-    }
+    }*/
 }

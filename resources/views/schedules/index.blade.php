@@ -343,12 +343,12 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="ModalLabel">Please Select Location </h5>
+                    <h5 class="modal-title" id="ModalLabel"></h5>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body minauto">
                     <h4 class="text-center">This SPL does not exist on this location, would you like to ingest it?</h4>
                 </div>
                 <div class="modal-footer">
@@ -945,7 +945,8 @@
 
         });
         $(document).on('click', '#linking_btn , #no_linked_spls_movies_tab', function () {
-
+            $('#search_unlinked_spl').val('') ;
+            $('#search_unlinked_film').val('') ;
             var location =  $('#location').val();
             if(location == 'Locations')
             {
@@ -983,13 +984,22 @@
                         });
                         $('#movies_table tbody').html(movies_table)
 
-                        $.each(response.nos_spls, function( index, value ) {
+                        noc_spl_table ="" ;
+                        $.each(response.lms_spl, function( index, value ) {
                             noc_spl_table +=
                             '<tr>'
-                                +'<td class="text-body align-middle fw-medium text-decoration-none" data-id="'+ value.id+'"  >'+ value.spl_title+' </td>'
+                                +'<td class="text-body align-middle fw-medium text-decoration-none" data-id="'+ value.uuid+'"  >'+ value.spl_title+' </td>'
                             '</tr >'
 
                         });
+                        $.each(response.nos_spls, function( index, value ) {
+                            noc_spl_table +=
+                            '<tr>'
+                                +'<td class="text-body align-middle fw-medium text-decoration-none" data-id="'+ value.uuid+'"  >'+ value.spl_title+' </td>'
+                            '</tr >'
+
+                        });
+
 
                         $('#spls_table tbody').html(noc_spl_table)
 
@@ -1028,13 +1038,14 @@
 
                     success:function(response)
                     {
-                        //console.log(response)
+
+                        console.log(response)
                         //console.log(response.spl.name) ;
                         $.each(response.movies, function( index, value ) {
                             movies_table +=
                             '<tr id="'+value.id+'">'
-                                +'<td class="text-body align-middle fw-medium text-decoration-none" data-id="'+ value.id+'"  >'+ value.title+' </td>'
-                                +'<td class="text-body align-middle fw-medium text-decoration-none" data-id="'+ value.nocspl.id+'"  >'+ value.nocspl.spl_title+' </td>'
+                                  +'<td class="text-body align-middle fw-medium text-decoration-none" data-id="'+ value.id+'"  >'+ value.title+' </td>'
+                                +'<td class="text-body align-middle fw-medium text-decoration-none" data-id="'+ value.nocspl_id+'"  >'+ value.title_spl+' </td>'
                             '</tr >'
                         });
                         $('#linked_movies_spl_table tbody').html(movies_table)
