@@ -43,6 +43,7 @@ class MoviescodController extends Controller
                             'last_update' => $moviescod['last_update'],
                             'status' => $moviescod['status'],
                             'location_id'     =>$location->id,
+                            'spl_uuid'     =>$moviescod['id_spl'],
                         ]);
                     }
                 }
@@ -57,8 +58,10 @@ class MoviescodController extends Controller
         //$location = Location::find($location) ;
         $movies = Moviescod::where('location_id',$request->location)->where('status','unlinked')->orderBy('title', 'ASC')->get() ;
 
-        $nos_spls = Nocspl::all() ;
+
         $lms_spl = Lmsspl::where('location_id' ,$location )->select('lmsspls.*','lmsspls.name as spl_title')->groupBy('uuid')->orderBy('spl_title', 'ASC')->get() ;
+        $lms_spl_uuid = array_column($lms_spl->toArray(), 'uuid');
+        $nos_spls = Nocspl::whereNotIn('uuid', $lms_spl_uuid)->get() ;
 
        /* $noc_and_location_spls = $nosspls->merge($spl_location);
         $nos_spls =  $noc_and_location_spls ;*/
@@ -85,14 +88,14 @@ class MoviescodController extends Controller
         }
         else
         {
-            $check_lms_spl = Lmsspl::where('uuid' , $splnoc->uuid)->where('location_id',$moviescod->location_id)->first() ;
+            $check_lms_spl = Lmsspl::where('uuid' , $request->spl_id)->where('location_id',$moviescod->location_id)->first() ;
         }
 
         if($check_lms_spl)
         {
             // $location = Location::findOrFail($check_lms_spl->location_id) ;
             //$this->sendUpdateLinksRequest($location->connection_ip, $moviescod->moviescods_id, $splnoc->uuid);
-            $response = $this->sendUpdateLinksRequest($apiUrl, $moviescod->code, $splnoc->uuid, $location->email , $location->password);
+            $response = $this->sendUpdateLinksRequest($apiUrl, $moviescod->code, $request->spl_id, $location->email , $location->password);
             //$response['result'] = 1 ;
                 //dd($response);
             if($response['result'] === 1 )

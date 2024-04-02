@@ -281,25 +281,41 @@
                             </div>
                             <div class="row " >
                                 <div class="col-md-12 " >
-                                    <button type="button" id="link_spl_movies_btn" class=" btn btn-primary btn-icon-text " style="float: right">
-                                    <i class="mdi mdi-check "></i> Link </button>
+                                    <button type="button " id="link_spl_movies_btn" class=" btn btn-primary  btn-icon-text " style="margin: 15px auto 0px auto; display: table;">
+                                    <i class="mdi mdi-check "></i> Apply </button>
                                 </div>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="linked_spls_movies" role="tabpanel" aria-labelledby="linked_spls_movies-tab">
                             <div class="row " >
                                 <div class="col-md-12  preview-list multiplex" >
+                                    <div class="row">
+                                        <div class="col-xl-12">
+                                            <div class="input-group mb-3 mr-sm-2">
+                                                <input type="text" class="form-control" id="search_linked_spl_films" placeholder="Search In SPLs List Or Films">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 row">
+                                            <h4 class="card-title col-xl-3" style="font-weight: bold;padding-bottom: 8px; width: fit-content">
+                                                <span class="mdi mdi-format-list-bulleted-type   custom-icon " style="color: #26a1eb;"></span>
+                                                SPLs List
+                                            </h4>
+
+                                        </div>
+                                        <div class="col-md-6 row">
+                                            <h4 class="card-title col-xl-3" style="font-weight: bold;padding-bottom: 8px; width: fit-content">
+                                                <span class="mdi mdi-movie  custom-icon " style="color: #26a1eb;"></span>
+                                                Films
+                                            </h4>
+
+                                        </div>
+                                    </div>
+
                                     <table class="table" id="linked_movies_spl_table">
-                                        <thead>
-                                            <tr>
-                                                <th>Movies</th>
-                                                <th>SPL</th>
-
-                                            </tr>
-                                        </thead>
                                         <tbody>
-
-                                    </tbody>
+                                        </tbody>
                                     </table>
                                 </div>
 
@@ -711,7 +727,14 @@
                         if(value.status !="linked" )
                         {
                             icon_spl = '<i class="mdi mdi-playlist-play text-danger"> </i>'
-                            statu_content = '<spn class="text-danger" >Unlinked  </span>'
+                            if(value.type == "pos")
+                            {
+                                statu_content = '<spn class="text-danger" >Unlinked  </span>'
+                            }
+                            else
+                            {
+                                statu_content = ''
+                            }
                             icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
                             icon_cpl = '<i class="mdi mdi-filmstrip text-warning ">'
                         }
@@ -755,12 +778,29 @@
                         {
                             statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-success get_schedule_infos btn-fw"> KDM Expired in  : '+value.date_expired+'</button>'
                         }
+                        var name =" " ;
+                        if(value.type == "pos")
+                        {
+                            if(value.status== "linked" )
+                            {
+                                var name =value.ShowTitleText  ;
+                            }
+                            else
+                            {
+                                var name =value.titleShort  ;
+                            }
+                        }
+                        else
+                        {
+                            var name =value.ShowTitleText  ;
+                        }
+
 
                         result = result
                             +'<tr class="odd ">'
                             +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.type+' </td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.screen.screen_name+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.name+'</a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+name+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.date_start+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+ icon_spl + icon_cpl + icon_kdm +' </i></a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+statu_content+'</a></td>'
@@ -855,10 +895,19 @@
                             {
                                 icon_spl = '<i class="mdi mdi-playlist-play text-danger"> </i>'
 
+                                if(value.type == "pos")
+                                {
+                                    statu_content = '<spn class="text-danger" >Unlinked  </span>'
+                                }
+                                else
+                                {
+                                    statu_content = ''
+                                }
+
                                 icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
                                 icon_cpl = '<i class="mdi mdi-filmstrip text-warning ">'
 
-                                statu_content = ''
+                                //statu_content = ''
 
                             }
                             else
@@ -871,7 +920,6 @@
                                     if(value.kdm  ==1 )
                                     {
                                         icon_kdm = '</i> <i class="mdi mdi-key-change text-success"> </i>'
-
 
                                     }
                                     else
@@ -904,11 +952,30 @@
                             }
 
 
+                            var name =" " ;
+                            if(value.type == "pos")
+                            {
+                                if(value.status== "linked" )
+                                {
+                                    var name =value.ShowTitleText  ;
+                                }
+                                else
+                                {
+                                    var name =value.titleShort  ;
+                                }
+                            }
+                            else
+                            {
+                                var name =value.ShowTitleText  ;
+                            }
+
+
+
                             result = result
                                 +'<tr class="odd ">'
                                 +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.type+' </td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.screen.screen_name+'</a></td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.name+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+name+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.date_start+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+ icon_spl + icon_cpl + icon_kdm +' </i></a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+statu_content+'</a></td>'
@@ -1044,8 +1111,9 @@
                         $.each(response.movies, function( index, value ) {
                             movies_table +=
                             '<tr id="'+value.id+'">'
-                                  +'<td class="text-body align-middle fw-medium text-decoration-none" data-id="'+ value.id+'"  >'+ value.title+' </td>'
-                                +'<td class="text-body align-middle fw-medium text-decoration-none" data-id="'+ value.nocspl_id+'"  >'+ value.title_spl+' </td>'
+                                +'<td style="width:50%" class="text-body spl_title align-middle fw-medium text-decoration-none" data-id="'+ value.nocspl_id+'"  >'+ value.title_spl+' </td>'
+                                  +'<td style="width:50%" class="text-body film_title align-middle fw-medium text-decoration-none" data-id="'+ value.id+'"  >'+ value.title+' </td>'
+
                             '</tr >'
                         });
                         $('#linked_movies_spl_table tbody').html(movies_table)
@@ -1811,7 +1879,14 @@
                         if(value.status !="linked" )
                         {
                             icon_spl = '<i class="mdi mdi-playlist-play text-danger"> </i>'
-                            statu_content = '<spn class="text-danger" >Unlinked  </span>'
+                            if(value.type == "pos")
+                            {
+                                statu_content = '<spn class="text-danger" >Unlinked  </span>'
+                            }
+                            else
+                            {
+                                statu_content = ''
+                            }
                             icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
                             icon_cpl = '<i class="mdi mdi-filmstrip text-warning ">'
                         }
@@ -1854,11 +1929,30 @@
                         {
                             statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-success get_schedule_infos btn-fw"> KDM Expired in  : '+value.date_expired+'</button>'
                         }
+
+                        var name =" " ;
+                        if(value.type == "pos")
+                        {
+                            if(value.status== "linked" )
+                            {
+                                var name =value.ShowTitleText  ;
+                            }
+                            else
+                            {
+                                var name =value.titleShort  ;
+                            }
+                        }
+                        else
+                        {
+                            var name =value.ShowTitleText  ;
+                        }
+
+
                         result = result
                             +'<tr class="odd ">'
                             +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.type+' </td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.screen.screen_name+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.name+'</a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+name+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.date_start+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+ icon_spl + icon_cpl + icon_kdm +' </i></a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+statu_content+'</a></td>'
@@ -1939,7 +2033,14 @@
                         if(value.status !="linked" )
                         {
                             icon_spl = '<i class="mdi mdi-playlist-play text-danger"> </i>'
-                            statu_content = '<spn class="text-danger" >Unlinked  </span>'
+                            if(value.type == "pos")
+                            {
+                                statu_content = '<spn class="text-danger" >Unlinked  </span>'
+                            }
+                            else
+                            {
+                                statu_content = ''
+                            }
                             icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
                             icon_cpl = '<i class="mdi mdi-filmstrip text-warning ">'
                         }
@@ -1982,11 +2083,30 @@
                         {
                             statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-success get_schedule_infos btn-fw"> KDM Expired in  : '+value.date_expired+'</button>'
                         }
+
+                        var name =" " ;
+                        if(value.type == "pos")
+                        {
+                            if(value.status== "linked" )
+                            {
+                                var name =value.ShowTitleText  ;
+                            }
+                            else
+                            {
+                                var name =value.titleShort  ;
+                            }
+                        }
+                        else
+                        {
+                            var name =value.ShowTitleText  ;
+                        }
+
+
                         result = result
                             +'<tr class="odd ">'
                             +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.type+' </td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.screen.screen_name+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.name+'</a></td>'
+                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+name+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.date_start+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+ icon_spl + icon_cpl + icon_kdm +' </i></a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+statu_content+'</a></td>'
@@ -2026,12 +2146,21 @@
     });
 
 
-
-
-    //search Films
     $("#search_unlinked_film").on("keyup", function() {
         var value = $(this).val().toLowerCase();
         $("#movies_table td").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+
+
+
+    //search Films and films from linked list
+    $("#search_linked_spl_films").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#linked_movies_spl_table tr").filter(function() {
+            console.log($(this).parent('tr').text())
         $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         });
     });
@@ -2044,7 +2173,7 @@
     let navbar_height = document.querySelector('.navbar').offsetHeight;
     //let footer_height = document.querySelector('.footer').offsetHeight;
     let page_header_height = document.querySelector('.page-header ').offsetHeight;
-    let content_max_height = content_height - navbar_height - page_header_height - 170;
+    let content_max_height = content_height - navbar_height - page_header_height - 320;
 
     $(".multiplex").height(content_max_height);
 

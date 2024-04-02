@@ -144,4 +144,9 @@ class Location extends Model
         return $this->belongsToMany(User::class,'locations_users');
     }
 
+    public function assetinfos(): HasMany
+    {
+        return $this->hasMany(Assetinfo::class);
+    }
+
 }
