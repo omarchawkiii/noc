@@ -180,3 +180,4 @@ Route::get('asset_reports', [App\Http\Controllers\AssetinfoController::class , '
 Route::get('get_asset_infos_with_filter', [App\Http\Controllers\AssetinfoController::class , 'get_asset_infos_with_filter'])->name('asset_infos.get_asset_infos_with_filter')->middleware(['auth']);
 
 Route::get('generate_pdf_asset_info', [App\Http\Controllers\AssetinfoController::class , 'generate_pdf_asset_info'])->name('asset_infos.generate_pdf_asset_info')->middleware(['auth']);
+Route::get('refresh_asset_infos_data', [App\Http\Controllers\LocationController::class , 'refresh_asset_infos_data'])->name('location.refresh_asset_infos_data')->middleware(['auth']);

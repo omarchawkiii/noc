@@ -15,7 +15,7 @@
     </div>
     <div class="row mb-2 ">
 
-        <div class="col-xl-5">
+        <div class="col-xl-4">
             <div class="input-group mb-2 mr-sm-2">
 
                 <div class="input-group">
@@ -34,7 +34,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-5">
+        <div class="col-xl-4">
             <div class="input-group mb-2 mr-sm-2">
                 <div class="input-group-prepend">
                     <div class="input-group-text"><i class="mdi mdi-monitor"></i></div>
@@ -56,7 +56,17 @@
                 </button>
             </div>
         </div>
-
+        <div class="col-xl-2 ">
+            <div class="input-group mb-2 mr-sm-2 " id="export_pdf">
+                <div class="input-group-prepend">
+                    <div class="input-group-text"><i class="mdi mdi-refresh"></i></div>
+                </div>
+                <button class="form-   form-control form-select-sm" aria-label=".form-select-sm example"
+                    id="refresh_content">
+                     Refresh
+                </button>
+            </div>
+        </div>
 
 
 
@@ -219,7 +229,60 @@
             }
 
 
+            $('#refresh_content').click(function(){
+                var url = "{{  url('') }}"+ '/refresh_asset_infos_data/' ;
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    data :
+                    {
 
+
+                    },
+                    success:function(response)
+                    {
+                        if(response)
+                        {
+                            swal({
+                                title: 'Done!',
+                                text: 'Asset Repports imported successfully!',
+                                icon: 'success',
+                                buttons: {
+                                    cancel: {
+                                        text: "Close",
+                                        value: null,
+                                        visible: true,
+                                        className: "btn btn-info",
+                                        closeModal: true,
+                                    },
+                                }
+                            })
+                        }
+                        else
+                        {
+                            swal({
+                                title: 'Oops...',
+                                text: 'Something went wrong!',
+                                icon: 'error',
+                                buttons: {
+                                    cancel: {
+                                        text: "Cancel",
+                                        value: null,
+                                        visible: true,
+                                        className: "btn btn-danger",
+                                        closeModal: true,
+                                    },
+                                }
+                            })
+                        }
+
+                    },
+                    error: function(response) {
+                        console.log(response)
+                    }
+                })
+
+            })
             $('#location').change(function(){
 
                 //$('#location-listing tbody').html('')
@@ -280,11 +343,7 @@
                 {
                     //  window.open('pdfReport.php?id_source='+id_source+'&name_screen='+name_screen+'&fromDate='+fromDate+'&toDate='+toDate+'&id_content='+id_content+'&title_content='+title_content, '_blank');
                     window.open(url);
-                    //   generate_pdf_report(id_location, id_screen, fromDate, toDate)
 
-                    /*if (id_content === undefined) {
-                            id_content=null;
-                    }*/
                 }
             });
 
@@ -343,6 +402,8 @@
 
 
         });
+
+
 
 
 

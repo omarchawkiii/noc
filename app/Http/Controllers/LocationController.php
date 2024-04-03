@@ -670,7 +670,6 @@ class LocationController extends Controller
 
     }
 
-
     public function refresh_movies_data()
     {
         $start_time = Carbon::now();
@@ -681,6 +680,18 @@ class LocationController extends Controller
             app(\App\Http\Controllers\MoviescodController::class)->getMoviesCods($location->id);
         }
 
+    }
+
+    public function refresh_asset_infos_data()
+    {
+        //$start_time = Carbon::now();
+        //echo $start_time->toDateTimeString();
+        $locations = Location::all() ;
+        foreach($locations as $location)
+        {
+            app(\App\Http\Controllers\AssetinfoController::class)->get_asset_infos($location->id);
+        }
+        return true  ;
     }
 
 
