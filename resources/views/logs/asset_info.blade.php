@@ -243,9 +243,12 @@
                     {
                         if(response)
                         {
+                            var location =  $('#location').val();
+                            var screen =  $('#screen').val();
+                            get_asset_infos(location, screen, true);
                             swal({
                                 title: 'Done!',
-                                text: 'Asset Repports imported successfully!',
+                                text: 'Asset Reports imported successfully!',
                                 icon: 'success',
                                 buttons: {
                                     cancel: {
