@@ -158,9 +158,7 @@ class LogController extends Controller
         if( $id_location != 'null' )
         {
             //$locations= explode(',', $id_location);
-            $logs = $logs->whereIn('location_id',$id_location
-
-            ) ;
+            $logs = $logs->whereIn('location_id',$id_location) ;
         }
         if( $id_screen != 'null' )
         {
