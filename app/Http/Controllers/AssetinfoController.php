@@ -101,7 +101,7 @@ class AssetinfoController extends Controller
                 $asset_infos = $asset_infos->where('screen_number', $screen->screen_number) ;
             }
 
-            $asset_infos = $asset_infos->orderBy('screen_number', 'desc')->get() ;
+            $asset_infos = $asset_infos->orderBy('screen_number', 'ASC')->get() ;
         }
         else
         {
@@ -124,7 +124,7 @@ class AssetinfoController extends Controller
 
         $pdfWidth = 400; // in mm
         $pdfHeight = 297; // in mm
-        $pageLayout = array(297, 500); // A4 dimensions in millimeters (width, height)
+        $pageLayout = array(297, 600); // A4 dimensions in millimeters (width, height)
         $pdf->AddPage('L', $pageLayout);
         $pdf->Cell(0, 10, 'Asset Reports Data ' , 0,1 );
         $pdf->Cell(0, 10, 'Date Generation : ' .  date("Y-m-d H:i:s"), 0, 1);
@@ -153,6 +153,9 @@ class AssetinfoController extends Controller
                 $pdf->Cell(30, 10, 'Sound Model',1,0,'c');
                 $pdf->Cell(50, 10, 'Sound Chasis Serial',1,0,'c');
                 $pdf->Cell(40, 10, 'Sound E-S/N',1,0,'c');
+                $pdf->Cell(50, 10, 'Server Firmware Version',1,0,'c');
+                $pdf->Cell(50, 10, 'Projector Version',1,0,'c');
+                $pdf->Cell(50, 10, 'Sound Software Version',1,0,'c');
 
 
                 if( isset($request->screen) &&  $request->screen != 'null')
@@ -161,7 +164,7 @@ class AssetinfoController extends Controller
                     $asset_infos = $asset_infos->where('screen_number', $screen->screen_number);
                 }
 
-                $asset_infos = $asset_infos->orderBy('screen_number', 'desc')->get() ;
+                $asset_infos = $asset_infos->orderBy('screen_number', 'ASC')->get() ;
 
                 foreach($asset_infos as $asset_info)
                 {
@@ -176,6 +179,10 @@ class AssetinfoController extends Controller
                     $pdf->Cell(30, 10, $asset_info->sound_model,1,0,'c');
                     $pdf->Cell(50, 10, $asset_info->sound_chasis_serial,1,0,'c');
                     $pdf->Cell(40, 10, $asset_info->sound_esn,1,0,'c');
+
+                    $pdf->Cell(50, 10, $asset_info->server_firmware_version,1,0,'c');
+                    $pdf->Cell(50, 10, $asset_info->projector_version,1,0,'c');
+                    $pdf->Cell(50, 10, $asset_info->sound_software_version,1,0,'c');
 
                     //$pdf->Ln(); // Move to the next row
                 }

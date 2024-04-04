@@ -208,7 +208,7 @@
 
 
                         var spl_datatable = $('#asset_infos_listing').DataTable({
-                            "iDisplayLength": 10,
+                            "iDisplayLength": 20,
                             destroy: true,
                             "bDestroy": true,
                             "language": {
@@ -380,8 +380,8 @@
             // fix page hight
 
             var t = $(window).height();
-            $("#content_page").css("height", t - 300);
-            $("#content_page").css("max-height", t - 300);
+            $("#content_page").css("height", t - 250);
+            $("#content_page").css("max-height", t - 250);
             $("#content_page").css("overflow-y", 'auto');
 
         });
