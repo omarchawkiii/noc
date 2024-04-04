@@ -22,6 +22,9 @@ class Assetinfo extends Model
         'sound_model' ,
         'sound_chasis_serial' ,
         'sound_esn' ,
+        'server_firmware_version',
+        'projector_version',
+        'sound_software_version',
         'location_id',
         'screen_id',
     ];

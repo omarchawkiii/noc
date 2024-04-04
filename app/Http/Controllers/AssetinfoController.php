@@ -27,7 +27,7 @@ class AssetinfoController extends Controller
         {
             foreach($contents as $asset_info)
             {
-                if($asset_info ['screen_status'] != 1 )
+                if($asset_info ['screen_status'] == 1 )
                 {
                     $screen = Screen::where('screen_number','=',$asset_info ['screen_number'])->where('location_id','=',$location->id)->first() ;
                     Assetinfo::updateOrCreate([
@@ -46,6 +46,10 @@ class AssetinfoController extends Controller
                         'sound_model' => $asset_info['sound_model'],
                         'sound_chasis_serial' => $asset_info['sound_chasis_serial'],
                         'sound_esn' => $asset_info['sound_esn'],
+                        'projector_version'=> $asset_info['projector_version'],
+                        'sound_software_version'=> $asset_info['sound_software_version'],
+                        'server_firmware_version' =>  $asset_info['server_firmware_version'],
+
                         'screen_id'     =>$screen->id,
                         'location_id'     =>$location->id,
                     ]);
