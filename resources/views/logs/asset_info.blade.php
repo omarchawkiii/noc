@@ -92,9 +92,13 @@
                                             <th class="sorting">Server Software</th>
                                             <th class="sorting ">Projector Model Number</th>
                                             <th class="sorting ">Projector Serial Number</th>
+                                            <th class="sorting ">Projector Version</th>
                                             <th class="sorting ">Sound Model</th>
                                             <th class="sorting ">Sound Chasis Serial</th>
                                             <th class="sorting ">Sound E-S/N</th>
+                                            <th class="sorting ">Server Firmware Version</th>
+
+                                            <th class="sorting ">Sound Software Version</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -199,9 +203,13 @@
                                     +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+ value.server_software+'</a></td>'
                                     +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+ value.projector_model_number+'</a></td>'
                                     +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+ value.projector_serial_number+'</a></td>'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+ value.projector_version+'</a></td>'
                                     +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+ value.sound_model+'</a></td>'
                                     +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+ value.sound_chasis_serial+'</a></td>'
                                     +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+ value.sound_esn+'</a></td>'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+ value.server_firmware_version+'</a></td>'
+
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+ value.sound_software_version+'</a></td>'
                                 +'</tr>';
                         });
                         $('#asset_infos_listing tbody').html(result)
