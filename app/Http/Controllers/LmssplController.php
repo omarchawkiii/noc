@@ -43,16 +43,15 @@ class LmssplController extends Controller
                     if(count($content) != $location->lmsspls->count() )
                     {
                         $uuid_lmsspls = array_column($content, 'uuid');
-                            foreach($location->lmsspls as $lmsspl)
+                        foreach($location->lmsspls as $lmsspl)
+                        {
+                            if (! in_array( $lmsspl->uuid , $uuid_lmsspls))
                             {
-                                if (! in_array( $lmsspl->uuid , $uuid_lmsspls))
-                                {
-                                    // delete deleted screen
-                                    $lmsspl->delete() ;
-                                }
+                                // delete deleted screen
+                                $lmsspl->delete() ;
                             }
+                        }
 
-                        //dd('we should delete screens ') ;
                     }
                 }
             }

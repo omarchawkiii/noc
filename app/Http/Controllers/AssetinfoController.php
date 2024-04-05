@@ -148,13 +148,14 @@ class AssetinfoController extends Controller
                 $pdf->Cell(50, 10, 'Server Product Name ',1,0,'c');
                 $pdf->Cell(35, 10, 'server E-S/N',1,0,'c');
                 $pdf->Cell(35, 10, 'Server Software',1,0,'c');
+                $pdf->Cell(50, 10, 'Server Firmware Version',1,0,'c');
                 $pdf->Cell(55, 10, 'Projector Model Number',1,0,'c');
                 $pdf->Cell(55, 10, 'Projector Serial Number',1,0,'c');
                 $pdf->Cell(50, 10, 'Projector Version',1,0,'c');
                 $pdf->Cell(30, 10, 'Sound Model',1,0,'c');
                 $pdf->Cell(50, 10, 'Sound Chasis Serial',1,0,'c');
                 $pdf->Cell(40, 10, 'Sound E-S/N',1,0,'c');
-                $pdf->Cell(50, 10, 'Server Firmware Version',1,0,'c');
+
                 $pdf->Cell(50, 10, 'Sound Software Version',1,0,'c');
 
 
@@ -174,13 +175,14 @@ class AssetinfoController extends Controller
                     $pdf->Cell(50, 10, $asset_info->server_product_name,1,0,'c');
                     $pdf->Cell(35, 10, $asset_info->server_esn,1,0,'c');
                     $pdf->Cell(35, 10, $asset_info->server_software,1,0,'c');
+                    $pdf->Cell(50, 10, $asset_info->server_firmware_version,1,0,'c');
                     $pdf->Cell(55, 10, $asset_info->projector_model_number,1,0,'c');
                     $pdf->Cell(55, 10, $asset_info->projector_serial_number,1,0,'c');
                     $pdf->Cell(50, 10, $asset_info->projector_version,1,0,'c');
                     $pdf->Cell(30, 10, $asset_info->sound_model,1,0,'c');
                     $pdf->Cell(50, 10, $asset_info->sound_chasis_serial,1,0,'c');
                     $pdf->Cell(40, 10, $asset_info->sound_esn,1,0,'c');
-                    $pdf->Cell(50, 10, $asset_info->server_firmware_version,1,0,'c');
+
                     $pdf->Cell(50, 10, $asset_info->sound_software_version,1,0,'c');
 
                     //$pdf->Ln(); // Move to the next row

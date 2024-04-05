@@ -2779,8 +2779,9 @@
         //upload spl after edit
         $(document).on('click', '#upload_spl_after_edit', function() {
 
-            var spl_id = $(this).data('spl_id');
-            var url = '{{ url('') }}' + '/upload_spl_after_edit/' ;
+            var spl_uuid = $('#auto_ingest_on_after_edit_spl_uuid span').data('uuid');
+            console.log(spl_uuid);
+            var url = '{{ url('') }}' + '/upload_spl_after_edit' ;
 
 
             //console.log(items_spl);
@@ -2994,7 +2995,7 @@
 
                                         $("#auto_ingest_on_after_edit").html(
                                             '<div class="col-md-12 style-modal-edit"  >PlayListBuilder Auto Ingest Offline'+'</div>'+
-                                            '<div class="col-md-12 style-modal-edit">SPL Title : <span data-uuid="'+obj.uuid+'">'+obj.title+'</span> </div>'+
+                                            '<div class="col-md-12 style-modal-edit" id="auto_ingest_on_after_edit_spl_uuid">SPL Title : <span data-uuid="'+obj.uuid+'">'+obj.title+'</span> </div>'+
                                             '<div class="col-md-12">  Available in the below locations : </div>'
                                             );
                                         for (var i = 0; i < list_available_in.length; i++) {
