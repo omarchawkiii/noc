@@ -2173,7 +2173,7 @@
     let navbar_height = document.querySelector('.navbar').offsetHeight;
     //let footer_height = document.querySelector('.footer').offsetHeight;
     let page_header_height = document.querySelector('.page-header ').offsetHeight;
-    let content_max_height = content_height - navbar_height - page_header_height - 320;
+    let content_max_height = content_height - navbar_height - page_header_height - 170;
 
     $(".multiplex").height(content_max_height);
 

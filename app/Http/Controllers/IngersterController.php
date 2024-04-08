@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ingestsource;
+use App\Models\Location;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -389,8 +391,15 @@ class IngersterController extends Controller
 
     public function transfere_content()
     {
-
-        return view('ingester.transfere_content');
+        if( Auth::user()->role != 1)
+        {
+            $locations = Auth::user()->locations ;
+        }
+        else
+        {
+            $locations = Location::all() ;
+        }
+        return view('ingester.transfere_content', compact('locations'));
     }
 
      public function delete_transfered_file(Request $request)

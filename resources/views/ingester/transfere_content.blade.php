@@ -11,8 +11,7 @@
         </nav>
     </div>
 
-    <div class="card">
-        <div class="card-body">
+
 
             <div class="row mb-2">
                 <div class="d-flex flex-row justify-content-between mt-2 mb-3">
@@ -31,55 +30,278 @@
                 <div class="  col-md-12">
                     <div class="card">
                         <div class="card-body ">
-                            <!--<div class="row mt-4">
-                                <div class="col-xl-2 ">
-                                    <div class="input-group mb-2 mr-sm-2">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text"><i class="mdi mdi-monitor"></i></div>
-                                        </div>
-                                        <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="filter_logs_status">
-                                            <option selected="All">All</option>
-                                            <option value="Complete">Complete</option>
-                                            <option value="Failed">Failed</option>
-                                            <option value="Canceled By User">Canceled</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-xl-3 ">
-                                    <div class="input-group mb-2 mr-sm-2">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text"><i class="mdi mdi-screwdriver"></i></div>
-                                        </div>
-                                        <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="filter_logs_type">
-                                            <option value="All" selected="">All Elements</option>
-                                            <option value="DCP">Content Playlist</option>
 
-                                            <option value="SPL"> Show Playlist</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-xl-2 ">
-                                    <div class="input-group mb-2 mr-sm-2">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">
-                                                <i class="mdi mdi-magnify"></i></div>
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="logest-tab" data-bs-toggle="tab" href="#logest" role="tab" aria-controls="logest" aria-selected="true">Transfer</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="monitor-tab" data-bs-toggle="tab" href="#monitor" role="tab" aria-controls="Monitor" aria-selected="false">Monitor</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="logs-tab" data-bs-toggle="tab" href="#logs" role="tab" aria-controls="Logs" aria-selected="false">Logs</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content" style="height: 567px; max-height: 567px;">
+                                <!-- tab Logest -->
+                                <div class="tab-pane fade active show" id="logest" role="tabpanel" aria-labelledby="home-tab">
+                                    <div class="row mb-2">
+                                        <div class="  col-md-6" style="border: 1px solid #646060;">
+
+                                            <div class="card">
+                                                <div class="card-body ">
+
+
+                                                    <div class="row  ">
+
+                                                        <button type="button" class="btn btn-primary btn-icon-text col-md-3 ml-1" id="ingest_content">
+                                                            <i class="mdi mdi-upload btn-icon-prepend"></i> Transfer
+                                                        </button>
+
+                                                        <button type="button" class="btn btn-danger  btn-icon-text col-md-3 ml-1 " id="delete_file">
+                                                            <i class="mdi mdi-delete-forever btn-icon-prepend"></i> Delete
+                                                        </button>
+                                                    </div>
+                                                    <div class="row mt-4">
+
+                                                        <div class="col-xl-12">
+                                                            <div class="input-group mb-2 mr-sm-2">
+                                                                <div class="input-group-prepend">
+                                                                    <div class="input-group-text"><i class="mdi mdi-magnify"></i></div>
+                                                                </div>
+                                                                <input type="text" class="form-control" id="search_screens_source" placeholder="Search ">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="preview-list multiplex" id="source_results" style="height: 391.742px; max-height: 391.742px; overflow-y: auto;">
+                                                                <div class="preview-item border-bottom dd-item item-content " data-type="CompositionPlaylist" data-uuid="urn:uuid:35c044fa-d7eb-4e29-8cd9-5bcdabab4918" data-description="311023-CowayAis-ENG-030-TGV-19LUFS" data-uri="/data/assets/35c044fa-d7eb-4e29-8cd9-5bcdabab4918/pkl_17fb0d47-176c-427f-8c99-39803397fd2f.xml">
+                                                                    <div class="icon icon-box-primary">
+                                                                        <i class="mdi mdi-content-save-settings text-primary" style="color:#ffab00!important;"></i>
+                                                                    </div>
+                                                                    <div class="preview-item-content d-sm-flex flex-grow">
+                                                                        <div class="flex-grow">
+                                                                            <h6 class="preview-subject">311023-CowayAis-ENG-030-TGV-19LUFS</h6>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+
                                         </div>
-                                        <button class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="details_logs">
-                                            Details
-                                        </button>
+                                        <div class="  col-md-6" style="border: 1px solid #646060;">
+
+                                            <div class="card">
+                                                <div class="card-body ">
+                                                    <div class="d-flex flex-row justify-content-between  mt-2">
+                                                        <h4 class="card-title "></h4>
+                                                    </div>
+                                                    <div class="row mt-4">
+                                                        <div class="col-xl-4">
+                                                            <div class="input-group mb-2 mr-sm-2">
+                                                                <div class="input-group-prepend">
+                                                                    <div class="input-group-text"><i class="mdi mdi-home-map-marker"></i></div>
+                                                                </div>
+                                                                <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="location">
+                                                                    <option selected="">Locations</option>
+                                                                    @foreach ($locations as $location )
+                                                                        <option value="{{ $location->id }}">{{ $location->name }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-4">
+                                                            <div class="input-group mb-2 mr-sm-2">
+                                                                <div class="input-group-prepend">
+                                                                    <div class="input-group-text"><i class="mdi mdi-monitor"></i></div>
+                                                                </div>
+                                                                <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="screen">
+                                                                    <option value="null">Screens</option>
+
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xl-4 ">
+                                                            <div class="input-group mb-2 mr-sm-2">
+                                                                <div class="input-group-prepend">
+                                                                    <div class="input-group-text"><i class="mdi mdi-magnify"></i></div>
+                                                                </div>
+                                                                <input type="text" class="form-control" id="search_screens_destination" placeholder="Search ">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="preview-list multiplex" id="destination_results" style="height: 401.742px; max-height: 401.742px; overflow-y: auto;">
+
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+
+                                        </div>
 
                                     </div>
                                 </div>
-                                <div class="col-xl-5 ">
-                                    <div class="input-group mb-2 mr-sm-2">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text"><i class="mdi mdi-magnify"></i></div>
+                                <!-- end tab Logest -->
+
+                                <div class="tab-pane fade" id="monitor" role="tabpanel" aria-labelledby="monitor">
+                                    <div class="  col-md-12">
+
+                                        <div class="card">
+                                            <div class="card-body ">
+                                                <div class="d-flex flex-row justify-content-between">
+                                                    <h4 class="card-title ">Multiplex Monitor</h4>
+                                                </div>
+                                                <div class="row">
+
+                                                    <div class="col-xl-4 ">
+                                                        <div class="input-group mb-2 mr-sm-2">
+                                                            <div class="input-group-prepend">
+                                                                <div class="input-group-text"><i class="mdi mdi-magnify"></i>
+                                                                </div>
+                                                            </div>
+                                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Search ">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-xl-8 ">
+                                                        <button type="button" class="btn btn-secondary custom-btn btn-icon-text" id="refresh_monitoring">
+                                                            <i class="mdi mdi-refresh btn-icon-prepend"></i> Refresh
+                                                        </button>
+                                                        <button type="button" class="btn btn-success custom-btn btn-icon-text" id="resume_ingesting">
+                                                            <i class="mdi mdi-play btn-icon-prepend"></i> Resume
+                                                        </button>
+                                                        <button type="button" class="btn btn-primary custom-btn btn-icon-text" id="pause_ingesting">
+                                                            <i class="mdi mdi-upload btn-icon-prepend"></i> Pause
+                                                        </button>
+                                                        <button type="button" class="btn btn-danger custom-btn btn-icon-text" id="cancel_ingesting">
+                                                            <i class="mdi mdi-server-remove  btn-icon-prepend"></i> Cancel
+                                                        </button>
+
+                                                    </div>
+
+
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="preview-list multiplex" id="parent_table_monitoring" style="height: 411.742px; max-height: 411.742px;">
+                                                            <div class="table-responsive">
+                                                                <table class="table " id="table_monitoring" style="overflow-y: auto;">
+                                                                    <thead>
+                                                                    <tr>
+                                                                        <th> State</th>
+                                                                        <th> Source</th>
+                                                                        <th> Destination</th>
+                                                                        <th> Progress</th>
+                                                                        <th> Contenty Type</th>
+                                                                        <th> Description</th>
+                                                                        <th> Creation date</th>
+
+                                                                    </tr>
+                                                                    </thead>
+                                                                    <tbody id="table_monitoring_body" style="overflow-y: hidden;"><div class="no-screen-select-msg">Tasks List Empty !</div></tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
                                         </div>
-                                        <input type="text" class="form-control" id="search_logs" placeholder="Search ">
+
                                     </div>
                                 </div>
-                            </div> -->
-                            <div class="row">
+
+                                <div class="tab-pane fade" id="logs" role="tabpanel" aria-labelledby="logs">
+                                    <div class="col-md-12">
+                                        <div class="card">
+                                            <div class="card-body ">
+                                                <div class="row">
+                                                    <div class="col-xl-4 ">
+                                                        <div class="input-group mb-2 mr-sm-2">
+                                                            <div class="input-group-prepend">
+                                                                <div class="input-group-text"><i class="mdi mdi-screwdriver"></i></div>
+                                                            </div>
+                                                            <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="screens_logs">
+
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-6 ">
+
+
+                                                        <select class="btn btn-dark  btn-fw" aria-label=".form-select-sm example" id="filter_logs" style="    text-align: left;">
+                                                            <option value="all" selected="selected">All
+                                                            </option>
+                                                            <option value="Completed">Completed</option>
+                                                            <option value="Failed">Failed</option>
+                                                            <option value="Cancelled">Cancelled</option>
+                                                        </select>
+
+
+                                                        <button type="button" class="btn btn-secondary custom-btn btn-icon-text center-block">
+                                                            <i class="mdi mdi-refresh btn-icon-prepend"></i> Refresh
+                                                        </button>
+
+
+                                                        <button type="button" class="btn btn-danger custom-btn btn-icon-text" id="delete_tasks">
+                                                            <i class="mdi mdi-delete-forever btn-icon-prepend"></i> Delete
+                                                        </button>
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="preview-list multiplex" id="logs-card" style="height: 447px; max-height: 447px;">
+                                                            <div class="table-responsive">
+                                                                <table class="table " id="table_logs">
+                                                                    <thead>
+                                                                    <tr style="text-align: center">
+                                                                        <th> State</th>
+                                                                        <th>Source</th>
+                                                                        <th> Progress</th>
+                                                                        <th> Content Type</th>
+                                                                        <th> Description</th>
+                                                                        <th> Creation date</th>
+                                                                        <th> Option</th>
+                                                                    </tr>
+                                                                    </thead>
+                                                                    <tbody id="tbody_logs" style="text-align: center">
+
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--<div class="row">
 
                                     <div class="preview-list multiplex" id="div_ingest_logs">
                                         <div class="table-responsive">
@@ -97,7 +319,7 @@
                                         </div>
                                     </div>
 
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -189,6 +411,7 @@
     }
 
     function displayFileTransfere() {
+
         $.ajax({
             url: '/noc/ingester/action_contoller',
             method: "POST",
@@ -208,7 +431,21 @@
                         $('#body_ingest_logs').html("");
                     } else {
                         for (var i = 0; i < dcp.length; i++) {
-                            box_logs += '<tr class="item_to_select logs-item" ' +
+
+                            result = result
+                            +'<div  class="preview-item border-bottom dd-item item-content item_to_select " data-uuid="urn:uuid:35c044fa-d7eb-4e29-8cd9-5bcdabab4918" data-description="311023-CowayAis-ENG-030-TGV-19LUFS" data-uri="/data/assets/35c044fa-d7eb-4e29-8cd9-5bcdabab4918/pkl_17fb0d47-176c-427f-8c99-39803397fd2f.xml">'
+                                +'<div class="icon icon-box-primary">'
+                                    +'<i class="mdi mdi-content-save-settings text-primary" style="color:#ffab00 !important;"></i>'
+                                +'</div>'
+                                +'<div class="preview-item-content d-sm-flex flex-grow">'
+                                    +'<div class="flex-grow">'
+                                        +'<h6 class="preview-subject">'+ dcp[i].cpl_description+'</h6>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>' ;
+
+
+                           /* box_logs += '<tr class="item_to_select logs-item" ' +
                                 '  data-task_status="' + dcp[i].status + '" ' +
                                 '  data-id="' + dcp[i].id + '" ' +
                                 ' data-type="DCP"' +
@@ -216,10 +453,10 @@
                                 '    <td class="status_control">' + getStatusDownload(dcp[i].status) + ' </td>  ' +
                                 '    <td>' + dcp[i].cpl_description + '</td>\n' +
                                 '    <td></td>\n' +
-                                '</tr>';
+                                '</tr>';*/
 
                         }
-                        $('#body_ingest_logs').html(box_logs);
+                        $('#source_results').html(box_logs);
                     }
                     let height_parent = $('.background-content').height();
                     $("#tab2-1").css("max-height", height_parent - 30);
@@ -320,6 +557,232 @@
             });
         }
     });
+
+
+    // search source
+    var search_screens_source = document.getElementById('search_screens_source');
+    search_screens_source.onkeyup = function () {
+        var searchTerms = $(this).val();
+        $('#source_results div').each(function () {
+            var hasMatch = searchTerms.length == 0 ||
+                $(this).text().toLowerCase().indexOf(searchTerms.toLowerCase()) > 0;
+            $(this).toggle(hasMatch);
+        });
+    }
+
+
+
+    //  Right side
+
+    function get_cpls(location , screen , lms , multiplex,refresh_screen)
+    {
+        result ="" ;
+        var url = "{{  url('') }}"+ '/get_cpl_with_filter/';
+        $.ajax({
+            url: url,
+            method: 'GET',
+            data: {
+                location: location,
+                screen_id: screen,
+                multiplex: multiplex,
+                lms : lms,
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+
+            success:function(response)
+            {
+                console.log(refresh_screen)
+                if(refresh_screen != false)
+                {
+                    screens = '<option value="null" selected>All screen </option>';
+                    $.each(response.screens, function( index_screen, screen ) {
+
+                        screens = screens
+                            +'<option  value="'+screen.id+'">'+screen.screen_name+'</option>';
+                    });
+                        $('#screen').html(screens)
+                }
+
+                if(response.cpls.length>0)
+                {
+                    $.each(response.cpls, function( index, value ) {
+                        index ++ ;
+                        if( value.available_on)
+                        {
+                            available_on_array =  value.available_on.split(",");
+                            available_on_content=""
+                            for(i = 0 ; i< available_on_array.length ; i++ )
+                            {
+                                if(i != 0 &&  i % 9 == 0 )
+                                {
+                                    available_on_content = available_on_content + '<br />'
+                                }
+                                available_on_content = available_on_content + '<div class="badge badge-outline-primary m-1">'+ available_on_array[i]+'</div>'
+                            }
+                        }
+                        else
+                        {
+                            available_on_content=""
+                        }
+
+
+                        playable =""
+                        if(value.playable == 1 || lms == true )
+                        {
+                            playable = "bg-playable" ;
+                        }
+                        else
+                        {
+                            playable = "bg-no-playable";
+                        }
+
+                        var encrypted="";
+                            if(value.pictureEncryptionAlgorithm=="None" || value.pictureEncryptionAlgorithm=="0"){
+                                encrypted="";
+                            }else{
+                                encrypted="<i class=\"cpl_need_kdm mdi btn-success mdi-lock-outline p-1 m-1 rounded\"  ></i> ";
+                            }
+                            var style = "" ;
+                            if(value.type == "Flat")
+                            {
+                                style = "color:#52d4f7;" ;
+                            }
+                            else if(value.type == "Scope")
+                            {
+                                style = "color:#36ffb9;" ;
+                            }
+                            else
+                            {
+                                style = "color:white;" ;
+                            }
+                            /* var style = (value.type == "Flat") ? "color:#52d4f7;" :
+                            (value.type == "Scope") ? "color:#36ffb9;" :
+                                "color:white;";
+                                */
+
+                            var title= '<span style="'+style+'"">' + value.contentTitleText +
+                                encrypted +
+                                (value.cpl_is_linked == "1" ? ' <span class=\"mdi mdi-calendar-clock custom-calendar p-1 m-1 btn-primary rounded\"  ></span>':"  ")
+                                +
+
+                                '  </span>';
+
+
+
+
+                        result = result
+                            +'<div class="preview-item border-bottom dd-item item-content " data-uuid="urn:uuid:35c044fa-d7eb-4e29-8cd9-5bcdabab4918" data-description="311023-CowayAis-ENG-030-TGV-19LUFS" data-uri="/data/assets/35c044fa-d7eb-4e29-8cd9-5bcdabab4918/pkl_17fb0d47-176c-427f-8c99-39803397fd2f.xml">'
+                                +'<div class="icon icon-box-primary">'
+                                    +'<i class="mdi mdi-content-save-settings text-primary" style="color:#ffab00 !important;"></i>'
+                                +'</div>'
+                                +'<div class="preview-item-content d-sm-flex flex-grow">'
+                                    +'<div class="flex-grow">'
+                                        +'<h6 class="preview-subject">'+value.contentTitleText+'</h6>'
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>' ;
+
+
+
+                    });
+                }
+
+                $('#destination_results').html(result)
+
+
+                /***** refresh datatable **** **/
+
+                var cpl_datatable = $('#location-listing').DataTable({
+                    "iDicplayLength": 10,
+                    destroy: true,
+                    "bDestroy": true,
+                    "language": {
+                        search: "_INPUT_",
+                        searchPlaceholder: "Search..."
+                    }
+                });
+
+            },
+            error: function(response) {
+
+            }
+        })
+    }
+
+
+    $('#screen').change(function(){
+
+        $("#location-listing").dataTable().fnDestroy();
+        $('#location-listing tbody').html('')
+
+        var loader_content  =
+        '<div class="jumping-dots-loader">'
+            +'<span></span>'
+            +'<span></span>'
+            +'<span></span>'
+            +'</div>'
+        $('#location-listing tbody').html(loader_content)
+
+        var country =  $('#country').val();
+        var screen =  $('#screen').val();
+        window.lms = false ;
+        var location =  $('#location').val();
+        var multiplex =  $('#multiplex').val();
+
+        get_cpls(location , screen , false , multiplex,false)
+
+
+
+    });
+
+    $('#location').change(function(){
+        $("#location-listing").dataTable().fnDestroy();
+            $('#screen').find('option')
+        .remove()
+        .end()
+        .append('<option value="null">All Screens</option>')
+
+        var loader_content  =
+        '<div class="jumping-dots-loader">'
+            +'<span></span>'
+            +'<span></span>'
+            +'<span></span>'
+            +'</div>'
+        $('#location-listing tbody').html(loader_content)
+        //$('#location-listing tbody').html('')
+        var location =  $('#location').val();
+        var country =  $('#country').val();
+        var multiplex =  $('#multiplex').val();
+        var screen =  null;
+
+        if(location != "Locations")
+        {
+            $('#refresh_lms').show();
+            get_cpls(location , screen , true , multiplex,true)
+        }
+        else
+        {
+            $('#refresh_lms').hide();
+            $('#location-listing tbody').html('<div id="table_logs_processing" class="dataTables_processing card">Please Select Location</div>')
+        }
+
+
+
+    });
+
+    // search LMS CPLs
+    var search_screens_source = document.getElementById('search_screens_destination');
+    search_screens_source.onkeyup = function () {
+        var searchTerms = $(this).val();
+        $('#destination_results div').each(function () {
+            var hasMatch = searchTerms.length == 0 ||
+                $(this).text().toLowerCase().indexOf(searchTerms.toLowerCase()) > 0;
+            $(this).toggle(hasMatch);
+        });
+    }
+
 })(jQuery);
 </script>
 
