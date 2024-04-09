@@ -223,6 +223,7 @@ class NockdmController extends Controller
             $nockdms =$nockdms->where('location_id',$location);
         }
 
+
         if(isset($screen) &&  $screen != 'null' )
         {
              $nockdms =$nockdms->where('screen_id',$screen);

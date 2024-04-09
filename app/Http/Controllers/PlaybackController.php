@@ -81,7 +81,7 @@ class PlaybackController extends Controller
 
     }
 
-    public function index()
+    public function index(Request $request)
     {
         if( Auth::user()->role != 1)
         {
@@ -90,6 +90,13 @@ class PlaybackController extends Controller
         else
         {
             $locations = Location::orderBy('name', 'DESC')->get() ;
+        }
+
+
+        if($request->type =="ajax")
+        {
+            $playbacks = Playback::with('location')->whereIn('location_id',array_column($locations->toArray(), 'id'))->get() ;
+            return Response()->json(compact('playbacks' ));
         }
         return view('playbacks.index', compact('locations'));
     }

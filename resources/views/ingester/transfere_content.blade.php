@@ -20,16 +20,10 @@
                     <h4 class="card-title ">Files</h4>
                     </div>
 
-                    <div>
-                        <button class="btn btn-danger  btn-icon-text" id="delete_file">
-                            <i class="mdi mdi-plus btn-icon-prepend"></i> Delete
-                        </button>
-                    </div>
+
                 </div>
 
                 <div class="  col-md-12">
-                    <div class="card">
-                        <div class="card-body ">
 
                             <ul class="nav nav-tabs" role="tablist">
                                 <li class="nav-item">
@@ -38,15 +32,13 @@
                                 <li class="nav-item">
                                     <a class="nav-link" id="monitor-tab" data-bs-toggle="tab" href="#monitor" role="tab" aria-controls="Monitor" aria-selected="false">Monitor</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="logs-tab" data-bs-toggle="tab" href="#logs" role="tab" aria-controls="Logs" aria-selected="false">Logs</a>
-                                </li>
+
                             </ul>
                             <div class="tab-content" style="height: 567px; max-height: 567px;">
                                 <!-- tab Logest -->
                                 <div class="tab-pane fade active show" id="logest" role="tabpanel" aria-labelledby="home-tab">
-                                    <div class="row mb-2">
-                                        <div class="  col-md-6" style="border: 1px solid #646060;">
+                                    <div class="row mb-2 mt-2">
+                                        <div class="  col-md-6" >
 
                                             <div class="card">
                                                 <div class="card-body ">
@@ -54,7 +46,7 @@
 
                                                     <div class="row  ">
 
-                                                        <button type="button" class="btn btn-primary btn-icon-text col-md-3 ml-1" id="ingest_content">
+                                                        <button style="margin-right : 10px ; " type="button" class="btn btn-primary btn-icon-text col-md-3 ml-1" id="ingest_content">
                                                             <i class="mdi mdi-upload btn-icon-prepend"></i> Transfer
                                                         </button>
 
@@ -76,17 +68,8 @@
 
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            <div class="preview-list multiplex" id="source_results" style="height: 391.742px; max-height: 391.742px; overflow-y: auto;">
-                                                                <div class="preview-item border-bottom dd-item item-content " data-type="CompositionPlaylist" data-uuid="urn:uuid:35c044fa-d7eb-4e29-8cd9-5bcdabab4918" data-description="311023-CowayAis-ENG-030-TGV-19LUFS" data-uri="/data/assets/35c044fa-d7eb-4e29-8cd9-5bcdabab4918/pkl_17fb0d47-176c-427f-8c99-39803397fd2f.xml">
-                                                                    <div class="icon icon-box-primary">
-                                                                        <i class="mdi mdi-content-save-settings text-primary" style="color:#ffab00!important;"></i>
-                                                                    </div>
-                                                                    <div class="preview-item-content d-sm-flex flex-grow">
-                                                                        <div class="flex-grow">
-                                                                            <h6 class="preview-subject">311023-CowayAis-ENG-030-TGV-19LUFS</h6>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                                            <div class="preview-list multiplex" id="files-listing" style="height: 391.742px; max-height: 391.742px; overflow-y: auto;">
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -96,7 +79,7 @@
                                             </div>
 
                                         </div>
-                                        <div class="  col-md-6" style="border: 1px solid #646060;">
+                                        <div class="  col-md-6" >
 
                                             <div class="card">
                                                 <div class="card-body ">
@@ -117,19 +100,7 @@
                                                                 </select>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xl-4">
-                                                            <div class="input-group mb-2 mr-sm-2">
-                                                                <div class="input-group-prepend">
-                                                                    <div class="input-group-text"><i class="mdi mdi-monitor"></i></div>
-                                                                </div>
-                                                                <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="screen">
-                                                                    <option value="null">Screens</option>
-
-                                                                </select>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-xl-4 ">
+                                                        <div class="col-xl-8 ">
                                                             <div class="input-group mb-2 mr-sm-2">
                                                                 <div class="input-group-prepend">
                                                                     <div class="input-group-text"><i class="mdi mdi-magnify"></i></div>
@@ -228,77 +199,7 @@
                                     </div>
                                 </div>
 
-                                <div class="tab-pane fade" id="logs" role="tabpanel" aria-labelledby="logs">
-                                    <div class="col-md-12">
-                                        <div class="card">
-                                            <div class="card-body ">
-                                                <div class="row">
-                                                    <div class="col-xl-4 ">
-                                                        <div class="input-group mb-2 mr-sm-2">
-                                                            <div class="input-group-prepend">
-                                                                <div class="input-group-text"><i class="mdi mdi-screwdriver"></i></div>
-                                                            </div>
-                                                            <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="screens_logs">
 
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-6 ">
-
-
-                                                        <select class="btn btn-dark  btn-fw" aria-label=".form-select-sm example" id="filter_logs" style="    text-align: left;">
-                                                            <option value="all" selected="selected">All
-                                                            </option>
-                                                            <option value="Completed">Completed</option>
-                                                            <option value="Failed">Failed</option>
-                                                            <option value="Cancelled">Cancelled</option>
-                                                        </select>
-
-
-                                                        <button type="button" class="btn btn-secondary custom-btn btn-icon-text center-block">
-                                                            <i class="mdi mdi-refresh btn-icon-prepend"></i> Refresh
-                                                        </button>
-
-
-                                                        <button type="button" class="btn btn-danger custom-btn btn-icon-text" id="delete_tasks">
-                                                            <i class="mdi mdi-delete-forever btn-icon-prepend"></i> Delete
-                                                        </button>
-
-                                                    </div>
-                                                </div>
-
-                                                <div class="row">
-                                                    <div class="col-12">
-                                                        <div class="preview-list multiplex" id="logs-card" style="height: 447px; max-height: 447px;">
-                                                            <div class="table-responsive">
-                                                                <table class="table " id="table_logs">
-                                                                    <thead>
-                                                                    <tr style="text-align: center">
-                                                                        <th> State</th>
-                                                                        <th>Source</th>
-                                                                        <th> Progress</th>
-                                                                        <th> Content Type</th>
-                                                                        <th> Description</th>
-                                                                        <th> Creation date</th>
-                                                                        <th> Option</th>
-                                                                    </tr>
-                                                                    </thead>
-                                                                    <tbody id="tbody_logs" style="text-align: center">
-
-
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
                             </div>
 
                             <!--<div class="row">
@@ -320,8 +221,7 @@
                                     </div>
 
                             </div> -->
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -427,13 +327,14 @@
                     var obj = JSON.parse(response);
                     var dcp = obj.dcp;
                     var spl = obj.spl;
+                    var result ;
                     if (dcp.length === 0) {
-                        $('#body_ingest_logs').html("");
+                        $('#files-listing').html("");
                     } else {
                         for (var i = 0; i < dcp.length; i++) {
 
                             result = result
-                            +'<div  class="preview-item border-bottom dd-item item-content item_to_select " data-uuid="urn:uuid:35c044fa-d7eb-4e29-8cd9-5bcdabab4918" data-description="311023-CowayAis-ENG-030-TGV-19LUFS" data-uri="/data/assets/35c044fa-d7eb-4e29-8cd9-5bcdabab4918/pkl_17fb0d47-176c-427f-8c99-39803397fd2f.xml">'
+                            +'<div data-id_cpl="' + dcp[i].cpl_id + '" data-type="DCP" class="preview-item border-bottom dd-item item-content item_to_select " data-id="' + dcp[i].id + '"  data-uri="/data/assets/35c044fa-d7eb-4e29-8cd9-5bcdabab4918/pkl_17fb0d47-176c-427f-8c99-39803397fd2f.xml">'
                                 +'<div class="icon icon-box-primary">'
                                     +'<i class="mdi mdi-content-save-settings text-primary" style="color:#ffab00 !important;"></i>'
                                 +'</div>'
@@ -456,7 +357,7 @@
                                 '</tr>';*/
 
                         }
-                        $('#source_results').html(box_logs);
+                        $('#files-listing').html(result);
                     }
                     let height_parent = $('.background-content').height();
                     $("#tab2-1").css("max-height", height_parent - 30);
@@ -558,14 +459,92 @@
         }
     });
 
+    //Delete Files
+    $(document).on('click', '#ingest_content', function (event) {
+        alert('Comming soon ') ;
+
+           /* var array_files = [];
+
+            $("#files-listing .item_to_select.selected").each(function() {
+                    var id = $(this).data("id_cpl");
+                    array_files.push(id);
+                });
+
+
+            console.log(array_files)
+            if (array_files.length ==  0) {
+                $("#no-file-selected").modal('show');
+            }else{
+            var url = "{{  url('') }}"+ '/ingester/delete_transfered_file/';
+                $.ajax({
+                    url: url,
+                    type: 'DELETE',
+                    data: {
+                        array_files:array_files,
+
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    beforeSend: function () {
+                    },
+                    success: function (response) {
+                        if(response)
+                        {
+                            displayFileTransfere()
+                                    swal({
+                                        title: 'Done!',
+                                        text: 'File Deleted Successfully ',
+                                        icon: 'success',
+                                        button: {
+                                            text: "Continue",
+                                            value: true,
+                                            visible: true,
+                                            className: "btn btn-primary"
+                                        }
+                                    })
+                        }
+                        else
+                        {
+                            swal({
+                                        title: 'Failed',
+                                        text: "Error occurred while sending the request.",
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#3f51b5',
+                                        cancelButtonColor: '#ff4081',
+                                        confirmButtonText: 'Great ',
+                                        buttons: {
+                                            cancel: {
+                                                text: "Cancel",
+                                                value: null,
+                                                visible: true,
+                                                className: "btn btn-danger",
+                                                closeModal: true,
+                                            },
+                                        }
+                                    })
+                        }
+
+
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    },
+                    complete: function (jqXHR, textStatus) {
+                    }
+                });
+            }*/
+        });
+
 
     // search source
     var search_screens_source = document.getElementById('search_screens_source');
     search_screens_source.onkeyup = function () {
         var searchTerms = $(this).val();
-        $('#source_results div').each(function () {
+        $('#files-listing h6.preview-subject').each(function () {
             var hasMatch = searchTerms.length == 0 ||
-                $(this).text().toLowerCase().indexOf(searchTerms.toLowerCase()) > 0;
+                $(this).text().toLowerCase().indexOf(searchTerms.toLowerCase()) > -1;
             $(this).toggle(hasMatch);
         });
     }
@@ -712,30 +691,6 @@
     }
 
 
-    $('#screen').change(function(){
-
-        $("#location-listing").dataTable().fnDestroy();
-        $('#location-listing tbody').html('')
-
-        var loader_content  =
-        '<div class="jumping-dots-loader">'
-            +'<span></span>'
-            +'<span></span>'
-            +'<span></span>'
-            +'</div>'
-        $('#location-listing tbody').html(loader_content)
-
-        var country =  $('#country').val();
-        var screen =  $('#screen').val();
-        window.lms = false ;
-        var location =  $('#location').val();
-        var multiplex =  $('#multiplex').val();
-
-        get_cpls(location , screen , false , multiplex,false)
-
-
-
-    });
 
     $('#location').change(function(){
         $("#location-listing").dataTable().fnDestroy();
@@ -768,20 +723,21 @@
             $('#location-listing tbody').html('<div id="table_logs_processing" class="dataTables_processing card">Please Select Location</div>')
         }
 
-
-
     });
 
-    // search LMS CPLs
-    var search_screens_source = document.getElementById('search_screens_destination');
-    search_screens_source.onkeyup = function () {
+    // search destination
+    var search_screens_destination = document.getElementById('search_screens_destination');
+    search_screens_destination.onkeyup = function () {
         var searchTerms = $(this).val();
         $('#destination_results div').each(function () {
             var hasMatch = searchTerms.length == 0 ||
-                $(this).text().toLowerCase().indexOf(searchTerms.toLowerCase()) > 0;
+                $(this).text().toLowerCase().indexOf(searchTerms.toLowerCase()) > -1;
             $(this).toggle(hasMatch);
         });
     }
+
+
+
 
 })(jQuery);
 </script>

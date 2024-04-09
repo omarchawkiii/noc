@@ -126,7 +126,7 @@
                                         <div class="input-group-text"><i class="mdi mdi-home-map-marker"></i></div>
                                     </div>
                                     <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="location">
-                                        <option selected="">Locations</option>
+                                        <option selected="" value="null">Locations</option>
                                         @foreach ($locations as $location )
                                             <option   value="{{ $location->id }}">{{ $location->name }}</option>
                                         @endforeach
@@ -623,6 +623,7 @@
                     var url = "{{  url('') }}"+ '/get_nockdm/' ;
                     var result =" " ;
                     var screens  =" " ;
+                    console.log(location)
                     $.ajax({
                         url: url,
                         method: 'GET',

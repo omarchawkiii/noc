@@ -695,6 +695,19 @@ class LocationController extends Controller
     }
 
 
+    public function refresh_disk_usage_data()
+    {
+        $start_time = Carbon::now();
+        echo $start_time->toDateTimeString();
+        $locations = Location::all() ;
+        foreach($locations as $location)
+        {
+            app(\App\Http\Controllers\DiskusageController::class)->getdiskusage($location->id);
+        }
+
+    }
+
+
 
 
 }

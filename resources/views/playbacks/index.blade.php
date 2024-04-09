@@ -51,7 +51,7 @@
                                         <td class="sorting_1"> {{ $location->name }}  </td>
                                         @if($location->playbacks->count() >0  )
                                             @foreach ( $location->playbacks as  $playback)
-                                                <td class="sorting_1">
+                                                <td class="sorting_1" id="{{ $playback->location_id }}-{{ $playback->screen_id }}">
                                                     @if ($playback->playback_status == 'Pause' )
                                                         <div class="icon icon-box-warning  playback_icon" style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="{{$playback->playback_status}}" data-id="{{ $playback->id }}">
                                                             <span class="mdi mdi-play-pause "></span>
@@ -218,43 +218,97 @@
 
     <script>
 
-    function calculateRuntimeDifference(remainingTime, elapsedTime) {
-
-        if(elapsedTime=="0")
-        {
-            return "00:00:00";
-        }
-
-        // Parse time strings into Date objects
-        const remainingTimeParts = remainingTime.split(':').map(part => parseInt(part, 10));
-        const elapsedParts = elapsedTime.split(':').map(part => parseInt(part, 10));
-
-        // Convert time parts into milliseconds
-        const remainingMilliseconds = (remainingTimeParts[0] * 3600 + remainingTimeParts[1] * 60 + remainingTimeParts[2]) * 1000;
-        const elapsedMilliseconds = (elapsedParts[0] * 3600 + elapsedParts[1] * 60 + elapsedParts[2]) * 1000;
-
-        // Calculate the difference
-        const differenceMilliseconds = remainingMilliseconds - elapsedMilliseconds;
-
-        // Calculate hours, minutes, and seconds
-        let hours = Math.floor(differenceMilliseconds / (1000 * 60 * 60));
-        let minutes = Math.floor((differenceMilliseconds % (1000 * 60 * 60)) / (1000 * 60));
-        let seconds = Math.floor((differenceMilliseconds % (1000 * 60)) / 1000);
-        console.log(hours)
-        // Ensure leading zeros if necessary
-        //hours = (hours < 10) ? 0 ${hours} : hours;
-        hours = (hours < 10) ? '0'+hours:hours;
-        minutes = (minutes < 10) ? '0'+minutes:minutes;
-        seconds = (seconds < 10) ? '0'+seconds:seconds;
-        /*minutes = (minutes < 10) ? 0${minutes} : minutes;
-        seconds = (seconds < 10) ? 0${seconds} : seconds;*/
-
-        // Return the formatted difference
-        return hours+':'+minutes+':'+seconds;
-    }
-
 
     (function($) {
+
+        function calculateRuntimeDifference(remainingTime, elapsedTime) {
+
+            if(elapsedTime=="0")
+            {
+                return "00:00:00";
+            }
+
+            // Parse time strings into Date objects
+            const remainingTimeParts = remainingTime.split(':').map(part => parseInt(part, 10));
+            const elapsedParts = elapsedTime.split(':').map(part => parseInt(part, 10));
+
+            // Convert time parts into milliseconds
+            const remainingMilliseconds = (remainingTimeParts[0] * 3600 + remainingTimeParts[1] * 60 + remainingTimeParts[2]) * 1000;
+            const elapsedMilliseconds = (elapsedParts[0] * 3600 + elapsedParts[1] * 60 + elapsedParts[2]) * 1000;
+
+            // Calculate the difference
+            const differenceMilliseconds = remainingMilliseconds - elapsedMilliseconds;
+
+            // Calculate hours, minutes, and seconds
+            let hours = Math.floor(differenceMilliseconds / (1000 * 60 * 60));
+            let minutes = Math.floor((differenceMilliseconds % (1000 * 60 * 60)) / (1000 * 60));
+            let seconds = Math.floor((differenceMilliseconds % (1000 * 60)) / 1000);
+            console.log(hours)
+            // Ensure leading zeros if necessary
+            //hours = (hours < 10) ? 0 ${hours} : hours;
+            hours = (hours < 10) ? '0'+hours:hours;
+            minutes = (minutes < 10) ? '0'+minutes:minutes;
+            seconds = (seconds < 10) ? '0'+seconds:seconds;
+            /*minutes = (minutes < 10) ? 0${minutes} : minutes;
+            seconds = (seconds < 10) ? 0${seconds} : seconds;*/
+
+            // Return the formatted difference
+            return hours+':'+minutes+':'+seconds;
+        }
+
+        function get_playback_data()
+        {
+            $.ajax({
+                    url:"{{  url('') }}"+ "/playback",
+                    type: 'get',
+                    //cache: false,
+                    data: {
+                        type : "ajax"
+                    },
+                    success: function(response) {
+                        console.log(response)
+                        $.each(response.playbacks, function( index, value ) {
+                            var playback_status =" " ;
+                            if (value.playback_status == 'Pause' )
+                            {
+                                playback_status = '<div class="icon icon-box-warning  playback_icon" style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="'+value.playback_status+'" data-id="'+value.id+'">'
+                                    +'<span class="mdi mdi-play-pause "></span>'
+                                +'</div>'
+                             }
+                            if (value.playback_status == 'Stop')
+                            {
+                                playback_status = '<div class="icon icon-box-danger playback_icon " style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="'+value.playback_status+'" data-id="'+value.id+'">'
+                                    +'<span class="mdi mdi-stop  "></span>'
+                                +'</div>'
+                             }
+                            if (value.playback_status == 'Unknown' )
+                            {
+                                playback_status = '<div class="icon icon-box-warning  playback_icon" style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="'+value.playback_status+'" data-id="'+value.id+'">'
+                                    +'<span class="mdi mdi-comment-question-outline  "></span>'
+                                +'</div>'
+                             }
+                            if (value.playback_status == 'Play')
+                            {
+                                playback_status = '<div class="icon icon-box-success playback_icon" style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="'+value.playback_status+'" data-id="'+value.id+'">'
+                                    +'<span class="mdi mdi-play "></span>'
+                                +'</div>'
+                             }
+                            $('#'+value.location_id +'-'+value.screen_id).html(playback_status)
+                        })
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    },
+                    complete: function(jqXHR, textStatus) {
+
+                    }
+            });
+        }
+        const interval = setInterval(function() {
+            get_playback_data() ;
+        }, 5000);
+
+
   'use strict';
   $(function() {
     $('#order-listing').DataTable({
@@ -397,7 +451,7 @@
                     console.log(errorThrown);
                 },
                 complete: function(jqXHR, textStatus) {}
-            });
+        });
 
 
 
