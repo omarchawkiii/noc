@@ -1228,6 +1228,11 @@ class NocsplController extends Controller
 
     public function uploadlocalspl(Request $request)
     {
+
+        $ingest_success = array() ;
+        $ingest_errors = array();
+        $ingest_status= array();
+
         try {
 
             foreach ($request->splfiles as $splfiles )
@@ -1280,20 +1285,40 @@ class NocsplController extends Controller
 
                                         ]);
                                     }
+                                    array_push($ingest_success,  array("status" => 1 , "originalName" =>  $splfiles->getClientOriginalName() , "id" =>  "" , "AnnotationText" =>  "" ));
 
+                            }
+                            else
+                            {
+                                array_push($ingest_errors,  array("status" => 0 , "originalName" =>  $splfiles->getClientOriginalName() , "id" =>  "",  "AnnotationText" =>  "This is not a KDM file"));
                             }
 
                         }
+                        else
+                        {
+                            array_push($ingest_errors,  array("status" => 0 , "originalName" =>  $splfiles->getClientOriginalName() , "id" =>  "",  "AnnotationText" =>  "This is not a KDM file"));
+                        }
 
+                    }
+                    else
+                    {
+                        array_push($ingest_errors,  array("status" => 0 , "originalName" =>  $splfiles->getClientOriginalName() , "id" =>  "",  "AnnotationText" =>  "This is not a KDM file"));
                     }
 
                 }
+                else
+                {
+                    array_push($ingest_errors,  array("status" => 0 , "originalName" =>  $splfiles->getClientOriginalName() , "id" =>  "",  "AnnotationText" =>  "This is not a KDM file"));
+                }
             }
-            echo "Success" ;
+            $ingest_status = array("status" => 1,  "message " => "") ;
+             return Response()->json(compact('ingest_errors','ingest_success','ingest_status'));
 
         } catch (Exception $e) {
+            $ingest_status = array("status" => 0 , "message " => $e->getMessage()) ;
+            return Response()->json(compact('ingest_errors','ingest_success','ingest_status'));
             echo "Failed" ;
-            return $e;
+            //return $e;
         }
 
     }

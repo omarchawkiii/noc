@@ -43,7 +43,7 @@
                                 <ul class="">
                                     @verbatim
 
-                                    <li v-for="(file, index) in files" class="d-flex justify-content-between align-items-center">
+                                    <li v-for="(file, index) in files" class="d-flex  flex justify-content-between align-items-center">
                                         <span v-if="typeof file.name !== 'undefined'">
                                             {{ file.name }} ({{ file.size }} b)
                                           </span>
@@ -53,7 +53,7 @@
                                 </ul>
 
 
-                                <input type="submit" class="btn btn-lg btn-success btn-icon-text" id="start_upload_spl" />
+                                <input @click="dropAllFiles()" type="submit" class="btn btn-lg btn-success btn-icon-text" id="start_upload_spl" />
 
                             </form>
                         </div>
@@ -100,7 +100,7 @@
                                 <ul class="">
                                     @verbatim
 
-                                    <li v-for="(file, index) in files" class="d-flex justify-content-between align-items-center">
+                                    <li v-for="(file, index) in files" class="d-flex flex justify-content-between align-items-center">
                                         <span v-if="typeof file.name !== 'undefined'">
                                             {{ file.name }} ({{ file.size }} b)
                                           </span>
@@ -108,7 +108,7 @@
                                     </li>
                                     @endverbatim
                                 </ul>
-                                <input type="submit" class="btn btn-lg btn-success btn-icon-text" id="start_upload_spl" />
+                                <input  @click="dropAllFiles()" type="submit" class="btn btn-lg btn-success btn-icon-text" id="start_upload_spl" />
                             </form>
 
                         </div>
@@ -145,9 +145,9 @@
                                 </div>
                             </div>
                             <div class="col-xl-6">
-                                <button id="ingest_kdm" class="btn btn-primary  btn-icon-text " style="float: right">
+                                <!--<button id="ingest_kdm" class="btn btn-primary  btn-icon-text " style="float: right">
                                     <i class="mdi mdi-plus btn-icon-prepend"></i> Ingest KDMS
-                                </button>
+                                </button> -->
                             </div>
                         </div>
                         <div class="row">
@@ -205,6 +205,27 @@
         </div>
     </div>
 
+    <div class=" modal fade " id="upload_spl_errors" tabindex="-1" role="dialog"  aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered  modal-xl">
+            <div class="modal-content border-0">
+                <div class="modal-header">
+                    <h4>Uploaded SPLs infos </h4>
+                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true"
+                            style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
+                </div>
+                <div class="modal-body  p-4">
+
+
+                </div>
+
+
+            </div>
+        <!--end modal-content-->
+        </div>
+    </div>
+
+
     <div class=" modal fade " id="ingest_kdm_vide" tabindex="-1" role="dialog"  aria-labelledby="delete_client_modalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered ">
             <div class="modal-content border-0">
@@ -260,6 +281,11 @@
                         this.files.push(f);
                     });
                 },
+                dropAllFiles()
+                {
+                    $('#app ul').html("");
+
+                },
                 removeFile(fileKey) {
                     this.files.splice(fileKey, 1)
                 },
@@ -301,6 +327,11 @@
 
                         this.files.push(f);
                     });
+                },
+                dropAllFiles()
+                {
+                    $('#app-kdm ul').html("");
+                    c
                 },
                 removeFile(fileKey) {
                     this.files.splice(fileKey, 1)
@@ -401,132 +432,281 @@
         (function($) {
             'use strict';
 
-            //upload spl
-            $("#upload_spl_form").on("submit", function(e) {
+             //upload spl
+             $("#upload_spl_form").on("submit", function(e) {
                 e.preventDefault();
-                var file = $('#splfiles')[0].files[0];
-                $.ajax({
-                    url: "{{ route('nocspl.uploadlocalspl') }}",
-                    type: 'POST',
-                    method: 'POST',
-                    data: new FormData(this),
-                    contentType: false,
-                    cache: false,
-                    processData: false,
-                    headers: {
-                        'X-CSRF-TOKEN': "{{ csrf_token() }}",
-                        "_token": "{{ csrf_token() }}",
-                    },
-                    beforeSend: function() {
-                        swal({
-                            title: 'Refreshing',
-                            allowEscapeKey: false,
-                            allowOutsideClick: true,
-                            onOpen: () => {
-                                swal.showLoading();
+
+                if( document.getElementById("splfiles").files.length > 0 ){
+                    var file = $('#splfiles')[0].files[0];
+                    $.ajax({
+                        url: "{{ route('nocspl.uploadlocalspl') }}",
+                        type: 'POST',
+                        method: 'POST',
+                        data: new FormData(this),
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                        headers: {
+                            'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                            "_token": "{{ csrf_token() }}",
+                        },
+                        beforeSend: function() {
+                            swal({
+                                title: 'Refreshing',
+                                allowEscapeKey: false,
+                                allowOutsideClick: true,
+                                onOpen: () => {
+                                    swal.showLoading();
+                                }
+                            });
+                        },
+                        success: function(response) {
+
+                            console.log(response) ;
+                            if (response.ingest_status.status == 1 )
+                            {
+                                var result  =" " ;
+                                if (response.ingest_errors.length> 0 )
+                                {
+                                    swal.close();
+                                    $('#upload_spl_errors').modal('show') ;
+                                    result = "<h4> Failed SPLs Ingest  </h4>" ;
+                                    $.each(response.ingest_errors, function( index, value ) {
+
+                                        result = result
+                                        +'<p>'
+                                            +'<span class="align-middle fw-medium text-danger ">'+value.originalName+' </span>'
+                                            +'<span class="align-middle fw-medium text-danger "> Can not be uploaded </span>'
+                                        +'</p>';
+                                    });
+
+                                    if (response.ingest_success.length> 0 )
+                                    {
+                                    result = result + "<br /> <br /> <h4>  Succeeded  SPLs Ingest   </h4>" ;
+                                        $.each(response.ingest_success, function( index, value ) {
+
+                                            result = result
+                                            +'<p>'
+                                                +'<span class="align-middle fw-medium text-success">'+value.originalName+' </span>'
+                                                +'<span class="align-middle fw-medium text-success" >  Uploaded Successfully </span>'
+                                            +'</p>';
+                                        });
+                                    }
+
+
+                                    $('#upload_spl_errors .modal-body').html(result) ;
+                                    //showSwal('warning-message-and-cancel')
+                                    $('#upload_spl_form').trigger("reset");
+                                    load_splnoc();
+
+
+                                } else {
+
+                                    swal.close();
+                                    $('#upload_spl_form').trigger("reset");
+                                    showSwal('success-message');
+                                    load_splnoc();
+
+
+                                }
                             }
-                        });
-                    },
-                    success: function(response) {
+                            else
+                            {
+                                swal.close();
+                                console.log(response.ingest_status.message)
+                                swal({
+                                    title: 'Failed',
+                                    text: "Error occurred while sending the request!.",
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3f51b5',
+                                    cancelButtonColor: '#ff4081',
+                                    confirmButtonText: 'Great ',
+                                    buttons: {
+                                        cancel: {
+                                            text: "Cancel",
+                                            value: null,
+                                            visible: true,
+                                            className: "btn btn-danger",
+                                            closeModal: true,
+                                        },
+                                    }
+                                })
+                            }
 
-                        if (response == "Success") {
+                        /* if (response == "Success") {
+                                swal.close();
+                                $('#upload_spl_form').trigger("reset");
+                                showSwal('success-message');
+                                load_splnoc();
+                            } else {
+                                swal.close();
+                                showSwal('warning-message-and-cancel')
+                            }*/
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
                             swal.close();
-                            $('#upload_spl_form').trigger("reset");
-                            showSwal('success-message');
-                            load_splnoc();
-                        } else {
-                            swal.close();
-                            showSwal('warning-message-and-cancel')
+                            showSwal('warning-message-and-cancel');
+
+                            //console.log(response) ;
                         }
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        swal.close();
-                        showSwal('warning-message-and-cancel');
-
-                        //console.log(response) ;
-                    }
-                })
+                    })
+                }
+                else
+                {
+                    swal({
+                            title: 'Form Is Empty',
+                            text: "Please Select One or more SPL  ",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3f51b5',
+                            cancelButtonColor: '#ff4081',
+                            confirmButtonText: 'Great ',
+                            buttons: {
+                                cancel: {
+                                    text: "Cancel",
+                                    value: null,
+                                    visible: true,
+                                    className: "btn btn-danger",
+                                    closeModal: true,
+                                },
+                            }
+                        })
+                }
             });
 
             //upload KDMs
             $("#upload_kdm_form").on("submit", function(e) {
+
                 e.preventDefault();
                 var file = $('#kdmfiles')[0].files[0];
-                $.ajax({
-                    url: "{{ route('nockdm.uploadlocalkdm') }}",
-                    type: 'POST',
-                    method: 'POST',
-                    data: new FormData(this),
-                    contentType: false,
-                    cache: false,
-                    processData: false,
-                    headers: {
-                        'X-CSRF-TOKEN': "{{ csrf_token() }}",
-                        "_token": "{{ csrf_token() }}",
-                    },
-                    beforeSend: function() {
-                        swal({
-                            title: 'Refreshing',
-                            allowEscapeKey: false,
-                            allowOutsideClick: true,
-                            onOpen: () => {
-                                swal.showLoading();
-                            }
-                        });
-                    },
-                    success: function(response) {
-                        var result ;
-                        console.log(response) ;
-                        if (response.ingest_errors.length> 0 )
-                        {
-                            swal.close();
-                            $('#upload_kdm_errors').modal('show') ;
-                            $.each(response.ingest_errors, function( index, value ) {
-                                result = "<h4> ingested kdms successfully </h4>" ;
-                                result = result
-                                +'<tr class="odd">'
-                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.id+'</a></td>'
-                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.AnnotationText+'</a></td>'
-                                +'</tr>';
+                if( document.getElementById("kdmfiles").files.length > 0 ){
+
+
+                    $.ajax({
+                        url: "{{ route('nockdm.uploadlocalkdm') }}",
+                        type: 'POST',
+                        method: 'POST',
+                        data: new FormData(this),
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                        headers: {
+                            'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                            "_token": "{{ csrf_token() }}",
+                        },
+                        beforeSend: function() {
+                            swal({
+                                title: 'Refreshing',
+                                allowEscapeKey: false,
+                                allowOutsideClick: true,
+                                onOpen: () => {
+                                    swal.showLoading();
+                                }
                             });
-
-                            if (response.ingest_success.length> 0 )
+                        },
+                        success: function(response) {
+                            var result ;
+                            console.log(response) ;
+                            if (response.ingest_status.status == 1 )
                             {
-                                $.each(response.ingest_errors, function( index, value ) {
-                                    result = result + "<h4> Failed kdms Ingest  </h4>" ;
-                                    result = result
-                                    +'<tr class="odd">'
-                                        +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.id+'</a></td>'
-                                        +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.AnnotationText+'</a></td>'
-                                    +'</tr>';
-                                });
+                                if (response.ingest_errors.length> 0 )
+                                {
+                                    swal.close();
+                                    $('#upload_kdm_errors').modal('show') ;
+                                    result = "<h4> Failed kdms Ingest  </h4>" ;
+                                    $.each(response.ingest_errors, function( index, value ) {
+
+                                        result = result
+                                        +'<p>'
+                                            +'<span class="align-middle fw-medium text-danger ">'+value.originalName+' </span>'
+                                            +'<span class="align-middle fw-medium text-danger "> Can not be uploaded </span>'
+                                        +'</p>';
+                                    });
+
+                                    if (response.ingest_success.length> 0 )
+                                    {
+                                    result = result + "<br /> <br /> <h4>  Succeeded  kdms Ingest   </h4>" ;
+                                        $.each(response.ingest_success, function( index, value ) {
+
+                                            result = result
+                                            +'<p>'
+                                                +'<span class="align-middle fw-medium text-success">'+value.originalName+' </span>'
+                                                +'<span class="align-middle fw-medium text-success" >  Uploaded Successfully </span>'
+                                            +'</p>';
+                                        });
+                                    }
+
+
+                                    $('#upload_kdm_errors .modal-body').html(result) ;
+                                    //showSwal('warning-message-and-cancel')
+
+
+
+                                } else {
+
+                                    swal.close();
+                                    $('#upload_kdm_form').trigger("reset");
+                                    showSwal('success-message-kdm');
+                                    load_kdmnoc();
+
+
+                                }
                             }
-
-
-                            $('#upload_kdm_errors .modal-body').html(result) ;
-                            //showSwal('warning-message-and-cancel')
-
-
-
-                        } else {
-
+                            else
+                            {
+                                 swal.close();
+                                 console.log(response.ingest_status.message)
+                                 swal({
+                                    title: 'Failed',
+                                    text: "Error occurred while sending the request.",
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3f51b5',
+                                    cancelButtonColor: '#ff4081',
+                                    confirmButtonText: 'Great ',
+                                    buttons: {
+                                        cancel: {
+                                            text: "Cancel",
+                                            value: null,
+                                            visible: true,
+                                            className: "btn btn-danger",
+                                            closeModal: true,
+                                        },
+                                    }
+                                })
+                            }
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
                             swal.close();
-                            $('#upload_kdm_form').trigger("reset");
-                            showSwal('success-message-kdm');
-                            load_kdmnoc();
+                            showSwal('warning-message-and-cancel');
 
-
+                            //console.log(response) ;
                         }
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        swal.close();
-                        showSwal('warning-message-and-cancel');
-
-                        //console.log(response) ;
-                    }
-                })
+                    })
+                }
+                else
+                {
+                    swal({
+                            title: 'Form Is Empty',
+                            text: "Please Select One or more KDM  ",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3f51b5',
+                            cancelButtonColor: '#ff4081',
+                            confirmButtonText: 'Great ',
+                            buttons: {
+                                cancel: {
+                                    text: "Cancel",
+                                    value: null,
+                                    visible: true,
+                                    className: "btn btn-danger",
+                                    closeModal: true,
+                                },
+                            }
+                        })
+                }
             });
-
             function dhm (ms)
             {
                 const days = Math.floor(ms / (24*60*60*1000));
@@ -752,12 +932,13 @@
             });
 
             // select kdms to ingest
-            $(document).on('click', '#kdm-listing tbody tr', function () {
+            /*$(document).on('click', '#kdm-listing tbody tr', function () {
                 $(this).toggleClass('selected') ;
-            })
+            })*/
 
             // upload existing KDM
-            $(document).on('click', '#ingest_kdm', function () {
+            //this functionality was removed because we decided to ingest the KDM automatically
+            /*$(document).on('click', '#ingest_kdm', function () {
 
                 var kdms_id = $('#kdm-listing tr.selected').map(function(){
                     return $(this).data('id');
@@ -844,7 +1025,7 @@
                     showSwal('no_kdms_selected');
                 }
 
-            })
+            }) */
 
             //Delete NOC SPLs
             $(document).on('click', '.delete_spl', function () {
@@ -915,7 +1096,7 @@
                                         text: 'Spls Deleted Successfully ',
                                         icon: 'success',
                                         button: {
-                                            text: "Continue",
+                                            text: "Close",
                                             value: true,
                                             visible: true,
                                             className: "btn btn-primary"
@@ -1027,7 +1208,7 @@
                                         text: 'KDM Deleted Successfully ',
                                         icon: 'success',
                                         button: {
-                                            text: "Continue",
+                                            text: "Close",
                                             value: true,
                                             visible: true,
                                             className: "btn btn-primary"

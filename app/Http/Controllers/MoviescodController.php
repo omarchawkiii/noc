@@ -24,7 +24,6 @@ class MoviescodController extends Controller
 //dd($contents);
         if($contents)
         {
-
             foreach($contents as $content)
             {
                 if($content)
@@ -46,8 +45,23 @@ class MoviescodController extends Controller
                             'spl_uuid'     =>$moviescod['id_spl'],
                         ]);
                     }
+
+                    if(count($content) != $location->moviescod->count() )
+                    {
+                        $uuid_moviescod = array_column($content, 'id');
+                            foreach($location->moviescod as $moviecod)
+                            {
+                                if (! in_array( $moviecod->moviescods_id , $uuid_moviescod))
+                                {
+                                    $moviecod->delete() ;
+                                }
+                            }
+                    }
+
                 }
             }
+
+
         }
      //   return Redirect::back()->with('message' ,' The cpls  has been updated');
     }

@@ -217,10 +217,6 @@
 
 
     <script>
-
-
-    (function($) {
-
         function calculateRuntimeDifference(remainingTime, elapsedTime) {
 
             if(elapsedTime=="0")
@@ -256,84 +252,88 @@
             return hours+':'+minutes+':'+seconds;
         }
 
-        function get_playback_data()
-        {
-            $.ajax({
-                    url:"{{  url('') }}"+ "/playback",
-                    type: 'get',
-                    //cache: false,
-                    data: {
-                        type : "ajax"
-                    },
-                    success: function(response) {
-                        console.log(response)
-                        $.each(response.playbacks, function( index, value ) {
-                            var playback_status =" " ;
-                            if (value.playback_status == 'Pause' )
-                            {
-                                playback_status = '<div class="icon icon-box-warning  playback_icon" style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="'+value.playback_status+'" data-id="'+value.id+'">'
-                                    +'<span class="mdi mdi-play-pause "></span>'
-                                +'</div>'
-                             }
-                            if (value.playback_status == 'Stop')
-                            {
-                                playback_status = '<div class="icon icon-box-danger playback_icon " style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="'+value.playback_status+'" data-id="'+value.id+'">'
-                                    +'<span class="mdi mdi-stop  "></span>'
-                                +'</div>'
-                             }
-                            if (value.playback_status == 'Unknown' )
-                            {
-                                playback_status = '<div class="icon icon-box-warning  playback_icon" style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="'+value.playback_status+'" data-id="'+value.id+'">'
-                                    +'<span class="mdi mdi-comment-question-outline  "></span>'
-                                +'</div>'
-                             }
-                            if (value.playback_status == 'Play')
-                            {
-                                playback_status = '<div class="icon icon-box-success playback_icon" style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="'+value.playback_status+'" data-id="'+value.id+'">'
-                                    +'<span class="mdi mdi-play "></span>'
-                                +'</div>'
-                             }
-                            $('#'+value.location_id +'-'+value.screen_id).html(playback_status)
-                        })
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        console.log(errorThrown);
-                    },
-                    complete: function(jqXHR, textStatus) {
+    (function($) {
 
-                    }
-            });
+
+
+    function get_playback_data()
+    {
+        $.ajax({
+                url:"{{  url('') }}"+ "/playback",
+                type: 'get',
+                //cache: false,
+                data: {
+                    type : "ajax"
+                },
+                success: function(response) {
+                    //  console.log(response)
+                    $.each(response.playbacks, function( index, value ) {
+                        var playback_status =" " ;
+                        if (value.playback_status == 'Pause' )
+                        {
+                            playback_status = '<div class="icon icon-box-warning  playback_icon" style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="'+value.playback_status+'" data-id="'+value.id+'">'
+                                +'<span class="mdi mdi-play-pause "></span>'
+                            +'</div>'
+                            }
+                        if (value.playback_status == 'Stop')
+                        {
+                            playback_status = '<div class="icon icon-box-danger playback_icon " style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="'+value.playback_status+'" data-id="'+value.id+'">'
+                                +'<span class="mdi mdi-stop  "></span>'
+                            +'</div>'
+                            }
+                        if (value.playback_status == 'Unknown' )
+                        {
+                            playback_status = '<div class="icon icon-box-warning  playback_icon" style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="'+value.playback_status+'" data-id="'+value.id+'">'
+                                +'<span class="mdi mdi-comment-question-outline  "></span>'
+                            +'</div>'
+                            }
+                        if (value.playback_status == 'Play')
+                        {
+                            playback_status = '<div class="icon icon-box-success playback_icon" style="margin-right: 5px; width: 34px; height: 28px;" data-bs-toggle="tooltip" data-placement="right" data-bs-original-title="'+value.playback_status+'" data-id="'+value.id+'">'
+                                +'<span class="mdi mdi-play "></span>'
+                            +'</div>'
+                            }
+                        $('#'+value.location_id +'-'+value.screen_id).html(playback_status)
+                    })
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                },
+                complete: function(jqXHR, textStatus) {
+
+                }
+        });
+    }
+    const interval = setInterval(function() {
+        get_playback_data() ;
+    }, 5000);
+
+
+    'use strict';
+    $(function() {
+        $('#order-listing').DataTable({
+        "aLengthMenu": [
+            [5, 10, 15, -1],
+            [5, 10, 15, "All"]
+        ],
+        "iDisplayLength": 10,
+        "language": {
+            search: ""
         }
-        const interval = setInterval(function() {
-            get_playback_data() ;
-        }, 5000);
-
-
-  'use strict';
-  $(function() {
-    $('#order-listing').DataTable({
-      "aLengthMenu": [
-        [5, 10, 15, -1],
-        [5, 10, 15, "All"]
-      ],
-      "iDisplayLength": 10,
-      "language": {
-        search: ""
-      }
+        });
+        $('#order-listing').each(function() {
+        var datatable = $(this);
+        // SEARCH - Add the placeholder for Search and Turn this into in-line form control
+        var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
+        search_input.attr('placeholder', 'Search');
+        search_input.removeClass('form-control-sm');
+        // LENGTH - Inline-Form control
+        var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
+        length_sel.removeClass('form-control-sm');
+        });
     });
-    $('#order-listing').each(function() {
-      var datatable = $(this);
-      // SEARCH - Add the placeholder for Search and Turn this into in-line form control
-      var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
-      search_input.attr('placeholder', 'Search');
-      search_input.removeClass('form-control-sm');
-      // LENGTH - Inline-Form control
-      var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
-      length_sel.removeClass('form-control-sm');
-    });
-  });
-})(jQuery);
 
+    var playback_icon_interval ;
     $(document).on('click', '.playback_icon', function () {
         var loader_content  =
             '<div class="jumping-dots-loader">'
@@ -344,6 +344,24 @@
         $('#infos_modal .modal-body').html(loader_content)
         $('#infos_modal').modal('show')
         var id = this.getAttribute("data-id")
+
+        get_playback_screen_infos(id) ;
+
+         playback_icon_interval = setInterval(function() {
+            get_playback_screen_infos(id) ;
+        }, 5000);
+
+
+    });
+    $(document).on('hidden.bs.modal', '#infos_modal', function () {
+
+        if (playback_icon_interval !== undefined) {
+            clearInterval(playback_icon_interval);
+        }
+
+    });
+    function get_playback_screen_infos(id)
+    {
         var data ;
         $.ajax({
                 url:"{{  url('') }}"+ "/get_playbak_detail",
@@ -452,12 +470,15 @@
                 },
                 complete: function(jqXHR, textStatus) {}
         });
+    }
 
 
 
 
+})(jQuery);
 
-    });
+
+
 </script>
 
 @endsection

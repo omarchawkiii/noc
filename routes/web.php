@@ -161,6 +161,7 @@ Route::get('ingester/', [App\Http\Controllers\IngersterController::class , 'inde
 Route::post('ingester/action_contoller', [App\Http\Controllers\IngersterController::class , 'action_contoller'])->name('ingester.action_contoller')->middleware(['auth']);
 Route::get('transfere_content', [App\Http\Controllers\IngersterController::class , 'transfere_content'])->name('ingester.transfere_content')->middleware(['auth']);
 Route::delete('ingester/delete_transfered_file', [App\Http\Controllers\IngersterController::class , 'delete_transfered_file'])->name('ingester.delete_transfered_file')->middleware(['auth']);
+Route::post('ingester/generate_torrent_file', [App\Http\Controllers\IngersterController::class , 'generate_torrent_file'])->name('ingester.generate_torrent_file')->middleware(['auth']);
 
 
 

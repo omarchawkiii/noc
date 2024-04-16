@@ -397,7 +397,7 @@
         if (array_files.length ==  0) {
             $("#no-file-selected").modal('show');
         }else{
-           var url = "{{  url('') }}"+ '/ingester/delete_transfered_file/';
+           var url = "{{  url('') }}"+ '/ingester/delete_transfered_file';
             $.ajax({
                 url: url,
                 type: 'DELETE',
@@ -461,26 +461,20 @@
 
     //Delete Files
     $(document).on('click', '#ingest_content', function (event) {
-        alert('Comming soon ') ;
+       // alert('Comming soon ') ;
 
-           /* var array_files = [];
+           var array_files = [];
 
-            $("#files-listing .item_to_select.selected").each(function() {
-                    var id = $(this).data("id_cpl");
-                    array_files.push(id);
-                });
-
-
-            console.log(array_files)
-            if (array_files.length ==  0) {
+           // console.log(array_files)
+            if (array_files.length ==  0 && false) {
                 $("#no-file-selected").modal('show');
             }else{
-            var url = "{{  url('') }}"+ '/ingester/delete_transfered_file/';
+            var url = "{{  url('') }}"+ '/ingester/generate_torrent_file';
                 $.ajax({
                     url: url,
-                    type: 'DELETE',
+                    type: 'POST',
                     data: {
-                        array_files:array_files,
+                        //array_files:array_files,
 
                     },
                     headers: {
@@ -489,7 +483,8 @@
                     beforeSend: function () {
                     },
                     success: function (response) {
-                        if(response)
+                        console.log(response)
+                        /*if(response)
                         {
                             displayFileTransfere()
                                     swal({
@@ -524,7 +519,7 @@
                                             },
                                         }
                                     })
-                        }
+                        }*/
 
 
                     },
@@ -534,7 +529,7 @@
                     complete: function (jqXHR, textStatus) {
                     }
                 });
-            }*/
+            }
         });
 
 

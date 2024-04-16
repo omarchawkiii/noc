@@ -1344,7 +1344,7 @@
 
         // filter files by kind
         $(document).on('change', '#filter_type', function(event) {
-            var criteria = $(this).val();
+            var criteria = $(this).val().toUpperCase() ;
 
             if (criteria == 'all') {
                 $('.left-side-item').show();
@@ -1352,7 +1352,7 @@
                 return;
             }
             $('#dragula-left .left-side-item').each(function(i, option) {
-                if ($(this).data("type") == criteria) {
+                if ($(this).data("type").toUpperCase()  == criteria) {
 
                     $(this).show();
                 } else {
@@ -1360,7 +1360,7 @@
                 }
             });
             $('#dragula-left .title-kind').each(function(i, option) {
-                if ($(this).data("type") == criteria) {
+                if ($(this).data("type").toUpperCase()  == criteria) {
 
                     $(this).show();
                 } else {
