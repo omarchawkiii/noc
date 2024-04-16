@@ -249,7 +249,7 @@
     <script src="{{ asset('/assets/vendors/datatables.net/jquery.dataTables.js') }}"></script>
     <script src="{{ asset('/assets/vendors/datatables.net-bs4/dataTables.bootstrap4.js') }}"></script>
     <script src="{{ asset('/assets/vendors/sweetalert/sweetalert.min.js') }}"></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js'></script>
+    <script src="{{ asset('/assets/js/vue.min.js') }}"></script>
 
 
 
