@@ -133,6 +133,7 @@ Route::post('uploadlocalkdm', [App\Http\Controllers\NockdmController::class , 'u
 Route::get('get_nockdm', [App\Http\Controllers\NockdmController::class , 'get_nockdm'])->name('nockdm.get_nockdm')->middleware(['auth']);
 Route::post('uploadexistingkdm', [App\Http\Controllers\NockdmController::class , 'uploadexistingkdm'])->name('nockdm.uploadexistingkdm')->middleware(['auth']);
 Route::delete('localkdm/{id}/destroy', [App\Http\Controllers\NockdmController::class , 'destroy'])->name('nockdm.destroy')->middleware(['auth']);
+Route::delete('localkdm/delete_all', [App\Http\Controllers\NockdmController::class , 'delete_all'])->name('nockdm.delete_all')->middleware(['auth']);
 
 
 Route::get('getlogs/{location}', [App\Http\Controllers\LogController::class , 'get_logs'])->name('logs.getlogs');

@@ -148,6 +148,10 @@
                                 <!--<button id="ingest_kdm" class="btn btn-primary  btn-icon-text " style="float: right">
                                     <i class="mdi mdi-plus btn-icon-prepend"></i> Ingest KDMS
                                 </button> -->
+
+                                <button id="delete_all_kdms" class="btn btn-danger  btn-icon-text " style="float: right">
+                                    <i class="mdi mdi-plus btn-icon-prepend"></i> Clear List
+                                </button>
                             </div>
                         </div>
                         <div class="row">
@@ -162,10 +166,9 @@
                                                 <th class="sorting">Content Name </th>
                                                 <th class="sorting">Begin Validity </th>
                                                 <th class="sorting">End Validity </th>
-                                                <th class="sorting">CPL</th>
-
-                                                <th class="sorting ">Device Target</th>
-                                                <th class="sorting ">Delete</th>
+                                                <th class="sorting">TMS Ingested</th>
+                                                <th class="sorting ">Error / Notes</th>
+                                                <th class="sorting ">Action</th>
 
                                             </tr>
                                         </thead>
@@ -254,6 +257,8 @@
 
 
     <script>
+        var spl_formData = new FormData();
+
         var app = new Vue({
             el: '#app',
             data: {
@@ -268,6 +273,7 @@
                     ([...droppedFiles]).forEach(f => {
 
                         this.files.push(f);
+                        spl_formData.append('splfiles[]', f);
                     });
                     this.color = "#444444"
                 },
@@ -277,7 +283,7 @@
                     if (!files) return;
                     // this tip, convert FileList to array, credit: https://www.smashingmagazine.com/2018/01/drag-drop-file-uploader-vanilla-js/
                     ([...files]).forEach(f => {
-
+                        spl_formData.append('splfiles[]', f);
                         this.files.push(f);
                     });
                 },
@@ -301,6 +307,7 @@
         })
     </script>
     <script>
+     var kdm_formData = new FormData();
         var app = new Vue({
             el: '#app-kdm',
             data: {
@@ -313,7 +320,7 @@
                     if (!droppedFiles) return;
                     // this tip, convert FileList to array, credit: https://www.smashingmagazine.com/2018/01/drag-drop-file-uploader-vanilla-js/
                     ([...droppedFiles]).forEach(f => {
-
+                        kdm_formData.append('kdmfiles[]', f);
                         this.files.push(f);
                     });
                     this.color = "#444444"
@@ -324,14 +331,13 @@
                     if (!files) return;
                     // this tip, convert FileList to array, credit: https://www.smashingmagazine.com/2018/01/drag-drop-file-uploader-vanilla-js/
                     ([...files]).forEach(f => {
-
+                        kdm_formData.append('kdmfiles[]', f);
                         this.files.push(f);
                     });
                 },
                 dropAllFiles()
                 {
                     $('#app-kdm ul').html("");
-                    c
                 },
                 removeFile(fileKey) {
                     this.files.splice(fileKey, 1)
@@ -436,13 +442,14 @@
              $("#upload_spl_form").on("submit", function(e) {
                 e.preventDefault();
 
-                if( document.getElementById("splfiles").files.length > 0 ){
+                if(spl_formData.get("splfiles[]") != null  ){
+
                     var file = $('#splfiles')[0].files[0];
                     $.ajax({
                         url: "{{ route('nocspl.uploadlocalspl') }}",
                         type: 'POST',
                         method: 'POST',
-                        data: new FormData(this),
+                        data: spl_formData,
                         contentType: false,
                         cache: false,
                         processData: false,
@@ -534,15 +541,11 @@
                                 })
                             }
 
-                        /* if (response == "Success") {
-                                swal.close();
-                                $('#upload_spl_form').trigger("reset");
-                                showSwal('success-message');
-                                load_splnoc();
-                            } else {
-                                swal.close();
-                                showSwal('warning-message-and-cancel')
-                            }*/
+                            for (var key of spl_formData.keys()) {
+                                // here you can add filtering conditions
+                                spl_formData.delete(key)
+                            }
+
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
                             swal.close();
@@ -579,15 +582,16 @@
             $("#upload_kdm_form").on("submit", function(e) {
 
                 e.preventDefault();
-                var file = $('#kdmfiles')[0].files[0];
-                if( document.getElementById("kdmfiles").files.length > 0 ){
+               // var file = $('#kdmfiles')[0].files[0];
+
+                 if(kdm_formData.get("kdmfiles[]") != null  ){
 
 
                     $.ajax({
                         url: "{{ route('nockdm.uploadlocalkdm') }}",
                         type: 'POST',
                         method: 'POST',
-                        data: new FormData(this),
+                        data: kdm_formData,
                         contentType: false,
                         cache: false,
                         processData: false,
@@ -620,7 +624,7 @@
                                         result = result
                                         +'<p>'
                                             +'<span class="align-middle fw-medium text-danger ">'+value.originalName+' </span>'
-                                            +'<span class="align-middle fw-medium text-danger "> Can not be uploaded </span>'
+                                            +'<span class="align-middle fw-medium text-danger "> '+value.AnnotationText+' </span>'
                                         +'</p>';
                                     });
 
@@ -632,7 +636,7 @@
                                             result = result
                                             +'<p>'
                                                 +'<span class="align-middle fw-medium text-success">'+value.originalName+' </span>'
-                                                +'<span class="align-middle fw-medium text-success" >  Uploaded Successfully </span>'
+                                                +'<span class="align-middle fw-medium text-success" >'+value.AnnotationText+' </span>'
                                             +'</p>';
                                         });
                                     }
@@ -640,7 +644,7 @@
 
                                     $('#upload_kdm_errors .modal-body').html(result) ;
                                     //showSwal('warning-message-and-cancel')
-
+                                    load_kdmnoc();
 
 
                                 } else {
@@ -675,6 +679,10 @@
                                         },
                                     }
                                 })
+                            }
+                            for (var key of kdm_formData.keys()) {
+                                // here you can add filtering conditions
+                                kdm_formData.delete(key)
                             }
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
@@ -829,16 +837,7 @@
                             $.each(response.nockdms, function( index, value ) {
                                 index++ ;
 
-                                /* if(value.content_present == 'yes'  || true ) {
-                                    content_present = '<i class= "mdi mdi-check-circle-outline text-white" > </i>'
-                                }else{
-                                    content_present = '<i class= "mdi mdi-checkbox-blank-circle-outline text-white" > </i>'
-                                }
-                                if(value.kdm_installed == 'yes' ){
-                                    kdm_installed = '<i class= "mdi mdi-check-circle-outline text-white" > </i>'
-                                }else{
-                                    kdm_installed = '<i class= "mdi mdi-checkbox-blank-circle-outline text-white" > </i>'
-                                }*/
+
 
                                 const date1 = new Date();
                                 const date2 = new Date(value.ContentKeysNotValidAfter);
@@ -860,6 +859,15 @@
                                 {
                                     background_difftime = "bg-danger"
                                 }
+                                var tms_ingested ="No" ;
+                                if(value.tms_ingested)
+                                {
+                                    var tms_ingested ='<span class=" text-success " > Yes </span>' ;
+                                }
+                                else
+                                {
+                                    var tms_ingested ='<span class=" text-danger " > No </span>' ;
+                                }
 
 
                                 result = result
@@ -869,11 +877,10 @@
                                         +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
                                         +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ new Date(value.ContentKeysNotValidBefore).toLocaleString() +'</a></td>'
                                         +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ new Date(value.ContentKeysNotValidAfter).toLocaleString() +'</a></td>'
-                                        //+'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ content_present+'</a></td>'
-                                        //+'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ kdm_installed+'</a></td>'
-                                        +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ dhm (diffTime)+'</a></td>'
-                                        +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> - </a></td>'
-                                        +'<td><a class="text-body align-middle fw-medium text-decoration-none"> <i class="mdi mdi-delete-forever text-danger delete_kdm" data-id="'+value.id+'" > </i></a></td>'
+
+                                        +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+tms_ingested+' </a></td>'
+                                        +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.error+' </a></td>'
+                                        +'<td><button type="button" class="btn btn-primary btn-icon-text ingest_kdm"  data-id="'+value.id+'"><i class="mdi mdi-upload  btn-icon-prepend"></i> Ingest</button></td>'
                                     +'</tr>';
                             });
                             $('#kdm-listing tbody').html(result)
@@ -1250,6 +1257,278 @@
                     }
 
                 })
+
+            })
+
+            //Delete All KDMs
+            $(document).on('click', '#delete_all_kdms', function () {
+
+                var id =  $(this).data('id');
+                var url = '{{  url("") }}'+ '/localkdm/delete_all' ;
+
+                swal({
+                        showCancelButton: true,
+                        title: 'Delete All KDMs !',
+                        text: 'You are sure you want to delete All KDMs',
+                        icon: 'warning',
+                        buttons: {
+                            cancel: {
+                                text: "Cancel",
+                                value: null,
+                                visible: true,
+                                className: "btn btn-primary",
+                                closeModal: true,
+                            },
+
+                            Confirm: {
+                                text: "Yes, delete it!",
+                                value: true,
+                                visible: true,
+                                className: "btn btn-danger",
+                                closeModal: true,
+                            },
+                        }
+                    }).then((result) => {
+                        console.log(result)
+                    if (result) {
+
+                        $.ajax({
+                            url: url,
+                            type: 'DELETE',
+                            method: 'DELETE',
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                            },
+
+                            headers: {
+                                'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                                "_token": "{{ csrf_token() }}",
+                            },
+                            beforeSend: function() {
+                                swal({
+                                    title: 'Refreshing',
+                                    allowEscapeKey: false,
+                                    allowOutsideClick: true,
+                                    onOpen: () => {
+                                        swal.showLoading();
+                                    }
+                                });
+                            },
+                            success: function(response) {
+                                swal.close();
+
+                                if(response == 'Success')
+                                {
+                                    load_kdmnoc()
+                                    swal({
+                                        title: 'Done!',
+                                        text: 'KDMs Deleted Successfully ',
+                                        icon: 'success',
+                                        button: {
+                                            text: "Close",
+                                            value: true,
+                                            visible: true,
+                                            className: "btn btn-primary"
+                                        }
+                                    })
+                                }
+                                else
+                                {
+                                    swal({
+                                        title: 'Failed',
+                                        text: "Error occurred while sending the request.",
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#3f51b5',
+                                        cancelButtonColor: '#ff4081',
+                                        confirmButtonText: 'Great ',
+                                        buttons: {
+                                            cancel: {
+                                                text: "Cancel",
+                                                value: null,
+                                                visible: true,
+                                                className: "btn btn-danger",
+                                                closeModal: true,
+                                            },
+                                        }
+                                    })
+                                }
+
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                swal.close();
+                                showSwal('warning-message-and-cancel');
+
+                                //console.log(response) ;
+                            }
+                        })
+
+
+                    }
+
+                })
+
+            })
+
+            // Ingest KDM
+            $(document).on('click', '#ingest_kdm', function () {
+
+                var kdm_id  = $(this).attr("data-id") ;
+
+                $.ajax({
+                    url: "{{ route('nockdm.uploadexistingkdm') }}",
+                    type: 'POST',
+                    method: 'POST',
+                    data: {
+                        kdm_id: kdm_id,
+                    },
+
+                    headers: {
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                        "_token": "{{ csrf_token() }}",
+                    },
+                    beforeSend: function() {
+                        swal({
+                            title: 'Refreshing',
+                            allowEscapeKey: false,
+                            allowOutsideClick: true,
+                            onOpen: () => {
+                                swal.showLoading();
+                            }
+                        });
+                    },
+                    success: function(response) {
+                        var result ;
+                        console.log(response) ;
+                        if (response.ingest_errors.length> 0 )
+                        {
+                            swal.close();
+                            $('#upload_kdm_errors').modal('show') ;
+                            $.each(response.ingest_errors, function( index, value ) {
+                                result = "<h4> ingested kdms successfully </h4>" ;
+                                result = result
+                                +'<tr class="odd">'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.id+'</a></td>'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.AnnotationText+'</a></td>'
+                                +'</tr>';
+                            });
+
+                            if (response.ingest_success.length> 0 )
+                            {
+                                $.each(response.ingest_errors, function( index, value ) {
+                                    result = result + "<h4> Failed kdms Ingest  </h4>" ;
+                                    result = result
+                                    +'<tr class="odd">'
+                                        +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.id+'</a></td>'
+                                        +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.AnnotationText+'</a></td>'
+                                    +'</tr>';
+                                });
+                            }
+
+
+                            $('#upload_kdm_errors .modal-body').html(result) ;
+                            //showSwal('warning-message-and-cancel')
+                            load_kdmnoc();
+
+
+                        } else {
+
+                            swal.close();
+                            $('#upload_kdm_form').trigger("reset");
+                            showSwal('success-message-kdm');
+                            load_kdmnoc();
+
+
+                        }
+                    },
+
+                    success: function(response) {
+                        var result ;
+                        console.log(response) ;
+                        if (response.ingest_status.status == 1 )
+                        {
+                            if (response.ingest_errors.length> 0 )
+                            {
+                                swal.close();
+                                $('#upload_kdm_errors').modal('show') ;
+                                result = "<h4> Failed kdms Ingest  </h4>" ;
+                                $.each(response.ingest_errors, function( index, value ) {
+
+                                    result = result
+                                    +'<p>'
+                                        +'<span class="align-middle fw-medium text-danger ">'+value.originalName+' </span>'
+                                        +'<span class="align-middle fw-medium text-danger "> '+value.AnnotationText+' </span>'
+                                    +'</p>';
+                                });
+
+                                if (response.ingest_success.length> 0 )
+                                {
+                                result = result + "<br /> <br /> <h4>  Succeeded  kdms Ingest   </h4>" ;
+                                    $.each(response.ingest_success, function( index, value ) {
+
+                                        result = result
+                                        +'<p>'
+                                            +'<span class="align-middle fw-medium text-success">'+value.originalName+' </span>'
+                                            +'<span class="align-middle fw-medium text-success" >'+value.AnnotationText+' </span>'
+                                        +'</p>';
+                                    });
+                                }
+
+
+                                $('#upload_kdm_errors .modal-body').html(result) ;
+                                //showSwal('warning-message-and-cancel')
+                                load_kdmnoc();
+
+
+                            } else {
+
+                                swal.close();
+                                $('#upload_kdm_form').trigger("reset");
+                                showSwal('success-message-kdm');
+                                load_kdmnoc();
+
+
+                            }
+                        }
+                        else
+                        {
+                                swal.close();
+                                console.log(response.ingest_status.message)
+                                swal({
+                                title: 'Failed',
+                                text: "Error occurred while sending the request.",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3f51b5',
+                                cancelButtonColor: '#ff4081',
+                                confirmButtonText: 'Great ',
+                                buttons: {
+                                    cancel: {
+                                        text: "Cancel",
+                                        value: null,
+                                        visible: true,
+                                        className: "btn btn-danger",
+                                        closeModal: true,
+                                    },
+                                }
+                            })
+                        }
+                        for (var key of kdm_formData.keys()) {
+                            // here you can add filtering conditions
+                            kdm_formData.delete(key)
+                        }
+                    },
+
+
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        swal.close();
+                        showSwal('warning-message-and-cancel');
+
+                        //console.log(response) ;
+                    }
+                })
+
+
 
             })
 

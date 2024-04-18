@@ -20,7 +20,9 @@ class Nockdm extends Model
         'screen_id',
         'cpl_id',
         'location_id',
-        'xmlpath'
+        'xmlpath',
+        'tms_ingested',
+        'error'
 
     ];
 

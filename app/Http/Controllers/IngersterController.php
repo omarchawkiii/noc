@@ -444,7 +444,7 @@ class IngersterController extends Controller
     {
 
         // Chemin vers le dossier que vous souhaitez transformer en fichier torrent
-        $directoryPath = storage_path('app/public/your_folder'); // Modifiez le chemin selon votre projet
+       /* $directoryPath = storage_path('app/public/your_folder'); // Modifiez le chemin selon votre projet
 
         // Chemin vers le fichier torrent qui sera créé
         $torrentFilePath = storage_path('app/public/your_file.torrent');
@@ -456,7 +456,7 @@ class IngersterController extends Controller
         // Créez le fichier torrent en utilisant getid3
         $torrent = new getid3_lib($getID3);
         $torrent->Write($directoryPath, $torrentFilePath);
-        dd(file_exists($torrentFilePath)) ;
+        dd(file_exists($torrentFilePath)) ;*/
         // Vérifiez que le fichier torrent a été créé
        /* if (file_exists($torrentFilePath)) {
             // Utilisez BinaryFileResponse pour renvoyer le fichier torrent à l'utilisateur
