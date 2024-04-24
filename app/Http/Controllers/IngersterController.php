@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Dcp_trensfer;
 use App\Models\Ingestsource;
 use App\Models\Location;
+use Exception;
 use getID3;
 use getid3_lib;
 use Illuminate\Http\Request;
@@ -440,8 +442,102 @@ class IngersterController extends Controller
 
     }
 
-    public function generate_torrent_file()
+    public function generate_torrent_file(Request $request)
     {
+
+        $ingest_success = array() ;
+        $ingest_errors = array();
+        $ingest_status= array();
+        try
+        {
+            foreach ($request->array_files as $file )
+            {
+                $cpl = $result = DB::table('ingests')
+                    ->where('cpl_id', $file)
+                    ->first();
+                if($cpl)
+                {
+                    $directoryPath = $cpl->tms_dir ;
+                    $torrentPath = "/DATA/noc_torrent/".$file.".torrent" ;
+                    $command = "mktorrent -o $torrentPath $directoryPath >> /DATA/logs/noc_torrent_log.log 2>&1";
+                    exec($command, $output, $returnVar);
+
+                    if (file_exists($torrentPath)) {
+
+                        $location_id = 1 ;
+                        Dcp_trensfer::updateOrCreate([
+                            'id_cpl' => $cpl->cpl_id ,
+                            'location_id' => $location_id
+                        ],[
+                            'status'     =>"pending",
+                            "torrent_path" => $torrentPath,
+                            "progress" => 0 ,
+                            "id_ingest"=> $cpl->id,
+                            "id_cpl" => $cpl->cpl_id,
+                            'location_id' => $location_id
+                        ]);
+                        array_push($ingest_success,  array("status" => 1, "pkl_description" =>  $cpl->pkl_description() , "message" =>  "DCP Ingested successfully" , "id" =>  $cpl->id ));
+
+                    }
+                    else
+                    {
+                        array_push($ingest_errors,  array("status" => 0, "pkl_description" =>  $cpl->pkl_description(), "message" =>  "The Torrent File Can Not Be Created." , "id" =>  $cpl->id ));
+                    }
+
+                }
+
+            }
+            $ingest_status = array("status" => 1,  "message " => "") ;
+            return Response()->json(compact('ingest_errors','ingest_success','ingest_status'));
+        } catch (Exception $e) {
+
+            $ingest_status = array("status" => 0 , "message " => $e->getMessage()) ;
+            return Response()->json(compact('ingest_errors','ingest_success','ingest_status'));
+            echo "Failed" ;
+            //return $e;
+        }
+        /*
+        // Définir le chemin vers le dossier que vous voulez transformer en torrent
+        $directoryPath = 'Controllers';
+
+        // Définir le chemin où le fichier torrent sera enregistré temporairement
+        $torrentPath = 'fichier3.torrent';
+
+
+        $command = "mktorrent -o $torrentPath $directoryPath >> /DATA/logs/noc_torrent_log.log 2>&1";
+        //$command = "mktorrent -o $torrentPath $directoryPath";
+        //var_dump($command);
+        //exec($command);
+        exec($command, $output, $returnVar);
+
+
+
+
+        //var_dump($output);
+        // Vérifiez que le fichier torrent a été créé
+
+        if (file_exists($torrentPath)) {
+
+        echo " Torrent file genereated " ;
+        /*
+            // Envoyez le fichier torrent à l'utilisateur
+            header('Content-Type: application/x-bittorrent');
+            header('Content-Disposition: attachment; filename="votre_fichier.torrent"');
+            header('Content-Length: ' . filesize($torrentPath));
+
+            // Lisez le fichier et envoyez son contenu
+            readfile($torrentPath);
+
+            // Supprimez le fichier torrent après l'avoir envoyé pour économiser de l'espace disque
+            unlink($torrentPath);
+
+        } else {
+            // Gérez le cas où le fichier torrent n'a pas été créé
+            echo "Erreur : Le fichier torrent n'a pas été créé.";
+        }
+
+ */
+
 
         // Chemin vers le dossier que vous souhaitez transformer en fichier torrent
        /* $directoryPath = storage_path('app/public/your_folder'); // Modifiez le chemin selon votre projet
@@ -471,5 +567,7 @@ class IngersterController extends Controller
             ], 500);
         }*/
     }
+
+
 
 }

@@ -64,6 +64,8 @@ class NockdmController extends Controller
                                 {
                                     $file_url = Storage::disk('local')->put( $file_name, $file_content) ;
                                     $location = $screen->location ;
+                                    $location_id = $location->id ;
+                                    $screen_id = $screen->id ;
                                     $cpl = Cpl::where('uuid','=',$kdm_file_data['CompositionPlaylistId'])->where('location_id','=',$location->id)->first() ;
                                     if($cpl != null)
                                     {
@@ -123,6 +125,8 @@ class NockdmController extends Controller
                                     'content_present' => $kdm['content_present'], */
                                     'serverName_by_serial' => $kdm_file_data ["SerialNumber"],
                                     'cpl_uuid' => $kdm_file_data['CompositionPlaylistId'],
+                                    'error' => $error,
+                                    'tms_ingested' => $tms_ingested,
                                     'cpl_id' => $cpl_id,
                                     'screen_id' => $screen_id,
                                     'location_id' => $location_id,
@@ -304,14 +308,27 @@ class NockdmController extends Controller
             {
                 $xmlFilePath =    storage_path().'/app/xml_file/'.$noc_kdm->xmlpath ;
                 $response = $this->updateKdm($location->connection_ip,$noc_kdm->uuid,$xmlFilePath,$location->email,$location->password ) ;
-                $response = json_decode($response) ;
-                if($response->status== 1 )
+              //  $response = json_decode($response) ;
+                if($response != null)
                 {
-                    array_push($ingest_success,  array("status" => $response->status , "id" =>  $noc_kdm->uuid , "AnnotationText" =>  $noc_kdm->name));
+                    if($response['status']== 1 )
+                    {
+
+                        $noc_kdm->update([
+                            'tms_ingested'=> 1  ,
+                                'error'=> "-"
+                        ]);
+
+                        array_push($ingest_success,  array("status" => 1 , "id" =>  $noc_kdm->uuid , "AnnotationText" =>  $noc_kdm->name));
+                    }
+                    else
+                    {
+                        array_push($ingest_errors,  array("status" =>0 , "id" =>  $noc_kdm->uuid , "AnnotationText" =>  $noc_kdm->name ));
+                    }
                 }
                 else
                 {
-                    array_push($ingest_errors,  array("status" => $response->status , "id" =>  $noc_kdm->uuid , "AnnotationText" =>  $noc_kdm->name ));
+                    array_push($ingest_errors,  array("status" => 0, "id" =>  $noc_kdm->uuid , "AnnotationText" =>  $noc_kdm->name ));
                 }
             }
             else

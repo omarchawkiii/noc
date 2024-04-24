@@ -150,7 +150,7 @@
                                 </button> -->
 
                                 <button id="delete_all_kdms" class="btn btn-danger  btn-icon-text " style="float: right">
-                                    <i class="mdi mdi-plus btn-icon-prepend"></i> Clear List
+                                    <i class="mdi mdi-delete-forever btn-icon-prepend"></i> Clear List
                                 </button>
                             </div>
                         </div>
@@ -880,7 +880,15 @@
 
                                         +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+tms_ingested+' </a></td>'
                                         +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.error+' </a></td>'
-                                        +'<td><button type="button" class="btn btn-primary btn-icon-text ingest_kdm"  data-id="'+value.id+'"><i class="mdi mdi-upload  btn-icon-prepend"></i> Ingest</button></td>'
+                                        if(value.tms_ingested == 1 )
+                                        {
+                                            result = result +'<td> <i  data-id="'+value.id+'" style="font-size: 22px; cursor: pointer;" class=" ingest_kdm mdi mdi-upload  btn-icon-prepend text-info"></i>  <i style="font-size: 22px; cursor: pointer;" class=" text-danger mdi mdi-delete-forever btn-icon-prepend delete_kdm" data-id="'+value.id+'"></i> </td>'
+                                        }
+                                        else
+                                        {
+                                            result = result +'<td> <i style="font-size: 22px; cursor: pointer;"  class="text-danger mdi mdi-delete-forever btn-icon-prepend delete_kdm" data-id="'+value.id+'"></i> </td>'
+                                        }
+
                                     +'</tr>';
                             });
                             $('#kdm-listing tbody').html(result)
@@ -1153,6 +1161,7 @@
             $(document).on('click', '.delete_kdm', function () {
 
                 var id =  $(this).data('id');
+
                 var url = '{{  url("") }}'+ '/localkdm/'+id+'/destroy' ;
 
                 swal({
@@ -1371,7 +1380,7 @@
             })
 
             // Ingest KDM
-            $(document).on('click', '#ingest_kdm', function () {
+            $(document).on('click', '.ingest_kdm', function () {
 
                 var kdm_id  = $(this).attr("data-id") ;
 
@@ -1648,6 +1657,10 @@
         .delete_kdm
         {
             font-size: 20px ;
+        }
+        .preview-list.multiplex, .fixed-hight
+        {
+            max-height: 850px !important ;
         }
     </style>
 @endsection

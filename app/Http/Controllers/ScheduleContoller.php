@@ -75,8 +75,8 @@ class ScheduleContoller extends Controller
 
                                 if(count($schedule['list_kdm_notes']) > 0 )
                                 {
-                                    $kdm_status = $schedule['list_kdm_notes'][0]['status'] ;
-                                    $date_expired = $schedule['list_kdm_notes'][0]['date_expired'] ;
+                                    $kdm_status = $schedule['list_kdm_notes'][0]['list_not'][0]['status'] ;
+                                    $date_expired = $schedule['list_kdm_notes'][0]['list_not'][0]['date_expired'] ;
                                 }
                                 else
                                 {

@@ -28,6 +28,15 @@ class LmscplController extends Controller
                 {
                     foreach($content as $cpl)
                     {
+
+                            if($cpl['available_on'] ==[])
+                            {
+                                $available_on = "" ;
+                            }
+                            else
+                            {
+                                $available_on = $cpl['available_on'] ;
+                            }
                         Lmscpl::updateOrCreate([
                             'uuid' => $cpl["uuid"],
                             'location_id'     =>$location->id,
@@ -43,7 +52,7 @@ class LmscplController extends Controller
                             'soundChannelCount'=> $cpl['soundChannelCount'] ,
                             'durationEdits' => $cpl['durationEdits'] ,
                             'ScreenAspectRatio'=> $cpl['ScreenAspectRatio'] ,
-                            'available_on'=> $cpl['available_on'] ,
+                            'available_on'=> $available_on ,
                             //'serverName'=> $cpl['serverName'] ,
                             'cpl_is_linked'=> $cpl['cpl_is_linked'] ,
                             'date_create_ingest'=> $cpl['date_create_ingest'] ,
@@ -62,6 +71,8 @@ class LmscplController extends Controller
 
 
                         ]);
+
+                         //dd($cpl);
                     }
 
                     if(count($content) != $location->lmscpls->count() )

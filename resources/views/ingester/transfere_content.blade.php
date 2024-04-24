@@ -250,6 +250,26 @@
         </div>
     </div>
 
+    <div class=" modal fade " id="cpl_ingest_error" tabindex="-1" role="dialog"  aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered  modal-xl">
+            <div class="modal-content border-0">
+                <div class="modal-header">
+                    <h4>Ingest  infos </h4>
+                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true"
+                            style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
+                </div>
+                <div class="modal-body  p-4">
+
+
+                </div>
+
+
+            </div>
+        <!--end modal-content-->
+        </div>
+    </div>
+
 @endsection
 
 @section('custom_script')
@@ -327,7 +347,7 @@
                     var obj = JSON.parse(response);
                     var dcp = obj.dcp;
                     var spl = obj.spl;
-                    var result ;
+                    var result="" ;
                     if (dcp.length === 0) {
                         $('#files-listing').html("");
                     } else {
@@ -345,16 +365,6 @@
                                 +'</div>'
                             +'</div>' ;
 
-
-                           /* box_logs += '<tr class="item_to_select logs-item" ' +
-                                '  data-task_status="' + dcp[i].status + '" ' +
-                                '  data-id="' + dcp[i].id + '" ' +
-                                ' data-type="DCP"' +
-                                '  data-id_cpl="' + dcp[i].cpl_id + '"   style="font-weight: bold">' +
-                                '    <td class="status_control">' + getStatusDownload(dcp[i].status) + ' </td>  ' +
-                                '    <td>' + dcp[i].cpl_description + '</td>\n' +
-                                '    <td></td>\n' +
-                                '</tr>';*/
 
                         }
                         $('#files-listing').html(result);
@@ -403,6 +413,121 @@
                 type: 'DELETE',
                 data: {
                     array_files:array_files,
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                beforeSend: function () {
+                },
+                success: function (response) {
+
+                    var result ;
+                    console.log(response) ;
+                    if (response.ingest_status.status == 1 )
+                    {
+                        if (response.ingest_errors.length> 0 )
+                        {
+
+                            $('#cpl_ingest_error').modal('show') ;
+                            result = "<h4> Failed Cpls Ingest  </h4>" ;
+                            $.each(response.ingest_errors, function( index, value ) {
+
+                                result = result
+                                +'<p>'
+                                    +'<span class="align-middle fw-medium text-danger ">'+value.pkl_description+' </span>'
+                                    +'<span class="align-middle fw-medium text-danger "> '+value.message+' </span>'
+                                +'</p>';
+                            });
+
+                            if (response.ingest_success.length> 0 )
+                            {
+                                result = result + "<br /> <br /> <h4>  Succeeded  kdms Ingest   </h4>" ;
+                                $.each(response.ingest_success, function( index, value )
+                                {
+                                    result = result
+                                    +'<p>'
+                                        +'<span class="align-middle fw-medium text-danger ">'+value.pkl_description+' </span>'
+                                        +'<span class="align-middle fw-medium text-danger "> '+value.message+' </span>'
+                                    +'</p>';
+                                });
+                            }
+                            $('#cpl_ingest_error .modal-body').html(result) ;
+
+
+                        }
+                        else
+                        {
+                            swal.close();
+
+                            swal({
+                                title: 'Done!',
+                                text: 'Ingest Created Successfully ',
+                                icon: 'success',
+                                button: {
+                                    text: "Close",
+                                    value: true,
+                                    visible: true,
+                                    className: "btn btn-primary"
+                                }
+                            })
+
+                        }
+                    }
+                    else
+                    {
+                            swal.close();
+                            console.log(response.ingest_status.message)
+                            swal({
+                            title: 'Failed',
+                            text: "Error occurred while sending the request.",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3f51b5',
+                            cancelButtonColor: '#ff4081',
+                            confirmButtonText: 'Great ',
+                            buttons: {
+                                cancel: {
+                                    text: "Cancel",
+                                    value: null,
+                                    visible: true,
+                                    className: "btn btn-danger",
+                                    closeModal: true,
+                                },
+                            }
+                        })
+                    }
+
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                },
+                complete: function (jqXHR, textStatus) {
+                }
+            });
+        }
+    });
+
+
+    //Ingest DCP
+    $(document).on('click', '#ingest_content', function (event) {
+       // alert('Comming soon ') ;
+
+        var array_files = [];
+        $("#files-listing  .item-content.selected").each(function() {
+            var id = $(this).data("id_cpl");
+            array_files.push(id);
+        });
+        console.log(array_files)
+        if (array_files.length ==  0 ) {
+            $("#no-file-selected").modal('show');
+        }else{
+        var url = "{{  url('') }}"+ '/ingester/generate_torrent_file';
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: {
+                    //array_files:array_files,
 
                 },
                 headers: {
@@ -411,7 +536,8 @@
                 beforeSend: function () {
                 },
                 success: function (response) {
-                    if(response)
+                    console.log(response)
+                    /*if(response)
                     {
                         displayFileTransfere()
                                 swal({
@@ -446,7 +572,7 @@
                                         },
                                     }
                                 })
-                    }
+                    }*/
 
 
                 },
@@ -458,80 +584,6 @@
             });
         }
     });
-
-    //Delete Files
-    $(document).on('click', '#ingest_content', function (event) {
-       // alert('Comming soon ') ;
-
-           var array_files = [];
-
-           // console.log(array_files)
-            if (array_files.length ==  0 && false) {
-                $("#no-file-selected").modal('show');
-            }else{
-            var url = "{{  url('') }}"+ '/ingester/generate_torrent_file';
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    data: {
-                        //array_files:array_files,
-
-                    },
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    beforeSend: function () {
-                    },
-                    success: function (response) {
-                        console.log(response)
-                        /*if(response)
-                        {
-                            displayFileTransfere()
-                                    swal({
-                                        title: 'Done!',
-                                        text: 'File Deleted Successfully ',
-                                        icon: 'success',
-                                        button: {
-                                            text: "Continue",
-                                            value: true,
-                                            visible: true,
-                                            className: "btn btn-primary"
-                                        }
-                                    })
-                        }
-                        else
-                        {
-                            swal({
-                                        title: 'Failed',
-                                        text: "Error occurred while sending the request.",
-                                        icon: 'warning',
-                                        showCancelButton: true,
-                                        confirmButtonColor: '#3f51b5',
-                                        cancelButtonColor: '#ff4081',
-                                        confirmButtonText: 'Great ',
-                                        buttons: {
-                                            cancel: {
-                                                text: "Cancel",
-                                                value: null,
-                                                visible: true,
-                                                className: "btn btn-danger",
-                                                closeModal: true,
-                                            },
-                                        }
-                                    })
-                        }*/
-
-
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        console.log(errorThrown);
-                    },
-                    complete: function (jqXHR, textStatus) {
-                    }
-                });
-            }
-        });
-
 
     // search source
     var search_screens_source = document.getElementById('search_screens_source');
