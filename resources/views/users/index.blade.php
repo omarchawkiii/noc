@@ -430,7 +430,8 @@
 
     <script src="{{ asset('/assets/vendors/jquery-toast-plugin/jquery.toast.min.js') }}"></script>
     <script src="{{ asset('/assets/vendors/sweetalert/sweetalert.min.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="{{ asset('/assets/js/select2.js') }}"></script>
+
     <script>
         $(document).ready(function() {
             $('#location').select2({

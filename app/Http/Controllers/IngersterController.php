@@ -476,12 +476,12 @@ class IngersterController extends Controller
                             "id_cpl" => $cpl->cpl_id,
                             'location_id' => $location_id
                         ]);
-                        array_push($ingest_success,  array("status" => 1, "pkl_description" =>  $cpl->pkl_description() , "message" =>  "DCP Ingested successfully" , "id" =>  $cpl->id ));
+                        array_push($ingest_success,  array("status" => 1, "pkl_description" =>  $cpl->pkl_description , "message" =>  "DCP Ingested successfully" , "id" =>  $cpl->id ));
 
                     }
                     else
                     {
-                        array_push($ingest_errors,  array("status" => 0, "pkl_description" =>  $cpl->pkl_description(), "message" =>  "The Torrent File Can Not Be Created." , "id" =>  $cpl->id ));
+                        array_push($ingest_errors,  array("status" => 0, "pkl_description" =>  $cpl->pkl_description, "message" =>  "The Torrent File Can Not Be Created." , "id" =>  $cpl->id ));
                     }
 
                 }

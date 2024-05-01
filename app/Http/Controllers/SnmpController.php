@@ -169,7 +169,19 @@ class SnmpController extends Controller
                 {
                     $playback_generale_status = true ;
                     $count_playback_generale_status ++ ;
-                    $infos .=  " <p class='m-2'> playback generale status is ".$playback->storage_generale_status ." in screen: " .$playback->screen->screen_name ." </p>";
+                    if($playback->storage_generale_status == 'Red')
+                    {
+                        $storage_generale_status = "Storage Greater Than 90% of disk size" ;
+                    }
+                    elseif($playback->storage_generale_status == 'Yellow')
+                    {
+                        $storage_generale_status = "storage between 80% and 90% disk size" ;
+                    }
+                    else
+                    {
+                        $storage_generale_status =$playback->storage_generale_status ;
+                    }
+                    $infos .=  " <p class='m-2'> playback Generale Storage Status : ".$storage_generale_status ." in screen: " .$playback->screen->screen_name ." </p>";
                 }
 
                 if($playback->securityManager != 'Normal' )
@@ -210,6 +222,7 @@ class SnmpController extends Controller
                 if($schedule->status == 'linked' && $schedule->kdm != 1)
                 {
                     $infos .="<li>  session : ".$schedule->name." Start At: ".$schedule->date_start." Has missing   KDMs </li> ";
+                    $count_missing_kdm_error++;
                 }
 
 

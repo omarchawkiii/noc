@@ -250,11 +250,11 @@
         </div>
     </div>
 
-    <div class=" modal fade " id="cpl_ingest_error" tabindex="-1" role="dialog"  aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+    <div class=" modal fade " id="upload_kdm_errors" tabindex="-1" role="dialog"  aria-labelledby="delete_client_modalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered  modal-xl">
             <div class="modal-content border-0">
                 <div class="modal-header">
-                    <h4>Ingest  infos </h4>
+                    <h4>Uploaded Kdms infos </h4>
                     <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal"
                         aria-label="Close"><span aria-hidden="true"
                             style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
@@ -269,6 +269,7 @@
         <!--end modal-content-->
         </div>
     </div>
+
 
 @endsection
 
@@ -413,6 +414,7 @@
                 type: 'DELETE',
                 data: {
                     array_files:array_files,
+
                 },
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -420,7 +422,80 @@
                 beforeSend: function () {
                 },
                 success: function (response) {
+                    if(response)
+                    {
+                        displayFileTransfere()
+                                swal({
+                                    title: 'Done!',
+                                    text: 'File Deleted Successfully ',
+                                    icon: 'success',
+                                    button: {
+                                        text: "Continue",
+                                        value: true,
+                                        visible: true,
+                                        className: "btn btn-primary"
+                                    }
+                                })
+                    }
+                    else
+                    {
+                        swal({
+                                    title: 'Failed',
+                                    text: "Error occurred while sending the request.",
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3f51b5',
+                                    cancelButtonColor: '#ff4081',
+                                    confirmButtonText: 'Great ',
+                                    buttons: {
+                                        cancel: {
+                                            text: "Cancel",
+                                            value: null,
+                                            visible: true,
+                                            className: "btn btn-danger",
+                                            closeModal: true,
+                                        },
+                                    }
+                                })
+                    }
 
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                },
+                complete: function (jqXHR, textStatus) {
+                }
+            });
+        }
+    });
+
+    $(document).on('click', '#ingest_content', function (event) {
+       // alert('Comming soon ') ;
+
+        var array_files = [];
+        $("#files-listing  .item-content.selected").each(function() {
+            var id = $(this).data("id_cpl");
+            array_files.push(id);
+        });
+        console.log(array_files)
+        if (array_files.length ==  0 ) {
+            $("#no-file-selected").modal('show');
+        }else{
+        var url = "{{  url('') }}"+ '/ingester/generate_torrent_file';
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: {
+                    array_files:array_files,
+
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                beforeSend: function () {
+                },
+                success: function (response) {
                     var result ;
                     console.log(response) ;
                     if (response.ingest_status.status == 1 )
@@ -496,84 +571,6 @@
                             }
                         })
                     }
-
-
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.log(errorThrown);
-                },
-                complete: function (jqXHR, textStatus) {
-                }
-            });
-        }
-    });
-
-
-    //Ingest DCP
-    $(document).on('click', '#ingest_content', function (event) {
-       // alert('Comming soon ') ;
-
-        var array_files = [];
-        $("#files-listing  .item-content.selected").each(function() {
-            var id = $(this).data("id_cpl");
-            array_files.push(id);
-        });
-        console.log(array_files)
-        if (array_files.length ==  0 ) {
-            $("#no-file-selected").modal('show');
-        }else{
-        var url = "{{  url('') }}"+ '/ingester/generate_torrent_file';
-            $.ajax({
-                url: url,
-                type: 'POST',
-                data: {
-                    //array_files:array_files,
-
-                },
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                beforeSend: function () {
-                },
-                success: function (response) {
-                    console.log(response)
-                    /*if(response)
-                    {
-                        displayFileTransfere()
-                                swal({
-                                    title: 'Done!',
-                                    text: 'File Deleted Successfully ',
-                                    icon: 'success',
-                                    button: {
-                                        text: "Continue",
-                                        value: true,
-                                        visible: true,
-                                        className: "btn btn-primary"
-                                    }
-                                })
-                    }
-                    else
-                    {
-                        swal({
-                                    title: 'Failed',
-                                    text: "Error occurred while sending the request.",
-                                    icon: 'warning',
-                                    showCancelButton: true,
-                                    confirmButtonColor: '#3f51b5',
-                                    cancelButtonColor: '#ff4081',
-                                    confirmButtonText: 'Great ',
-                                    buttons: {
-                                        cancel: {
-                                            text: "Cancel",
-                                            value: null,
-                                            visible: true,
-                                            className: "btn btn-danger",
-                                            closeModal: true,
-                                        },
-                                    }
-                                })
-                    }*/
-
 
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
