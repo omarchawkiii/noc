@@ -48,7 +48,104 @@
      <script src="{{asset('/assets/js/todolist.js')}}"></script>
 
      <script src="{{asset('/assets/js/dashboard.js')}}"></script>
+
      @yield('custom_script')
+
+     <script>
+
+         function getdata() {
+
+            var url = "{{ url('') }}" + '/get_header_error';
+            $.ajax({
+                url: url,
+                method: 'GET',
+                success: function(response) {
+                    console.log(response)
+                    var data ;
+
+
+                    if(response.total_errors> 0 )
+                    {
+                        $('#notificationDropdown .count').html(response.total_errors )
+                        $('#notificationDropdown .count').addClass("bg-warning").removeClass("bg-success");
+                    }
+                    else
+                    {
+                        $('#notificationDropdown .count').html('0')
+                        $('#notificationDropdown .count').removeClass("bg-warning").addClass("bg-success");
+                    }
+
+
+                    if(response.kdm_errors> 0 )
+                    {
+                        $('#header_kdm_errors').html(response.kdm_errors +' Kdm Errors Detected ')
+                        $('#icon_kdm_errors').css("color", "rgb(255, 93, 93)");
+                    }
+                    else
+                    {
+                        $('#header_kdm_errors').html('Healthy')
+                        $('#icon_kdm_errors').css("color", "rgb(48, 255, 48)");
+                    }
+
+                    if(response.nbr_sound_alert> 0 )
+                    {
+                        $('#header_sound_errors').html(response.nbr_sound_alert +' Kdm Errors Detected ')
+                        $('#icon_sound_errors').css("color", "rgb(255, 93, 93)");
+                    }
+                    else
+                    {
+                        $('#header_sound_errors').html('Healthy')
+                        $('#icon_sound_errors').css("color", "rgb(48, 255, 48)");
+                    }
+
+                    if(response.nbr_projector_alert> 0 )
+                    {
+                        $('#header_projector_errors').html(response.nbr_projector_alert +' Kdm Errors Detected ')
+                        $('#icon_projector_errors').css("color", "rgb(255, 93, 93)");
+                    }
+                    else
+                    {
+                        $('#header_projector_errors').html('Healthy')
+                        $('#icon_projector_errors').css("color", "rgb(48, 255, 48)");
+                    }
+
+                    if(response.nbr_server_alert> 0 )
+                    {
+                        $('#header_server_errors').html(response.nbr_server_alert +' Kdm Errors Detected ')
+                        $('#icon_server_errors').css("color", "rgb(255, 93, 93)");
+                    }
+                    else
+                    {
+                        $('#header_server_errors').html('Healthy')
+                        $('#icon_server_errors').css("color", "rgb(48, 255, 48)");
+                    }
+
+                    if(response.nbr_storage_errors> 0 )
+                    {
+                        $('#header_storage_errors').html(response.nbr_storage_errors +' Kdm Errors Detected ')
+                        $('#icon_storage_errors').css("color", "rgb(255, 93, 93)");
+                    }
+                    else
+                    {
+                        $('#header_storage_errors').html('Healthy')
+                        $('#icon_storage_errors').css("color", "rgb(48, 255, 48)");
+                    }
+
+
+
+                },
+                error: function(response) {
+
+                }
+            })
+
+
+
+        }
+
+        getdata()  ;
+     </script>
+
 </body>
 
 

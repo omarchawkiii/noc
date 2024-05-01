@@ -186,3 +186,4 @@ Route::get('refresh_asset_infos_data', [App\Http\Controllers\LocationController:
 
 
 Route::get('get_error_list/{location}', [App\Http\Controllers\Error_listController::class , 'get_error_list'])->name('error_list.get_error_list')->middleware(['auth']);
+Route::get('get_header_error', [App\Http\Controllers\Error_listController::class , 'header_errors'])->name('error_list.get_error_list')->middleware(['auth']);

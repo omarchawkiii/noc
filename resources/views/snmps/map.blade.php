@@ -247,7 +247,7 @@
 
                             data +=
                                 '<tr class="odd text-center  ">'
-                                    +'<td class="sorting_1"> '+ error.location+'  </td>'
+                                    +'<td class="sorting_1"> '+ error.location.name+'  </td>'
                                     +'<td class="sorting_1"> '+ error.kdm_errors+'  </td>'
                                     +'<td class="sorting_1"> '+ error.nbr_storage_errors+'  </td>'
                                     +'<td class="sorting_1"> '+ error.nbr_server_alert+'  </td>'

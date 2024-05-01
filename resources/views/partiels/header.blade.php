@@ -7,66 +7,90 @@
         <span class="mdi mdi-menu"></span>
       </button>
       <ul class="navbar-nav w-100">
-        <li class="nav-item dropdown border-left">
-          <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-bs-toggle="dropdown">
-            <i class="mdi mdi-server-network"></i>
-            <span class="count bg-success">33</span>
-          </a>
 
-        </li>
-        <li class="nav-item dropdown border-left">
-          <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-bs-toggle="dropdown">
-            <i class="mdi mdi-alert"></i>
-            <span class="count bg-warning">82</span>
-          </a>
-
-        </li>
 
         <li class="nav-item dropdown border-left">
-          <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-bs-toggle="dropdown">
-            <i class="mdi mdi-bell"></i>
-            <span class="count bg-danger">150</span>
-          </a>
+            <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-bs-toggle="dropdown">
+                <i class="mdi mdi-alert"></i>
+                <span class="count bg-warning">!</span>
+            </a>
+
           <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
-            <h6 class="p-3 mb-0">Notifications</h6>
+            <h6 class="p-3 mb-0">Errors In All Locations</h6>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item preview-item">
-              <div class="preview-thumbnail">
-                <div class="preview-icon bg-dark rounded-circle">
-                  <i class="mdi mdi-calendar text-success"></i>
-                </div>
-              </div>
-              <div class="preview-item-content">
-                <p class="preview-subject mb-1">Event today</p>
-                <p class="text-muted ellipsis mb-0"> Just a reminder that you have an event today </p>
-              </div>
-            </a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item preview-item">
-              <div class="preview-thumbnail">
-                <div class="preview-icon bg-dark rounded-circle">
-                  <i class="mdi mdi-settings text-danger"></i>
-                </div>
-              </div>
-              <div class="preview-item-content">
-                <p class="preview-subject mb-1">Settings</p>
-                <p class="text-muted ellipsis mb-0"> Update dashboard </p>
-              </div>
-            </a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item preview-item">
-              <div class="preview-thumbnail">
-                <div class="preview-icon bg-dark rounded-circle">
-                  <i class="mdi mdi-link-variant text-warning"></i>
-                </div>
-              </div>
-              <div class="preview-item-content">
-                <p class="preview-subject mb-1">Launch Admin</p>
-                <p class="text-muted ellipsis mb-0"> New admin wow! </p>
-              </div>
-            </a>
-            <div class="dropdown-divider"></div>
-            <p class="p-3 mb-0 text-center">See all notifications</p>
+                <a class="dropdown-item preview-item" href="{{  route('snmp.get_snmp_with_filter')}}">
+                    <div class="preview-thumbnail">
+                        <div class="preview-icon bg-dark rounded-circle">
+                            <i class="mdi mdi-access-point-network text-warning"></i>
+                        </div>
+                    </div>
+
+                    <div class="preview-item-content">
+                        <p class="preview-subject mb-1">SNMP </p>
+                        <p class="text-muted ellipsis mb-0">Details  </p>
+                    </div>
+
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                    <div class="preview-thumbnail">
+                        <div class="preview-icon bg-dark rounded-circle">
+                            <i class="mdi mdi-key-change text- " id="icon_kdm_errors" style="color: rgb(255, 93, 93);"></i>
+                        </div>
+                    </div>
+                    <div class="preview-item-content" id="show_kdms_errors_details">
+                        <p class="preview-subject mb-1">Kdms </p>
+                        <p class="text-muted ellipsis mb-0" id="header_kdm_errors">25 Kdm Errors Detected  </p>
+                    </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                    <div class="preview-thumbnail">
+                        <div class="preview-icon bg-dark rounded-circle">
+                            <i class="mdi mdi-server   text- " id="icon_server_errors" style="color: rgb(48, 255, 48);"></i>
+                        </div>
+                    </div>
+                    <div class="preview-item-content" id="show_server_errors_details">
+                        <p class="preview-subject mb-1">Server </p>
+                        <p class="text-muted ellipsis mb-0" id="header_server_errors">Healthy </p>
+                    </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                    <div class="preview-thumbnail">
+                        <div class="preview-icon bg-dark rounded-circle">
+                            <i class="mdi mdi-projector   text- " id="icon_projector_errors" style="color: rgb(255, 93, 93);"></i>
+                        </div>
+                    </div>
+                    <div class="preview-item-content" id="show_projector_errors_details">
+                        <p class="preview-subject mb-1">Projector </p>
+                        <p class="text-muted ellipsis mb-0" id="header_projector_errors">6 Projector Errors Detected  </p>
+                    </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                    <div class="preview-thumbnail">
+                        <div class="preview-icon bg-dark rounded-circle">
+                            <i class="mdi mdi-volume-high  text- " id="icon_sound_errors" style="color: rgb(48, 255, 48);"></i>
+                        </div>
+                    </div>
+                    <div class="preview-item-content" id="show_sound_errors_details">
+                        <p class="preview-subject mb-1">Sound </p>
+                        <p class="text-muted ellipsis mb-0" id="header_sound_errors">Healthy </p>
+                    </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item preview-item">
+                    <div class="preview-thumbnail">
+                        <div class="preview-icon bg-dark rounded-circle">
+                            <i class="mdi mdi-chart-pie  text- " id="icon_storage_errors" style="color: rgb(48, 255, 48);"></i>
+                        </div>
+                    </div>
+                    <div class="preview-item-content" id="show_storage_errors_details">
+                        <p class="preview-subject mb-1">Storage </p>
+                        <p class="text-muted ellipsis mb-0" id="header_storage_errors">Healthy </p>
+                    </div>
+                </a>
           </div>
         </li>
       </ul>
@@ -124,3 +148,6 @@
       </button>
     </div>
   </nav>
+
+
+

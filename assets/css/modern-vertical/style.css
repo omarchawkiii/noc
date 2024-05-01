@@ -22650,6 +22650,7 @@ div.tagsinput {
         line-height: 1.5;
         top: -4px;
         padding: 3px;
+        min-width: 20px;
       }
     .navbar .navbar-menu-wrapper .navbar-nav {
       flex-direction: row;
