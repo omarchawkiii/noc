@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('error_lists', function (Blueprint $table) {
             $table->id();
-            $table->string("kdm_errors",100)->nullable();
-            $table->string("nbr_sound_alert",100)->nullable();
-            $table->decimal("nbr_projector_alert",8,2)->nullable();
-            $table->string("nbr_server_alert",255)->nullable();
-            $table->string("nbr_storage_errors",100)->nullable();
+            $table->integer("kdm_errors")->nullable();
+            $table->integer("nbr_sound_alert")->nullable();
+            $table->integer("nbr_projector_alert")->nullable();
+            $table->integer("nbr_server_alert")->nullable();
+            $table->integer("nbr_storage_errors")->nullable();
             $table->foreignId('location_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });

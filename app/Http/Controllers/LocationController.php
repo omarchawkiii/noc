@@ -707,6 +707,19 @@ class LocationController extends Controller
 
     }
 
+    public function refresh_errors_list_data()
+    {
+        $start_time = Carbon::now();
+        echo $start_time->toDateTimeString();
+        $locations = Location::all() ;
+        foreach($locations as $location)
+        {
+            app(\App\Http\Controllers\Error_listController::class)->get_error_list($location->id);
+        }
+
+    }
+
+
 
 
 

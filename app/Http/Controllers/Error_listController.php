@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Redirect;
 
 class Error_listController extends Controller
 {
-    public function get_error_list($location,$screen )
+    public function get_error_list($location )
     {
 
         $location = Location::find($location) ;
@@ -22,24 +22,17 @@ class Error_listController extends Controller
 
         if($contents)
         {
-            foreach($contents as $content)
-            {
-                if($content)
-                {
-                    Error_list::updateOrCreate([
-                        'location_id' => $location->id
-                    ],[
+            Error_list::updateOrCreate([
+                'location_id' => $location->id
+            ],[
 
-                        'kdm_errors' => $content['kdm_errors'],
-                        'nbr_sound_alert' => $content['nbr_sound_alert'],
-                        'nbr_projector_alert' => $content['nbr_projector_alert'],
-                        'nbr_server_alert' => $content['nbr_server_alert'],
-                        'nbr_storage_errors' => $content['nbr_storage_errors'],
-                        'location_id' => $location->id,
-
-                    ]);
-                }
-            }
+                'kdm_errors' => $contents['errors_list']['kdm_errors'],
+                'nbr_sound_alert' => $contents['errors_list']['nbr_sound_alert'],
+                'nbr_projector_alert' => $contents['errors_list']['nbr_projector_alert'],
+                'nbr_server_alert' => $contents['errors_list']['nbr_server_alert'],
+                'nbr_storage_errors' => $contents['errors_list']['nbr_storage_errors'],
+                'location_id' => $location->id,
+            ]);
         }
         return Redirect::back()->with('message' ,' The Errors list  has been updated');
     }

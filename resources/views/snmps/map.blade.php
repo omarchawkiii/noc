@@ -141,8 +141,8 @@
             <div class="row mt-3">
 
 
-                <div class="table-responsive">
-                    <table id="error_table" class="table">
+                <div class="table-responsive preview-list multiplex" style="position: relative">
+                    <table id="error_table" class="table" >
                         <thead>
                             <tr>
                                 <th class="sorting sorting_asc text-center">Location</th>
@@ -186,6 +186,7 @@
     <script src="{{ asset('/assets/js/jquery.fullscreen-min.js') }}"></script>
 
     <script>
+
         function getdata(zoomLevel , datacount) {
 
             var url = "{{ url('') }}" + '/error_map/?data=data&zoomLevel=' + zoomLevel;
@@ -240,22 +241,30 @@
                     {
 
                         var data ;
-                        console.log(response)
-                        $.each(response.data_count, function(index, error) {
+                       if(response.error_table.length > 0)
+                       {
+                            $.each(response.error_table, function(index, error) {
 
-                        data +=
-                            '<tr class="odd text-center  ">'
-                                +'<td class="sorting_1"> '+ error.location+'  </td>'
-                                +'<td class="sorting_1"> '+ error.count_missing_kdm_error+'  </td>'
-                                +'<td class="sorting_1"> '+ error.count_diskusage+'  </td>'
-                                +'<td class="sorting_1"> '+ error.count_missing_cpl_error+'  </td>'
-                                +'<td class="sorting_1"> '+ error.count_securityManager+'  </td>'
-                                +'<td class="sorting_1"> '+ error.count_playback_generale_status+'  </td>'
-                            +'</tr>'
+                            data +=
+                                '<tr class="odd text-center  ">'
+                                    +'<td class="sorting_1"> '+ error.location+'  </td>'
+                                    +'<td class="sorting_1"> '+ error.kdm_errors+'  </td>'
+                                    +'<td class="sorting_1"> '+ error.nbr_storage_errors+'  </td>'
+                                    +'<td class="sorting_1"> '+ error.nbr_server_alert+'  </td>'
+                                    +'<td class="sorting_1"> '+ error.nbr_projector_alert+'  </td>'
+                                    +'<td class="sorting_1"> '+ error.nbr_sound_alert+'  </td>'
+                                +'</tr>'
 
-                        })
+                            })
 
-                        $('#error_table tbody').html(data) ;
+                            $('#error_table tbody').html(data) ;
+
+                       }
+                       else
+                       {
+                            $('#error_table tbody').html('<div id="table_logs_processing" class="dataTables_processing card">No data available </div>') ;
+                       }
+
                         $('#idle_screen').html(response.idle_screen) ;
                         $('#offline_screen').html(response.offline_screen) ;
                         $('#playing_screen').html(response.playing_screen) ;

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cpl;
+use App\Models\Error_list;
 use App\Models\Location;
 use App\Models\Schedule;
 use App\Models\Snmp;
@@ -286,7 +287,7 @@ class SnmpController extends Controller
 
 
 
-
+        $error_table = Error_list::with('location')->get() ;
 
         $data = $request->data;
         $zoomLevel = $request->zoomLevel;
@@ -298,12 +299,12 @@ class SnmpController extends Controller
             {
                 $data_count = $data_location;
                 $data_location = $data_states ;
-                return Response()->json(compact('data_location','data_count','locations','idle_screen','offline_screen','playing_screen','pause_screen'));
+                return Response()->json(compact('data_location','data_count','error_table','locations','idle_screen','offline_screen','playing_screen','pause_screen'));
             }
             else
             {
                 $data_count = $data_location;
-                return Response()->json(compact('data_location','locations'));
+                return Response()->json(compact('data_location','locations','error_table'));
             }
         }
         else
