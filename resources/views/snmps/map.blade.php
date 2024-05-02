@@ -169,7 +169,7 @@
     </div>
 
     <div class="modal fade show" id="kdm_errors_modal" tabindex="-1" aria-labelledby="ModalLabel"  aria-modal="true" role="dialog">
-        <div class="modal-dialog  modal-xl"  role="document">
+        <div class="modal-dialog  modal-xl"  role="document"  style="max-width: 93%; width: 93%;">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title"> KDMS Errors List</h5>
@@ -185,8 +185,8 @@
                             <thead>
                             <tr>
                                 <th>CPL UUID</th>
-                                <th width="20%">Annotation Text </th>
-                                <th width="20%">Details</th>
+                                <th >Annotation Text </th>
+                                <th >Details</th>
                                 <th width="10%">Screen</th>
                                 <th width="30%">Date</th>
                             </tr>
@@ -228,11 +228,49 @@
                                 <th> SubType</th>
                                 <th> Severity</th>
                                 <th> Error Code</th>
-                                <th> Details</th>
                                 <th> Screen</th>
                             </tr>
                             </thead>
                             <tbody id="body_list_server_errors">
+                                <tr>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade show" id="projector_errors_modal" tabindex="-1" aria-labelledby="ModalLabel"  aria-modal="true" role="dialog">
+        <div class="modal-dialog  modal-xl"  role="document"  style="max-width: 93%; width: 93%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"> Projector Errors List</h5>
+                    <input type="hidden">
+                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
+                </div>
+                <div class="modal-body">
+
+
+                    <div id="list_projector_errors"  class="table-responsive preview-list multiplex">
+
+                        <table class="table " id="table_list_projector_errors">
+                            <thead>
+                            <tr>
+                                <th> Title</th>
+                                <th> Time</th>
+                                <th> Code</th>
+                                <th> Severity</th>
+                                <th> Message</th>
+                                <th> Screen</th>
+                            </tr>
+                            </thead>
+                            <tbody id="body_list_kdm_errors">
                                 <tr>
                                 </tr>
                             </tbody>
@@ -329,7 +367,7 @@
                                     +'<td class="sorting_1 kdm_errors" data-location="'+ error.location.id+'"> '+ error.kdm_errors+'  </td>'
                                     +'<td class="sorting_1"> '+ error.nbr_storage_errors+'  </td>'
                                     +'<td class="sorting_1 server_errors"  data-location="'+ error.location.id+'"> '+ error.nbr_server_alert+'  </td>'
-                                    +'<td class="sorting_1"> '+ error.nbr_projector_alert+'  </td>'
+                                    +'<td class="sorting_1 projector_errors"  data-location="'+ error.location.id+'"> '+ error.nbr_projector_alert+'  </td>'
                                     +'<td class="sorting_1"> '+ error.nbr_sound_alert+'  </td>'
                                 +'</tr>'
 
@@ -449,13 +487,13 @@
                     if(response.kdms_errors_list.length > 0)
                     {
                             $.each(response.kdms_errors_list, function(index, kdm) {
+
                             data +=
                                 '<tr class="odd text-center  ">'
                                     +'<td class="sorting_1"> '+ kdm.cpl_id+'  </td>'
-                                    +'<td class="sorting_1 > '+ kdm.annotationText+'  </td>'
+                                    +'<td class="sorting_1"> ' + kdm.annotationText+'  </td>'
                                     +'<td class="sorting_1"> '+ kdm.details+'  </td>'
-                                    +'<td class="sorting_1"> '+ kdm.nbr_server_alert+'  </td>'
-                                    +'<td class="sorting_1"> '+ kdm.screen_id+'  </td>'
+                                    +'<td class="sorting_1"> '+ kdm.serverName+'  </td>'
                                     +'<td class="sorting_1"> '+ kdm.date_time+'  </td>'
                                 +'</tr>'
 
@@ -512,12 +550,11 @@
                                 '<tr class="odd text-center  ">'
                                     +'<td class="sorting_1"> '+ server.eventId+'  </td>'
                                     +'<td class="sorting_1"> '+ server.date+'  </td>'
-                                    +'<td class="sorting_1 > '+ server.class+'  </td>'
+                                    +'<td class="sorting_1" > '+ server.class+'  </td>'
                                     +'<td class="sorting_1"> '+ server.type+'  </td>'
                                     +'<td class="sorting_1"> '+ server.subType+'  </td>'
                                     +'<td class="sorting_1"> '+ server.criticity+'  </td>'
                                     +'<td class="sorting_1"> '+ server.errorCode+'  </td>'
-                                    +'<td class="sorting_1"> - </td>'
                                     +'<td class="sorting_1"> '+ server.serverName+'  </td>'
                                 +'</tr>'
 
@@ -529,6 +566,63 @@
                     else
                     {
                         $('#body_list_server_errors').html('<div id="table_logs_processing" class="dataTables_processing card">No data available </div>') ;
+                    }
+
+
+                },
+                error: function(response) {
+
+                }
+            })
+
+
+
+        }
+
+        $(document).on('click', '.projector_errors', function() {
+
+            var location = $(this).data('location');
+            console.log(location)
+            get_projector_errors_list(location)
+            $('#projector_errors_modal').modal('show');
+        });
+
+        function get_projector_errors_list(location)
+        {
+
+            var url = "{{ url('') }}" + '/get_projector_errors_list';
+            $.ajax({
+                url: url,
+                data: {
+                    location: location,
+                },
+                method: 'GET',
+                success: function(response) {
+                    console.log(response)
+                    var data ;
+                    if(response.projector_errors_list.length > 0)
+                    {
+
+                        $.each(response.projector_errors_list, function(index, projector) {
+                        data +=
+                            '<tr class="odd text-center  ">'
+                                +'<td class="sorting_1"> '+ projector.title+'  </td>'
+                                +'<td class="sorting_1"> '+ projector.time_saved+'  </td>'
+                                +'<td class="sorting_1" > '+ projector.code+'  </td>'
+                                +'<td class="sorting_1"> '+ projector.severity+'  </td>'
+                                +'<td class="sorting_1"> '+ projector.message+'  </td>'
+                                +'<td class="sorting_1"> '+ projector.serverName+'  </td>'
+
+                            +'</tr>'
+
+                        })
+
+                        $('#body_list_projector_errors').html(data) ;
+
+                    }
+                    else
+                    {
+                        $('#body_list_projector_errors').html('<div id="table_logs_processing" class="dataTables_processing card">No data available </div>') ;
                     }
 
 

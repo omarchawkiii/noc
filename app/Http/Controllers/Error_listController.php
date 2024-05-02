@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Error_list;
 use App\Models\Kdm_error_list;
 use App\Models\Location;
+use App\Models\Projector_errors_list;
 use App\Models\Server_error_list;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
@@ -36,14 +37,16 @@ class Error_listController extends Controller
                 'nbr_storage_errors' => $contents['errors_list']['nbr_storage_errors'],
                 'location_id' => $location->id,
             ]);
-            Server_error_list::all()->delete();
+            Server_error_list::where('location_id',$location->id)->delete();
 
             if( count($contents['errors_list']['list_server_errors']) > 0 )
             {
                 foreach($contents['errors_list']['list_server_errors'] as $list_server_error)
                 {
+
+               // dd($contents['errors_list']['list_server_errors']);
                     Server_error_list::updateOrCreate([
-                        'id_sever_error' => $list_server_error['id'] ,
+                        'id_server_error' => $list_server_error['id'] ,
                         'location_id' => $location->id
                     ],[
 
@@ -63,27 +66,57 @@ class Error_listController extends Controller
                 }
             }
 
-            Kdm_error_list::all()->delete();
+            Kdm_error_list::where('location_id',$location->id)->delete();
 
             if( count($contents['errors_list']['list_kdm_errors']) > 0 )
             {
                 foreach($contents['errors_list']['list_kdm_errors'] as $list_kdm_error)
                 {
-                    Kdm_error_list::all()->delete();
+
                     Kdm_error_list::updateOrCreate([
-                        'location_id' => $location->id
+                        'location_id' => $location->id,
+                        'cpl_id' => $list_kdm_error['cpl_id'],
+                        'screen_id' => $list_kdm_error['screen_id'],
                     ],[
 
                         'annotationText' => $list_kdm_error['AnnotationText'],
                         'cpl_id' => $list_kdm_error['cpl_id'],
                         'date_time' => $list_kdm_error['date_time'],
-                        'details' => $list_kdm_error['errorCode'],
+                        'details' => $list_kdm_error['details'],
                         'screen_id' => $list_kdm_error['screen_id'],
                         'serverName' => $list_kdm_error['serverName'],
                         'location_id' => $location->id,
                     ]);
                 }
             }
+
+            Projector_errors_list::where('location_id',$location->id)->delete();
+
+            if( count($contents['errors_list']['list_projector_errors']) > 0 )
+            {
+                foreach($contents['errors_list']['list_projector_errors'] as $projector_error)
+                {
+
+                    Kdm_error_list::updateOrCreate([
+                        'location_id' => $location->id,
+                        'id_screen' => $projector_error['id_screen'],
+                    ],[
+                        'code' => $projector_error['code'],
+                        'id_projector_errors' => $projector_error['id_projector_errors'],
+                        'id_screen' => $projector_error['id_screen'],
+                        'ip_projector' => $projector_error['ip_projector'],
+                        'message' => $projector_error['message'],
+                        'number' => $projector_error['number'],
+                        'serverName' => $projector_error['serverName'],
+                        'severity' => $projector_error['severity'],
+                        'time_saved' => $projector_error['time_saved'],
+                        'title' => $projector_error['title'],
+                        'location_id' => $location->id,
+                    ]);
+                }
+            }
+
+
         }
         return Redirect::back()->with('message' ,' The Errors list  has been updated');
     }
@@ -125,5 +158,12 @@ class Error_listController extends Controller
         $location = $request->location;
         $server_errors_list = Server_error_list::where('location_id',$location)->get() ;
         return Response()->json(compact('server_errors_list'));
+    }
+
+    public function projector_errors_list(Request $request)
+    {
+        $location = $request->location;
+        $projector_errors_list = Projector_errors_list::where('location_id',$location)->get() ;
+        return Response()->json(compact('projector_errors_list'));
     }
 }
