@@ -30,223 +30,35 @@
         </div>
     </div>
 
-    <div class="modal fade show" id="kdm_errors_modal" tabindex="-1" aria-labelledby="ModalLabel"  aria-modal="true" role="dialog">
-        <div class="modal-dialog" style="max-width: 93%; width: 93%;" role="document">
+    <div class="modal fade show" id="header_kdm_errors_modal" tabindex="-1" aria-labelledby="ModalLabel"  aria-modal="true" role="dialog">
+        <div class="modal-dialog  modal-xl"  role="document"  style="max-width: 93%; width: 93%;">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title"> Errors </h5>
+                    <h5 class="modal-title"> KDMS Errors List</h5>
                     <input type="hidden">
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
+                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
                 </div>
                 <div class="modal-body">
 
-                    <ul class="nav nav-tabs" role="tablist">
 
-                        <li class="nav-item">
-                            <a class="nav-link active" id="kdm-errors-tab" data-bs-toggle="tab" href="#kdm-errors-section" role="tab" aria-controls="kdm-errors" aria-selected="false">KDM Errors </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="server-Errors-tab" data-bs-toggle="tab" href="#server-Errors-section" role="tab" aria-controls="server-errors" aria-selected="false">Server Errors</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="Projector-errors-tab" data-bs-toggle="tab" href="#Projector-errors-section" role="tab" aria-controls="Projector" aria-selected="false">Projector Error</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="show-sound-errors-tab" data-bs-toggle="tab" href="#sound-errors-section" role="tab" aria-controls="show-playlist" aria-selected="false">Sound Error</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="show-storage-errors-tab" data-bs-toggle="tab" href="#storage-errors-section" role="tab" aria-controls="show-sto" aria-selected="false">Storage Error</a>
-                        </li>
-                    </ul>
-                    <div class="tab-content" style="height: 559px;">
-                        <div class="tab-pane fade show active" id="kdm-errors-section" role="tabpanel" aria-labelledby="kdm-error">
-                            <div id="list_kdm_errors" style="overflow: scroll; height: 570px">
+                    <div id="list_kdm_errors"  class="table-responsive preview-list multiplex">
 
-                                <table class="table" id="table_list_kdm_errors">
-                                    <thead>
-                                    <tr>
-                                        <th width="20%">CPL UUID</th>
-                                        <th width="20%">Annotation Text </th>
-                                        <th width="20%">Details</th>
-                                        <th width="10%">Screen</th>
-                                        <th width="30%">Date</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody id="body_list_kdm_errors"><tr>    <td width="20%">urn:uuid:271f88ea-2d1e-4ab2-aa42-43e7399cf11a</td>
-        <td width="20%">ROUND-UP-PUNISHMENT_FTR_S_KO-MSA-QMS-EN_MY_51_2K_MG_20240425_IOP_VF1</td>
-        <td width="20%">Missing kdm detected </td>
-        <td width="10%">Screen-01</td>
-        <td width="30%">2024-04-30 16:00:18</td></tr><tr>    <td width="20%">urn:uuid:9965adb1-485e-4b92-81d4-356f722ad499</td>
-        <td width="20%">DUAHATIBIRUFNL_FTR_F-185_IND-ind_INT_71_4K_ST_20240417_RIC_IOP_OV</td>
-        <td width="20%">Missing kdm detected </td>
-        <td width="10%">Screen-01</td>
-        <td width="30%">2024-04-25 04:49:02</td></tr><tr>    <td width="20%">urn:uuid:35df0266-42e9-4ee8-a503-6f2752eb9d52</td>
-        <td width="20%">PEENAK4_FTR_S-239_TH-MSA-QMS-EN_MY_51_2K_FP_20240408_FP_IOP_OV</td>
-        <td width="20%">Missing kdm detected </td>
-        <td width="10%">Screen-02</td>
-        <td width="30%">2024-04-24 09:20:17</td></tr><tr>    <td width="20%">urn:uuid:f8243746-53c3-4017-b598-aa0876d4d37f</td>
-        <td width="20%">GodzillaXKong_FTR-2-2D_S_EN-MSA-QMS_MY_51_4K_WR_20240307_DLX_IOP_OV</td>
-        <td width="20%">Missing kdm detected </td>
-        <td width="10%">Screen-02</td>
-        <td width="30%">2024-04-30 13:40:34</td></tr><tr>    <td width="20%">urn:uuid:75a95948-dca8-43b0-b4dd-c621fcb7f47c</td>
-        <td width="20%">CheifOfStation_FTR_S-239_EN-MSA-QMS_MY_51_2K_FP_20240430_FP_SMPTE_VF</td>
-        <td width="20%">Missing kdm detected </td>
-        <td width="10%">Screen-03</td>
-        <td width="30%">2024-05-01 18:00:30</td></tr><tr>    <td width="20%">urn:uuid:b3e307b1-3b96-44b6-b4ed-6b9585179b0b</td>
-        <td width="20%">Abigail_FTR-1_S_EN-MSA-QMS_MY_51_2K_UP_20240412_EKN_IOP_OV</td>
-        <td width="20%">Missing kdm detected </td>
-        <td width="10%">Screen-03</td>
-        <td width="30%">2024-04-25 04:49:02</td></tr><tr>    <td width="20%">urn:uuid:bc7365e1-230c-43f9-a1cb-45c69c772960</td>
-        <td width="20%">CheifOfStation_FTR_S-239_EN-XX_MY_51_2K_FP_20240422_FP_SMPTE_OV</td>
-        <td width="20%">Missing kdm detected </td>
-        <td width="10%">Screen-03</td>
-        <td width="30%">2024-04-30 15:30:56</td></tr><tr>    <td width="20%">urn:uuid:698adacc-ef3b-4297-bdb5-adce18e6c10d</td>
-        <td width="20%">CashOut_FTR-V3_S_EN-mly-chin_INT_51_2K_ST_20230920_RIC_IOP_OV</td>
-        <td width="20%">Missing kdm detected </td>
-        <td width="10%">Screen-03</td>
-        <td width="30%">2024-04-24 02:35:18</td></tr><tr>    <td width="20%">urn:uuid:75a95948-dca8-43b0-b4dd-c621fcb7f47c</td>
-        <td width="20%">CheifOfStation_FTR_S-239_EN-MSA-QMS_MY_51_2K_FP_20240430_FP_SMPTE_VF</td>
-        <td width="20%">Missing kdm detected </td>
-        <td width="10%">Screen-04</td>
-        <td width="30%">2024-05-01 18:00:31</td></tr><tr>    <td width="20%">urn:uuid:271f88ea-2d1e-4ab2-aa42-43e7399cf11a</td>
-        <td width="20%">ROUND-UP-PUNISHMENT_FTR_S_KO-MSA-QMS-EN_MY_51_2K_MG_20240425_IOP_VF1</td>
-        <td width="20%">Missing kdm detected </td>
-        <td width="10%">Screen-04</td>
-        <td width="30%">2024-04-30 16:00:19</td></tr><tr>    <td width="20%">urn:uuid:bc7365e1-230c-43f9-a1cb-45c69c772960</td>
-        <td width="20%">CheifOfStation_FTR_S-239_EN-XX_MY_51_2K_FP_20240422_FP_SMPTE_OV</td>
-        <td width="20%">Missing kdm detected </td>
-        <td width="10%">Screen-04</td>
-        <td width="30%">2024-04-30 15:30:56</td></tr><tr>    <td width="20%">urn:uuid:b3e307b1-3b96-44b6-b4ed-6b9585179b0b</td>
-        <td width="20%">Abigail_FTR-1_S_EN-MSA-QMS_MY_51_2K_UP_20240412_EKN_IOP_OV</td>
-        <td width="20%">Missing kdm detected </td>
-        <td width="10%">Screen-04</td>
-        <td width="30%">2024-04-25 04:49:03</td></tr><tr>    <td width="20%">urn:uuid:bc7365e1-230c-43f9-a1cb-45c69c772960</td>
-        <td width="20%">CheifOfStation_FTR_S-239_EN-XX_MY_51_2K_FP_20240422_FP_SMPTE_OV</td>
-        <td width="20%">Missing kdm detected </td>
-        <td width="10%">Screen-05</td>
-        <td width="30%">2024-04-30 17:20:41</td></tr><tr>    <td width="20%">urn:uuid:b3e307b1-3b96-44b6-b4ed-6b9585179b0b</td>
-        <td width="20%">Abigail_FTR-1_S_EN-MSA-QMS_MY_51_2K_UP_20240412_EKN_IOP_OV</td>
-        <td width="20%">Missing kdm detected </td>
-        <td width="10%">Screen-07</td>
-        <td width="30%">2024-04-25 04:49:03</td></tr><tr>    <td width="20%">urn:uuid:bc7365e1-230c-43f9-a1cb-45c69c772960</td>
-        <td width="20%">CheifOfStation_FTR_S-239_EN-XX_MY_51_2K_FP_20240422_FP_SMPTE_OV</td>
-        <td width="20%">Missing kdm detected </td>
-        <td width="10%">Screen-08</td>
-        <td width="30%">2024-04-30 17:15:42</td></tr><tr>    <td width="20%">urn:uuid:bc7365e1-230c-43f9-a1cb-45c69c772960</td>
-        <td width="20%">CheifOfStation_FTR_S-239_EN-XX_MY_51_2K_FP_20240422_FP_SMPTE_OV</td>
-        <td width="20%">Missing kdm detected </td>
-        <td width="10%">Screen-09</td>
-        <td width="30%">2024-04-30 17:25:31</td></tr><tr>    <td width="20%">urn:uuid:35df0266-42e9-4ee8-a503-6f2752eb9d52</td>
-        <td width="20%">PEENAK4_FTR_S-239_TH-MSA-QMS-EN_MY_51_2K_FP_20240408_FP_IOP_OV</td>
-        <td width="20%">Missing kdm detected </td>
-        <td width="10%">Screen-09</td>
-        <td width="30%">2024-04-24 09:20:18</td></tr><tr>    <td width="20%">urn:uuid:9965adb1-485e-4b92-81d4-356f722ad499</td>
-        <td width="20%">DUAHATIBIRUFNL_FTR_F-185_IND-ind_INT_71_4K_ST_20240417_RIC_IOP_OV</td>
-        <td width="20%">Missing kdm detected </td>
-        <td width="10%">Beanie-01</td>
-        <td width="30%">2024-04-25 04:49:04</td></tr><tr>    <td width="20%">urn:uuid:35df0266-42e9-4ee8-a503-6f2752eb9d52</td>
-        <td width="20%">PEENAK4_FTR_S-239_TH-MSA-QMS-EN_MY_51_2K_FP_20240408_FP_IOP_OV</td>
-        <td width="20%">Missing kdm detected </td>
-        <td width="10%">Beanie-01</td>
-        <td width="30%">2024-04-24 09:20:18</td></tr><tr>    <td width="20%">urn:uuid:9965adb1-485e-4b92-81d4-356f722ad499</td>
-        <td width="20%">DUAHATIBIRUFNL_FTR_F-185_IND-ind_INT_71_4K_ST_20240417_RIC_IOP_OV</td>
-        <td width="20%">Missing kdm detected </td>
-        <td width="10%">Beanie-02</td>
-        <td width="30%">2024-04-25 04:49:04</td></tr><tr>    <td width="20%">urn:uuid:35df0266-42e9-4ee8-a503-6f2752eb9d52</td>
-        <td width="20%">PEENAK4_FTR_S-239_TH-MSA-QMS-EN_MY_51_2K_FP_20240408_FP_IOP_OV</td>
-        <td width="20%">Missing kdm detected </td>
-        <td width="10%">Beanie-02</td>
-        <td width="30%">2024-04-24 09:20:19</td></tr><tr>    <td width="20%">urn:uuid:271f88ea-2d1e-4ab2-aa42-43e7399cf11a</td>
-        <td width="20%">ROUND-UP-PUNISHMENT_FTR_S_KO-MSA-QMS-EN_MY_51_2K_MG_20240425_IOP_VF1</td>
-        <td width="20%">Missing kdm detected </td>
-        <td width="10%">Junior</td>
-        <td width="30%">2024-04-30 16:00:20</td></tr><tr>    <td width="20%">urn:uuid:35df0266-42e9-4ee8-a503-6f2752eb9d52</td>
-        <td width="20%">PEENAK4_FTR_S-239_TH-MSA-QMS-EN_MY_51_2K_FP_20240408_FP_IOP_OV</td>
-        <td width="20%">Missing kdm detected </td>
-        <td width="10%">Junior</td>
-        <td width="30%">2024-04-24 09:20:19</td></tr><tr>    <td width="20%">urn:uuid:bc7365e1-230c-43f9-a1cb-45c69c772960</td>
-        <td width="20%">CheifOfStation_FTR_S-239_EN-XX_MY_51_2K_FP_20240422_FP_SMPTE_OV</td>
-        <td width="20%">Missing kdm detected </td>
-        <td width="10%">Indulge--02</td>
-        <td width="30%">2024-04-29 12:45:20</td></tr><tr>    <td width="20%">urn:uuid:698adacc-ef3b-4297-bdb5-adce18e6c10d</td>
-        <td width="20%">CashOut_FTR-V3_S_EN-mly-chin_INT_51_2K_ST_20230920_RIC_IOP_OV</td>
-        <td width="20%">Missing kdm detected </td>
-        <td width="10%">Indulge--02</td>
-        <td width="30%">2024-04-24 02:35:19</td></tr></tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade " id="server-Errors-section" role="tabpanel" aria-labelledby="server-Errors">
-                            <div id="list_server_errors" style="overflow: scroll;height: 570px">
-                                <table class="table" id="table_list_server_errors">
-                                    <thead>
-                                    <tr>
-                                        <th> Event Id</th>
-                                        <th> Date</th>
-                                        <th> Class</th>
-                                        <th> Type</th>
-                                        <th> SubType</th>
-                                        <th> Severity</th>
-                                        <th> Error Code</th>
-                                        <th> Details</th>
-                                        <th> Screen</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody id="body_list_server_errors"><tr>    <td>1</td>    <td>2024-05-01 17:15:07</td>    <td>Performance</td>    <td>Playout</td>    <td>PlayoutAlert</td>    <td>Error</td>    <td>DCP-E00001001</td></tr><tr>    <td>1</td>    <td>2024-05-01 20:30:07</td>    <td>Performance</td>    <td>Playout</td>    <td>PlayoutAlert</td>    <td>Error</td>    <td>DCP-E00001001</td></tr><tr>    <td>2</td>    <td>2024-05-01 20:56:55</td>    <td>Performance</td>    <td>Playout</td>    <td>PlayoutAlert</td>    <td>Error</td>    <td>DCP-E00001001</td></tr></tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade " id="Projector-errors-section" role="tabpanel" aria-labelledby="projector-Errors">
-                            <div id="list_projector_errors" style="overflow: scroll;height: 570px">
-                                <table class="table" id="table_list_projector_errors">
-                                    <thead>
-                                    <tr>
-                                        <th> Title</th>
-                                        <th> Time</th>
-                                        <th> Code</th>
-                                        <th> Severity</th>
-                                        <th> Message</th>
-                                        <th> Screen</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody id="body_list_projector_errors"></tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade " id="sound-errors-section" role="tabpanel" aria-labelledby="sound-Errors">
-                            <div id="list_sound_errors" style="overflow: scroll;height: 570px">
-                                <table class="table" id="table_list_sound_errors">
-                                    <thead>
-                                    <tr>
-                                        <th> Alarm Id</th>
-                                        <th>  Date Saved</th>
-                                        <th> Severity</th>
-                                        <th> Title</th>
-                                        <th> Clearable</th>
-                                        <th> Hardware</th>
-                                        <th> Screen</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody id="body_list_sound_errors"></tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade " id="storage-errors-section" role="tabpanel" aria-labelledby="storage-Errors">
-                            <div id="list_storage_errors" style="overflow: scroll;height: 570px">
-                                <table class="table" id="table_list_storage_errors">
-                                    <thead>
-                                    <tr>
-                                        <th> Stat</th>
-                                        <th> Screen</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody id="body_list_storage_errors"></tbody>
-                                </table>
-                            </div>
-                        </div>
-
+                        <table class="table " id="header_table_list_kdm_errors">
+                            <thead>
+                            <tr>
+                                <th>Location</th>
+                                <th>CPL UUID</th>
+                                <th >Annotation Text </th>
+                                <th >Details</th>
+                                <th width="10%">Screen</th>
+                                <th width="30%">Date</th>
+                            </tr>
+                            </thead>
+                            <tbody id="body_list_kdm_errors">
+                                <tr>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
 
                 </div>
@@ -255,6 +67,88 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade show" id="header_server_errors_modal" tabindex="-1" aria-labelledby="ModalLabel"  aria-modal="true" role="dialog">
+        <div class="modal-dialog  modal-xl"  role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"> Sever Errors List</h5>
+                    <input type="hidden">
+                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
+                </div>
+                <div class="modal-body">
+
+
+                    <div id="list_server_errors"  class="table-responsive preview-list multiplex">
+
+                        <table class="table " id="table_list_server_errors">
+                            <thead>
+                            <tr>
+                                <th>Location</th>
+                                <th> Event Id</th>
+                                <th> Date</th>
+                                <th> Class</th>
+                                <th> Type</th>
+                                <th> SubType</th>
+                                <th> Severity</th>
+                                <th> Error Code</th>
+                                <th> Screen</th>
+                            </tr>
+                            </thead>
+                            <tbody id="header_body_list_server_errors">
+                                <tr>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade show" id="header_projector_errors_modal" tabindex="-1" aria-labelledby="ModalLabel"  aria-modal="true" role="dialog">
+        <div class="modal-dialog  modal-xl"  role="document"  style="max-width: 93%; width: 93%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"> Projector Errors List</h5>
+                    <input type="hidden">
+                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
+                </div>
+                <div class="modal-body">
+
+
+                    <div id="list_projector_errors"  class="table-responsive preview-list multiplex">
+
+                        <table class="table " id="table_list_projector_errors">
+                            <thead>
+                            <tr>
+                                <th>Location</th>
+                                <th> Title</th>
+                                <th> Time</th>
+                                <th> Code</th>
+                                <th> Severity</th>
+                                <th> Message</th>
+                                <th> Screen</th>
+                            </tr>
+                            </thead>
+                            <tbody id="header_body_list_projector_errors">
+                                <tr>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
 
 
      <!-- plugins:js -->
@@ -357,6 +251,58 @@
                         $('#icon_storage_errors').css("color", "rgb(48, 255, 48)");
                     }
 
+                },
+                error: function(response) {
+
+                }
+            })
+
+        }
+
+        getdata()  ;
+
+
+        $(document).on('click', '.header_kdm_errors_btn', function() {
+            var location = $(this).data('location');
+            get_kdms_errors_list(location)
+            $('#header_kdm_errors_modal').modal('show');
+        });
+
+        function get_kdms_errors_list(location)
+        {
+            var url = "{{ url('') }}" + '/get_kdm_errors_list';
+            $.ajax({
+                url: url,
+                data: {
+                    location: location,
+                },
+                method: 'GET',
+                success: function(response) {
+                    console.log(response)
+                    var data ;
+                    if(response.kdms_errors_list.length > 0)
+                    {
+                            $.each(response.kdms_errors_list, function(index, kdm) {
+
+                            data +=
+                                '<tr class="odd ">'
+                                    +'<td class="sorting_1"> '+ kdm.location.name+'  </td>'
+                                    +'<td class="sorting_1"> '+ kdm.cpl_id+'  </td>'
+                                    +'<td class="sorting_1"> ' + kdm.annotationText+'  </td>'
+                                    +'<td class="sorting_1"> '+ kdm.details+'  </td>'
+                                    +'<td class="sorting_1"> '+ kdm.serverName+'  </td>'
+                                    +'<td class="sorting_1"> '+ kdm.date_time+'  </td>'
+                                +'</tr>'
+
+                            })
+
+                            $('#header_body_list_kdm_errors').html(data) ;
+
+                    }
+                    else
+                    {
+                        $('#header_body_list_kdm_errors').html('<div id="table_logs_processing" class="dataTables_processing card">No data available </div>') ;
+                    }
 
 
                 },
@@ -365,14 +311,115 @@
                 }
             })
 
-
-
         }
 
-        getdata()  ;
-        $('.nav-item .dropdown-item').click(function(){
-            $('#kdm_errors_modal').modal('show');
+        $(document).on('click', '.header_server_errors_btn', function() {
+
+            var location = $(this).data('location');
+            console.log(location)
+            get_server_errors_list(location)
+            $('#header_server_errors_modal').modal('show');
         });
+
+        function get_server_errors_list(location)
+        {
+            var url = "{{ url('') }}" + '/get_server_errors_list';
+            $.ajax({
+                url: url,
+                data: {
+                    location: location,
+                },
+                method: 'GET',
+                success: function(response) {
+                    console.log(response)
+                    var data ;
+                    if(response.server_errors_list.length > 0)
+                    {
+                        $.each(response.server_errors_list, function(index, server) {
+                        data +=
+                            '<tr class="odd  ">'
+                                +'<td class="sorting_1"> '+ kdm.location.name+'  </td>'
+                                +'<td class="sorting_1"> '+ server.eventId+'  </td>'
+                                +'<td class="sorting_1"> '+ server.date+'  </td>'
+                                +'<td class="sorting_1" > '+ server.class+'  </td>'
+                                +'<td class="sorting_1"> '+ server.type+'  </td>'
+                                +'<td class="sorting_1"> '+ server.subType+'  </td>'
+                                +'<td class="sorting_1"> '+ server.criticity+'  </td>'
+                                +'<td class="sorting_1"> '+ server.errorCode+'  </td>'
+                                +'<td class="sorting_1"> '+ server.serverName+'  </td>'
+                            +'</tr>'
+
+                        })
+
+                        $('#header_body_list_server_errors').html(data) ;
+
+                    }
+                    else
+                    {
+                        $('#header_body_list_server_errors').html('<div id="table_logs_processing" class="dataTables_processing card">No data available </div>') ;
+                    }
+
+
+                },
+                error: function(response) {
+
+                }
+            })
+        }
+
+        $(document).on('click', '.header_projector_errors_btn', function() {
+
+            var location = $(this).data('location');
+            console.log(location)
+            get_projector_errors_list(location)
+            $('#header_projector_errors_modal').modal('show');
+        });
+
+        function get_projector_errors_list(location)
+        {
+            var url = "{{ url('') }}" + '/get_projector_errors_list';
+            $.ajax({
+                url: url,
+                data: {
+                    location: location,
+                },
+                method: 'GET',
+                success: function(response) {
+                    console.log(response)
+                    var data ;
+                    if(response.projector_errors_list.length > 0)
+                    {
+
+                        $.each(response.projector_errors_list, function(index, projector) {
+                        data +=
+                            '<tr class="odd ">'
+                                +'<td class="sorting_1"> '+ kdm.location.name+'  </td>'
+                                +'<td class="sorting_1"> '+ projector.title+'  </td>'
+                                +'<td class="sorting_1"> '+ projector.time_saved+'  </td>'
+                                +'<td class="sorting_1" > '+ projector.code+'  </td>'
+                                +'<td class="sorting_1"> '+ projector.severity+'  </td>'
+                                +'<td class="sorting_1"> '+ projector.message+'  </td>'
+                                +'<td class="sorting_1"> '+ projector.serverName+'  </td>'
+
+                            +'</tr>'
+
+                        })
+
+                        $('#header_body_list_projector_errors').html(data) ;
+
+                    }
+                    else
+                    {
+                        $('#header_body_list_projector_errors').html('<div id="table_logs_processing" class="dataTables_processing card">No data available </div>') ;
+                    }
+
+
+                },
+                error: function(response) {
+
+                }
+            })
+        }
 
 
      </script>

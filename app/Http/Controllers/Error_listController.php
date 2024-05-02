@@ -97,12 +97,12 @@ class Error_listController extends Controller
                 foreach($contents['errors_list']['list_projector_errors'] as $projector_error)
                 {
 
-                    Kdm_error_list::updateOrCreate([
+                    Projector_errors_list::updateOrCreate([
                         'location_id' => $location->id,
-                        'id_screen' => $projector_error['id_screen'],
+                        'id_projector_errors' => $projector_error['id'],
                     ],[
                         'code' => $projector_error['code'],
-                        'id_projector_errors' => $projector_error['id_projector_errors'],
+                        'id_projector_errors' => $projector_error['id'],
                         'id_screen' => $projector_error['id_screen'],
                         'ip_projector' => $projector_error['ip_projector'],
                         'message' => $projector_error['message'],
@@ -149,21 +149,48 @@ class Error_listController extends Controller
     public function kdms_errors_list(Request $request)
     {
         $location = $request->location;
-        $kdms_errors_list = Kdm_error_list::where('location_id',$location)->get() ;
+        if($location)
+        {
+            $kdms_errors_list = Kdm_error_list::with('location')->where('location_id',$location)->get() ;
+        }
+        else
+        {
+            $kdms_errors_list = Kdm_error_list::with('location')->get() ;
+        }
+
         return Response()->json(compact('kdms_errors_list'));
     }
 
     public function server_errors_list(Request $request)
     {
         $location = $request->location;
-        $server_errors_list = Server_error_list::where('location_id',$location)->get() ;
+
+        if($location)
+        {
+            $server_errors_list = Server_error_list::with('location')->where('location_id',$location)->get() ;
+        }
+        else
+        {
+            $server_errors_list = Server_error_list::with('location')->get() ;
+        }
+
+
         return Response()->json(compact('server_errors_list'));
     }
 
     public function projector_errors_list(Request $request)
     {
         $location = $request->location;
-        $projector_errors_list = Projector_errors_list::where('location_id',$location)->get() ;
+
+        if($location)
+        {
+            $projector_errors_list = Projector_errors_list::with('location')->where('location_id',$location)->get() ;
+        }
+        else
+        {
+            $projector_errors_list = Projector_errors_list::with('location')->get() ;
+        }
+
         return Response()->json(compact('projector_errors_list'));
     }
 }

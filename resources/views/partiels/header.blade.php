@@ -32,22 +32,22 @@
 
                 </a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item preview-item">
+                <a class="dropdown-item preview-item  header_kdm_errors_btn">
                     <div class="preview-thumbnail">
                         <div class="preview-icon bg-dark rounded-circle">
-                            <i class="mdi mdi-key-change text- " id="icon_kdm_errors" style="color: rgb(255, 93, 93);"></i>
+                            <i class="mdi mdi-key-change  " id="icon_kdm_errors" style="color: rgb(255, 93, 93);"></i>
                         </div>
                     </div>
-                    <div class="preview-item-content" id="show_kdms_errors_details">
+                    <div class="preview-item-content " id="show_kdms_errors_details">
                         <p class="preview-subject mb-1">Kdms </p>
                         <p class="text-muted ellipsis mb-0" id="header_kdm_errors">25 Kdm Errors Detected  </p>
                     </div>
                 </a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item preview-item">
+                <a class="dropdown-item preview-item  header_server_errors_btn ">
                     <div class="preview-thumbnail">
                         <div class="preview-icon bg-dark rounded-circle">
-                            <i class="mdi mdi-server   text- " id="icon_server_errors" style="color: rgb(48, 255, 48);"></i>
+                            <i class="mdi mdi-server  " id="icon_server_errors" style="color: rgb(48, 255, 48);"></i>
                         </div>
                     </div>
                     <div class="preview-item-content" id="show_server_errors_details">
@@ -56,7 +56,7 @@
                     </div>
                 </a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item preview-item">
+                <a class="dropdown-item preview-item header_projector_errors_btn">
                     <div class="preview-thumbnail">
                         <div class="preview-icon bg-dark rounded-circle">
                             <i class="mdi mdi-projector   text- " id="icon_projector_errors" style="color: rgb(255, 93, 93);"></i>

@@ -270,7 +270,7 @@
                                 <th> Screen</th>
                             </tr>
                             </thead>
-                            <tbody id="body_list_kdm_errors">
+                            <tbody id="body_list_projector_errors">
                                 <tr>
                                 </tr>
                             </tbody>
@@ -489,7 +489,7 @@
                             $.each(response.kdms_errors_list, function(index, kdm) {
 
                             data +=
-                                '<tr class="odd text-center  ">'
+                                '<tr class="odd ">'
                                     +'<td class="sorting_1"> '+ kdm.cpl_id+'  </td>'
                                     +'<td class="sorting_1"> ' + kdm.annotationText+'  </td>'
                                     +'<td class="sorting_1"> '+ kdm.details+'  </td>'
@@ -547,7 +547,7 @@
 
                             $.each(response.server_errors_list, function(index, server) {
                             data +=
-                                '<tr class="odd text-center  ">'
+                                '<tr class="odd  ">'
                                     +'<td class="sorting_1"> '+ server.eventId+'  </td>'
                                     +'<td class="sorting_1"> '+ server.date+'  </td>'
                                     +'<td class="sorting_1" > '+ server.class+'  </td>'
@@ -605,7 +605,7 @@
 
                         $.each(response.projector_errors_list, function(index, projector) {
                         data +=
-                            '<tr class="odd text-center  ">'
+                            '<tr class="odd ">'
                                 +'<td class="sorting_1"> '+ projector.title+'  </td>'
                                 +'<td class="sorting_1"> '+ projector.time_saved+'  </td>'
                                 +'<td class="sorting_1" > '+ projector.code+'  </td>'
