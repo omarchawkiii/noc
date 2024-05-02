@@ -880,7 +880,7 @@
 
                                         +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+tms_ingested+' </a></td>'
                                         +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.error+' </a></td>'
-                                        if(value.tms_ingested == 1 )
+                                        if(!value.tms_ingested == 1 )
                                         {
                                             result = result +'<td> <i  data-id="'+value.id+'" style="font-size: 22px; cursor: pointer;" class=" ingest_kdm mdi mdi-upload  btn-icon-prepend text-info"></i>  <i style="font-size: 22px; cursor: pointer;" class=" text-danger mdi mdi-delete-forever btn-icon-prepend delete_kdm" data-id="'+value.id+'"></i> </td>'
                                         }
