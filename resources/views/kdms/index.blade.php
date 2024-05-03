@@ -546,10 +546,10 @@
         $('[data-toggle="tooltip"]').tooltip()
     })
 
-    $(".preview-item").click(function() {
+    /*$(".preview-item").click(function() {
 
         $(this).toggleClass("selected");
-    });
+    });*/
 </script>
 @endsection
 

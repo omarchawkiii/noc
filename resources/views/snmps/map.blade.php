@@ -206,7 +206,7 @@
     </div>
 
     <div class="modal fade show" id="server_errors_modal" tabindex="-1" aria-labelledby="ModalLabel"  aria-modal="true" role="dialog">
-        <div class="modal-dialog  modal-xl"  role="document">
+        <div class="modal-dialog  modal-xl"  role="document"  style="max-width: 93%; width: 93%;">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title"> Sever Errors List</h5>
@@ -467,6 +467,7 @@
             var location = $(this).data('location');
             console.log(location)
             get_kdms_errors_list(location)
+
             $('#kdm_errors_modal').modal('show');
         });
 
@@ -635,6 +636,8 @@
 
 
         }
+        $(".multiplex").height("700px");
+        $(".multiplex").css({"maxHeight":"700px"});
 
     </script>
 @endsection

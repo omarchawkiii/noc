@@ -95,7 +95,6 @@
 </script>
 
 <script>
-
     function extractTextWithinQuotes(inputText)
     {
         var regex = /"([^"]+)"/g;
@@ -192,7 +191,6 @@
         });
 
     })(jQuery);
-
 </script>
 
 <script>
@@ -206,11 +204,10 @@
         $('[data-toggle="tooltip"]').tooltip()
     })
 
-    $(".preview-item").click(function() {
+    /*$(".preview-item").click(function() {
         $(this).toggleClass("selected");
-    });
+    });*/
 </script>
-
 
 @endsection
 
