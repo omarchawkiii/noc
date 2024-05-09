@@ -388,7 +388,7 @@
                             +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
                             +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+available_on_content+'</a></td>'
                             +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+value.duration+'</a></td>'
-                            +'<td ><a class="btn btn-primary infos_modal"  href="#" id="'+value.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
+                            +'<td ><a class="btn btn-primary infos_modal"  href="#" id="'+value.id+'"> <i class="mdi mdi-magnify"> </i>  </a> <a target="_blank" href="/DATA/spl/'+value.uuid+'.xml" class="btn btn-success   mdi mdi-download download_spl" data-uuid="urn:uuid:19942816-433a-4d87-8ef6-cf9063275449"></a></td>'
                             +'</tr>';
                     });
                     $('#location-listing tbody').html(result)
