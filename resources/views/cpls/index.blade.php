@@ -336,7 +336,7 @@
                         <div class="row">
                             <div class="col-md-12 ">
                                 <div class="form-group custom-form-group" style="text-align: center">
-                                    <label id="warning-content"> No File Selected </label>
+                                    <label id="warning-content"> No CPLs Selected </label>
                                 </div>
                             </div>
                         </div>
@@ -1287,7 +1287,7 @@ function formatSize(sizeInBytes) {
         });
 
         $(document).on('click', '#delete_cpl', function (event) {
-            console.log(lms)
+            $('#check_all_server').prop('checked', false);
 
             var screen =  $('#screen').val();
            // window.lms = false ;

@@ -2417,7 +2417,7 @@
             $('#block_edit_spl').removeClass("hide_div");
 
             $('#save_spl_title').html("<i class=\"btn btn-primary mdi mdi-tooltip-edit  \"  ></i> Edit Playlist");
-            var id_spl = $('#opened_spl').data("uuid");
+            var id_spl = $('#opened_spl').attr("data-uuid");
             $('#spl_uuid_edit').val(id_spl);
             var title = $('#opened_spl').text();
             var mod = $('#opened_spl').attr("data-mod");

@@ -58,8 +58,8 @@ Route::get('get_spl_with_filter', [App\Http\Controllers\SplController::class , '
 Route::get('get_spl_infos/{spl}', [App\Http\Controllers\SplController::class , 'get_spl_infos'])->name('spls.get_spl_infos')->middleware(['auth']);
 Route::get('spl_builder', [App\Http\Controllers\SplController::class , 'spl_builder'])->name('spls.spl_builder')->middleware(['auth']);
 Route::get('upload_spl', [App\Http\Controllers\SplController::class , 'upload_spl'])->name('spls.upload_spl')->middleware(['auth']);
-
-
+Route::get('get_screens_from_spls', [App\Http\Controllers\SplController::class , 'get_screens_from_spls'])->name('cpls.get_screens_from_spls')->middleware(['auth']);
+Route::get('spls/delete_spls', [App\Http\Controllers\SplController::class , 'delete_spls'])->name('cpls.delete_spls')->middleware(['auth']);
 
 
 Route::get('cpls/{location}/{spls}/get_cpls', [App\Http\Controllers\CplController::class , 'getcpls'])->name('cpls.get_cpls');

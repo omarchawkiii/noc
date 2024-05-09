@@ -163,4 +163,96 @@ class SplController extends Controller
         $locations = Location::all() ;
         return view('spls.uploadspl', compact('locations'));
     }
+
+    public function get_screens_from_spls(Request $request )
+    {
+        $location = $request->location ;
+        $screens = array() ;
+        foreach($request->array_spls as $spl)
+        {
+            $spls = Spl::where('uuid',$spl)->where('location_id',$location)->orderBy('screen_id', 'ASC')->get() ;
+            foreach( $spls as $spl)
+            {
+                $screen = $spl->screen ;
+                if ( ! in_array($screen->id,  array_column($screens, 'id')))
+                {
+                    array_push($screens,  array("id" => $screen->id ,"screen_number" => $screen->screen_number , "name" => $screen->screen_name));
+                }
+            }
+        }
+        $screens_id = array_column($screens, 'id');
+        array_multisort($screens_id, SORT_ASC, $screens);
+        return Response()->json(compact('screens'));
+
+
+    }
+
+    public function delete_spls(Request $request )
+    {
+        $location = Location::findOrFail($request->location) ;
+        $response = $this->delete_splRequest($request->connection_ip, $request->lms, $request->array_spls, $request->array_screens, $location->email , $location->password);
+        $response['result'] = 1 ;
+        if($response['result'] === 1 )
+        {
+
+            foreach($request->array_spls as $spl_uuid)
+            {
+                if($request->lms)
+                {
+                    $spl = Lmsspl::where('uuid',$spl_uuid)->where('location_id',$location->id)->delete();
+                //    dd($cpl,$cpl_uuid) ;
+                }
+                $spl = Spl::where('uuid',$spl_uuid)->whereIn('screen_id',$request->array_screens)->where('location_id',$location->id)->delete() ;
+                //dd($cpl,$cpl_uuid) ;
+            }
+                echo "Success" ;
+        }
+        else
+        {
+            echo "Failed" ;
+        }
+    }
+
+
+    function delete_splRequest($apiUrl,$lms, $array_spls, $array_screens,$username,$password) {
+        // Prepare the request data
+        $requestData = [
+            'action' => 'delete_spl',
+            'lms' => $lms,
+            'array_spls' => $array_spls,
+            'array_screens' => $array_screens,
+            'username' =>$username,
+            'password' =>$password
+
+        ];
+
+        // Initialize cURL session
+        $ch = curl_init($apiUrl);
+
+        // Set cURL options
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($requestData));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        // Execute cURL session and get the response
+        $response = curl_exec($ch);
+       // print_r($response);
+
+        // Check for cURL errors
+        if (curl_errno($ch)) {
+            return ['error' => 'Curl error: ' . curl_error($ch)];
+        }
+
+        // Close cURL session
+        curl_close($ch);
+
+        // Process the API response
+        if (!$response) {
+            return ['error' => 'Error occurred while sending the request.'];
+        } else {
+            return json_decode($response, true);
+        }
+    }
+
+
 }

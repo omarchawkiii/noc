@@ -53,11 +53,17 @@
                             </div>
                         </div>
                         <div class="col-xl-2">
+                            <button type="button" class="btn btn-danger btn-icon-text" id="delete_spl">
+                                <i class="mdi mdi-delete-forever btn-icon-prepend"></i> Delete
+                            </button>
+                        </div>
+                        <div class="col-xl-2">
                             <button type="button" id="refresh_lms"  class="btn btn-icon-text " style="color: #6f6f6f;background: #2a3038; height: 37px; display:none">
                                 <i class="mdi mdi-server-network"></i> LMS </button>
                         </div>
-                    </div>
 
+
+                    </div>
 
                 </div>
 
@@ -198,6 +204,83 @@
         </div>
     </div>
 
+    <div class="modal fade " id="empty-warning-modal" tabindex="-1" role="dialog" aria-labelledby="delete_client_modalLabel"  aria-modal="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ModalLabel"><i class="mdi mdi-alert btn btn-warning"></i> Warning
+                    </h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body minauto">
+                    <div class="tab-pane fade active show" id="home-1" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="row">
+                            <div class="col-md-12 ">
+                                <div class="form-group custom-form-group" style="text-align: center">
+                                    <label id="warning-content"> No SPLs Selected </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col" style="text-align: center">
+                                <button class="btn btn-secondary btn-fw close" data-bs-dismiss="modal" aria-label="Close">Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade " id="spl_delete_model" tabindex="-1" aria-labelledby="ModalLabel"aria-modal="true" role="dialog">
+        <div class="modal-dialog" style="max-width: 60%; width: 60%;" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 15px;">
+                    <h5 class="modal-title" id=" " style="font-size: 23px;">
+                        <i class="mdi mdi-delete-sweep custom-search  btn-inverse-danger "></i>CPL Deletion </h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="list_s">
+                    <form class="row">
+
+                        <div class="form-group col-md-12">
+                            <button type="button" class="btn btn-inverse-primary btn-fw" style="background: none;  border-radius: 0;  text-align: left;margin-bottom: 9px;">
+                                <input type="checkbox" class="check_all form-check-input " name="check_all_server" id="check_all_server" style="font-size: 20px;">
+                                <label for="check_all_server" class="style_label_deletion" style="font-size: 20px;">
+                                    All Screens Storage </label>
+                            </button>
+                            <ul class="list_deletion all_screens" id="list_servers_spls_to_delete">
+                                <li>
+                                    <button type="button" class="btn btn-outline-secondary btn-fw" style="text-align: left;">
+                                        <label class="form-check-label custom-check2">
+                                            <input type="checkbox" class="form-check-input check_all" name="screen_to_ingest" id="" value="" style="font-size: 20px;margin-bottom:  3px">
+                                            <span style="font-weight: bold;">Screen-01</span> <i class="input-helper"></i>
+                                        </label>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </form>
+                    <div class="spinner-border text-danger  " id="delete_cpl_progress" style="display: none;" role="status">
+                        <span class="sr-only"> </span>
+                    </div>
+
+                    <div class="row" id="deleted_cpls"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="confirm_delete_cpl_group" class="btn btn-danger" style=" margin: auto;font-size: 21px;font-weight: bold;" data-dismiss="modal">
+                        Create Delete Task
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
 @endsection
 
@@ -205,11 +288,7 @@
 <!-- ------- DATA TABLE ---- -->
 <script src="{{asset('/assets/vendors/datatables.net/jquery.dataTables.js')}}"></script>
 <script src="{{asset('/assets/vendors/datatables.net-bs4/dataTables.bootstrap4.js')}}"></script>
-<script>
-
-
-</script>
-<!-- -------END  DATA TABLE ---- -->
+<script src="{{ asset('/assets/vendors/sweetalert/sweetalert.min.js') }}"></script>
 
 
 <script src="{{asset('/assets/vendors/jquery-toast-plugin/jquery.toast.min.js')}}"></script>
@@ -234,9 +313,7 @@
 
     // filter location
     (function($) {
-
         var spl_datatable = $('#location-listing').DataTable({
-
         "iDisplayLength": 10,
             destroy: true,
             "bDestroy": true,
@@ -244,9 +321,7 @@
                 search: "_INPUT_",
                 searchPlaceholder: "Search..."
             }
-
         });
-
 
         function get_spls(location , screen , lms , refresh_screen)
         {
@@ -308,12 +383,12 @@
 
 
                         result = result
-                            +'<tr class="odd">'
-                            +'<td class="sorting_1">'+index +' </td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+available_on_content+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.duration+'</a></td>'
-                            +'<td><a class="btn btn-primary infos_modal"  href="#" id="'+value.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
+                            +'<tr class="odd" data-id="'+value.uuid+'">'
+                            +'<td class="sorting_1 cpl-item">'+index +' </td>'
+                            +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
+                            +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+available_on_content+'</a></td>'
+                            +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+value.duration+'</a></td>'
+                            +'<td ><a class="btn btn-primary infos_modal"  href="#" id="'+value.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
                             +'</tr>';
                     });
                     $('#location-listing tbody').html(result)
@@ -490,6 +565,167 @@
                 }
             })
 
+        });
+        $(document).on('click', '.cpl-item', function (event) {
+            $(this).parent('tr').toggleClass('selected');
+        });
+        $(document).ready(function() {
+            // Handle the change event of the #check_all_server checkbox
+            $('#check_all_server').change(function() {
+                // Check if the #check_all_server checkbox is checked
+                if ($(this).is(':checked')) {
+                    // If checked, set all checkboxes within the list to checked
+                    $('#list_servers_spls_to_delete').find('input[type="checkbox"]').prop('checked', true);
+                } else {
+                    // If unchecked, set all checkboxes within the list to unchecked
+                    $('#list_servers_spls_to_delete').find('input[type="checkbox"]').prop('checked', false);
+                }
+            });
+        });
+        $(document).on('click', '#delete_spl', function (event) {
+
+
+            var screen =  $('#screen').val();
+
+            var multiplex =  $('#multiplex').val();
+            var array_spls = [];
+            var location = $('#location').val() ;
+
+            $("#location-listing tr.selected").each(function() {
+                var id = $(this).data("id");
+                array_spls.push(id);
+            });
+
+            $('#check_all_server').prop('checked', false);
+
+            if (array_spls.length ==  0) {
+                $("#empty-warning-modal").modal('show');
+            }else{
+                var url = "{{  url('') }}"+ '/get_screens_from_spls/';
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    data: {
+                        array_spls:array_spls,
+                        location :location
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    beforeSend: function () {
+                    },
+                    success: function (response) {
+
+                        var result = '<li>'
+                                    +'<button type="button" class="btn btn-outline-secondary btn-fw" style="text-align: left;">'
+                                        +'<label class="form-check-label custom-check2">'
+                                            +'<input id="delete_from_lms" type="checkbox" class="form-check-input" name="lms" style="font-size: 20px;margin-bottom:  3px; margin-right:  5px">'
+                                            +'<span style="font-weight: bold;">LMS</span> <i class="input-helper"></i>'
+                                        +'</label>'
+                                    +'</button>'
+                                +'</li>' ;
+
+                            $.each(response.screens, function( index, value ) {
+
+                                result =  result +
+                                '<li>'
+                                    +'<button type="button" class="btn btn-outline-secondary btn-fw" style="text-align: left;">'
+                                        +'<label class="form-check-label custom-check2">'
+                                            +'<input type="checkbox" class="form-check-input" name="screen_to_ingest" data-id="'+value.screen_number+'" value="'+value.id+'" style="font-size: 20px;margin-bottom:  3px; margin-right:  5px">'
+                                            +'<span style="font-weight: bold;">'+value.name+'</span> <i class="input-helper"></i>'
+                                        +'</label>'
+                                    +'</button>'
+                                +'</li>'
+
+                            });
+
+                            $('#list_servers_spls_to_delete').html(result)
+                            $('#spl_delete_model').modal('show')
+
+                            $('#confirm_delete_cpl_group').click(function(){
+                                var array_screens = [];
+                               $("#list_servers_spls_to_delete [name='screen_to_ingest']:checked").each(function() {
+                                    var screen_id = $(this).data("id");
+                                    array_screens.push(screen_id);
+                                });
+
+                                var delete_from_lms = $('#delete_from_lms' ).is(":checked")
+
+
+                                $.ajax({
+                                    url : "{{  url('') }}"+ '/spls/delete_spls',
+                                    type: 'GET',
+                                    data: {
+                                        array_spls:array_spls,
+                                        location :location,
+                                        array_screens:array_screens,
+                                        lms:delete_from_lms
+                                    },
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                    },
+                                    beforeSend: function () {
+                                    },
+                                    success: function (response) {
+                                        if (response == 'Success') {
+
+                                            swal({
+                                                title: 'Done!',
+                                                text: 'Cpls Deleted Successfully ',
+                                                icon: 'success',
+                                                button: {
+                                                    text: "Continue",
+                                                    value: true,
+                                                    visible: true,
+                                                    className: "btn btn-primary"
+                                                }
+                                            })
+                                            $('#location-listing tbody').html("")
+
+                                            get_spls(location , screen , false , multiplex)
+                                            $('#spl_delete_model').modal('hide');
+                                        } else {
+                                            swal({
+                                                title: 'Failed',
+                                                text: "Error occurred while sending the request.",
+                                                icon: 'warning',
+                                                showCancelButton: true,
+                                                confirmButtonColor: '#3f51b5',
+                                                cancelButtonColor: '#ff4081',
+                                                confirmButtonText: 'Great ',
+                                                buttons: {
+                                                    cancel: {
+                                                        text: "Cancel",
+                                                        value: null,
+                                                        visible: true,
+                                                        className: "btn btn-danger",
+                                                        closeModal: true,
+                                                    },
+                                                }
+                                            })
+                                        }
+
+                                    },
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        console.log(errorThrown);
+                                    },
+                                    complete: function (jqXHR, textStatus) {
+                                    }
+                                });
+
+
+                                console.log(array_screens)
+
+                            });
+
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    },
+                    complete: function (jqXHR, textStatus) {
+                    }
+                });
+            }
         });
 
     })(jQuery);
@@ -768,6 +1004,26 @@
     text-align: center;
     padding: 1em 0;
 }
+
+
+#list_servers_spls_to_delete ,#list_servers_spls_to_delete{
+        list-style: none;
+    }
+
+    #list_servers_spls_to_delete li {
+        float: left;
+        font-size: 20px;
+        margin: 3px;
+    }
+    #list_servers_spls_to_delete li {
+        float: left;
+        font-size: 20px;
+        margin: 3px;
+    }
+    #list_servers_spls_to_delete li button {
+        width: 171px !important;
+    }
+
 
 </style>
 @endsection
