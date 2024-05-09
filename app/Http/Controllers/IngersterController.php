@@ -455,33 +455,30 @@ class IngersterController extends Controller
                 $cpl = $result = DB::table('ingests')
                     ->where('cpl_id', $file)
                     ->first();
+                    $location = Location::find(1) ;
                 if($cpl)
                 {
-                    $directoryPath = $cpl->tms_dir ;
-                    $torrentPath = "/DATA/noc_torrent/".$file.".torrent" ;
-                    $command = "mktorrent -o $torrentPath $directoryPath >> /DATA/logs/noc_torrent_log.log 2>&1";
-                    exec($command, $output, $returnVar);
+                    $response = $this->ingestDcp($location->connection_ip,$cpl->cpl_id, $cpl->pkl_size, $cpl->cpl_description,$location->email, $location->password);
 
-                    if (file_exists($torrentPath)) {
 
-                        $location_id = 1 ;
+                    if($response['result'] === 1 )
+                    {
                         Dcp_trensfer::updateOrCreate([
                             'id_cpl' => $cpl->cpl_id ,
-                            'location_id' => $location_id
+                            'location_id' => $location->id
                         ],[
                             'status'     =>"pending",
-                            "torrent_path" => $torrentPath,
+                            "torrent_path" =>$response['dcp_path'],
                             "progress" => 0 ,
                             "id_ingest"=> $cpl->id,
                             "id_cpl" => $cpl->cpl_id,
-                            'location_id' => $location_id
+                            'location_id' => $location->id
                         ]);
                         array_push($ingest_success,  array("status" => 1, "pkl_description" =>  $cpl->pkl_description , "message" =>  "DCP Ingested successfully" , "id" =>  $cpl->id ));
-
                     }
                     else
                     {
-                        array_push($ingest_errors,  array("status" => 0, "pkl_description" =>  $cpl->pkl_description, "message" =>  "The Torrent File Can Not Be Created." , "id" =>  $cpl->id ));
+                        array_push($ingest_errors,  array("status" => 0, "pkl_description" =>  $cpl->pkl_description, "message" =>  $response['result'], "id" =>  $cpl->id ));
                     }
 
                 }
@@ -490,84 +487,47 @@ class IngersterController extends Controller
             $ingest_status = array("status" => 1,  "message " => "") ;
             return Response()->json(compact('ingest_errors','ingest_success','ingest_status'));
         } catch (Exception $e) {
-
             $ingest_status = array("status" => 0 , "message " => $e->getMessage()) ;
             return Response()->json(compact('ingest_errors','ingest_success','ingest_status'));
             echo "Failed" ;
-            //return $e;
-        }
-        /*
-        // Définir le chemin vers le dossier que vous voulez transformer en torrent
-        $directoryPath = 'Controllers';
 
-        // Définir le chemin où le fichier torrent sera enregistré temporairement
-        $torrentPath = 'fichier3.torrent';
-
-
-        $command = "mktorrent -o $torrentPath $directoryPath >> /DATA/logs/noc_torrent_log.log 2>&1";
-        //$command = "mktorrent -o $torrentPath $directoryPath";
-        //var_dump($command);
-        //exec($command);
-        exec($command, $output, $returnVar);
-
-
-
-
-        //var_dump($output);
-        // Vérifiez que le fichier torrent a été créé
-
-        if (file_exists($torrentPath)) {
-
-        echo " Torrent file genereated " ;
-        /*
-            // Envoyez le fichier torrent à l'utilisateur
-            header('Content-Type: application/x-bittorrent');
-            header('Content-Disposition: attachment; filename="votre_fichier.torrent"');
-            header('Content-Length: ' . filesize($torrentPath));
-
-            // Lisez le fichier et envoyez son contenu
-            readfile($torrentPath);
-
-            // Supprimez le fichier torrent après l'avoir envoyé pour économiser de l'espace disque
-            unlink($torrentPath);
-
-        } else {
-            // Gérez le cas où le fichier torrent n'a pas été créé
-            echo "Erreur : Le fichier torrent n'a pas été créé.";
         }
 
- */
-
-
-        // Chemin vers le dossier que vous souhaitez transformer en fichier torrent
-       /* $directoryPath = storage_path('app/public/your_folder'); // Modifiez le chemin selon votre projet
-
-        // Chemin vers le fichier torrent qui sera créé
-        $torrentFilePath = storage_path('app/public/your_file.torrent');
-
-        // Créer une nouvelle instance de getID3
-        $getID3 = new getID3;
-        $getID3->option_md5_data = false;
-
-        // Créez le fichier torrent en utilisant getid3
-        $torrent = new getid3_lib($getID3);
-        $torrent->Write($directoryPath, $torrentFilePath);
-        dd(file_exists($torrentFilePath)) ;*/
-        // Vérifiez que le fichier torrent a été créé
-       /* if (file_exists($torrentFilePath)) {
-            // Utilisez BinaryFileResponse pour renvoyer le fichier torrent à l'utilisateur
-            return new BinaryFileResponse($torrentFilePath, 200, [
-                'Content-Type' => 'application/x-bittorrent',
-                'Content-Disposition' => 'attachment; filename="your_file.torrent"',
-            ]);
-        } else {
-            // Gérez les erreurs si le fichier torrent n'a pas été créé
-            return response()->json([
-                'error' => "Le fichier torrent n'a pas été créé."
-            ], 500);
-        }*/
     }
 
 
+    public function ingestDcp($apiUrl,$cpl_uuid, $dcp_size, $title,$username, $password)
+    {
+        // Prepare the request data
+        $requestData = [
+            'action' => 'ingestDcp',
+            'username' => $username,
+            'password' => $password,
+            'cpl_uuid' => $cpl_uuid,
+            'dcp_size' => $dcp_size,
+            'title' => $title,
+        ];
+        // Initialize cURL session
+        $ch = curl_init($apiUrl);
+        // Set cURL options
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($requestData));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
+        // Execute cURL session and get the response
+        $response = curl_exec($ch);
+        // Check for cURL errors
+        if (curl_errno($ch)) {
+            return ['error' => 'Curl error: ' . curl_error($ch)];
+        }
+        // Close cURL session
+        curl_close($ch);
+
+        // Process the API response
+        if (!$response) {
+            return ['error' => 'Error occurred while sending the request.'];
+        } else {
+            return json_decode($response, true);
+        }
+    }
 }
