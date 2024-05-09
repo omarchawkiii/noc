@@ -183,7 +183,7 @@
     @yield('custom_script')
 
     <script>
-        function getdata() {
+        function header_getdata() {
 
             var url = "{{ url('') }}" + '/get_header_error';
             $.ajax({
@@ -253,7 +253,7 @@
 
         }
 
-        getdata();
+        header_getdata();
 
 
         $(document).on('click', '.header_kdm_errors_btn', function() {

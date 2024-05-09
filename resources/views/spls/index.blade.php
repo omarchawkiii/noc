@@ -313,7 +313,7 @@
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+available_on_content+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.duration+'</a></td>'
-                            +'<td><a class="btn btn-primary infos_modal" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
+                            +'<td><a class="btn btn-primary infos_modal"  href="#" id="'+value.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
                             +'</tr>';
                     });
                     $('#location-listing tbody').html(result)
@@ -342,6 +342,7 @@
         $('#screen').change(function(){
 
             var location =  $('#location').val();
+            $('#refresh_lms').removeClass("activated") ;
             if(this.id == "screen")
             {
                 lms=false ;
@@ -379,7 +380,7 @@
             var country =  $('#country').val();
             var screen =  null;
             window.lms = false ;
-
+            $('#refresh_lms').removeClass("activated") ;
             if(location != "Locations")
             {
                 $('#refresh_lms').show();
@@ -467,6 +468,7 @@
                             +'<td><a class="btn btn-primary infos_modal" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
                             +'</tr>';
                     });
+                    $('#refresh_lms').addClass("activated") ;
                     $('#location-listing tbody').html(result)
 
                     console.log(response.spls)
@@ -495,7 +497,8 @@
 </script>
 
 <script>
-     $(document).on('click', '.infos_modal', function () {
+     $(document).on('click', '.infos_modal', function (e) {
+        e.preventDefault() ;
 
         var loader_content  =
             '<div class="jumping-dots-loader">'
@@ -587,7 +590,7 @@
 
                     $('#Properties').html(result)
 
-
+                    $('#infos_modal').modal('show');
 
 
 

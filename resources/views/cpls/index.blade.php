@@ -408,10 +408,7 @@
 <!-- ------- DATA TABLE ---- -->
 <script src="{{asset('/assets/vendors/datatables.net/jquery.dataTables.js')}}"></script>
 <script src="{{asset('/assets/vendors/datatables.net-bs4/dataTables.bootstrap4.js')}}"></script>
-<script>
-
-
-</script>
+<script src="{{ asset('/assets/vendors/sweetalert/sweetalert.min.js') }}"></script>
 <!-- -------END  DATA TABLE ---- -->
 
 
@@ -445,8 +442,8 @@ function formatSize(sizeInBytes) {
 
 
 <script>
-    $(document).on('click', '.infos_modal', function () {
-
+    $(document).on('click', '.infos_modal', function (e) {
+        e.preventDefault();
        var loader_content  =
            '<div class="jumping-dots-loader">'
                +'<span></span>'
@@ -845,7 +842,7 @@ function formatSize(sizeInBytes) {
 
 
                    $('#Properties').html(result)
-
+                   $('#infos_modal').modal('show');
 
 
 
@@ -1016,7 +1013,6 @@ function formatSize(sizeInBytes) {
         function get_cpls(location , screen , lms , multiplex,refresh_screen)
         {
 
-
             result ="" ;
             var url = "{{  url('') }}"+ '/get_cpl_with_filter/';
             $.ajax({
@@ -1034,7 +1030,7 @@ function formatSize(sizeInBytes) {
 
                 success:function(response)
                 {
-                    console.log(refresh_screen)
+                    console.log(response)
                     if(refresh_screen != false)
                     {
                         screens = '<option value="null" selected>All screen </option>';
@@ -1114,13 +1110,13 @@ function formatSize(sizeInBytes) {
 
 
                             result = result
-                                +'<tr class=" cpl-item odd  '+playable+' text-center" data-id="'+value.uuid+'">'
-                                +'<td class="sorting_1">'+ index+' </td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+title+'</a></td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">'+value.contentKind+'</a></td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">' +formatSize(value.totalSize)+ '</a></td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none text-center">' + available_on_content + '</a></td>'
-                                +'<td><a class="btn btn-primary infos_modal text-center" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#" id="'+value.id+' " data-location="'+value.location.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
+                                +'<tr class="  odd  '+playable+' text-center" data-id="'+value.uuid+'">'
+                                +'<td class="sorting_1 cpl-item">'+ index+' </td>'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none text-center" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+title+'</a></td>'
+                                +'<td class="cpl-item" ><a class="text-body align-middle fw-medium text-decoration-none text-center">'+value.contentKind+'</a></td>'
+                                +'<td class="cpl-item" ><a class="text-body align-middle fw-medium text-decoration-none text-center">' +formatSize(value.totalSize)+ '</a></td>'
+                                +'<td class="cpl-item" ><a class="text-body align-middle fw-medium text-decoration-none text-center">' + available_on_content + '</a></td>'
+                                +'<td><a class="btn btn-primary infos_modal text-center"  href="#" id="'+value.id+' " data-location="'+value.location.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
                                 +'</tr>';
                         });
                     }
@@ -1166,7 +1162,7 @@ function formatSize(sizeInBytes) {
             window.lms = false ;
             var location =  $('#location').val();
             var multiplex =  $('#multiplex').val();
-
+            $('#refresh_lms').removeClass("activated") ;
             get_cpls(location , screen , false , multiplex,false)
 
 
@@ -1193,6 +1189,7 @@ function formatSize(sizeInBytes) {
             var multiplex =  $('#multiplex').val();
             var screen =  null;
             window.lms = false ;
+            $('#refresh_lms').removeClass("activated") ;
             if(location != "Locations")
             {
                 $('#refresh_lms').show();
@@ -1231,7 +1228,7 @@ function formatSize(sizeInBytes) {
             window.lms = true ;
             var screen =  null;
                 get_cpls(location , screen , true , multiplex,true)
-
+                $(this).addClass("activated") ;
 
         });
 
@@ -1273,7 +1270,7 @@ function formatSize(sizeInBytes) {
         });
 
         $(document).on('click', '.cpl-item', function (event) {
-            $(this).toggleClass('selected');
+            $(this).parent('tr').toggleClass('selected');
         });
         $(document).ready(function() {
             // Handle the change event of the #check_all_server checkbox
@@ -1298,7 +1295,7 @@ function formatSize(sizeInBytes) {
             var array_cpls = [];
             var location = $('#location').val() ;
 
-            $("#location-listing .cpl-item.selected").each(function() {
+            $("#location-listing tr.selected").each(function() {
                 var id = $(this).data("id");
                 array_cpls.push(id);
             });
@@ -1348,7 +1345,6 @@ function formatSize(sizeInBytes) {
                             $('#cpl_delete_model').modal('show')
 
                             $('#confirm_delete_cpl_group').click(function(){
-
                                 var array_screens = [];
                                $("#list_servers_cpls_to_delete [name='screen_to_ingest']:checked").each(function() {
                                     var screen_id = $(this).data("id");
@@ -1386,8 +1382,10 @@ function formatSize(sizeInBytes) {
                                                     className: "btn btn-primary"
                                                 }
                                             })
-                                            get_cpls(location , screen , false , multiplex)
+                                            $('#location-listing tbody').html("")
 
+                                            get_cpls(location , screen , false , multiplex)
+                                            $('#cpl_delete_model').modal('hide');
                                         } else {
                                             swal({
                                                 title: 'Failed',

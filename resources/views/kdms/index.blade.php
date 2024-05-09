@@ -85,7 +85,7 @@
                                     <th class="sorting">Content Name </th>
                                     <th class="sorting">Begin Validity </th>
                                     <th class="sorting">End Validity </th>
-                                    <th class="sorting">CPL</th>
+                                    <th class="sorting">Content present</th>
                                     <th class="sorting">KDM</th>
                                     <th class="sorting ">Notes</th>
                                     <th class="sorting ">Device Target</th>
@@ -187,10 +187,12 @@
                 lms=false ;
                 $('#lms_screen').hide();
                 var screen =  $('#screen').val();
+                $('#refresh_lms').removeClass("activated") ;
             }
             else
             {
                 lms= true ;
+                $('#refresh_lms').addClass("activated") ;
                 var screen =  $('#lms_screen_content').val();
             }
             var url ="{{  url('') }}"+ '/get_kdms_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen+'&lms='+ lms;
@@ -206,15 +208,15 @@
                     $.each(response.kdms, function( index, value ) {
 
                         if(value.content_present == 'yes' ){
-                            content_present = '<i class= "mdi mdi-check-circle-outline text-white" > </i>'
+                            content_present = '<div class="badge badge-outline-success"> <i class= "mdi mdi-check-circle-outline " > </i> Present</div> '
                         }else{
-                            content_present = '<i class= "mdi mdi-checkbox-blank-circle-outline text-white" > </i>'
+                            content_present = '<div class="badge badge-outline-danger"> <i class= "mdi mdi-checkbox-blank-circle-outline" > </i> Absent </div>'
                         }
 
                         if(value.kdm_installed == 'yes' ){
-                            kdm_installed = '<i class= "mdi mdi-check-circle-outline text-white" > </i>'
+                            kdm_installed = '<div class="badge badge-outline-success"><i class= "mdi mdi-check-circle-outline" > </i>Installed</div>'
                         }else{
-                            kdm_installed = '<i class= "mdi mdi-checkbox-blank-circle-outline text-white" > </i>'
+                            kdm_installed = '<div class="badge badge-outline-danger"><i class= "mdi mdi-checkbox-blank-circle-outline" > </i> Uninstalled</div>'
                         }
 
                         const date1 = new Date();
@@ -255,7 +257,7 @@
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ new Date(value.ContentKeysNotValidBefore).toLocaleString() +'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ new Date(value.ContentKeysNotValidAfter).toLocaleString() +'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ content_present+'</a></td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ kdm_installed+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;">'+ kdm_installed+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ dhm (diffTime)+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;">  '+value.device_target+' </a></td>'
                             +'</tr>';
@@ -291,7 +293,7 @@
         $(' #location').change(function(){
 
             $("#location-listing").dataTable().fnDestroy();
-
+            $('#refresh_lms').removeClass("activated") ;
              $('#screen').find('option')
             .remove()
             .end()
@@ -334,15 +336,17 @@
                         $.each(response.kdms, function( index, value ) {
 
                             if(value.content_present == 'yes' ){
-                                content_present = '<i class= "mdi mdi-check-circle-outline text-white" > </i>'
+                                content_present = '<div class="badge badge-outline-success"> <i class= "mdi mdi-check-circle-outline " > </i> Present</div> '
                             }else{
-                                content_present = '<i class= "mdi mdi-checkbox-blank-circle-outline text-white" > </i>'
+                                content_present = '<div class="badge badge-outline-danger"> <i class= "mdi mdi-checkbox-blank-circle-outline" > </i> Absent </div>'
                             }
+
                             if(value.kdm_installed == 'yes' ){
-                                kdm_installed = '<i class= "mdi mdi-check-circle-outline text-white" > </i>'
+                                kdm_installed = '<div class="badge badge-outline-success"><i class= "mdi mdi-check-circle-outline" > </i>Installed</div>'
                             }else{
-                                kdm_installed = '<i class= "mdi mdi-checkbox-blank-circle-outline text-white" > </i>'
+                                kdm_installed = '<div class="badge badge-outline-danger"><i class= "mdi mdi-checkbox-blank-circle-outline" > </i> Uninstalled</div>'
                             }
+
 
                             const date1 = new Date();
                             const date2 = new Date(value.ContentKeysNotValidAfter);
@@ -410,7 +414,7 @@
         });
 
         $('#refresh_lms').click(function(){
-
+            $('#refresh_lms').addClass("activated") ;
             $("#location-listing").dataTable().fnDestroy();
             var loader_content  =
             '<div class="jumping-dots-loader">'
@@ -452,15 +456,17 @@
                     $.each(response.kdms, function( index, value ) {
 
                         if(value.content_present == 'yes' ){
-                            content_present = '<i class= "mdi mdi-check-circle-outline text-white" > </i>'
+                            content_present = '<div class="badge badge-outline-success"> <i class= "mdi mdi-check-circle-outline " > </i> Present</div> '
                         }else{
-                            content_present = '<i class= "mdi mdi-checkbox-blank-circle-outline text-white" > </i>'
+                            content_present = '<div class="badge badge-outline-danger"> <i class= "mdi mdi-checkbox-blank-circle-outline" > </i> Absent </div>'
                         }
+
                         if(value.kdm_installed == 'yes' ){
-                            kdm_installed = '<i class= "mdi mdi-check-circle-outline text-white" > </i>'
+                            kdm_installed = '<div class="badge badge-outline-success"><i class= "mdi mdi-check-circle-outline" > </i>Installed</div>'
                         }else{
-                            kdm_installed = '<i class= "mdi mdi-checkbox-blank-circle-outline text-white" > </i>'
+                            kdm_installed = '<div class="badge badge-outline-danger"><i class= "mdi mdi-checkbox-blank-circle-outline" > </i> Uninstalled</div>'
                         }
+
 
                         const date1 = new Date();
                         const date2 = new Date(value.ContentKeysNotValidAfter);

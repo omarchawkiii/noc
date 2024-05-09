@@ -127,7 +127,7 @@ class SnmpController extends Controller
         $pause_screen =  0;
         foreach($locations as $location )
         {
-            $infos ="" ;
+            $infos ="<br /><h3 class='m-2'>Location : $location->name </h3>" ;
             $diskusage = false ;
             $playback_generale_status = false ;
             $schedules_error =false ;
@@ -143,10 +143,9 @@ class SnmpController extends Controller
             if($location->diskusage->free_space_percentage >= 90  )
             {
                 $diskusage = true ;
-                $infos =  " <p class='m-2'>  Disque Usage is : ".$location->diskusage->free_space_percentage." % </p> " ;
+                $infos =  " <p class='m-2'> Location : $location->name Disque Usage is : ".$location->diskusage->free_space_percentage." %  </p> " ;
                 $count_diskusage ++ ;
             }
-
             foreach($location->playbacks as $playback)
             {
                 if ($playback->playback_status == 'Stop')
@@ -182,20 +181,17 @@ class SnmpController extends Controller
                     {
                         $storage_generale_status =$playback->storage_generale_status ;
                     }
-                    $infos .=  " <p class='m-2'> playback Generale Storage Status : ".$storage_generale_status ." in screen: " .$playback->screen->screen_name ." </p>";
+                    $infos .=  " <p class='m-2'> playback  Storage Status Is: ".$storage_generale_status ." in screen: " .$playback->screen->screen_name ." </p>";
                 }
 
                 if($playback->securityManager != 'Normal' )
                 {
                     $securityManager = true ;
                     $count_securityManager ++ ;
-                    $infos .=  " <p class='m-2'> Security Manager status is: ".$playback->securityManager ." in screen: " .$playback->screen->screen_name ." </p>";
+                    $infos .=  " <p class='m-2'>Security Manager status is: ".$playback->securityManager ." in screen: " .$playback->screen->screen_name ." </p>";
                 }
-
             }
-
-            $schedules = Schedule::where('location_id', $location->id )->where('date_start' , '>' , Carbon::today() )->where('date_start' , '<' , Carbon::now()->addDays(1) )->get() ;
-
+            $schedules = Schedule::where('location_id', $location->id )->where('date_start' , '>' , Carbon::today() )->get() ;
             foreach($schedules as $schedule)
             {
                 if($schedule->status != 'linked' && !$schedules_error )
@@ -217,7 +213,7 @@ class SnmpController extends Controller
                 if($schedule->status == 'linked'  && $schedule->cpls != 1  &&  !$missing_cpls )
                 {
                     $missing_cpls = true ;
-                    $infos .=  " <p class='m-2'> Missing CPLs </p> " ;
+                    $infos .=  " <p class='m-2'> Missing CPLs In </p> " ;
                 }
 
                 if($schedule->status == 'linked' && $schedule->kdm != 1)
@@ -234,71 +230,60 @@ class SnmpController extends Controller
                 }
             }
 
-            if( $diskusage || $playback_generale_status  || $schedules_error  || $securityManager)
+
+            if( $diskusage || $playback_generale_status  || $schedules_error  || $securityManager && false)
             {
-                array_push($data_location,  array("state" => $location->city , "location" => $location->name, "latitude" => $location->latitude, "longitude" => $location->longitude, "status" => "red" , "infos" =>$infos , "count_diskusage" =>$count_diskusage, "count_playback_generale_status" =>$count_playback_generale_status, "count_securityManager" =>$count_securityManager, "count_missing_kdm_error" =>$count_missing_kdm_error, "count_missing_cpl_error" =>$count_missing_cpl_error));
+                array_push($data_location,  array("title" =>$location->name, "state" => $location->city , "location" => $location->name, "latitude" => $location->latitude, "longitude" => $location->longitude, "status" => "red" , "infos" =>$infos , "count_diskusage" =>$count_diskusage, "count_playback_generale_status" =>$count_playback_generale_status, "count_securityManager" =>$count_securityManager, "count_missing_kdm_error" =>$count_missing_kdm_error, "count_missing_cpl_error" =>$count_missing_cpl_error));
                 if (!in_array($location->city, $states_red))
                 {
                     array_push($states_red, $location->city);
                 }
-
             }
             else
             {
+                array_push($data_location,  array("title" =>$location->name, "state" => $location->city , "location" => $location->name, "latitude" => $location->latitude, "longitude" => $location->longitude, "status" => "green", "infos" => "No Errors Detected", "count_diskusage" =>$count_diskusage, "count_playback_generale_status" =>$count_playback_generale_status, "count_securityManager" =>$count_securityManager, "count_missing_kdm_error" =>$count_missing_kdm_error, "count_missing_cpl_error" =>$count_missing_cpl_error ));
                 if (!in_array($location->city, $states_green) && !in_array($location->city, $states_red))
                 {
                     array_push($states_green, $location->city);
                 }
-                array_push($data_location,  array("state" => $location->city , "location" => $location->name, "latitude" => $location->latitude, "longitude" => $location->longitude, "status" => "green", "infos" => "No Errors ", "count_diskusage" =>$count_diskusage, "count_playback_generale_status" =>$count_playback_generale_status, "count_securityManager" =>$count_securityManager, "count_missing_kdm_error" =>$count_missing_kdm_error, "count_missing_cpl_error" =>$count_missing_cpl_error ));
             }
-
-
-
         }
-
-
         foreach ($states_red as $state)
         {
-            $content = "" ;
-            foreach($data_location as $location)
+            $content =""  ;
+            foreach($data_location as $data)
             {
-                if($state == $location['state'] && $location['status'] == 'red')
+                if($state == $data['state'] && $data['status'] == 'red')
                 {
-                    $content .=  $location['infos'] ;
+                    $content .=  $data['infos'] ;
                 }
-
             }
-
-            array_push($data_states,  array("state" => $location['state'] , "location" => $state , "latitude" => $location['latitude'], "longitude" => $location['longitude'], "status" => "red", "infos" => $content ));
+            array_push($data_states,  array("title" => $data['state'], "state" => $data['state'] , "location" => $location->name , "latitude" => $data['latitude'], "longitude" => $data['longitude'], "status" => "red", "infos" => $content ));
         }
 
         foreach ($states_green as $state)
         {
-            $content = "" ;
-            foreach($data_location as $location)
+            $content = "No Errors Detected";
+            foreach($data_location as $data)
             {
-                if($state == $location['state'] && $location['status'] == 'green')
+                if($state == $data['state'] && $data['status'] == 'green')
                 {
-                    $content .=  $location['infos'] ;
+                    //$content .=  $data['infos'] ;
                 }
             }
-            array_push($data_states,  array("state" => $location['state'] , "location" => $state , "latitude" => $location['latitude'], "longitude" =>$location['longitude'], "status" => "green", "infos" => $content ));
+            array_push($data_states,  array("title" => $data['state'], "state" => $data['state'] , "location" => $location->name , "latitude" => $data['latitude'], "longitude" =>$data['longitude'], "status" => "green", "infos" => $content ));
         }
-
-
-
         $error_table = Error_list::with('location')->get() ;
-
         $data = $request->data;
         $zoomLevel = $request->zoomLevel;
 
         if(isset($data) &&  $data != 'null' )
         {
-
             if($zoomLevel <= 8)
             {
                 $data_count = $data_location;
                 $data_location = $data_states ;
+
                 return Response()->json(compact('data_location','data_count','error_table','locations','idle_screen','offline_screen','playing_screen','pause_screen'));
             }
             else

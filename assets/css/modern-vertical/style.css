@@ -23923,3 +23923,8 @@ table td a
     text-align: center;
     padding: 1em 0;
 }
+.activated
+{
+    background: #297eee !important ;
+    color: white !important;
+}

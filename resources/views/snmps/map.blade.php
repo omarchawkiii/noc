@@ -326,7 +326,6 @@
 
 
                     $.each(response.data_location, function(index, state) {
-                        //console.log(response)
                         // Display only states
                         var marker = new ol.Feature({
                             geometry: new ol.geom.Point(ol.proj.fromLonLat([state.longitude,
@@ -346,7 +345,7 @@
                         var vectorLayer = new ol.layer.Vector({
                             source: vectorSource,
                             content: state.infos,
-                            title: state.location
+                            title: state.title
                         });
 
                         map.addLayer(vectorLayer);
@@ -420,7 +419,7 @@
         map.on('moveend', function(e) {
             var newZoom = map.getView().getZoom();
             if (currZoom != newZoom) {
-                //console.log('zoom end, new zoom: ' + newZoom);
+                console.log('zoom end, new zoom: ' + newZoom);
                 getdata(newZoom , false);
                 currZoom = newZoom;
 
@@ -450,9 +449,6 @@
 
         map.on('click', function(event) {
             map.forEachFeatureAtPixel(event.pixel, function(feature, layer) {
-                /*console.log(feature.getId())
-                console.log(layer.get('content'))*/
-
                 $('#location_errors .modal-body ').html(layer.get('content'))
                 $('#location_errors .modal-header h4 ').html("Errors in location : " + layer.get('title'))
                 $('#location_errors').modal('show');
@@ -462,12 +458,8 @@
 
         $(document).on('click', '.kdm_errors', function() {
 
-
-          //  $('.kdm_errors').modal('show');
             var location = $(this).data('location');
-            console.log(location)
             get_kdms_errors_list(location)
-
             $('#kdm_errors_modal').modal('show');
         });
 
@@ -483,7 +475,7 @@
                 },
                 method: 'GET',
                 success: function(response) {
-                    console.log(response)
+
                     var data ;
                     if(response.kdms_errors_list.length > 0)
                     {
@@ -523,7 +515,7 @@
         $(document).on('click', '.server_errors', function() {
 
             var location = $(this).data('location');
-            console.log(location)
+
             get_server_errors_list(location)
             $('#server_errors_modal').modal('show');
         });
@@ -539,7 +531,6 @@
                 },
                 method: 'GET',
                 success: function(response) {
-                    console.log(response)
                     var data ;
                     if(response.server_errors_list.length > 0)
                     {
@@ -583,7 +574,6 @@
         $(document).on('click', '.projector_errors', function() {
 
             var location = $(this).data('location');
-            console.log(location)
             get_projector_errors_list(location)
             $('#projector_errors_modal').modal('show');
         });
@@ -599,7 +589,6 @@
                 },
                 method: 'GET',
                 success: function(response) {
-                    console.log(response)
                     var data ;
                     if(response.projector_errors_list.length > 0)
                     {

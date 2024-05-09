@@ -342,19 +342,19 @@ class CplController extends Controller
     {
         $location = Location::findOrFail($request->location) ;
         $response = $this->delete_cplRequest($request->connection_ip, $request->lms, $request->array_cpls, $request->array_screens, $location->email , $location->password);
+        $response['result'] = 1 ;
         if($response['result'] === 1 )
         {
+
             foreach($request->array_cpls as $cpl_uuid)
             {
                 if($request->lms)
                 {
-                    Lmscpl::where('uuid',$cpl_uuid)->delete() ;
+                    $cpl = Lmscpl::where('uuid',$cpl_uuid)->where('location_id',$location->id)->delete();
+                //    dd($cpl,$cpl_uuid) ;
                 }
-                else
-                {
-                    Cpl::where('uuid',$cpl_uuid)->whereIn('screen_id',$request->array_screens)->delete() ;
-                }
-
+                $cpl = Cpl::where('uuid',$cpl_uuid)->whereIn('screen_id',$request->array_screens)->where('location_id',$location->id)->delete() ;
+                //dd($cpl,$cpl_uuid) ;
             }
                 echo "Success" ;
         }

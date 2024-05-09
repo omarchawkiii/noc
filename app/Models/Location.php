@@ -149,9 +149,10 @@ class Location extends Model
         return $this->hasMany(Assetinfo::class);
     }
 
-    public function error_lists(): HasMany
+    public function error_list(): HasOne
     {
-        return $this->hasMany(Error_list::class);
+        return $this->hasOne(Error_list::class);
+       // return $this->hasMany(Error_list::class);
     }
 
 }
