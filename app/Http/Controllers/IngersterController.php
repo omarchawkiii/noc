@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use RecursiveIteratorIterator;
+use Symfony\Component\Finder\Iterator\RecursiveDirectoryIterator;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class IngersterController extends Controller
@@ -458,7 +460,9 @@ class IngersterController extends Controller
                     $location = Location::find(1) ;
                 if($cpl)
                 {
-                    $response = $this->ingestDcp($location->connection_ip,$cpl->cpl_id, $cpl->pkl_size, $cpl->cpl_description,$location->email, $location->password);
+                    $pkl_size = $this->getFolderSize($cpl->cpl_uri);
+                    dd($pkl_size) ;
+                    $response = $this->ingestDcp($location->connection_ip,$cpl->cpl_id, $pkl_size, $cpl->cpl_description,$location->email, $location->password);
 
 
                     if($response['result'] === 1 )
@@ -531,7 +535,7 @@ class IngersterController extends Controller
         }
     }
 
-    /*function getFolderSize($folder) {
+    function getFolderSize($folder) {
         $totalSize = 0;
         $directoryIterator = new RecursiveDirectoryIterator($folder, RecursiveDirectoryIterator::SKIP_DOTS);
         $recursiveIterator = new RecursiveIteratorIterator($directoryIterator);
@@ -541,9 +545,8 @@ class IngersterController extends Controller
                 $totalSize += $file->getSize();
             }
         }
-
         return $totalSize;
-    }*/
+    }
 
 
 

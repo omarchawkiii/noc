@@ -18,15 +18,15 @@
 
             <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item">
-                  <a class="nav-link active" id="upload-spl-tab" data-bs-toggle="tab" href="#upload-spl" role="tab" aria-controls="home" aria-selected="true">Upload Show Playlists</a>
+                  <a class="nav-link @if( !app('request')->input('upload_missing_kmds')) active @endif " id="upload-spl-tab" data-bs-toggle="tab" href="#upload-spl" role="tab" aria-controls="home" aria-selected="true">Upload Show Playlists</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" id="upload-kdm-tab" data-bs-toggle="tab" href="#upload-kdm" role="tab" aria-controls="profile" aria-selected="false">Upload KDM</a>
+                  <a class="nav-link @if( app('request')->input('upload_missing_kmds')) active @endif " id="upload-kdm-tab" data-bs-toggle="tab" href="#upload-kdm" role="tab" aria-controls="profile" aria-selected="false">Upload KDM</a>
                 </li>
             </ul>
 
             <div class="tab-content">
-                <div class="tab-pane fade show active" id="upload-spl" role="tabpanel" aria-labelledby="home-tab">
+                <div class="tab-pane fade @if( !app('request')->input('upload_missing_kmds')) show active @endif" id="upload-spl" role="tabpanel" aria-labelledby="home-tab">
 
                     <main>
                         <div id="app" @dragover.prevent @drop.prevent>
@@ -85,7 +85,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="upload-kdm" role="tabpanel" aria-labelledby="profile-tab">
+                <div class="tab-pane fade @if( app('request')->input('upload_missing_kmds')) show active @endif" id="upload-kdm" role="tabpanel" aria-labelledby="profile-tab">
                     <main>
                         <div id="app-kdm" @dragover.prevent @drop.prevent>
                             <form method="POST" action="{{ route('nockdm.uploadlocalkdm') }}" id="upload_kdm_form">

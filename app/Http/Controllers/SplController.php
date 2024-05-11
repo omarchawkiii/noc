@@ -190,6 +190,7 @@ class SplController extends Controller
     {
         $location = Location::findOrFail($request->location) ;
         $response = $this->delete_splRequest($location->connection_ip, $request->lms, $request->array_spls, $request->array_screens, $location->email , $location->password);
+
         $response['result'] = 1 ;
         if($response['result'] === 1 )
         {

@@ -72,6 +72,11 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="col-xl-4">
+                            <a href="{{ route('spls.upload_spl', ['upload_missing_kmds'=>true]) }}" id=""  class="btn btn-icon-text "  style="color: #fff;background: #852b94; height: 37px; margin:auto; display : table ">
+                                <i class="mdi mdi-upload "></i> Upload KDMs </a>
+                        </div>
+
                     </div>
                 </div>
 
