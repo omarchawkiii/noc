@@ -184,17 +184,15 @@ class SplController extends Controller
         array_multisort($screens_id, SORT_ASC, $screens);
         return Response()->json(compact('screens'));
 
-
     }
 
     public function delete_spls(Request $request )
     {
         $location = Location::findOrFail($request->location) ;
-        $response = $this->delete_splRequest($request->connection_ip, $request->lms, $request->array_spls, $request->array_screens, $location->email , $location->password);
+        $response = $this->delete_splRequest($location->connection_ip, $request->lms, $request->array_spls, $request->array_screens, $location->email , $location->password);
         $response['result'] = 1 ;
         if($response['result'] === 1 )
         {
-
             foreach($request->array_spls as $spl_uuid)
             {
                 if($request->lms)
@@ -215,15 +213,15 @@ class SplController extends Controller
 
 
     function delete_splRequest($apiUrl,$lms, $array_spls, $array_screens,$username,$password) {
+
         // Prepare the request data
         $requestData = [
-            'action' => 'delete_spl',
+            'action' => 'deleteSplByUuidScreenNumbers',
             'lms' => $lms,
-            'array_spls' => $array_spls,
-            'array_screens' => $array_screens,
+            'list_spls' => $array_spls,
+            'list_screens' => $array_screens,
             'username' =>$username,
             'password' =>$password
-
         ];
 
         // Initialize cURL session
@@ -253,6 +251,5 @@ class SplController extends Controller
             return json_decode($response, true);
         }
     }
-
 
 }

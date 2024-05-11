@@ -176,7 +176,6 @@
                                                                     <thead>
                                                                     <tr>
                                                                         <th> State</th>
-                                                                        <th> Source</th>
                                                                         <th> Destination</th>
                                                                         <th> Progress</th>
                                                                         <th> Contenty Type</th>

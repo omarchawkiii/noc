@@ -367,10 +367,10 @@ class CplController extends Controller
     function delete_cplRequest($apiUrl,$lms, $array_cpls, $array_screens,$username,$password) {
         // Prepare the request data
         $requestData = [
-            'action' => 'delete_cpl',
+            'action' => 'deleteCplByUuidScreenNumbers',
             'lms' => $lms,
-            'array_cpls' => $array_cpls,
-            'array_screens' => $array_screens,
+            'list_cpls' => $array_cpls,
+            'list_screens' => $array_screens,
             'username' =>$username,
             'password' =>$password
 

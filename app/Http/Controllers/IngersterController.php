@@ -530,4 +530,21 @@ class IngersterController extends Controller
             return json_decode($response, true);
         }
     }
+
+    /*function getFolderSize($folder) {
+        $totalSize = 0;
+        $directoryIterator = new RecursiveDirectoryIterator($folder, RecursiveDirectoryIterator::SKIP_DOTS);
+        $recursiveIterator = new RecursiveIteratorIterator($directoryIterator);
+
+        foreach ($recursiveIterator as $file) {
+            if ($file->isFile()) {
+                $totalSize += $file->getSize();
+            }
+        }
+
+        return $totalSize;
+    }*/
+
+
+
 }

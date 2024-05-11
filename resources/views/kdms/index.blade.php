@@ -208,15 +208,15 @@
                     $.each(response.kdms, function( index, value ) {
 
                         if(value.content_present == 'yes' ){
-                            content_present = '<div class="badge badge-outline-success"> <i class= "mdi mdi-check-circle-outline " > </i> Present</div> '
+                            content_present = '<div class="badge badge-outline-success"> <i class= "mdi mdi-check-circle-outline h4 " > </i> </div> '
                         }else{
-                            content_present = '<div class="badge badge-outline-danger"> <i class= "mdi mdi-checkbox-blank-circle-outline" > </i> Absent </div>'
+                            content_present = '<div class="badge badge-outline-danger"> <i class= "mdi mdi-checkbox-blank-circle-outline h4" > </i>  </div>'
                         }
 
                         if(value.kdm_installed == 'yes' ){
-                            kdm_installed = '<div class="badge badge-outline-success"><i class= "mdi mdi-check-circle-outline" > </i>Installed</div>'
+                            kdm_installed = '<div class="badge badge-outline-success"><i class= "mdi mdi-check-circle-outline h4" > </i></div>'
                         }else{
-                            kdm_installed = '<div class="badge badge-outline-danger"><i class= "mdi mdi-checkbox-blank-circle-outline" > </i> Uninstalled</div>'
+                            kdm_installed = '<div class="badge badge-outline-danger"><i class= "mdi mdi-checkbox-blank-circle-outline h4" > </i> </div>'
                         }
 
                         const date1 = new Date();
@@ -336,15 +336,15 @@
                         $.each(response.kdms, function( index, value ) {
 
                             if(value.content_present == 'yes' ){
-                                content_present = '<div class="badge badge-outline-success"> <i class= "mdi mdi-check-circle-outline " > </i> Present</div> '
+                                content_present = '<div class="badge badge-outline-success"> <i class= "mdi mdi-check-circle-outline h4 " > </i> </div> '
                             }else{
-                                content_present = '<div class="badge badge-outline-danger"> <i class= "mdi mdi-checkbox-blank-circle-outline" > </i> Absent </div>'
+                                content_present = '<div class="badge badge-outline-danger"> <i class= "mdi mdi-checkbox-blank-circle-outline h4" > </i>  </div>'
                             }
 
                             if(value.kdm_installed == 'yes' ){
-                                kdm_installed = '<div class="badge badge-outline-success"><i class= "mdi mdi-check-circle-outline" > </i>Installed</div>'
+                                kdm_installed = '<div class="badge badge-outline-success"><i class= "mdi mdi-check-circle-outline h4" > </i></div>'
                             }else{
-                                kdm_installed = '<div class="badge badge-outline-danger"><i class= "mdi mdi-checkbox-blank-circle-outline" > </i> Uninstalled</div>'
+                                kdm_installed = '<div class="badge badge-outline-danger"><i class= "mdi mdi-checkbox-blank-circle-outline h4" > </i> </div>'
                             }
 
 
@@ -456,15 +456,15 @@
                     $.each(response.kdms, function( index, value ) {
 
                         if(value.content_present == 'yes' ){
-                            content_present = '<div class="badge badge-outline-success"> <i class= "mdi mdi-check-circle-outline " > </i> Present</div> '
+                            content_present = '<div class="badge badge-outline-success"> <i class= "mdi mdi-check-circle-outline h4 " > </i> </div> '
                         }else{
-                            content_present = '<div class="badge badge-outline-danger"> <i class= "mdi mdi-checkbox-blank-circle-outline" > </i> Absent </div>'
+                            content_present = '<div class="badge badge-outline-danger"> <i class= "mdi mdi-checkbox-blank-circle-outline h4" > </i>  </div>'
                         }
 
                         if(value.kdm_installed == 'yes' ){
-                            kdm_installed = '<div class="badge badge-outline-success"><i class= "mdi mdi-check-circle-outline" > </i>Installed</div>'
+                            kdm_installed = '<div class="badge badge-outline-success"><i class= "mdi mdi-check-circle-outline h4" > </i></div>'
                         }else{
-                            kdm_installed = '<div class="badge badge-outline-danger"><i class= "mdi mdi-checkbox-blank-circle-outline" > </i> Uninstalled</div>'
+                            kdm_installed = '<div class="badge badge-outline-danger"><i class= "mdi mdi-checkbox-blank-circle-outline h4" > </i> </div>'
                         }
 
 
