@@ -60,6 +60,7 @@ Route::get('spl_builder', [App\Http\Controllers\SplController::class , 'spl_buil
 Route::get('upload', [App\Http\Controllers\SplController::class , 'upload_spl'])->name('spls.upload_spl')->middleware(['auth']);
 Route::get('get_screens_from_spls', [App\Http\Controllers\SplController::class , 'get_screens_from_spls'])->name('cpls.get_screens_from_spls')->middleware(['auth']);
 Route::get('spls/delete_spls', [App\Http\Controllers\SplController::class , 'delete_spls'])->name('cpls.delete_spls')->middleware(['auth']);
+Route::get('spls/download_spl', [App\Http\Controllers\SplController::class , 'download_spl'])->name('cpls.delete_spls')->middleware(['auth']);
 
 
 Route::get('cpls/{location}/{spls}/get_cpls', [App\Http\Controllers\CplController::class , 'getcpls'])->name('cpls.get_cpls');

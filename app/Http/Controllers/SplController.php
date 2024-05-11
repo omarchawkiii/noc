@@ -253,4 +253,12 @@ class SplController extends Controller
         }
     }
 
+
+    public function download_spl(Request $request)
+    {
+        //$spl = Spl::where('uuid',$request->spl_id)->first() ;
+        $spl_file = simplexml_load_file("/DATA/spl/$request->spl_id.xml");
+        $xmlString = $spl_file->asXML();
+        print_r($xmlString);
+    }
 }

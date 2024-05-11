@@ -460,7 +460,7 @@ class IngersterController extends Controller
                     $location = Location::find(1) ;
                 if($cpl)
                 {
-                    $pkl_size = $this->getFolderSize($cpl->cpl_uri);
+                    $pkl_size = $this->getFolderSize($cpl->tms_dir);
                     dd($pkl_size) ;
                     $response = $this->ingestDcp($location->connection_ip,$cpl->cpl_id, $pkl_size, $cpl->cpl_description,$location->email, $location->password);
 
