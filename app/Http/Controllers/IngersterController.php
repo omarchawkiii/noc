@@ -461,12 +461,16 @@ class IngersterController extends Controller
                 if($cpl)
                 {
                     $pkl_size = $this->getFolderSize($cpl->tms_dir);
-                    dd($pkl_size) ;
+
                     $response = $this->ingestDcp($location->connection_ip,$cpl->cpl_id, $pkl_size, $cpl->cpl_description,$location->email, $location->password);
 
 
                     if($response['result'] === 1 )
                     {
+                       // $command = "mktorrent -o $torrentPath $directoryPath >> /DATA/logs/noc_torrent_log.log 2>&1";
+                        $command ="root@expersysnoc:/usr/bin# rsync -avz --partial --no-t /DATA/assets/$file/ noc@172.17.42.2:/".$response['dcp_path'].">> /DATA/logs/noc_ingest_file_log.log 2>&1";
+                        exec($command, $output, $returnVar);
+
                         Dcp_trensfer::updateOrCreate([
                             'id_cpl' => $cpl->cpl_id ,
                             'location_id' => $location->id
@@ -484,9 +488,7 @@ class IngersterController extends Controller
                     {
                         array_push($ingest_errors,  array("status" => 0, "pkl_description" =>  $cpl->pkl_description, "message" =>  $response['result'], "id" =>  $cpl->id ));
                     }
-
                 }
-
             }
             $ingest_status = array("status" => 1,  "message " => "") ;
             return Response()->json(compact('ingest_errors','ingest_success','ingest_status'));

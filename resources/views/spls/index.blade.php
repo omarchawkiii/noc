@@ -538,7 +538,7 @@
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+available_on_content+'</a></td>'
                             +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.duration+'</a></td>'
-                            +'<td><a class="btn btn-primary infos_modal"  href="#" id="'+value.id+'"> <i class="mdi mdi-magnify"> </i>  </a> <a  href="#" id="'+value.id+'" href="" class="btn btn-success   mdi mdi-download download_spl" ></a></td>'
+                            +'<td><a class="btn btn-primary infos_modal"  href="#" id="'+value.id+'"> <i class="mdi mdi-magnify"> </i>  </a> <a  href="#" id="'+value.uuid+'" href="" class="btn btn-success   mdi mdi-download download_spl" ></a></td>'
                             +'</tr>';
                     });
                     $('#refresh_lms').addClass("activated") ;
@@ -744,7 +744,19 @@
                 beforeSend: function () {
                 },
                 success: function (response) {
-                    console.log('response')
+                    console.log(response)
+                    var blob = new Blob([response], { type: "application/xml" });
+                        if (window.navigator.msSaveBlob) {
+                            // Pour Internet Explorer et Microsoft Edge
+                            window.navigator.msSaveBlob(blob, spl_id + '.xml');
+                        } else {
+                            // Pour les autres navigateurs
+                            var link = document.createElement('a');
+                            link.href = window.URL.createObjectURL(blob);
+                            link.download = spl_id + '.xml';
+                            link.click();
+                        }
+
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.log(errorThrown);
