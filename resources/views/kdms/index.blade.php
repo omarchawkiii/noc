@@ -171,6 +171,7 @@
             }
         });
 
+
         $('#screen , #lms_screen_content').change(function(){
 
             $("#location-listing").dataTable().fnDestroy();
@@ -419,7 +420,7 @@
         });
 
         $('#refresh_lms').click(function(){
-            $('#refresh_lms').addClass("activated") ;
+
             $("#location-listing").dataTable().fnDestroy();
             var loader_content  =
             '<div class="jumping-dots-loader">'
@@ -441,103 +442,203 @@
             var screen =  null;
             $('#lms_screen').show();
 
-            var url ="{{  url('') }}"+  '/get_kdms_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen+'&lms='+ lms;
-            result =" " ;
-
-            $.ajax({
-                url: url,
-                method: 'GET',
-                success:function(response)
+            if( $('#refresh_lms').hasClass("activated"))
+            {
+                $('#refresh_lms').removeClass("activated") ;
+                $('#lms_screen').hide();
+                if(location != "Locations")
                 {
-                    screens = '<option value="null" selected>All Screens</option>';
-                    $.each(response.screens, function( index_screen, screen ) {
-
-                        screens = screens
-                            +'<option  value="'+screen.id+'">'+screen.screen_name+'</option>';
-                    });
-                        $('#screen').html(screens);
-                        $('#lms_screen_content').html(screens)
-
-                    $.each(response.kdms, function( index, value ) {
-
-                        if(value.content_present == 'yes' ){
-                            content_present = '<div class="badge badge-outline-success"> <i class= "mdi mdi-check-circle-outline h4 " > </i> </div> '
-                        }else{
-                            content_present = '<div class="badge badge-outline-danger"> <i class= "mdi mdi-checkbox-blank-circle-outline h4" > </i>  </div>'
-                        }
-
-                        if(value.kdm_installed == 'yes' ){
-                            kdm_installed = '<div class="badge badge-outline-success"><i class= "mdi mdi-check-circle-outline h4" > </i></div>'
-                        }else{
-                            kdm_installed = '<div class="badge badge-outline-danger"><i class= "mdi mdi-checkbox-blank-circle-outline h4" > </i> </div>'
-                        }
-
-
-                        const date1 = new Date();
-                        const date2 = new Date(value.ContentKeysNotValidAfter);
-                        let diffTime = Math.abs(date2 - date1);
-
-                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-                        background_difftime=""
-
-                        if(diffTime/100/60/60 > 48 )
+                    var url ="{{  url('') }}"+  '/get_kdms_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen;
+                    result =" " ;
+                    $.ajax({
+                        url: url,
+                        method: 'GET',
+                        success:function(response)
                         {
-                            background_difftime = "bg-success"
+                            screens = '<option value="null" selected>All Screens</option>';
+                            $.each(response.screens, function( index_screen, screen ) {
+
+                                screens = screens
+                                    +'<option  value="'+screen.id+'">'+screen.screen_name+'</option>';
+                            });
+                                $('#screen').html(screens);
+                                $('#lms_screen_content').html(screens)
+
+                            $.each(response.kdms, function( index, value ) {
+
+                                if(value.content_present == 'yes' ){
+                                    content_present = '<div class="badge badge-outline-success"> <i class= "mdi mdi-check-circle-outline h4 " > </i> </div> '
+                                }else{
+                                    content_present = '<div class="badge badge-outline-danger"> <i class= "mdi mdi-checkbox-blank-circle-outline h4" > </i>  </div>'
+                                }
+
+                                if(value.kdm_installed == 'yes' ){
+                                    kdm_installed = '<div class="badge badge-outline-success"><i class= "mdi mdi-check-circle-outline h4" > </i></div>'
+                                }else{
+                                    kdm_installed = '<div class="badge badge-outline-danger"><i class= "mdi mdi-checkbox-blank-circle-outline h4" > </i> </div>'
+                                }
+
+
+                                const date1 = new Date();
+                                const date2 = new Date(value.ContentKeysNotValidAfter);
+                                let diffTime = Math.abs(date2 - date1);
+
+                                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                                background_difftime=""
+
+                                if(diffTime/100/60/60 > 48 )
+                                {
+                                    background_difftime = "bg-success"
+                                }
+                                if(diffTime/100/60/60 < 48  && diffTime/100/60/60 > 0 )
+                                {
+                                    background_difftime = "bg-warning"
+                                }
+                                if(diffTime/100/60/60 <= 0 )
+                                {
+                                    background_difftime = "bg-danger"
+                                }
+
+
+                                result = result
+                                    +'<tr class="odd '+background_difftime+'">'
+                                        +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.screen.screen_name+' </td>'
+                                        +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
+                                        +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ new Date(value.ContentKeysNotValidBefore).toLocaleString() +'</a></td>'
+                                        +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ new Date(value.ContentKeysNotValidAfter).toLocaleString() +'</a></td>'
+                                        +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ content_present+'</a></td>'
+                                        +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ kdm_installed+'</a></td>'
+                                        +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ dhm (diffTime)+'</a></td>'
+                                        +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;">  '+value.device_target+' </a></td>'
+                                    +'</tr>';
+                            });
+                            $('#location-listing tbody').html(result)
+
+                            console.log(response.kdms)
+                            /***** refresh datatable **** **/
+
+                            var kdm_datatable = $('#location-listing').DataTable({
+                                "iDisplayLength": 10,
+                                destroy: true,
+                                "bDestroy": true,
+                                "language": {
+                                    search: "_INPUT_",
+                                    searchPlaceholder: "Search..."
+                                }
+                            });
+
+                        },
+                        error: function(response) {
+
                         }
-                        if(diffTime/100/60/60 < 48  && diffTime/100/60/60 > 0 )
-                        {
-                            background_difftime = "bg-warning"
-                        }
-                        if(diffTime/100/60/60 <= 0 )
-                        {
-                            background_difftime = "bg-danger"
-                        }
-                        screen_name =""
-                        if(value.screen)
-                        {
-                            screen_name = value.screen.screen_name
-                        }
-                        else
-                        {
-                            screen_name = value.device_target;
-                        }
-
-
-
-                        result = result
-                            +'<tr class="odd '+background_difftime+'">'
-                                +'<td class="text-body align-middle fw-medium text-decoration-none">'+ screen_name+' </td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ new Date(value.ContentKeysNotValidBefore).toLocaleString() +'</a></td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ new Date(value.ContentKeysNotValidAfter).toLocaleString() +'</a></td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ content_present+'</a></td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ kdm_installed+'</a></td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ dhm (diffTime)+'</a></td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ value.device_target +'</a></td>'
-                            +'</tr>';
-                    });
-                    $('#location-listing tbody').html(result)
-
-                    console.log(response.kdms)
-                    /***** refresh datatable **** **/
-
-                    var kdm_datatable = $('#location-listing').DataTable({
-                        "iDisplayLength": 10,
-                        destroy: true,
-                        "bDestroy": true,
-                        "language": {
-                            search: "_INPUT_",
-                            searchPlaceholder: "Search..."
-                        }
-                    });
-
-                },
-                error: function(response) {
-
+                    })
                 }
-            })
+                else
+                {
+                    $('#refresh_lms').hide();
+                    $('#location-listing tbody').html('<div id="table_logs_processing" class="dataTables_processing card">Please Select Location</div>')
+                }
+            }
+            else
+            {
+                $('#refresh_lms').addClass("activated") ;
+                var url ="{{  url('') }}"+  '/get_kdms_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen+'&lms='+ lms;
+                result =" " ;
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    success:function(response)
+                    {
+                        screens = '<option value="null" selected>All Screens</option>';
+                        $.each(response.screens, function( index_screen, screen ) {
 
+                            screens = screens
+                                +'<option  value="'+screen.id+'">'+screen.screen_name+'</option>';
+                        });
+                            $('#screen').html(screens);
+                            $('#lms_screen_content').html(screens)
+
+                        $.each(response.kdms, function( index, value ) {
+
+                            if(value.content_present == 'yes' ){
+                                content_present = '<div class="badge badge-outline-success"> <i class= "mdi mdi-check-circle-outline h4 " > </i> </div> '
+                            }else{
+                                content_present = '<div class="badge badge-outline-danger"> <i class= "mdi mdi-checkbox-blank-circle-outline h4" > </i>  </div>'
+                            }
+
+                            if(value.kdm_installed == 'yes' ){
+                                kdm_installed = '<div class="badge badge-outline-success"><i class= "mdi mdi-check-circle-outline h4" > </i></div>'
+                            }else{
+                                kdm_installed = '<div class="badge badge-outline-danger"><i class= "mdi mdi-checkbox-blank-circle-outline h4" > </i> </div>'
+                            }
+
+
+                            const date1 = new Date();
+                            const date2 = new Date(value.ContentKeysNotValidAfter);
+                            let diffTime = Math.abs(date2 - date1);
+
+                            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                            background_difftime=""
+
+                            if(diffTime/100/60/60 > 48 )
+                            {
+                                background_difftime = "bg-success"
+                            }
+                            if(diffTime/100/60/60 < 48  && diffTime/100/60/60 > 0 )
+                            {
+                                background_difftime = "bg-warning"
+                            }
+                            if(diffTime/100/60/60 <= 0 )
+                            {
+                                background_difftime = "bg-danger"
+                            }
+                            screen_name =""
+                            if(value.screen)
+                            {
+                                screen_name = value.screen.screen_name
+                            }
+                            else
+                            {
+                                screen_name = value.device_target;
+                            }
+
+
+
+                            result = result
+                                +'<tr class="odd '+background_difftime+'">'
+                                    +'<td class="text-body align-middle fw-medium text-decoration-none">'+ screen_name+' </td>'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ new Date(value.ContentKeysNotValidBefore).toLocaleString() +'</a></td>'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ new Date(value.ContentKeysNotValidAfter).toLocaleString() +'</a></td>'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ content_present+'</a></td>'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ kdm_installed+'</a></td>'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ dhm (diffTime)+'</a></td>'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ value.device_target +'</a></td>'
+                                +'</tr>';
+                        });
+                        $('#location-listing tbody').html(result)
+
+                        console.log(response.kdms)
+                        /***** refresh datatable **** **/
+
+                        var kdm_datatable = $('#location-listing').DataTable({
+                            "iDisplayLength": 10,
+                            destroy: true,
+                            "bDestroy": true,
+                            "language": {
+                                search: "_INPUT_",
+                                searchPlaceholder: "Search..."
+                            }
+                        });
+
+                    },
+                    error: function(response) {
+
+                    }
+                })
+            }
         });
 
     })(jQuery);

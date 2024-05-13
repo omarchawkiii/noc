@@ -191,7 +191,7 @@ class SplController extends Controller
         $location = Location::findOrFail($request->location) ;
         $response = $this->delete_splRequest($location->connection_ip, $request->lms, $request->array_spls, $request->array_screens, $location->email , $location->password);
 
-        $response['result'] = 1 ;
+        //$response['result'] = 1 ;
         if($response['result'] === 1 )
         {
             foreach($request->array_spls as $spl_uuid)
@@ -199,12 +199,12 @@ class SplController extends Controller
                 if($request->lms)
                 {
                     $spl = Lmsspl::where('uuid',$spl_uuid)->where('location_id',$location->id)->delete();
-                //    dd($cpl,$cpl_uuid) ;
                 }
-                $spl = Spl::where('uuid',$spl_uuid)->whereIn('id_server',$request->array_screens)->where('location_id',$location->id)->delete() ;
-                //dd($cpl,$cpl_uuid) ;
+                $screens= Screen::whereIn('id_server',$request->array_screens)->where('location_id',$location->id)->get()->toArray();
+                $screens_id = array_column($screens, 'id');
+                $spl = Spl::with('screen')->where('uuid',$spl_uuid)->whereIn('screen_id',$screens_id)->where('location_id',$location->id)->delete() ;
             }
-                echo "Success" ;
+            echo "Success" ;
         }
         else
         {

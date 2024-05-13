@@ -325,9 +325,10 @@ class CplController extends Controller
             foreach( $cpls as $cpl)
             {
                 $screen = $cpl->screen ;
+
                 if ( ! in_array($screen->id,  array_column($screens, 'id')))
                 {
-                    array_push($screens,  array("id" => $screen->id ,"screen_number" => $screen->screen_number , "name" => $screen->screen_name));
+                    array_push($screens,  array("id" => $screen->id ,"screen_number" => $screen->id_server , "name" => $screen->screen_name));
                 }
             }
         }
@@ -342,7 +343,7 @@ class CplController extends Controller
     {
         $location = Location::findOrFail($request->location) ;
         $response = $this->delete_cplRequest($request->connection_ip, $request->lms, $request->array_cpls, $request->array_screens, $location->email , $location->password);
-        $response['result'] = 1 ;
+        //$response['result'] = 1 ;
         if($response['result'] === 1 )
         {
 
@@ -351,10 +352,10 @@ class CplController extends Controller
                 if($request->lms)
                 {
                     $cpl = Lmscpl::where('uuid',$cpl_uuid)->where('location_id',$location->id)->delete();
-                //    dd($cpl,$cpl_uuid) ;
                 }
-                $cpl = Cpl::where('uuid',$cpl_uuid)->whereIn('screen_id',$request->array_screens)->where('location_id',$location->id)->delete() ;
-                //dd($cpl,$cpl_uuid) ;
+                $screens= Screen::whereIn('id_server',$request->array_screens)->where('location_id',$location->id)->get()->toArray();
+                $screens_id = array_column($screens, 'id');
+                $cpl = Cpl::with('screen')->where('uuid',$cpl_uuid)->whereIn('screen_id',$screens_id)->where('location_id',$location->id)->delete() ;
             }
                 echo "Success" ;
         }

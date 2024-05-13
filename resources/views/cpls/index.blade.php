@@ -1012,8 +1012,19 @@ function formatSize(sizeInBytes) {
 
         function get_cpls(location , screen , lms , multiplex,refresh_screen)
         {
+            $("#location-listing").dataTable().fnDestroy();
+            $('#location-listing tbody').html('')
+
+            var loader_content  =
+           '<div class="jumping-dots-loader">'
+               +'<span></span>'
+               +'<span></span>'
+               +'<span></span>'
+               +'</div>'
+            $('#location-listing tbody').html(loader_content)
 
             result ="" ;
+            $('#location-listing tbody').html(result)
             var url = "{{  url('') }}"+ '/get_cpl_with_filter/';
             $.ajax({
                 url: url,
@@ -1094,10 +1105,6 @@ function formatSize(sizeInBytes) {
                                 {
                                     style = "color:white;" ;
                                 }
-                               /* var style = (value.type == "Flat") ? "color:#52d4f7;" :
-                                (value.type == "Scope") ? "color:#36ffb9;" :
-                                    "color:white;";
-                                    */
 
                                 var title= '<span style="'+style+'"">' + value.contentTitleText +
                                     encrypted +
@@ -1107,17 +1114,15 @@ function formatSize(sizeInBytes) {
                                     '  </span>';
 
 
-
-
-                            result = result
-                                +'<tr class="  odd  '+playable+' text-center" data-id="'+value.uuid+'">'
-                                +'<td class="sorting_1 cpl-item">'+ index+' </td>'
-                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none text-center" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+title+'</a></td>'
-                                +'<td class="cpl-item" ><a class="text-body align-middle fw-medium text-decoration-none text-center">'+value.contentKind+'</a></td>'
-                                +'<td class="cpl-item" ><a class="text-body align-middle fw-medium text-decoration-none text-center">' +formatSize(value.totalSize)+ '</a></td>'
-                                +'<td class="cpl-item" ><a class="text-body align-middle fw-medium text-decoration-none text-center">' + available_on_content + '</a></td>'
-                                +'<td><a class="btn btn-primary infos_modal text-center"  href="#" id="'+value.id+' " data-location="'+value.location.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
-                                +'</tr>';
+                                result = result
+                                    +'<tr class="  odd  '+playable+' text-center" data-id="'+value.uuid+'">'
+                                    +'<td class="sorting_1 cpl-item">'+ index+' </td>'
+                                    +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none text-center" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+title+'</a></td>'
+                                    +'<td class="cpl-item" ><a class="text-body align-middle fw-medium text-decoration-none text-center">'+value.contentKind+'</a></td>'
+                                    +'<td class="cpl-item" ><a class="text-body align-middle fw-medium text-decoration-none text-center">' +formatSize(value.totalSize)+ '</a></td>'
+                                    +'<td class="cpl-item" ><a class="text-body align-middle fw-medium text-decoration-none text-center">' + available_on_content + '</a></td>'
+                                    +'<td><a class="btn btn-primary infos_modal text-center"  href="#" id="'+value.id+' " data-location="'+value.location.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
+                                    +'</tr>';
                         });
                     }
 
@@ -1146,17 +1151,6 @@ function formatSize(sizeInBytes) {
 
         $('#screen').change(function(){
 
-            $("#location-listing").dataTable().fnDestroy();
-            $('#location-listing tbody').html('')
-
-            var loader_content  =
-           '<div class="jumping-dots-loader">'
-               +'<span></span>'
-               +'<span></span>'
-               +'<span></span>'
-               +'</div>'
-            $('#location-listing tbody').html(loader_content)
-
             var country =  $('#country').val();
             var screen =  $('#screen').val();
             window.lms = false ;
@@ -1164,8 +1158,6 @@ function formatSize(sizeInBytes) {
             var multiplex =  $('#multiplex').val();
             $('#refresh_lms').removeClass("activated") ;
             get_cpls(location , screen , false , multiplex,false)
-
-
 
         });
 
@@ -1207,29 +1199,39 @@ function formatSize(sizeInBytes) {
 
         $('#refresh_lms').click(function(){
 
-            $("#location-listing").dataTable().fnDestroy();
-            var loader_content  =
-            '<div class="jumping-dots-loader">'
-                +'<span></span>'
-                +'<span></span>'
-                +'<span></span>'
-                +'</div>'
-            $('#location-listing tbody').html(loader_content)
 
-            $('#screen').find('option')
-            .remove()
-            .end()
-            .append('<option value="null">All Screens</option>')
-
-            //$('#location-listing tbody').html('')
-            var location =  $('#location').val();
+             //$('#location-listing tbody').html('')
+             var location =  $('#location').val();
             var country =  $('#country').val();
             var multiplex =  $('#multiplex').val();
             window.lms = true ;
             var screen =  null;
-                get_cpls(location , screen , true , multiplex,true)
-                $(this).addClass("activated") ;
 
+            $("#location-listing").dataTable().fnDestroy();
+                var loader_content  =
+                '<div class="jumping-dots-loader">'
+                    +'<span></span>'
+                    +'<span></span>'
+                    +'<span></span>'
+                    +'</div>'
+                $('#location-listing tbody').html(loader_content)
+
+                $('#screen').find('option')
+                .remove()
+                .end()
+                .append('<option value="null">All Screens</option>')
+
+            if( $('#refresh_lms').hasClass("activated"))
+            {
+                get_cpls(location , screen , false , true)
+                $('#refresh_lms').removeClass("activated") ;
+            }
+            else
+            {
+
+                get_cpls(location , screen , true ,true)
+                $(this).addClass("activated") ;
+            }
         });
 
         $('#multiplex').change(function(){
@@ -1290,7 +1292,7 @@ function formatSize(sizeInBytes) {
             $('#check_all_server').prop('checked', false);
 
             var screen =  $('#screen').val();
-           // window.lms = false ;
+            // window.lms = false ;
             var multiplex =  $('#multiplex').val();
             var array_cpls = [];
             var location = $('#location').val() ;
@@ -1333,7 +1335,7 @@ function formatSize(sizeInBytes) {
                                 '<li>'
                                     +'<button type="button" class="btn btn-outline-secondary btn-fw" style="text-align: left;">'
                                         +'<label class="form-check-label custom-check2">'
-                                            +'<input type="checkbox" class="form-check-input" name="screen_to_ingest" data-id="'+value.screen_number+'" value="'+value.id+'" style="font-size: 20px;margin-bottom:  3px; margin-right:  5px">'
+                                            +'<input type="checkbox" class="form-check-input" name="screen_to_ingest" data-id="'+value.screen_number+'" value="'+value.screen_number+'" style="font-size: 20px;margin-bottom:  3px; margin-right:  5px">'
                                             +'<span style="font-weight: bold;">'+value.name+'</span> <i class="input-helper"></i>'
                                         +'</label>'
                                     +'</button>'
@@ -1384,7 +1386,16 @@ function formatSize(sizeInBytes) {
                                             })
                                             $('#location-listing tbody').html("")
 
-                                            get_cpls(location , screen , false , multiplex)
+                                            if($('#refresh_lms').hasClass("activated"))
+                                            {
+                                                get_cpls(location , screen , true , multiplex)
+                                            }
+                                            else
+                                            {
+                                                get_cpls(location , screen , false , multiplex)
+                                            }
+
+
                                             $('#cpl_delete_model').modal('hide');
                                         } else {
                                             swal({

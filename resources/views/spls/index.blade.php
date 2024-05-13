@@ -368,11 +368,15 @@
                             available_on_content=""
                             for(i = 0 ; i< available_on_array.length ; i++ )
                             {
-                                if(i != 0 &&  i % 9 == 0 )
+                                if(available_on_array[i] != " " && available_on_array[i] != "" && available_on_array[i] != "  ")
                                 {
-                                    available_on_content = available_on_content + '<br />'
+                                    if(i != 0 &&  i % 9 == 0  )
+                                    {
+                                        available_on_content = available_on_content + '<br />'
+                                    }
+                                    available_on_content = available_on_content + '<div class="badge badge-outline-primary m-1">'+ available_on_array[i]+'</div>'
                                 }
-                                available_on_content = available_on_content + '<div class="badge badge-outline-primary m-1">'+ available_on_array[i]+'</div>'
+
                             }
                         }
                         else
@@ -474,94 +478,108 @@
 
         $('#refresh_lms').click(function(){
 
-            $("#location-listing").dataTable().fnDestroy();
-            var loader_content  =
-            '<div class="jumping-dots-loader">'
-                +'<span></span>'
-                +'<span></span>'
-                +'<span></span>'
-                +'</div>'
-            $('#location-listing tbody').html(loader_content)
-
-            $('#screen').find('option')
-            .remove()
-            .end()
-            .append('<option value="null">All Screens</option>')
-
             //$('#location-listing tbody').html('')
             var location =  $('#location').val();
             var country =  $('#country').val();
             window.lms = true ;
             var screen =  null;
 
+            if( $('#refresh_lms').hasClass("activated"))
+            {
+                get_spls(location , screen , false , true)
+                $('#refresh_lms').removeClass("activated") ;
+            }
+            else
+            {
 
-            var url = "{{  url('') }}"+ '/get_spl_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen+'&lms='+ lms;
-            result =" " ;
+                $("#location-listing").dataTable().fnDestroy();
+                var loader_content  =
+                '<div class="jumping-dots-loader">'
+                    +'<span></span>'
+                    +'<span></span>'
+                    +'<span></span>'
+                    +'</div>'
+                $('#location-listing tbody').html(loader_content)
 
-            $.ajax({
-                url: url,
-                method: 'GET',
-                success:function(response)
-                {
+                $('#screen').find('option')
+                .remove()
+                .end()
+                .append('<option value="null">All Screens</option>')
 
-                    screens = '<option value="null" selected>All Screens</option>';
-                    $.each(response.screens, function( index_screen, screen ) {
+                var url = "{{  url('') }}"+ '/get_spl_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen+'&lms='+ lms;
+                result =" " ;
 
-                        screens = screens
-                            +'<option  value="'+screen.id+'">'+screen.screen_name+'</option>';
-                    });
-                        $('#screen').html(screens)
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    success:function(response)
+                    {
 
-                    $.each(response.spls, function( index, value ) {
-                        index++ ;
-                        if(value.available_on)
-                        {
-                            available_on_array =  value.available_on.split(",");
-                            available_on_content=""
-                            for(i = 0 ; i< available_on_array.length ; i++ )
+                        screens = '<option value="null" selected>All Screens</option>';
+                        $.each(response.screens, function( index_screen, screen ) {
+
+                            screens = screens
+                                +'<option  value="'+screen.id+'">'+screen.screen_name+'</option>';
+                        });
+                            $('#screen').html(screens)
+
+                        $.each(response.spls, function( index, value ) {
+                            index++ ;
+                            if(value.available_on)
                             {
-                                if(i != 0 &&  i % 9 == 0 )
-                                {
-                                    available_on_content = available_on_content + '<br />'
-                                }
-                                available_on_content = available_on_content + '<div class="badge badge-outline-primary m-1">'+ available_on_array[i]+'</div>'
+                                available_on_array =  value.available_on.split(",");
+                                available_on_content=""
+
+                                    for(i = 0 ; i< available_on_array.length ; i++ )
+                                    {
+                                        if(available_on_array[i] != " " && available_on_array[i] != "" && available_on_array[i] != "  ")
+                                        {
+
+                                            if(i != 0 &&  i % 9 == 0 )
+                                            {
+                                                available_on_content = available_on_content + '<br />'
+                                            }
+                                            available_on_content = available_on_content + '<div class="badge badge-outline-primary m-1">'+ available_on_array[i]+'</div>'
+                                        }
+                                    }
+
                             }
-                        }
-                        else
-                        {
-                            available_on_content="" ;
-                        }
+                            else
+                            {
+                                available_on_content="" ;
+                            }
 
-                        result = result
-                            +'<tr class="odd">'
-                            +'<td class="cpl-item class="sorting_1">'+ index +' </td>'
-                            +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
-                            +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+available_on_content+'</a></td>'
-                            +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+value.duration+'</a></td>'
-                            +'<td><a class="btn btn-primary infos_modal"  href="#" id="'+value.id+'"> <i class="mdi mdi-magnify"> </i>  </a> <a  href="#" id="'+value.uuid+'" href="" class="btn btn-success   mdi mdi-download download_spl" ></a></td>'
-                            +'</tr>';
-                    });
-                    $('#refresh_lms').addClass("activated") ;
-                    $('#location-listing tbody').html(result)
+                            result = result
+                                +'<tr class="odd">'
+                                +'<td class="cpl-item class="sorting_1">'+ index +' </td>'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+available_on_content+'</a></td>'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+value.duration+'</a></td>'
+                                +'<td><a class="btn btn-primary infos_modal"  href="#" id="'+value.id+'"> <i class="mdi mdi-magnify"> </i>  </a> <a  href="#" id="'+value.uuid+'" href="" class="btn btn-success   mdi mdi-download download_spl" ></a></td>'
+                                +'</tr>';
+                        });
+                        $('#refresh_lms').addClass("activated") ;
+                        $('#location-listing tbody').html(result)
 
-                    console.log(response.spls)
-                    /***** refresh datatable **** **/
+                        console.log(response.spls)
+                        /***** refresh datatable **** **/
 
-                    var spl_datatable = $('#location-listing').DataTable({
-                        "iDisplayLength": 10,
-                        destroy: true,
-                        "bDestroy": true,
-                        "language": {
-                            search: "_INPUT_",
-                            searchPlaceholder: "Search..."
-                        }
-                    });
+                        var spl_datatable = $('#location-listing').DataTable({
+                            "iDisplayLength": 10,
+                            destroy: true,
+                            "bDestroy": true,
+                            "language": {
+                                search: "_INPUT_",
+                                searchPlaceholder: "Search..."
+                            }
+                        });
 
-                },
-                error: function(response) {
+                    },
+                    error: function(response) {
 
-                }
-            })
+                    }
+                })
+            }
 
         });
         $(document).on('click', '.cpl-item', function (event) {
@@ -581,7 +599,6 @@
             });
         });
         $(document).on('click', '#delete_spl', function (event) {
-
 
             var screen =  $('#screen').val();
 
