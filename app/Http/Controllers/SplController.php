@@ -176,7 +176,7 @@ class SplController extends Controller
                 $screen = $spl->screen ;
                 if ( ! in_array($screen->id,  array_column($screens, 'id')))
                 {
-                    array_push($screens,  array("id" => $screen->id ,"screen_number" => $screen->screen_number , "name" => $screen->screen_name));
+                    array_push($screens,  array("id" => $screen->id ,"screen_number" => $screen->screen_number , "name" => $screen->screen_name, "id_server" => $screen->id_server));
                 }
             }
         }
@@ -201,7 +201,7 @@ class SplController extends Controller
                     $spl = Lmsspl::where('uuid',$spl_uuid)->where('location_id',$location->id)->delete();
                 //    dd($cpl,$cpl_uuid) ;
                 }
-                $spl = Spl::where('uuid',$spl_uuid)->whereIn('screen_id',$request->array_screens)->where('location_id',$location->id)->delete() ;
+                $spl = Spl::where('uuid',$spl_uuid)->whereIn('id_server',$request->array_screens)->where('location_id',$location->id)->delete() ;
                 //dd($cpl,$cpl_uuid) ;
             }
                 echo "Success" ;

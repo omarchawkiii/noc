@@ -618,19 +618,19 @@
                                     +'<button type="button" class="btn btn-outline-secondary btn-fw" style="text-align: left;">'
                                         +'<label class="form-check-label custom-check2">'
                                             +'<input id="delete_from_lms" type="checkbox" class="form-check-input" name="lms" style="font-size: 20px;margin-bottom:  3px; margin-right:  5px">'
-                                            +'<span style="font-weight: bold;">LMS</span> <i class="input-helper"></i>'
+                                            +'<span style="font-weight: bold; display: inline-block; margin-top: 6px;">LMS</span> <i class="input-helper"></i>'
                                         +'</label>'
                                     +'</button>'
                                 +'</li>' ;
 
                             $.each(response.screens, function( index, value ) {
-
+                                console.log(value)
                                 result =  result +
                                 '<li>'
                                     +'<button type="button" class="btn btn-outline-secondary btn-fw" style="text-align: left;">'
                                         +'<label class="form-check-label custom-check2">'
-                                            +'<input type="checkbox" class="form-check-input" name="screen_to_ingest" data-id="'+value.screen_number+'" value="'+value.id+'" style="font-size: 20px;margin-bottom:  3px; margin-right:  5px">'
-                                            +'<span style="font-weight: bold;">'+value.name+'</span> <i class="input-helper"></i>'
+                                            +'<input type="checkbox" class="form-check-input" name="screen_to_ingest" data-id="'+value.id_server+'" value="'+value.id_server+'" style="font-size: 20px;margin-bottom:  3px; margin-right:  5px">'
+                                            +'<span style="font-weight: bold; display: inline-block; margin-top: 6px;">'+value.name+'</span> <i class="input-helper"></i>'
                                         +'</label>'
                                     +'</button>'
                                 +'</li>'
