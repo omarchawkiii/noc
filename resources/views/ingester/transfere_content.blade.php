@@ -276,6 +276,7 @@
 <!-- ------- DATA TABLE ---- -->
 <script src="{{asset('/assets/vendors/datatables.net/jquery.dataTables.js')}}"></script>
 <script src="{{asset('/assets/vendors/datatables.net-bs4/dataTables.bootstrap4.js')}}"></script>
+
 <script>
 
 (function($) {
@@ -531,7 +532,7 @@
                         }
                         else
                         {
-                            swal.close();
+
 
                             swal({
                                 title: 'Done!',
@@ -549,8 +550,8 @@
                     }
                     else
                     {
-                            swal.close();
-                            console.log(response.ingest_status.message)
+
+
                             swal({
                             title: 'Failed',
                             text: "Error occurred while sending the request.",

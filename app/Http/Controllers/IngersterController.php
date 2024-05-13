@@ -468,7 +468,8 @@ class IngersterController extends Controller
                     if($response['result'] === 1 )
                     {
                        // $command = "mktorrent -o $torrentPath $directoryPath >> /DATA/logs/noc_torrent_log.log 2>&1";
-                        $command ="root@expersysnoc:/usr/bin# rsync -avz --partial --no-t /DATA/assets/$file/ noc@172.17.42.2:/".$response['dcp_path'].">> /DATA/logs/noc_ingest_file_log.log 2>&1";
+
+                        $command ="rsync -avz --partial --no-t  /DATA/assets/$file/ noc@172.17.42.2:/".$response['dcp_path'].">> /DATA/logs/noc_ingest_file_log.log 2>&1";
                         exec($command, $output, $returnVar);
 
                         Dcp_trensfer::updateOrCreate([

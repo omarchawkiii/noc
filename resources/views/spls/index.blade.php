@@ -240,7 +240,7 @@
             <div class="modal-content">
                 <div class="modal-header" style="padding: 15px;">
                     <h5 class="modal-title" id=" " style="font-size: 23px;">
-                        <i class="mdi mdi-delete-sweep custom-search  btn-inverse-danger "></i>CPL Deletion </h5>
+                        <i class="mdi mdi-delete-sweep custom-search  btn-inverse-danger "></i>SPL Deletion </h5>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -534,10 +534,10 @@
 
                         result = result
                             +'<tr class="odd">'
-                            +'<td class="sorting_1">'+ index +' </td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+available_on_content+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.duration+'</a></td>'
+                            +'<td class="cpl-item class="sorting_1">'+ index +' </td>'
+                            +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
+                            +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+available_on_content+'</a></td>'
+                            +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+value.duration+'</a></td>'
                             +'<td><a class="btn btn-primary infos_modal"  href="#" id="'+value.id+'"> <i class="mdi mdi-magnify"> </i>  </a> <a  href="#" id="'+value.uuid+'" href="" class="btn btn-success   mdi mdi-download download_spl" ></a></td>'
                             +'</tr>';
                     });
