@@ -1110,7 +1110,7 @@ function formatSize(sizeInBytes) {
                                     style = "color:white;" ;
                                 }
                                 var deleting_ipossibility ="" ;
-                                if(value.cpl_is_linked != 1 )
+                                if(value.cpl_is_linked == 1 )
                                 {
                                     deleting_ipossibility ="cpl_can_not_be_deleted" ;
                                 }

@@ -198,13 +198,16 @@ class CplController extends Controller
 
         if(isset($multiplex) && $multiplex != 'null' )
         {
+
             if($multiplex =='linked')
             {
                 $cpls =$cpls->where('cpl_is_linked',1);
+               // dd($cpls->get()) ;
             }
             if($multiplex =='unlinked')
             {
                 $cpls =$cpls->where('cpl_is_linked',0);
+               // dd($cpls->get()) ;
             }
             if($multiplex =='Encryped')
             {
@@ -230,7 +233,7 @@ class CplController extends Controller
         }
 
 
-        $cpls = $cpls->get() ;
+        $cpls = $cpls->orderBy('contentTitleText', 'ASC')->get() ;
         return Response()->json(compact('cpls','screens','macros'));
 
     }
