@@ -1480,40 +1480,67 @@ function formatSize(sizeInBytes) {
             }
             else
             {
-                var url = "{{  url('') }}"+ '/cpls/clean_cpls/';
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    data: {
-                        location :location,
-                        lms :lms
-                    },
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    beforeSend: function () {
-                    },
-                    success: function (response) {
+                swal({
+                        showCancelButton: true,
+                        title: 'Clean Content!',
+                        text: 'You are sure you want to clean cpls',
+                        icon: 'warning',
+                        buttons: {
+                            cancel: {
+                                text: "Cancel",
+                                value: null,
+                                visible: true,
+                                className: "btn btn-primary",
+                                closeModal: true,
+                            },
 
-                            swal({
-                                title: 'Done!',
-                                text: response.count_cpls + ' Cpls Deleted Successfully ' ,
-                                icon: 'success',
-                                button: {
-                                    text: "Continue",
-                                    value: true,
-                                    visible: true,
-                                    className: "btn btn-primary"
+                            Confirm: {
+                                text: "Yes, Clean Content!",
+                                value: true,
+                                visible: true,
+                                className: "btn btn-danger",
+                                closeModal: true,
+                            },
+                        }
+                    }).then((result) => {
+                        if (result) {
+                            var url = "{{  url('') }}"+ '/cpls/clean_cpls/';
+                            $.ajax({
+                                url: url,
+                                type: 'GET',
+                                data: {
+                                    location :location,
+                                    lms :lms
+                                },
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                beforeSend: function () {
+                                },
+                                success: function (response) {
+
+                                        swal({
+                                            title: 'Done!',
+                                            text: response.count_cpls + ' Cpls Deleted Successfully ' ,
+                                            icon: 'success',
+                                            button: {
+                                                text: "Continue",
+                                                value: true,
+                                                visible: true,
+                                                className: "btn btn-primary"
+                                            }
+                                        })
+
+                                },
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    console.log(errorThrown);
+                                },
+                                complete: function (jqXHR, textStatus) {
                                 }
-                            })
+                            });
+                        }
+                    })
 
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        console.log(errorThrown);
-                    },
-                    complete: function (jqXHR, textStatus) {
-                    }
-                });
             }
 
 
