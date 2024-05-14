@@ -125,7 +125,8 @@ class CplController extends Controller
 
         $location = $request->location;
         $country = $request->country;
-        $screen = $request->screen;
+        $screen = $request->screen_id;
+
         $lms= $request->lms ;
         $multiplex=$request->multiplex ;
         $playlist_builder= $request->playlist_builder ;
@@ -153,6 +154,7 @@ class CplController extends Controller
         }
         else
         {
+
             $screens =null;
             $screen=null ;
             if( Auth::user()->role != 1)
