@@ -1109,22 +1109,29 @@ function formatSize(sizeInBytes) {
                                 {
                                     style = "color:white;" ;
                                 }
+                                var deleting_ipossibility ="" ;
+                                if(value.cpl_is_linked != 1 )
+                                {
+                                    deleting_ipossibility ="cpl_can_not_be_deleted" ;
+                                }
+                                else
+                                {
+                                    deleting_ipossibility ="cpl-item" ;
+                                }
 
                                 var title= '<span style="'+style+'"">' + value.contentTitleText +
                                     encrypted +
                                     (value.cpl_is_linked == "1" ? ' <span class=\"mdi mdi-calendar-clock custom-calendar p-1 m-1 btn-primary rounded\"  ></span>':"  ")
-                                    +
-
-                                    '  </span>';
+                                    +'  </span>';
 
 
                                 result = result
                                     +'<tr class="  odd  '+playable+' text-center" data-id="'+value.uuid+'">'
-                                    +'<td class="sorting_1 cpl-item">'+ index+' </td>'
-                                    +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none text-center" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+title+'</a></td>'
-                                    +'<td class="cpl-item" ><a class="text-body align-middle fw-medium text-decoration-none text-center">'+value.contentKind+'</a></td>'
-                                    +'<td class="cpl-item" ><a class="text-body align-middle fw-medium text-decoration-none text-center">' +formatSize(value.totalSize)+ '</a></td>'
-                                    +'<td class="cpl-item" ><a class="text-body align-middle fw-medium text-decoration-none text-center">' + available_on_content + '</a></td>'
+                                    +'<td class="sorting_1 '+deleting_ipossibility+'">'+ index+' </td>'
+                                    +'<td class="'+deleting_ipossibility+'"><a class="text-body align-middle fw-medium text-decoration-none text-center" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+title+'</a></td>'
+                                    +'<td class="'+deleting_ipossibility+'" ><a class="text-body align-middle fw-medium text-decoration-none text-center">'+value.contentKind+'</a></td>'
+                                    +'<td class="'+deleting_ipossibility+'" ><a class="text-body align-middle fw-medium text-decoration-none text-center">' +formatSize(value.totalSize)+ '</a></td>'
+                                    +'<td class="'+deleting_ipossibility+'" ><a class="text-body align-middle fw-medium text-decoration-none text-center">' + available_on_content + '</a></td>'
                                     +'<td><a class="btn btn-primary infos_modal text-center"  href="#" id="'+value.id+' " data-location="'+value.location.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
                                     +'</tr>';
                         });
@@ -1291,7 +1298,27 @@ function formatSize(sizeInBytes) {
                 }
             });
         });
+        $(document).on('click', '.cpl_can_not_be_deleted', function (event) {
+            swal({
+                    title: '',
+                    text: "CPL Is Linked, Can Not Be Deleted.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3f51b5',
+                    cancelButtonColor: '#ff4081',
+                    confirmButtonText: 'Great ',
+                    buttons: {
+                        cancel: {
+                            text: "Cancel",
+                            value: null,
+                            visible: true,
+                            className: "btn btn-danger",
+                            closeModal: true,
+                        },
+                    }
+                })
 
+        });
         $(document).on('click', '#delete_cpl', function (event) {
             $('#check_all_server').prop('checked', false);
 
