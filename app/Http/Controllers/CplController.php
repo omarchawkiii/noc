@@ -377,7 +377,16 @@ class CplController extends Controller
     public function clean_cpls(Request $request)
     {
         $location = $request->location;
-        $cpls = Cpl::where('location_id',$location)->where('created_at','>=',now()->subDays(40))->where('cpl_is_linked','!=',1)->where('pictureEncryptionAlgorithm','!=',1);
+        $lms = $request->lms;
+        if($lms)
+        {
+            $cpls = Lmscpl::where('location_id',$location)->where('created_at','>=',now()->subDays(40))->where('cpl_is_linked','!=',1)->where('pictureEncryptionAlgorithm','!=',1);
+        }
+        else
+        {
+            $cpls = Cpl::where('location_id',$location)->where('created_at','>=',now()->subDays(40))->where('cpl_is_linked','!=',1)->where('pictureEncryptionAlgorithm','!=',1);
+        }
+
         $count_cpls = $cpls->count() ;
         if($count_cpls)
         {

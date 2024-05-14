@@ -81,7 +81,7 @@
                     </div>
                     <div class="col-xl-2">
                         <button type="button" class="btn btn-danger btn-icon-text" id="clean_cpl">
-                            <i class="mdi mdi-delete-forever btn-icon-prepend"></i> Clean Content
+                            <i class="mdi mdi-delete-sweep btn-icon-prepend"></i> Clean Content
                         </button>
                     </div>
                 </div>
@@ -1448,7 +1448,15 @@ function formatSize(sizeInBytes) {
         $(document).on('click', '#clean_cpl', function (event) {
 
             var location = $('#location').val() ;
-
+            var lms = false ;
+            if( $('#refresh_lms').hasClass("activated"))
+            {
+                lms = true ;
+            }
+            else
+            {
+                lms = false ;
+            }
             if(location == 'Locations')
             {
                 swal({
@@ -1477,7 +1485,8 @@ function formatSize(sizeInBytes) {
                     url: url,
                     type: 'GET',
                     data: {
-                        location :location
+                        location :location,
+                        lms :lms
                     },
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
