@@ -244,13 +244,6 @@ class CplController extends Controller
         $locations= explode(',', $location);
 
         $screens=null ;
-        /*$cpls = DB::table('lmscpls')->whereIn('location_id',$locations)->groupBy('uuid')
-        ->orderBy('contentKind', 'ASC')->orderBy('contentTitleText', 'ASC') ; */
-
-        /*$cpls = DB::table('cpls')->whereIn('location_id',$locations)->select('cpls.*', 'lmscpls.*','cpls.ScreenAspectRatio as aspect_Ratio' )->groupBy('uuid')
-        ->orderBy('contentKind', 'ASC')->orderBy('contentTitleText', 'ASC') ;*/
-
-
 
         $cpls = DB::table('cpls')->whereIn('location_id',$locations)->select('cpls.*','cpls.ScreenAspectRatio as aspect_Ratio' )->groupBy('uuid')
         ->orderBy('contentKind', 'ASC')->orderBy('contentTitleText', 'ASC')->distinct()->get();
@@ -259,30 +252,6 @@ class CplController extends Controller
 
 
         $all_cpls = $cpls->merge($lmscpls)->unique('uuid');
-
-
-        /*
-        $cpls = DB::table('cpls')
-        ->whereIn('location_id',$locations)
-        ->select('cpls.*','cpls.ScreenAspectRatio as aspect_Ratio' );
-
-        $lmscpls = DB::table('lmscpls')
-        ->whereIn('location_id',$locations)
-        ->select( 'lmscpls.*' );
-
-        $all_cpls = $cpls->unionAll($lmscpls);
-
-        $data = DB::table(DB::raw("({$all_cpls->toSql()}) AS all_cpls"))
-        ->mergeBindings($all_cpls)
-        ->groupBy('uuid')
-        ->orderBy('contentKind', 'ASC')->orderBy('contentTitleText', 'ASC') ;
-        */
-      ///  ->select('lmscpls.*') ;
-
-       // $cpls =Lmscpl::with('location')->whereIn('location_id',$locations)->groupBy('uuid');
-
-        //cpls = $cpls->orderBy('contentKind', 'ASC')->orderBy('contentTitleText', 'ASC') ;
-
 
         $macros = Macro::whereIn('location_id',$locations)->groupBy('idmacro_config')->orderBy('section_title', 'ASC')->get() ;
         return Response()->json(compact('cpls','screens','macros'));
@@ -405,6 +374,21 @@ class CplController extends Controller
         }
     }
 
+    public function clean_cpls(Request $request)
+    {
+        $location = $request->location;
+        $cpls = Cpl::where('location_id',$location)->where('created_at','>=',now()->subDays(40))->where('cpl_is_linked','!=',1)->where('pictureEncryptionAlgorithm','!=',1);
+        $count_cpls = $cpls->count() ;
+        if($count_cpls)
+        {
+            $status = $cpls->delete() ;
+        }
+        else
+        {
+            $status =true  ;
+        }
+        return Response()->json(compact('status','count_cpls'));
 
+    }
 
 }

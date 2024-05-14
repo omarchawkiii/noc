@@ -79,7 +79,11 @@
                         <button type="button" id="refresh_lms"  class="btn btn-icon-text " style="color: #6f6f6f;background: #2a3038; height: 37px; display:none">
                             <i class="mdi mdi-server-network"></i> LMS </button>
                     </div>
-
+                    <div class="col-xl-2">
+                        <button type="button" class="btn btn-danger btn-icon-text" id="clean_cpl">
+                            <i class="mdi mdi-delete-forever btn-icon-prepend"></i> Clean Content
+                        </button>
+                    </div>
                 </div>
 
                 <div class="col-12">
@@ -1441,6 +1445,70 @@ function formatSize(sizeInBytes) {
             }
         });
 
+        $(document).on('click', '#clean_cpl', function (event) {
+
+            var location = $('#location').val() ;
+
+            if(location == 'Locations')
+            {
+                swal({
+                        title: '',
+                        text: "Please Select Locaion.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3f51b5',
+                        cancelButtonColor: '#ff4081',
+                        confirmButtonText: 'Great ',
+                        buttons: {
+                            cancel: {
+                                text: "Cancel",
+                                value: null,
+                                visible: true,
+                                className: "btn btn-danger",
+                                closeModal: true,
+                            },
+                        }
+                    })
+            }
+            else
+            {
+                var url = "{{  url('') }}"+ '/cpls/clean_cpls/';
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    data: {
+                        location :location
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    beforeSend: function () {
+                    },
+                    success: function (response) {
+
+                            swal({
+                                title: 'Done!',
+                                text: response.count_cpls + ' Cpls Deleted Successfully ' ,
+                                icon: 'success',
+                                button: {
+                                    text: "Continue",
+                                    value: true,
+                                    visible: true,
+                                    className: "btn btn-primary"
+                                }
+                            })
+
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    },
+                    complete: function (jqXHR, textStatus) {
+                    }
+                });
+            }
+
+
+        });
 
     })(jQuery);
 
