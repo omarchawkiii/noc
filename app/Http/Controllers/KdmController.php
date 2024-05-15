@@ -24,7 +24,6 @@ class KdmController extends Controller
         $client = new Client();
         $response = $client->request('GET', $url);
         $contents = json_decode($response->getBody(), true);
-
         if($contents)
         {
             foreach($contents as $content)
@@ -34,33 +33,24 @@ class KdmController extends Controller
                     foreach($content as $kdm)
                     {
                         $cpl = Cpl::where('uuid','=',$kdm['cplId'])->where('location_id','=',$location->id)->first() ;
-                        if($cpl)
-                        {
-                            $cpl_id = $cpl->id ;
-                        }
-                        else
-                        {
-                            $cpl_id = "" ;
-                        }
-                            Kdm::updateOrCreate([
-                                'uuid' => $kdm["uuid"],
-                                'location_id' => $location->id
-                            ],[
-                                'uuid' => $kdm['uuid'],
-                                'name' => $kdm['ContentTitleText'],
-                                'ContentKeysNotValidBefore' => $kdm['ContentKeysNotValidBefore'],
-                                'ContentKeysNotValidAfter' => $kdm['ContentKeysNotValidAfter'],
-                                'kdm_installed' => $kdm['kdm_installed'],
-                                'content_present' => $kdm['content_present'],
-                                'serverName_by_serial' => $kdm['serverName_by_serial'],
-                                'device_target' => $kdm['DeviceTarget'],
-                                'cpl_uuid' => $kdm['cplId'],
-                                'cpl_id' => $cpl_id,
-                                'screen_id' => $screen->id,
-                                'location_id' => $location->id,
 
-                            ]);
-
+                        Kdm::updateOrCreate([
+                            'uuid' => $kdm["uuid"],
+                            'location_id' => $location->id
+                        ],[
+                            'uuid' => $kdm['uuid'],
+                            'name' => $kdm['ContentTitleText'],
+                            'ContentKeysNotValidBefore' => $kdm['ContentKeysNotValidBefore'],
+                            'ContentKeysNotValidAfter' => $kdm['ContentKeysNotValidAfter'],
+                            'kdm_installed' => $kdm['kdm_installed'],
+                            'content_present' => $kdm['content_present'],
+                            'serverName_by_serial' => $kdm['serverName_by_serial'],
+                            'device_target' => $kdm['DeviceTarget'],
+                            'cpl_uuid' => $kdm['cplId'],
+                            //'cpl_id' => $cpl_id,
+                            'screen_id' => $screen->id,
+                            'location_id' => $location->id,
+                        ]);
                     }
 
                     if(count($content) != $screen->kdms->count() )

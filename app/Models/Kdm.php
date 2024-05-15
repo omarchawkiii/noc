@@ -24,7 +24,7 @@ class Kdm extends Model
         'content_present',
         'serverName_by_serial',
         'screen_id',
-        'cpl_id',
+        'cpl_uuid',
         'location_id',
         'device_target',
 

@@ -257,6 +257,7 @@ class LocationController extends Controller
         $location = Location::find($location->id);
         foreach($location->screens as $screen)
         {
+
             app(\App\Http\Controllers\KdmController::class)->getkdms($location->id,$screen->id);
         }
         echo "All KDMs imported<br />" ;
