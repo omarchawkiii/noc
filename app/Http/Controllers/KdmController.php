@@ -78,7 +78,7 @@ class KdmController extends Controller
         $screen = $request->screen;
         $lms= $request->lms ;
 
-        if($lms== true)
+        if($lms=='true')
         {
             $kdms =Lmskdm::with('screen');
         }
@@ -111,7 +111,10 @@ class KdmController extends Controller
         if(isset($screen) && $screen != 'null' )
         {
             $kdms =$kdms->where('screen_id',$screen);
+
         }
+
+
         $kdms =$kdms->get() ;
 
         return Response()->json(compact('kdms','screens'));

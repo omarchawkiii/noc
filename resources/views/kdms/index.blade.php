@@ -224,23 +224,15 @@
                             kdm_installed = '<input type="checkbox" class="form-check-input"  style="font-size: 20px; ">'
                         }
 
-                        /*const date1 = new Date();
-                        const date2 = new Date(value.ContentKeysNotValidAfter);
-                        let diffTime = Math.abs(date1 - date2);*/
-
-
                         const date1 = new Date(); // Date actuelle
                         const date2String = value.ContentKeysNotValidAfter; // Chaîne représentant la date
 
-                        // Convertir la chaîne en objet Date
                         const date2 = new Date(date2String);
 
                         let diffTime = date2 - date1;
 
-                        // Pour obtenir la différence en jours par exemple :
                         let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-                        //const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
                         console.log(value.ContentKeysNotValidAfter)
                         background_difftime=""
 
@@ -364,13 +356,18 @@
                             }
 
 
-                            const date1 = new Date();
-                            const date2 = new Date(value.ContentKeysNotValidAfter);
+                            const date1 = new Date(); // Date actuelle
+                            const date2String = value.ContentKeysNotValidAfter; // Chaîne représentant la date
+
+                            const date2 = new Date(date2String);
+
                             let diffTime = date2 - date1;
 
-                            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                            let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
+                            console.log(diffTime/100/60/60)
                             background_difftime=""
+
 
                             if(diffTime/100/60/60 > 48 )
                             {
@@ -487,13 +484,18 @@
                                 }
 
 
-                                const date1 = new Date();
-                                const date2 = new Date(value.ContentKeysNotValidAfter);
+                                const date1 = new Date(); // Date actuelle
+                                const date2String = value.ContentKeysNotValidAfter; // Chaîne représentant la date
+
+                                const date2 = new Date(date2String);
+
                                 let diffTime = date2 - date1;
 
-                                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                                let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
+                                console.log(value.ContentKeysNotValidAfter)
                                 background_difftime=""
+
 
                                 if(diffTime/100/60/60 > 48 )
                                 {
@@ -582,13 +584,18 @@
                             }
 
 
-                            const date1 = new Date();
-                            const date2 = new Date(value.ContentKeysNotValidAfter);
+                            const date1 = new Date(); // Date actuelle
+                            const date2String = value.ContentKeysNotValidAfter; // Chaîne représentant la date
+
+                            const date2 = new Date(date2String);
+
                             let diffTime = date2 - date1;
 
-                            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                            let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
+                            console.log(value.ContentKeysNotValidAfter)
                             background_difftime=""
+
 
                             if(diffTime/100/60/60 > 48 )
                             {

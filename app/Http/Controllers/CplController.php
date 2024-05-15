@@ -280,7 +280,7 @@ class CplController extends Controller
 
         //dd($spls) ;
         //dd($cpl);
-        $kdms = $cpl->kdms ;
+        //$kdms = $cpl->kdms ;
 
         $kdms =Kdm::with('screen')->where('cpl_uuid',$cpl->uuid)->where('location_id',$location)->get();
       //  $schedules =  $spl->schedules ;
