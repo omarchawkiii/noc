@@ -142,6 +142,7 @@ class CplController extends Controller
         }
 
 
+
         if(isset($location) &&  $location != 'null' )
         {
             if($location != 'all')
@@ -381,8 +382,34 @@ class CplController extends Controller
 
     public function clean_cpls(Request $request)
     {
-        $location = $request->location;
+
         $lms = $request->lms;
+        $location = Location::find($request->location) ;
+
+        if($lms)
+        {
+            $url = $location->connection_ip."?request=get_lms_content_to_clean";
+        }
+        else
+        {
+            $url = $location->connection_ip."?request=get_screen_content_to_clean";
+        }
+
+        $client = new Client();
+        $response = $client->request('GET', $url);
+        $contents = json_decode($response->getBody(), true);
+
+        if($contents)
+        {
+            foreach($contents as $content)
+            {
+                if($content)
+                {
+                    dd($content) ;
+                }
+            }
+        }
+        /*
         if($lms)
         {
             $cpls = Lmscpl::where('location_id',$location)->where('created_at','>=',now()->subDays(40))->where('cpl_is_linked','!=',1)->where('pictureEncryptionAlgorithm','!=',1);
@@ -400,9 +427,44 @@ class CplController extends Controller
         else
         {
             $status =true  ;
-        }
+        }*/
         return Response()->json(compact('status','count_cpls'));
 
+    }
+
+
+    function clean_cplRequest($apiUrl) {
+        // Prepare the request data
+        $requestData = [
+            'action' => 'get_lms_content_to_clean',
+        ];
+
+        // Initialize cURL session
+        $ch = curl_init($apiUrl);
+
+        // Set cURL options
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($requestData));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        // Execute cURL session and get the response
+        $response = curl_exec($ch);
+       // print_r($response);
+
+        // Check for cURL errors
+        if (curl_errno($ch)) {
+            return ['error' => 'Curl error: ' . curl_error($ch)];
+        }
+
+        // Close cURL session
+        curl_close($ch);
+
+        // Process the API response
+        if (!$response) {
+            return ['error' => 'Error occurred while sending the request.'];
+        } else {
+            return json_decode($response, true);
+        }
     }
 
 }
