@@ -171,7 +171,6 @@
             }
         });
 
-
         $('#screen , #lms_screen_content').change(function(){
 
             $("#location-listing").dataTable().fnDestroy();
@@ -214,22 +213,36 @@
                     $.each(response.kdms, function( index, value ) {
 
                         if(value.content_present == 'yes' ){
-                            content_present = '<div class="badge badge-outline-success"> <i class= "mdi mdi-check-circle-outline h4 " > </i> </div> '
+                            content_present = '<input type="checkbox" class="form-check-input" checked="" style="font-size: 20px; "> '
                         }else{
-                            content_present = '<div class="badge badge-outline-danger"> <i class= "mdi mdi-checkbox-blank-circle-outline h4" > </i>  </div>'
+                            content_present = '<input type="checkbox" class="form-check-input"  style="font-size: 20px; ">'
                         }
 
                         if(value.kdm_installed == 'yes' ){
-                            kdm_installed = '<div class="badge badge-outline-success"><i class= "mdi mdi-check-circle-outline h4" > </i></div>'
+                            kdm_installed = '<input type="checkbox" class="form-check-input" checked="" style="font-size: 20px; ">'
                         }else{
-                            kdm_installed = '<div class="badge badge-outline-danger"><i class= "mdi mdi-checkbox-blank-circle-outline h4" > </i> </div>'
+                            kdm_installed = '<input type="checkbox" class="form-check-input"  style="font-size: 20px; ">'
                         }
 
-                        const date1 = new Date();
+                        /*const date1 = new Date();
                         const date2 = new Date(value.ContentKeysNotValidAfter);
-                        let diffTime = Math.abs(date2 - date1);
+                        let diffTime = Math.abs(date1 - date2);*/
 
-                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                        const date1 = new Date(); // Date actuelle
+                        const date2String = value.ContentKeysNotValidAfter; // Chaîne représentant la date
+
+                        // Convertir la chaîne en objet Date
+                        const date2 = new Date(date2String);
+
+                        let diffTime = date2 - date1;
+
+                        // Pour obtenir la différence en jours par exemple :
+                        let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+
+
+                        //const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
                         background_difftime=""
 
@@ -312,7 +325,6 @@
                 +'</div>'
             $('#location-listing tbody').html(loader_content)
 
-
             //$('#location-listing tbody').html('')
             var location =  $('#location').val();
             var country =  $('#country').val();
@@ -342,15 +354,15 @@
                         $.each(response.kdms, function( index, value ) {
 
                             if(value.content_present == 'yes' ){
-                                content_present = '<div class="badge badge-outline-success"> <i class= "mdi mdi-check-circle-outline h4 " > </i> </div> '
+                                content_present = '<input type="checkbox" class="form-check-input" checked="" style="font-size: 20px; "> '
                             }else{
-                                content_present = '<div class="badge badge-outline-danger"> <i class= "mdi mdi-checkbox-blank-circle-outline h4" > </i>  </div>'
+                                content_present = '<input type="checkbox" class="form-check-input"  style="font-size: 20px; ">'
                             }
 
                             if(value.kdm_installed == 'yes' ){
-                                kdm_installed = '<div class="badge badge-outline-success"><i class= "mdi mdi-check-circle-outline h4" > </i></div>'
+                                kdm_installed = '<input type="checkbox" class="form-check-input" checked="" style="font-size: 20px; ">'
                             }else{
-                                kdm_installed = '<div class="badge badge-outline-danger"><i class= "mdi mdi-checkbox-blank-circle-outline h4" > </i> </div>'
+                                kdm_installed = '<input type="checkbox" class="form-check-input"  style="font-size: 20px; ">'
                             }
 
 
@@ -415,8 +427,6 @@
                 $('#location-listing tbody').html('<div id="table_logs_processing" class="dataTables_processing card">Please Select Location</div>')
             }
 
-
-
         });
 
         $('#refresh_lms').click(function(){
@@ -467,15 +477,15 @@
                             $.each(response.kdms, function( index, value ) {
 
                                 if(value.content_present == 'yes' ){
-                                    content_present = '<div class="badge badge-outline-success"> <i class= "mdi mdi-check-circle-outline h4 " > </i> </div> '
+                                    content_present = '<input type="checkbox" class="form-check-input" checked="" style="font-size: 20px; "> '
                                 }else{
-                                    content_present = '<div class="badge badge-outline-danger"> <i class= "mdi mdi-checkbox-blank-circle-outline h4" > </i>  </div>'
+                                    content_present = '<input type="checkbox" class="form-check-input"  style="font-size: 20px; ">'
                                 }
 
                                 if(value.kdm_installed == 'yes' ){
-                                    kdm_installed = '<div class="badge badge-outline-success"><i class= "mdi mdi-check-circle-outline h4" > </i></div>'
+                                    kdm_installed = '<input type="checkbox" class="form-check-input" checked="" style="font-size: 20px; ">'
                                 }else{
-                                    kdm_installed = '<div class="badge badge-outline-danger"><i class= "mdi mdi-checkbox-blank-circle-outline h4" > </i> </div>'
+                                    kdm_installed = '<input type="checkbox" class="form-check-input"  style="font-size: 20px; ">'
                                 }
 
 
@@ -562,15 +572,15 @@
                         $.each(response.kdms, function( index, value ) {
 
                             if(value.content_present == 'yes' ){
-                                content_present = '<div class="badge badge-outline-success"> <i class= "mdi mdi-check-circle-outline h4 " > </i> </div> '
+                                content_present = '<input type="checkbox" class="form-check-input" checked="" style="font-size: 20px; "> '
                             }else{
-                                content_present = '<div class="badge badge-outline-danger"> <i class= "mdi mdi-checkbox-blank-circle-outline h4" > </i>  </div>'
+                                content_present = '<input type="checkbox" class="form-check-input"  style="font-size: 20px; ">'
                             }
 
                             if(value.kdm_installed == 'yes' ){
-                                kdm_installed = '<div class="badge badge-outline-success"><i class= "mdi mdi-check-circle-outline h4" > </i></div>'
+                                kdm_installed = '<input type="checkbox" class="form-check-input" checked="" style="font-size: 20px; ">'
                             }else{
-                                kdm_installed = '<div class="badge badge-outline-danger"><i class= "mdi mdi-checkbox-blank-circle-outline h4" > </i> </div>'
+                                kdm_installed = '<input type="checkbox" class="form-check-input"  style="font-size: 20px; ">'
                             }
 
 
