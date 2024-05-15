@@ -58,7 +58,14 @@ class NockdmController extends Controller
 
                                 $file_name = $kdm_file_data['MessageId'].".xml" ;
                                 $cn_dn_table = $this->getDnCn($kdm_file_data ["SubjectName"]);
-                                $screen =  $this->getScreenByDnCn( $cn_dn_table['dnQualifier'],$cn_dn_table['CN'],$serial_number) ;
+                                $screen =  $this->getScreenByDnCn( $cn_dn_table['dnQualifier'],$cn_dn_table['CN'],$serial_number,$dn_cleaned) ;
+                                if(!$screen)
+                                {
+                                    $dn_cleaned = str_replace('\\', '', $cn_dn_table['dnQualifier']);
+                                    $screen =  $this->getScreenByDnCn( $cn_dn_table['dnQualifier'],$cn_dn_table['CN'],$serial_number) ;
+                                }
+
+
                                 $file_url = Storage::disk('local')->put( $file_name, $file_content) ;
                                 if($screen)
                                 {

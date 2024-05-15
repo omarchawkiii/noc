@@ -1513,11 +1513,12 @@ function formatSize(sizeInBytes) {
             if( $('#refresh_lms').hasClass("activated"))
             {
                 lms = true ;
-                $('#cpl_to_clean_table h5.modal-title').html("LMS CPLs to Clean")
+                $('#cpl_to_clean_model h5.modal-title').html("LMS CPLs to Clean")
             }
             else
             {
                 lms = false ;
+                $('#cpl_to_clean_model h5.modal-title').html("Screen CPLs to Clean")
             }
             if(location == 'Locations')
             {
