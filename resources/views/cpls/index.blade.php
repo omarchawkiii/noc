@@ -405,6 +405,40 @@
         </div>
     </div>
 
+    <div class="modal fade " id="cpl_to_clean_model" tabindex="-1" aria-labelledby="ModalLabel"aria-modal="true" role="dialog">
+        <div class="modal-dialog" style="max-width: 60%; width: 60%;" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 15px;">
+                    <h5 class="modal-title" id=" " style="font-size: 23px;">
+                        <i class="mdi mdi-delete-sweep custom-search  btn-inverse-danger "></i>Screen CPLs to Clean  </h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table" id="cpl_to_clean_table">
+                        <thead>
+                            <tr>
+                                <th>UUID</th>
+                                <th>CPL Name</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                      </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="confirm_clean_cpl" class="btn btn-danger" style=" margin: auto;font-size: 21px;font-weight: bold;" data-dismiss="modal">
+                        Confirm  Clean Task
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 
 @endsection
 
@@ -1479,6 +1513,7 @@ function formatSize(sizeInBytes) {
             if( $('#refresh_lms').hasClass("activated"))
             {
                 lms = true ;
+                $('#cpl_to_clean_table h5.modal-title').html("LMS CPLs to Clean")
             }
             else
             {
@@ -1545,18 +1580,43 @@ function formatSize(sizeInBytes) {
                                 beforeSend: function () {
                                 },
                                 success: function (response) {
+                                    if(response.content_to_clean.length>0)
+                                    {
+                                        var result="" ;
+                                        $.each(response.content_to_clean, function( index, value ) {
+                                            result =  result +
+                                                '<tr>'
+                                                    +'<td>'+value.uuid+'</td>'
+                                                    +'<td>'+value.contentTitleText+'</td>'
+                                                +'</t>'
+                                        });
 
+
+                                        $('#cpl_to_clean_table tbody').html(result)
+                                        $('#cpl_to_clean_model').modal('show');
+                                    }
+                                    else
+                                    {
                                         swal({
-                                            title: 'Done!',
-                                            text: response.count_cpls + ' Cpls Deleted Successfully ' ,
-                                            icon: 'success',
-                                            button: {
-                                                text: "Continue",
-                                                value: true,
-                                                visible: true,
-                                                className: "btn btn-primary"
+                                            title: '',
+                                            text: "Nothnothing To Delete .",
+                                            icon: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#3f51b5',
+                                            cancelButtonColor: '#ff4081',
+                                            confirmButtonText: 'Great ',
+                                            buttons: {
+                                                cancel: {
+                                                    text: "Cancel",
+                                                    value: null,
+                                                    visible: true,
+                                                    className: "btn btn-danger",
+                                                    closeModal: true,
+                                                },
                                             }
                                         })
+                                    }
+
 
                                 },
                                 error: function (jqXHR, textStatus, errorThrown) {

@@ -399,15 +399,11 @@ class CplController extends Controller
         $response = $client->request('GET', $url);
         $contents = json_decode($response->getBody(), true);
 
-        if($contents)
+        if($contents['content_to_clean'])
         {
-            foreach($contents as $content)
-            {
-                if($content)
-                {
-                    dd($content) ;
-                }
-            }
+            $content_to_clean = $contents["content_to_clean"];
+            return Response()->json(compact('content_to_clean'));
+
         }
         /*
         if($lms)
