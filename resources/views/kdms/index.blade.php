@@ -240,10 +240,8 @@
                         // Pour obtenir la différence en jours par exemple :
                         let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-
-
                         //const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
+                        console.log(value.ContentKeysNotValidAfter)
                         background_difftime=""
 
                         if(diffTime/100/60/60 > 48 )
@@ -368,7 +366,7 @@
 
                             const date1 = new Date();
                             const date2 = new Date(value.ContentKeysNotValidAfter);
-                            let diffTime = Math.abs(date2 - date1);
+                            let diffTime = date2 - date1;
 
                             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
@@ -491,7 +489,7 @@
 
                                 const date1 = new Date();
                                 const date2 = new Date(value.ContentKeysNotValidAfter);
-                                let diffTime = Math.abs(date2 - date1);
+                                let diffTime = date2 - date1;
 
                                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
@@ -586,7 +584,7 @@
 
                             const date1 = new Date();
                             const date2 = new Date(value.ContentKeysNotValidAfter);
-                            let diffTime = Math.abs(date2 - date1);
+                            let diffTime = date2 - date1;
 
                             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 

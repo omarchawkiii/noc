@@ -53,7 +53,7 @@ class SplController extends Controller
                         ]);
                     }
 
-                    // check if SPLs deleted
+
                     if(count($content) != $screen->spls->count() )
                     {
                         $uuid_spls = array_column($content, 'uuid');
@@ -65,11 +65,7 @@ class SplController extends Controller
                                     $spl->delete() ;
                                 }
                             }
-
-                        //dd('we should delete screens ') ;
                     }
-
-
                 }
             }
         }

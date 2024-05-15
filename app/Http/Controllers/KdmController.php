@@ -36,6 +36,12 @@ class KdmController extends Controller
                         $cpl = Cpl::where('uuid','=',$kdm['cplId'])->where('location_id','=',$location->id)->first() ;
                         if($cpl)
                         {
+                            $cpl_id = $cpl->id ;
+                        }
+                        else
+                        {
+                            $cpl_id = "" ;
+                        }
                             Kdm::updateOrCreate([
                                 'uuid' => $kdm["uuid"],
                                 'location_id' => $location->id
@@ -49,16 +55,12 @@ class KdmController extends Controller
                                 'serverName_by_serial' => $kdm['serverName_by_serial'],
                                 'device_target' => $kdm['DeviceTarget'],
                                 'cpl_uuid' => $kdm['cplId'],
-                                'cpl_id' => $cpl->id,
+                                'cpl_id' => $cpl_id,
                                 'screen_id' => $screen->id,
                                 'location_id' => $location->id,
 
                             ]);
-                        }
-                        else
-                        {
-                            echo "CPL dont exsite " . $kdm['cplId'] ;
-                        }
+
                     }
 
                     if(count($content) != $screen->kdms->count() )
@@ -68,7 +70,6 @@ class KdmController extends Controller
                             {
                                 if (! in_array( $kdm->uuid , $uuid_kdms))
                                 {
-                                    // delete deleted screen
                                     $kdm->delete() ;
                                 }
                             }
