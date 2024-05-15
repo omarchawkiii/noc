@@ -111,11 +111,9 @@ class KdmController extends Controller
         if(isset($screen) && $screen != 'null' )
         {
             $kdms =$kdms->where('screen_id',$screen);
-
         }
 
-
-        $kdms =$kdms->get() ;
+        $kdms =$kdms->orderBy('ContentKeysNotValidAfter', 'ASC')->get() ;
 
         return Response()->json(compact('kdms','screens'));
 

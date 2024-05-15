@@ -233,18 +233,18 @@
 
                         let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-                        console.log(value.ContentKeysNotValidAfter)
+                        console.log(diffTime / (1000 * 60 * 60))
                         background_difftime=""
 
-                        if(diffTime/100/60/60 > 48 )
+                        if(diffTime / (1000 * 60 * 60) > 48 )
                         {
                             background_difftime = "bg-success"
                         }
-                        if(diffTime/100/60/60 < 48  && diffTime/100/60/60 > 0 )
+                        if(diffTime / (1000 * 60 * 60) < 48  && diffTime / (1000 * 60 * 60) > 0 )
                         {
                             background_difftime = "bg-warning"
                         }
-                        if(diffTime/100/60/60 <= 0 )
+                        if(diffTime / (1000 * 60 * 60) <= 0 )
                         {
                             background_difftime = "bg-danger"
                         }
@@ -365,19 +365,19 @@
 
                             let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-                            console.log(diffTime/100/60/60)
+                            console.log(diffTime / (1000 * 60 * 60))
                             background_difftime=""
 
 
-                            if(diffTime/100/60/60 > 48 )
+                            if(diffTime / (1000 * 60 * 60) > 48 )
                             {
                                 background_difftime = "bg-success"
                             }
-                            if(diffTime/100/60/60 < 48  && diffTime/100/60/60 > 0 )
+                            if(diffTime / (1000 * 60 * 60) < 48  && diffTime / (1000 * 60 * 60) > 0 )
                             {
                                 background_difftime = "bg-warning"
                             }
-                            if(diffTime/100/60/60 <= 0 )
+                            if(diffTime / (1000 * 60 * 60) <= 0 )
                             {
                                 background_difftime = "bg-danger"
                             }
@@ -497,15 +497,15 @@
                                 background_difftime=""
 
 
-                                if(diffTime/100/60/60 > 48 )
+                                if(diffTime / (1000 * 60 * 60) > 48 )
                                 {
                                     background_difftime = "bg-success"
                                 }
-                                if(diffTime/100/60/60 < 48  && diffTime/100/60/60 > 0 )
+                                if(diffTime / (1000 * 60 * 60) < 48  && diffTime / (1000 * 60 * 60) > 0 )
                                 {
                                     background_difftime = "bg-warning"
                                 }
-                                if(diffTime/100/60/60 <= 0 )
+                                if(diffTime / (1000 * 60 * 60) <= 0 )
                                 {
                                     background_difftime = "bg-danger"
                                 }
@@ -593,19 +593,19 @@
 
                             let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-                            console.log(value.ContentKeysNotValidAfter)
+                            console.log(diffTime)
                             background_difftime=""
 
 
-                            if(diffTime/100/60/60 > 48 )
+                            if(diffTime / (1000 * 60 * 60) > 48 )
                             {
                                 background_difftime = "bg-success"
                             }
-                            if(diffTime/100/60/60 < 48  && diffTime/100/60/60 > 0 )
+                            if(diffTime / (1000 * 60 * 60) < 48  && diffTime / (1000 * 60 * 60) > 0 )
                             {
                                 background_difftime = "bg-warning"
                             }
-                            if(diffTime/100/60/60 <= 0 )
+                            if(diffTime / (1000 * 60 * 60) <= 0 )
                             {
                                 background_difftime = "bg-danger"
                             }
