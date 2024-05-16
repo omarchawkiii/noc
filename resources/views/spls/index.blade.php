@@ -282,6 +282,30 @@
         </div>
     </div>
 
+    <div class="modal fade " id="spl_deleted_model" tabindex="-1" aria-labelledby="ModalLabel"aria-modal="true" role="dialog">
+        <div class="modal-dialog" style="max-width: 60%; width: 60%;" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 15px;">
+                    <h5 class="modal-title" id=" " style="font-size: 23px;">
+                        <i class="mdi mdi-delete-sweep custom-search  btn-inverse-danger "></i>SPL Deletion Infos </h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body" >
+
+
+                </div>
+                <div class="modal-footer">
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
 @endsection
 
 @section('custom_script')
@@ -665,7 +689,14 @@
                                 });
 
                                 var delete_from_lms = $('#delete_from_lms' ).is(":checked")
-
+                                if(delete_from_lms)
+                                {
+                                    delete_from_lms = 1 ;
+                                }
+                                else
+                                {
+                                    delete_from_lms = 0 ;
+                                }
 
                                 $.ajax({
                                     url : "{{  url('') }}"+ '/spls/delete_spls',
@@ -682,24 +713,48 @@
                                     beforeSend: function () {
                                     },
                                     success: function (response) {
-                                        if (response == 'Success') {
+                                        if (response.status )
+                                        {
+                                            if (response.errors.length> 0 )
+                                            {
 
-                                            swal({
-                                                title: 'Done!',
-                                                text: 'Cpls Deleted Successfully ',
-                                                icon: 'success',
-                                                button: {
-                                                    text: "Continue",
-                                                    value: true,
-                                                    visible: true,
-                                                    className: "btn btn-primary"
-                                                }
-                                            })
-                                            $('#location-listing tbody').html("")
+                                                $('#spl_deleted_model').modal('show') ;
+                                                result = "<h4> Failed  Spls Deleted</h4>" ;
+                                                $.each(response.errors, function( index, value ) {
 
-                                            get_spls(location , screen , false , multiplex)
-                                            $('#spl_delete_model').modal('hide');
-                                        } else {
+                                                    result = result
+                                                    +'<p>'
+                                                        +'<span class="align-middle fw-medium text-danger ">'+value.uuid+' |  </span>'
+                                                        +'<span class="align-middle fw-medium text-danger "> '+value.ShowTitleText+' </span>'
+                                                        +'<span class="align-middle fw-medium text-danger "> : '+value.status+' </span>'
+                                                        +'<span class="align-middle fw-medium text-success" > From Screen : '+value.screen+' </span>'
+                                                    +'</p>';
+                                                });
+                                            }
+
+                                            if (response.deleted_spls.length> 0 )
+                                            {
+                                            result = result + "<br /> <br /> <h4>  Succeeded  SPLs Deleted   </h4>" ;
+                                                $.each(response.deleted_spls, function( index, value ) {
+
+                                                    result = result
+                                                    +'<p>'
+                                                        +'<span class="align-middle fw-medium text-success">'+value.uuid+' |</span>'
+                                                        +'<span class="align-middle fw-medium text-success" >'+value.ShowTitleText+' </span>'
+                                                        +'<span class="align-middle fw-medium text-success" >'+value.status+' </span>'
+                                                        +'<span class="align-middle fw-medium text-success" > From Screen : '+value.screen+' </span>'
+                                                    +'</p>';
+                                                });
+                                            }
+
+
+                                            $('#spl_deleted_model .modal-body').html(result) ;
+                                            //showSwal('warning-message-and-cancel')
+                                            load_kdmnoc();
+
+                                        }
+                                        else
+                                        {
                                             swal({
                                                 title: 'Failed',
                                                 text: "Error occurred while sending the request.",

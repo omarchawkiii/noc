@@ -341,15 +341,15 @@ class CplController extends Controller
     }
 
     function delete_cplRequest($apiUrl,$lms, $array_cpls, $array_screens,$username,$password) {
+
         // Prepare the request data
         $requestData = [
             'action' => 'deleteCplByUuidScreenNumbers',
             'lms' => $lms,
-            'list_cpls' => $array_cpls,
+            'list_spls' => $array_cpls,
             'list_screens' => $array_screens,
             'username' =>$username,
             'password' =>$password
-
         ];
 
         // Initialize cURL session
@@ -379,6 +379,7 @@ class CplController extends Controller
             return json_decode($response, true);
         }
     }
+
 
     public function clean_cpls(Request $request)
     {
