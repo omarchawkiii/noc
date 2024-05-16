@@ -317,11 +317,13 @@ class CplController extends Controller
     public function delete_cpl(Request $request )
     {
         $location = Location::findOrFail($request->location) ;
-        $response = $this->delete_cplRequest($request->connection_ip, $request->lms, $request->array_cpls, $request->array_screens, $location->email , $location->password);
-        //$response['result'] = 1 ;
-        if($response['result'] === 1 )
-        {
 
+        //$response = $this->delete_cplRequest($request->connection_ip, $request->lms, $request->array_cpls, $request->array_screens, $location->email , $location->password);
+        $response = $this->delete_cplRequest($location->connection_ip,$request->array_cpls, $request->array_screens, $request->lms,$location->email, $location->password);
+        //$response['result'] = 1 ;
+
+        if(count($response['errors']) === 0)
+        {
             foreach($request->array_cpls as $cpl_uuid)
             {
                 if($request->lms)
@@ -332,24 +334,33 @@ class CplController extends Controller
                 $screens_id = array_column($screens, 'id');
                 $cpl = Cpl::with('screen')->where('uuid',$cpl_uuid)->whereIn('screen_id',$screens_id)->where('location_id',$location->id)->delete() ;
             }
-                echo "Success" ;
+            $deleted_cpls = $response['deleted_cpls'] ;
+            $errors = $response['errors'] ;
+            $status = 1 ;
+            return Response()->json(compact('status','deleted_cpls','errors'));
+
         }
         else
         {
-            echo "Failed" ;
+            $deleted_cpls =null ;
+            $errors =null ;
+            $status = 0 ;
+            return Response()->json(compact('status','deleted_cpls','errors'));
         }
     }
 
-    function delete_cplRequest($apiUrl,$lms, $array_cpls, $array_screens,$username,$password) {
+
+    public function delete_cplRequest($apiUrl,$list_cpls, $list_screens, $lms,$username, $password)
+    {
 
         // Prepare the request data
         $requestData = [
             'action' => 'deleteCplByUuidScreenNumbers',
+            'username' => $username,
+            'password' => $password,
+            'list_cpls' => $list_cpls,
+            'list_screens' => $list_screens,
             'lms' => $lms,
-            'list_spls' => $array_cpls,
-            'list_screens' => $array_screens,
-            'username' =>$username,
-            'password' =>$password
         ];
 
         // Initialize cURL session
@@ -362,11 +373,10 @@ class CplController extends Controller
 
         // Execute cURL session and get the response
         $response = curl_exec($ch);
-       // print_r($response);
-
         // Check for cURL errors
         if (curl_errno($ch)) {
             return ['error' => 'Curl error: ' . curl_error($ch)];
+
         }
 
         // Close cURL session
@@ -377,6 +387,7 @@ class CplController extends Controller
             return ['error' => 'Error occurred while sending the request.'];
         } else {
             return json_decode($response, true);
+
         }
     }
 

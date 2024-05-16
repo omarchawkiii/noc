@@ -439,6 +439,27 @@
         </div>
     </div>
 
+    <div class="modal fade " id="cpl_deleted_model" tabindex="-1" aria-labelledby="ModalLabel"aria-modal="true" role="dialog">
+        <div class="modal-dialog" style="max-width: 60%; width: 60%;" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 15px;">
+                    <h5 class="modal-title" id=" " style="font-size: 23px;">
+                        <i class="mdi mdi-delete-sweep custom-search  btn-inverse-danger "></i>CPLs Deletion Infos </h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body" >
+
+
+                </div>
+                <div class="modal-footer">
+
+                </div>
+
+            </div>
+        </div>
+    </div>
 
 @endsection
 
@@ -1436,22 +1457,45 @@ function formatSize(sizeInBytes) {
                                     beforeSend: function () {
                                     },
                                     success: function (response) {
-                                        if (response == 'Success') {
+                                        if (response.status )
+                                        {
+                                            if (response.errors.length> 0 )
+                                            {
 
-                                            swal({
-                                                title: 'Done!',
-                                                text: 'Cpls Deleted Successfully ',
-                                                icon: 'success',
-                                                button: {
-                                                    text: "Continue",
-                                                    value: true,
-                                                    visible: true,
-                                                    className: "btn btn-primary"
-                                                }
-                                            })
-                                            $('#location-listing tbody').html("")
+                                                $('#cpl_deleted_model').modal('show') ;
+                                                result = "<h4> Failed  cpls Deleted</h4>" ;
+                                                $.each(response.errors, function( index, value ) {
 
-                                            if($('#refresh_lms').hasClass("activated"))
+                                                    result = result
+                                                    +'<p>'
+                                                        +'<span class="align-middle fw-medium text-danger ">'+value.uuid+' |  </span>'
+                                                        +'<span class="align-middle fw-medium text-danger "> '+value.ShowTitleText+' </span>'
+                                                        +'<span class="align-middle fw-medium text-danger "> : '+value.status+' </span>'
+                                                        +'<span class="align-middle fw-medium text-success" > From Screen : '+value.screen+' </span>'
+                                                    +'</p>';
+                                                });
+                                            }
+
+                                            if (response.deleted_cpls.length> 0 )
+                                            {
+                                                result = result + "<br /> <br /> <h4>  Succeeded  SPLs Deleted   </h4>" ;
+                                                    $.each(response.deleted_cpls, function( index, value ) {
+
+                                                        result = result
+                                                        +'<p>'
+                                                            +'<span class="align-middle fw-medium text-success">'+value.uuid+' |</span>'
+                                                            +'<span class="align-middle fw-medium text-success" >'+value.ShowTitleText+' </span>'
+                                                            +'<span class="align-middle fw-medium text-success" >'+value.status+' </span>'
+                                                            +'<span class="align-middle fw-medium text-success" > From Screen : '+value.screen+' </span>'
+                                                        +'</p>';
+                                                    });
+                                            }
+
+                                            $('#cpl_delete_model').modal('hide');
+                                            $('#cpl_delete_model .modal-body').html(result) ;
+                                            $('#cpl_delete_model').modal('show') ;
+                                            //showSwal('warning-message-and-cancel')
+                                            if( $('#refresh_lms').hasClass("activated"))
                                             {
                                                 get_cpls(location , screen , true , multiplex)
                                             }
@@ -1460,8 +1504,6 @@ function formatSize(sizeInBytes) {
                                                 get_cpls(location , screen , false , multiplex)
                                             }
 
-
-                                            $('#cpl_delete_model').modal('hide');
                                         } else {
                                             swal({
                                                 title: 'Failed',
