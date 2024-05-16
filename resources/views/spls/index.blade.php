@@ -734,21 +734,22 @@
 
                                             if (response.deleted_spls.length> 0 )
                                             {
-                                            result = result + "<br /> <br /> <h4>  Succeeded  SPLs Deleted   </h4>" ;
-                                                $.each(response.deleted_spls, function( index, value ) {
+                                                result = result + "<br /> <br /> <h4>  Succeeded  SPLs Deleted   </h4>" ;
+                                                    $.each(response.deleted_spls, function( index, value ) {
 
-                                                    result = result
-                                                    +'<p>'
-                                                        +'<span class="align-middle fw-medium text-success">'+value.uuid+' |</span>'
-                                                        +'<span class="align-middle fw-medium text-success" >'+value.ShowTitleText+' </span>'
-                                                        +'<span class="align-middle fw-medium text-success" >'+value.status+' </span>'
-                                                        +'<span class="align-middle fw-medium text-success" > From Screen : '+value.screen+' </span>'
-                                                    +'</p>';
-                                                });
+                                                        result = result
+                                                        +'<p>'
+                                                            +'<span class="align-middle fw-medium text-success">'+value.uuid+' |</span>'
+                                                            +'<span class="align-middle fw-medium text-success" >'+value.ShowTitleText+' </span>'
+                                                            +'<span class="align-middle fw-medium text-success" >'+value.status+' </span>'
+                                                            +'<span class="align-middle fw-medium text-success" > From Screen : '+value.screen+' </span>'
+                                                        +'</p>';
+                                                    });
                                             }
 
-
+                                            $('#spl_delete_model').modal('hide');
                                             $('#spl_deleted_model .modal-body').html(result) ;
+                                            $('#spl_deleted_model').modal('show') ;
                                             //showSwal('warning-message-and-cancel')
                                             if( $('#refresh_lms').hasClass("activated"))
                                             {
