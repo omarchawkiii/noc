@@ -750,7 +750,14 @@
 
                                             $('#spl_deleted_model .modal-body').html(result) ;
                                             //showSwal('warning-message-and-cancel')
-                                            load_kdmnoc();
+                                            if( $('#refresh_lms').hasClass("activated"))
+                                            {
+                                                get_spls(location , screen , true , multiplex)
+                                            }
+                                            else
+                                            {
+                                            get_spls(location , screen , false , multiplex)
+                                            }
 
                                         }
                                         else
