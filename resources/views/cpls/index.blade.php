@@ -1417,15 +1417,31 @@ function formatSize(sizeInBytes) {
 
                             $.each(response.screens, function( index, value ) {
 
-                                result =  result +
-                                '<li>'
-                                    +'<button type="button" class="btn btn-outline-secondary btn-fw" style="text-align: left;">'
-                                        +'<label class="form-check-label custom-check2">'
-                                            +'<input type="checkbox" class="form-check-input" name="screen_to_ingest" data-id="'+value.screen_number+'" value="'+value.screen_number+'" style="font-size: 20px;margin-bottom:  3px; margin-right:  5px">'
-                                            +'<span style="font-weight: bold;">'+value.name+'</span> <i class="input-helper"></i>'
-                                        +'</label>'
-                                    +'</button>'
-                                +'</li>'
+                                if(value.playback_status == "Unknown")
+                                {
+                                    result =  result +
+                                    '<li>'
+                                        +'<button type="button" class="btn btn-outline-secondary btn-fw" style="text-align: left;">'
+                                            +'<label class="form-check-label custom-check2">'
+                                                +'<input disabled="true" type="checkbox" class="form-check-input" name="screen_to_ingest" data-id="'+value.screen_number+'" value="'+value.screen_number+'" style="font-size: 20px;margin-bottom:  3px; margin-right:  5px">'
+                                                +'<span style="font-weight: bold; color:red">'+value.name+' ( Screen offline )</span> <i class="input-helper"></i>'
+                                            +'</label>'
+                                        +'</button>'
+                                    +'</li>'
+                                }
+                                else
+                                {
+                                    result =  result +
+                                    '<li>'
+                                        +'<button type="button" class="btn btn-outline-secondary btn-fw" style="text-align: left;">'
+                                            +'<label class="form-check-label custom-check2">'
+                                                +'<input type="checkbox" class="form-check-input" name="screen_to_ingest" data-id="'+value.screen_number+'" value="'+value.screen_number+'" style="font-size: 20px;margin-bottom:  3px; margin-right:  5px">'
+                                                +'<span style="font-weight: bold;">'+value.name+'</span> <i class="input-helper"></i>'
+                                            +'</label>'
+                                        +'</button>'
+                                    +'</li>'
+                                }
+
 
                             });
 
@@ -1835,7 +1851,7 @@ function formatSize(sizeInBytes) {
         margin: 3px;
     }
     #list_servers_cpls_to_delete li button {
-        width: 171px !important;
+       /* width: 171px !important;*/
     }
     #list_servers_spls_to_delete li button {
         width: 171px !important;

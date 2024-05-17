@@ -574,7 +574,7 @@
                             }
 
                             result = result
-                                +'<tr class="odd">'
+                                +'<tr class="odd"  data-id="'+value.uuid+'">'
                                 +'<td class="cpl-item class="sorting_1">'+ index +' </td>'
                                 +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
                                 +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+available_on_content+'</a></td>'
@@ -625,10 +625,18 @@
         $(document).on('click', '#delete_spl', function (event) {
 
             var screen =  $('#screen').val();
-
             var multiplex =  $('#multiplex').val();
             var array_spls = [];
             var location = $('#location').val() ;
+            var lms = false ;
+            if( $('#refresh_lms').hasClass("activated"))
+            {
+                lms = true ;
+            }
+            else
+            {
+                lms = false ;
+            }
 
             $("#location-listing tr.selected").each(function() {
                 var id = $(this).data("id");
@@ -646,7 +654,8 @@
                     type: 'GET',
                     data: {
                         array_spls:array_spls,
-                        location :location
+                        location :location,
+                        lms:lms,
                     },
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -665,16 +674,32 @@
                                 +'</li>' ;
 
                             $.each(response.screens, function( index, value ) {
-                                console.log(value)
-                                result =  result +
-                                '<li>'
-                                    +'<button type="button" class="btn btn-outline-secondary btn-fw" style="text-align: left;">'
-                                        +'<label class="form-check-label custom-check2">'
-                                            +'<input type="checkbox" class="form-check-input" name="screen_to_ingest" data-id="'+value.id_server+'" value="'+value.id_server+'" style="font-size: 20px;margin-bottom:  3px; margin-right:  5px">'
-                                            +'<span style="font-weight: bold; display: inline-block; margin-top: 6px;">'+value.name+'</span> <i class="input-helper"></i>'
-                                        +'</label>'
-                                    +'</button>'
-                                +'</li>'
+
+                                if(value.playback_status == "Unknown")
+                                {
+                                    result =  result +
+                                    '<li>'
+                                        +'<button type="button" class="btn btn-outline-secondary btn-fw" style="text-align: left;">'
+                                            +'<label class="form-check-label custom-check2">'
+                                                +'<input disabled="true" type="checkbox" class="form-check-input" name="screen_to_ingest" data-id="'+value.id_server+'" value="'+value.id_server+'" style="font-size: 20px;margin-bottom:  3px; margin-right:  5px">'
+                                                +'<span style=" color:red; font-weight: bold; display: inline-block; margin-top: 6px;"> '+value.name+' ( Screen offline ) </span> <i class="input-helper"></i>'
+                                            +'</label>'
+                                        +'</button>'
+                                    +'</li>'
+
+                                }
+                                else
+                                {
+                                    result =  result +
+                                    '<li>'
+                                        +'<button type="button" class="btn btn-outline-secondary btn-fw" style="text-align: left;">'
+                                            +'<label class="form-check-label custom-check2">'
+                                                +'<input type="checkbox" class="form-check-input" name="screen_to_ingest" data-id="'+value.id_server+'" value="'+value.id_server+'" style="font-size: 20px;margin-bottom:  3px; margin-right:  5px">'
+                                                +'<span style="font-weight: bold; display: inline-block; margin-top: 6px;">'+value.name+'</span> <i class="input-helper"></i>'
+                                            +'</label>'
+                                        +'</button>'
+                                    +'</li>'
+                                }
 
                             });
 

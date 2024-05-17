@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Lmsspl;
 use App\Models\Location;
 use App\Models\Nocspl;
+use App\Models\Playback;
 use App\Models\Schedule;
 use App\Models\Screen;
 use App\Models\Spl;
@@ -164,15 +165,31 @@ class SplController extends Controller
     {
         $location = $request->location ;
         $screens = array() ;
+
         foreach($request->array_spls as $spl)
         {
-            $spls = Spl::where('uuid',$spl)->where('location_id',$location)->orderBy('screen_id', 'ASC')->get() ;
+
+            if($request->lms)
+            {
+                //$spls = Lmsspl::where('uuid',$spl)->where('location_id',$location)->get() ;
+                $spls = Spl::where('uuid',$spl)->where('location_id',$location)->orderBy('screen_id', 'ASC')->get() ;
+            }
+            else
+            {
+                $spls = Spl::where('uuid',$spl)->where('location_id',$location)->orderBy('screen_id', 'ASC')->get() ;
+            }
+
+
             foreach( $spls as $spl)
             {
+
                 $screen = $spl->screen ;
+                $screen = Screen::where('id',$spl->screen_id)->where('location_id',$location)->get() ;
+
                 if ( ! in_array($screen->id,  array_column($screens, 'id')))
                 {
-                    array_push($screens,  array("id" => $screen->id ,"screen_number" => $screen->screen_number , "name" => $screen->screen_name, "id_server" => $screen->id_server));
+                    $playable = Playback::where('screen_id',$screen->id)->where('location_id',$location)->first() ;
+                    array_push($screens,  array("id" => $screen->id ,"screen_number" => $screen->screen_number , "name" => $screen->screen_name, "id_server" => $screen->id_server, "playback_status" => $playable->playback_status));
                 }
             }
         }

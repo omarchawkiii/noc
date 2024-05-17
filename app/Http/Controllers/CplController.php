@@ -7,6 +7,7 @@ use App\Models\Kdm;
 use App\Models\Lmscpl;
 use App\Models\Location;
 use App\Models\Macro;
+use App\Models\Playback;
 use App\Models\Schedule;
 use App\Models\Screen;
 use App\Models\Spl;
@@ -300,10 +301,12 @@ class CplController extends Controller
             foreach( $cpls as $cpl)
             {
                 $screen = $cpl->screen ;
+                //$screen = Screen::with('playback')->where('id',$cpl->screen_id)->first();
 
                 if ( ! in_array($screen->id,  array_column($screens, 'id')))
                 {
-                    array_push($screens,  array("id" => $screen->id ,"screen_number" => $screen->id_server , "name" => $screen->screen_name));
+                    $playable = Playback::where('screen_id',$screen->id)->where('location_id',$location)->first() ;
+                    array_push($screens,  array("id" => $screen->id ,"screen_number" => $screen->id_server , "name" => $screen->screen_name, "playback_status" => $playable->playback_status));
                 }
             }
         }
