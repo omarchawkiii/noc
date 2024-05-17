@@ -39,7 +39,7 @@ class Error_listController extends Controller
             ]);
             Server_error_list::where('location_id',$location->id)->delete();
 
-            if( contents['errors_list']['list_server_errors'] )
+            if( $contents['errors_list']['list_server_errors'] )
             {
                 foreach($contents['errors_list']['list_server_errors'] as $list_server_error)
                 {
@@ -68,7 +68,7 @@ class Error_listController extends Controller
 
             Kdm_error_list::where('location_id',$location->id)->delete();
 
-            if( contents['errors_list']['list_kdm_errors'] )
+            if( $contents['errors_list']['list_kdm_errors'] )
             {
                 foreach($contents['errors_list']['list_kdm_errors'] as $list_kdm_error)
                 {
@@ -92,7 +92,7 @@ class Error_listController extends Controller
 
             Projector_errors_list::where('location_id',$location->id)->delete();
 
-            if( contents['errors_list']['list_projector_errors'] )
+            if( $contents['errors_list']['list_projector_errors'] )
             {
                 foreach($contents['errors_list']['list_projector_errors'] as $projector_error)
                 {

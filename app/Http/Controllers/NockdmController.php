@@ -58,15 +58,16 @@ class NockdmController extends Controller
 
                                 $file_name = $kdm_file_data['MessageId'].".xml" ;
                                 $cn_dn_table = $this->getDnCn($kdm_file_data ["SubjectName"]);
-                                $screen =  $this->getScreenByDnCn( $cn_dn_table['dnQualifier'],$cn_dn_table['CN'],$serial_number,$dn_cleaned) ;
+                                $screen =  $this->getScreenByDnCn( $cn_dn_table['dnQualifier'],$cn_dn_table['CN'],$serial_number) ;
                                 if(!$screen)
                                 {
                                     $dn_cleaned = str_replace('\\', '', $cn_dn_table['dnQualifier']);
-                                    $screen =  $this->getScreenByDnCn( $cn_dn_table['dnQualifier'],$cn_dn_table['CN'],$serial_number) ;
+                                    $screen =  $this->getScreenByDnCn(  $dn_cleaned,$cn_dn_table['CN'],$serial_number) ;
                                 }
 
 
                                 $file_url = Storage::disk('local')->put( $file_name, $file_content) ;
+
                                 if($screen)
                                 {
                                     $file_url = Storage::disk('local')->put( $file_name, $file_content) ;
@@ -86,6 +87,8 @@ class NockdmController extends Controller
 
                                     $response = $this->updateKdm($location->connection_ip,$kdm_file_data ["MessageId"],$xmlFilePath,$location->email,$location->password ) ;
                                     $tms_ingested = false ;
+                                    /*dd($response != null);
+                                    dd($response,$location->connection_ip,$kdm_file_data ["MessageId"],$xmlFilePath,$location->email,$location->password );*/
                                     if($response != null)
                                     {
                                         if($response['status']== 1 )
@@ -106,8 +109,49 @@ class NockdmController extends Controller
 
                                         $tms_ingested = false ;
                                         $error = "TMS Offline";
-                                        array_push($ingest_errors,  array("status" => $response['status'] , "originalName" =>  $kdmfile->getClientOriginalName() , "id" =>  $kdm_file_data ["MessageId"],  "AnnotationText" =>  "TMS Offline"));
+                                        array_push($ingest_errors,  array("status" => 0 , "originalName" =>  $kdmfile->getClientOriginalName() , "id" =>  $kdm_file_data ["MessageId"],  "AnnotationText" =>  "TMS Offline"));
                                     }
+
+                                    $noc_kdm = Nockdm::updateOrCreate([
+                                        'uuid' => $kdm_file_data['MessageId'],
+                                        'location_id' =>  $location_id ,
+                                    ],[
+                                        'uuid' => $kdm_file_data['MessageId'],
+                                        'name' => $kdm_file_data ["ContentTitleText"],
+                                        'xmlpath'=> $file_name ,
+                                        'ContentKeysNotValidBefore' => $kdm_file_data ["ContentKeysNotValidBefore"],
+                                        'ContentKeysNotValidAfter' => $kdm_file_data ["ContentKeysNotValidAfter"],
+                                        /* 'kdm_installed' => $kdm['kdm_installed'],
+                                        'content_present' => $kdm['content_present'], */
+                                        'serverName_by_serial' => $kdm_file_data ["SerialNumber"],
+                                        'cpl_uuid' => $kdm_file_data['CompositionPlaylistId'],
+                                        'error' => $error,
+                                        'tms_ingested' => $tms_ingested,
+                                        'cpl_id' => $cpl_id,
+                                        'screen_id' => $screen_id,
+                                        'location_id' => $location_id,
+                                    ]);
+
+
+
+                                    Kdm::updateOrCreate([
+                                        'uuid' => $kdm_file_data['MessageId'],
+                                        'location_id' =>  $location_id ,
+                                    ],[
+                                        'uuid' => $kdm_file_data['MessageId'],
+                                        'name' => $kdm_file_data ["ContentTitleText"],
+                                        'ContentKeysNotValidBefore' => $kdm_file_data ["ContentKeysNotValidBefore"],
+                                        'ContentKeysNotValidAfter' => $kdm_file_data ["ContentKeysNotValidAfter"],
+                                        /* 'kdm_installed' => $kdm['kdm_installed'],
+                                        'content_present' => $kdm['content_present'], */
+                                        'serverName_by_serial' => $kdm_file_data ["SerialNumber"],
+                                        'cpl_uuid' => null,
+                                        'cpl_id' => null,
+                                        'screen_id' => $screen_id,
+                                        'location_id' => $location_id,
+
+                                    ]);
+
                                 }
                                 else
                                 {
@@ -119,45 +163,7 @@ class NockdmController extends Controller
                                     array_push($ingest_errors,  array("status" => 0 , "originalName" =>  $kdmfile->getClientOriginalName(), "id" =>  "",  "AnnotationText" =>  "This KDM does not belong to any screen"));
                                 }
 
-                                $noc_kdm = Nockdm::updateOrCreate([
-                                    'uuid' => $kdm_file_data['MessageId'],
-                                    'location_id' =>  $location_id ,
-                                ],[
-                                    'uuid' => $kdm_file_data['MessageId'],
-                                    'name' => $kdm_file_data ["ContentTitleText"],
-                                    'xmlpath'=> $file_name ,
-                                    'ContentKeysNotValidBefore' => $kdm_file_data ["ContentKeysNotValidBefore"],
-                                    'ContentKeysNotValidAfter' => $kdm_file_data ["ContentKeysNotValidAfter"],
-                                    /* 'kdm_installed' => $kdm['kdm_installed'],
-                                    'content_present' => $kdm['content_present'], */
-                                    'serverName_by_serial' => $kdm_file_data ["SerialNumber"],
-                                    'cpl_uuid' => $kdm_file_data['CompositionPlaylistId'],
-                                    'error' => $error,
-                                    'tms_ingested' => $tms_ingested,
-                                    'cpl_id' => $cpl_id,
-                                    'screen_id' => $screen_id,
-                                    'location_id' => $location_id,
-                                ]);
 
-
-
-                                Kdm::updateOrCreate([
-                                    'uuid' => $kdm_file_data['MessageId'],
-                                    'location_id' =>  $location_id ,
-                                ],[
-                                    'uuid' => $kdm_file_data['MessageId'],
-                                    'name' => $kdm_file_data ["ContentTitleText"],
-                                    'ContentKeysNotValidBefore' => $kdm_file_data ["ContentKeysNotValidBefore"],
-                                    'ContentKeysNotValidAfter' => $kdm_file_data ["ContentKeysNotValidAfter"],
-                                    /* 'kdm_installed' => $kdm['kdm_installed'],
-                                    'content_present' => $kdm['content_present'], */
-                                    'serverName_by_serial' => $kdm_file_data ["SerialNumber"],
-                                    'cpl_uuid' => null,
-                                    'cpl_id' => null,
-                                    'screen_id' => $screen_id,
-                                    'location_id' => $location_id,
-
-                                ]);
 
                             }
                             else

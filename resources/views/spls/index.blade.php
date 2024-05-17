@@ -738,6 +738,7 @@
                                     beforeSend: function () {
                                     },
                                     success: function (response) {
+                                        result ="" ;
                                         if (response.status )
                                         {
                                             if (response.errors.length> 0 )

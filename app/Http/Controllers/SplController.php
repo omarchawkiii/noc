@@ -184,7 +184,7 @@ class SplController extends Controller
             {
 
                 $screen = $spl->screen ;
-                $screen = Screen::where('id',$spl->screen_id)->where('location_id',$location)->get() ;
+                $screen = Screen::where('id',$spl->screen_id)->where('location_id',$location)->first() ;
 
                 if ( ! in_array($screen->id,  array_column($screens, 'id')))
                 {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\changeDataEvent;
 use App\Http\Requests\LocationStoreRequest;
 use App\Models\Cpl;
+use App\Models\Dcp_trensfer;
 use App\Models\Lmscpl;
 use App\Models\Lmsspl;
 use App\Models\Location;
@@ -720,6 +721,37 @@ class LocationController extends Controller
 
     }
 
+
+    public function refresh_dcp_trensfer_data()
+    {
+        $start_time = Carbon::now();
+        echo $start_time->toDateTimeString();
+        $locations = Location::all() ;
+        foreach($locations as $location)
+        {
+            $dcps = Dcp_trensfer::where('location_id',$location->id)->where('status','pending')->get() ;
+            foreach($dcps as $dcp)
+            {
+                $log_file = "/DATA/logs/noc_rsync_log.log";
+                $source = "/DATA/assets/950e2027-8c76-4f6c-a897-9501e3ee73b3/";
+                $destination = "noc@172.17.42.2:/data/test_folder/1e3269c4-3df1-4457-9963-0a4c1f9c11ab/";
+
+                $rsync_command = "sshpass rsync -avz --partial --no-t " . escapeshellarg($source) . " " . escapeshellarg($destination). " > " . escapeshellarg($log_file) . " 2>&1";
+                $output = [];
+                $return_code = 0;
+
+                exec($rsync_command, $output, $return_code);
+
+                if ($return_code === 0) {
+                    echo "Rsync completed successfully.";
+                } else {
+                    echo "Rsync failed with code: " . $return_code;
+                   // echo "Output:\n" . implode("\n", $output);
+                }
+            }
+        }
+
+    }
 
 
 

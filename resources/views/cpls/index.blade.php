@@ -1473,15 +1473,18 @@ function formatSize(sizeInBytes) {
                                     beforeSend: function () {
                                     },
                                     success: function (response) {
+                                        result ="" ;
                                         if (response.status )
                                         {
+                                            console.log(response.status)
+                                            console.log(response.errors.length)
+                                            console.log(response.deleted_cpls.length)
+
                                             if (response.errors.length> 0 )
                                             {
-
                                                 $('#cpl_deleted_model').modal('show') ;
                                                 result = "<h4> Failed  cpls Deleted</h4>" ;
                                                 $.each(response.errors, function( index, value ) {
-
                                                     result = result
                                                     +'<p>'
                                                         +'<span class="align-middle fw-medium text-danger ">'+value.uuid+' |  </span>'
@@ -1494,7 +1497,7 @@ function formatSize(sizeInBytes) {
 
                                             if (response.deleted_cpls.length> 0 )
                                             {
-                                                result = result + "<br /> <br /> <h4>  Succeeded  SPLs Deleted   </h4>" ;
+                                                result = result + "<br /> <br /> <h4>  Succeeded  CPLs Deleted   </h4>" ;
                                                     $.each(response.deleted_cpls, function( index, value ) {
 
                                                         result = result
@@ -1506,10 +1509,10 @@ function formatSize(sizeInBytes) {
                                                         +'</p>';
                                                     });
                                             }
-
+                                            console.log(result)
                                             $('#cpl_delete_model').modal('hide');
-                                            $('#cpl_delete_model .modal-body').html(result) ;
-                                            $('#cpl_delete_model').modal('show') ;
+                                            $('#cpl_deleted_model .modal-body').html(result) ;
+                                            $('#cpl_deleted_model').modal('show') ;
                                             //showSwal('warning-message-and-cancel')
                                             if( $('#refresh_lms').hasClass("activated"))
                                             {
