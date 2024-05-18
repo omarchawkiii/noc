@@ -15,6 +15,7 @@ class Dcp_trensfer extends Model
         "torrent_path",
         "progress",
         "id_ingest",
+        "source",
         "id_cpl",
         'location_id',
     ];
