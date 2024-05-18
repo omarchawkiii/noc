@@ -468,27 +468,22 @@ class IngersterController extends Controller
                     if($response['result'] === 1 )
                     {
                        // $command = "mktorrent -o $torrentPath $directoryPath >> /DATA/logs/noc_torrent_log.log 2>&1";
-
-                        $source = "/DATA/assets/$file/";
+                       /* $source = "/DATA/assets/$file/";
                         $destination = "noc@172.17.42.2:/".$response['dcp_path']."/";
-
                         // Define the hardcoded password (security risk)
                         $password = "noc"; // Caution: This is insecure, avoid in production
-
                         // Rsync command with sshpass and hardcoded password
                         $rsync_command = "sshpass -p " . escapeshellarg($password) . " rsync -avz --partial --no-t " . escapeshellarg($source) . " " . escapeshellarg($destination);
 
                         // Execute the rsync command and capture the
-
                         //$command ="rsync -avz --partial --no-t  /DATA/assets/$file/ noc@172.17.42.2:/".$response['dcp_path'].">> /DATA/logs/noc_ingest_file_log.log 2>&1";
-
                         $output = [];
                         $return_code = 0;
 
-                        exec($rsync_command, $output, $return_code);
+                        //exec($rsync_command, $output, $return_code);
 
 
-                       // exec($command, $output, $returnVar);
+                       // exec($command, $output, $returnVar);*/
 
                         Dcp_trensfer::updateOrCreate([
                             'id_cpl' => $cpl->cpl_id ,
@@ -496,6 +491,7 @@ class IngersterController extends Controller
                         ],[
                             'status'     =>"pending",
                             "torrent_path" =>$response['dcp_path'],
+                            "source" =>$response['cpl_uri'],
                             "progress" => 0 ,
                             "id_ingest"=> $cpl->id,
                             "id_cpl" => $cpl->cpl_id,
