@@ -732,11 +732,9 @@ class LocationController extends Controller
             $dcps = Dcp_trensfer::where('location_id',$location->id)->where('status','pending')->get() ;
             foreach($dcps as $dcp)
             {
+
                 $password = "noc" ;
                 $command = "sshpass -p " . escapeshellarg($password) . " rsync -avz --partial --no-t ".$dcp['source']." noc@172.17.42.2:/".$dcp['torrent_path'] ;
-                //$rsync_command = "sshpass -p " . escapeshellarg($password) . " rsync -avz --partial --no-t " . escapeshellarg($source) . " " . escapeshellarg($destination);
-
-                //$rsync_command = "sshpass -p " . escapeshellarg($password) . " rsync -avz --partial --no-t " . escapeshellarg($source) . " " . escapeshellarg($destination);
 
                 //$rsync_command = "sshpass rsync -avz --partial --no-t " . escapeshellarg($source) . " " . escapeshellarg($destination). " > " . escapeshellarg($log_file) . " 2>&1";
                 $output = [];

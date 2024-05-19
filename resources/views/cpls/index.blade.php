@@ -431,7 +431,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="confirm_clean_cpl" class="btn btn-danger" style=" margin: auto;font-size: 21px;font-weight: bold;" data-dismiss="modal">
-                        Confirm  Clean Task
+                        Confirm  Clean CPLs
                     </button>
                 </div>
 
@@ -1664,6 +1664,7 @@ function formatSize(sizeInBytes) {
                                                 type: 'GET',
                                                 data: {
                                                     location :location,
+                                                    lms :lms
                                                 },
                                                 headers: {
                                                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
