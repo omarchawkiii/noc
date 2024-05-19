@@ -71,6 +71,8 @@ Route::get('get_cpl_with_filter_for_noc', [App\Http\Controllers\CplController::c
 Route::get('get_screens_from_cpls', [App\Http\Controllers\CplController::class , 'get_screens_from_cpls'])->name('cpls.get_screens_from_cpls')->middleware(['auth']);
 Route::get('delete_cpls', [App\Http\Controllers\CplController::class , 'delete_cpl'])->name('cpls.delete_cpl')->middleware(['auth']);
 Route::get('cpls/clean_cpls', [App\Http\Controllers\CplController::class , 'clean_cpls'])->name('cpls.clean_cpls')->middleware(['auth']);
+Route::get('cpls/confirm_clean_cpls', [App\Http\Controllers\CplController::class , 'clean_cpls'])->name('cpls.clean_cpls')->middleware(['auth']);
+
 
 
 Route::get('kdms/{location}/{cpls}/get_kdms', [App\Http\Controllers\KdmController::class , 'getkdms'])->name('kdms.get_kdms');

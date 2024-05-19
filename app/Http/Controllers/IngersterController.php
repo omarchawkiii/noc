@@ -465,7 +465,7 @@ class IngersterController extends Controller
                     $response = $this->ingestDcp($location->connection_ip,$cpl->cpl_id, $pkl_size, $cpl->cpl_description,$location->email, $location->password);
 
 
-                    if($response['result'] === 1 )
+                    if($response['status'] === 1 )
                     {
                        // $command = "mktorrent -o $torrentPath $directoryPath >> /DATA/logs/noc_torrent_log.log 2>&1";
                        /* $source = "/DATA/assets/$file/";
@@ -491,7 +491,7 @@ class IngersterController extends Controller
                         ],[
                             'status'     =>"pending",
                             "torrent_path" =>$response['dcp_path'],
-                            "source" =>$response['cpl_uri'],
+                            "source" =>$cpl->tms_dir,
                             "progress" => 0 ,
                             "id_ingest"=> $cpl->id,
                             "id_cpl" => $cpl->cpl_id,

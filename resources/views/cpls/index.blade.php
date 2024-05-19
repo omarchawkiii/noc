@@ -1656,6 +1656,69 @@ function formatSize(sizeInBytes) {
 
                                         $('#cpl_to_clean_table tbody').html(result)
                                         $('#cpl_to_clean_model').modal('show');
+
+                                        $('#confirm_clean_cpl').click(function(){
+
+                                            $.ajax({
+                                                url : "{{  url('') }}"+ '/cpls/confirm_clean_cpls/',
+                                                type: 'GET',
+                                                data: {
+                                                    location :location,
+                                                },
+                                                headers: {
+                                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                                },
+                                                beforeSend: function () {
+                                                },
+                                                success: function (response) {
+                                                    result ="" ;
+                                                    if (response.status )
+                                                    {
+
+                                                        $('#cpl_delete_model').modal('hide');
+                                                        $('#cpl_deleted_model .modal-body').html(result) ;
+                                                        $('#cpl_deleted_model').modal('show') ;
+                                                        //showSwal('warning-message-and-cancel')
+                                                        if( $('#refresh_lms').hasClass("activated"))
+                                                        {
+                                                            get_cpls(location , screen , true , multiplex)
+                                                        }
+                                                        else
+                                                        {
+                                                            get_cpls(location , screen , false , multiplex)
+                                                        }
+
+                                                    } else {
+                                                        swal({
+                                                            title: 'Failed',
+                                                            text: "Error occurred while sending the request.",
+                                                            icon: 'warning',
+                                                            showCancelButton: true,
+                                                            confirmButtonColor: '#3f51b5',
+                                                            cancelButtonColor: '#ff4081',
+                                                            confirmButtonText: 'Great ',
+                                                            buttons: {
+                                                                cancel: {
+                                                                    text: "Cancel",
+                                                                    value: null,
+                                                                    visible: true,
+                                                                    className: "btn btn-danger",
+                                                                    closeModal: true,
+                                                                },
+                                                            }
+                                                        })
+                                                    }
+
+                                                },
+                                                error: function (jqXHR, textStatus, errorThrown) {
+                                                    console.log(errorThrown);
+                                                },
+                                                complete: function (jqXHR, textStatus) {
+                                                }
+                                            });
+
+                                        });
+
                                     }
                                     else
                                     {

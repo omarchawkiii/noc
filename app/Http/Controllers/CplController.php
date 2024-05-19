@@ -420,34 +420,40 @@ class CplController extends Controller
             return Response()->json(compact('content_to_clean'));
 
         }
-        /*
+
+        return Response()->json(compact('status','count_cpls'));
+
+    }
+
+    public function confirm_clean_cpls(Request $request)
+    {
+        $location = Location::findOrFail($request->location) ;
+        $lms = $request->lms;
+
         if($lms)
         {
-            $cpls = Lmscpl::where('location_id',$location)->where('created_at','>=',now()->subDays(40))->where('cpl_is_linked','!=',1)->where('pictureEncryptionAlgorithm','!=',1);
+           $action = 'clean_lms_content' ;
         }
         else
         {
-            $cpls = Cpl::where('location_id',$location)->where('created_at','>=',now()->subDays(40))->where('cpl_is_linked','!=',1)->where('pictureEncryptionAlgorithm','!=',1);
+            $action = 'clean_screen_content' ;
+
         }
 
-        $count_cpls = $cpls->count() ;
-        if($count_cpls)
-        {
-            $status = $cpls->delete() ;
-        }
-        else
-        {
-            $status =true  ;
-        }*/
+        $response = $this->clean_cplRequest($location->connection_ip,$action , $location->email, $location->password);
+        dd($response) ;
+
         return Response()->json(compact('status','count_cpls'));
 
     }
 
 
-    function clean_cplRequest($apiUrl) {
+    function clean_cplRequest($apiUrl,$action,$username,$password) {
         // Prepare the request data
         $requestData = [
-            'action' => 'get_lms_content_to_clean',
+            'action' => $action,
+            'username' => $username,
+            'password' => $password,
         ];
 
         // Initialize cURL session

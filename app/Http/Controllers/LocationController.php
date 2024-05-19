@@ -732,10 +732,12 @@ class LocationController extends Controller
             $dcps = Dcp_trensfer::where('location_id',$location->id)->where('status','pending')->get() ;
             foreach($dcps as $dcp)
             {
-                $log_file = "/DATA/logs/noc_rsync_log.log";
-                $source = "/DATA/assets/950e2027-8c76-4f6c-a897-9501e3ee73b3/";
-                $destination = "noc@172.17.42.2:/data/test_folder/1e3269c4-3df1-4457-9963-0a4c1f9c11ab/";
-                $command = " root@expersysnoc:/usr/bin# rsync -avz --partial --no-t ".$dcp['source']." noc@172.17.42.2:/".$dcp['torrent_path'] ;
+                $password = "noc" ;
+                $command = "sshpass -p " . escapeshellarg($password) . " rsync -avz --partial --no-t ".$dcp['source']." noc@172.17.42.2:/".$dcp['torrent_path'] ;
+                //$rsync_command = "sshpass -p " . escapeshellarg($password) . " rsync -avz --partial --no-t " . escapeshellarg($source) . " " . escapeshellarg($destination);
+
+                //$rsync_command = "sshpass -p " . escapeshellarg($password) . " rsync -avz --partial --no-t " . escapeshellarg($source) . " " . escapeshellarg($destination);
+
                 //$rsync_command = "sshpass rsync -avz --partial --no-t " . escapeshellarg($source) . " " . escapeshellarg($destination). " > " . escapeshellarg($log_file) . " 2>&1";
                 $output = [];
                 $return_code = 0;

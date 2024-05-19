@@ -9,14 +9,14 @@
       <ul class="navbar-nav w-100">
 
 
-        <li class="nav-item dropdown border-left">
+        <li class="nav-item dropdown border-left nav-errors">
             <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-bs-toggle="dropdown">
                 <i class="mdi mdi-alert"></i>
                 <span class="count bg-warning">!</span>
             </a>
 
           <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
-            <h6 class="p-3 mb-0">Errors In All Locations</h6>
+            <h6 class="p-3 mb-0">Errors </h6>
             <div class="dropdown-divider"></div>
                 <a class="dropdown-item preview-item" href="{{  route('snmp.get_snmp_with_filter')}}">
                     <div class="preview-thumbnail">

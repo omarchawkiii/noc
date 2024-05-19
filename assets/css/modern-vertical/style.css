@@ -23928,3 +23928,8 @@ table td a
     background: #297eee !important ;
     color: white !important;
 }
+.navbar .nav-errors .dropdown-menu
+{
+    width: max-content !important;
+    left: 0 !important;
+}
