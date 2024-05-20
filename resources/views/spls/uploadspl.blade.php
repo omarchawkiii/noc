@@ -837,28 +837,23 @@
                             $.each(response.nockdms, function( index, value ) {
                                 index++ ;
 
-
-
                                 const date1 = new Date();
                                 const date2 = new Date(value.ContentKeysNotValidAfter);
-                                let diffTime = Math.abs(date2 - date1);
+                                let diffTime = date2 - date1;
 
                                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-                                var background_difftime=""
+                                var error=" - " ;
 
-                                if(diffTime/100/60/60 > 48 )
+                                if(diffTime / (1000 * 60 * 60) <= 0 )
                                 {
-                                    background_difftime = "bg-success"
+                                    error = "KDM Expired" ;
                                 }
-                                if(diffTime/100/60/60 < 48  && diffTime/100/60/60 > 0 )
+                                else
                                 {
-                                    background_difftime = "bg-warning"
+                                    error =  value.error ;
                                 }
-                                if(diffTime/100/60/60 <= 0 )
-                                {
-                                    background_difftime = "bg-danger"
-                                }
+
                                 var tms_ingested ="No" ;
                                 if(value.tms_ingested)
                                 {
@@ -870,14 +865,24 @@
                                 }
 
                                 var screen_name = " " ;
-                                if(value.screen.screen_name)
+                                if(value.screen)
                                 {
-                                    screen_name = value.screen.screen_name
+                                    if(value.screen.screen_name)
+                                    {
+                                        screen_name = value.screen.screen_name
+                                    }
+                                    else
+                                    {
+                                        screen_name = "Unknown Screen Number " ;
+                                    }
                                 }
                                 else
                                 {
                                     screen_name = "Unknown Screen Number " ;
                                 }
+
+
+
 
                                 result = result
                                     +'<tr class="odd" data-id="'+value.id+'">'
@@ -888,7 +893,7 @@
                                         +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ new Date(value.ContentKeysNotValidAfter).toLocaleString() +'</a></td>'
 
                                         +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+tms_ingested+' </a></td>'
-                                        +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+value.error+' </a></td>'
+                                        +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ error +' </a></td>'
                                         if(!value.tms_ingested == 1 )
                                         {
                                             result = result +'<td> <i  data-id="'+value.id+'" style="font-size: 22px; cursor: pointer;" class=" ingest_kdm mdi mdi-upload  btn-icon-prepend text-info"></i>  <i style="font-size: 22px; cursor: pointer;" class=" text-danger mdi mdi-delete-forever btn-icon-prepend delete_kdm" data-id="'+value.id+'"></i> </td>'

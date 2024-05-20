@@ -22,6 +22,7 @@ class NocsplController extends Controller
 
     public function createlocalspl(Request $request)
     {
+
         //dd($request->action_type);
         if($request->action_type =="edit")
         {
@@ -33,7 +34,7 @@ class NocsplController extends Controller
         }
         else{
             $uuid =  $this->generateUuid();
-            $locations_of_spl = null ;
+            $locations_of_spl = Location::whereIn('id',$request->id_location)->get();
         }
 
 
@@ -88,7 +89,7 @@ class NocsplController extends Controller
             if($config->autoIngest)
             {
                 $autoIngest = true ;
-                if($request->action_type =="edit")
+                if($request->action_type =="edit" || true )
                 {
                     if(count($locations_of_spl)> 0 )
                     {
@@ -128,6 +129,7 @@ class NocsplController extends Controller
 
     public function upload_spl_after_edit(Request $request)
     {
+
         $nocspl = Nocspl::where('uuid', $request->spl_uuid)->first();
         $locations_of_spl = Lmsspl::where('uuid',$nocspl->uuid)->leftJoin('locations', 'locations.id', '=', 'lmsspls.location_id')->select('locations.*' )->groupBy('location_id')->get();
 

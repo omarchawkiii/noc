@@ -2452,6 +2452,7 @@
             let items_macro = [];
             let items_marker = [];
             let items_intermission = [];
+            var id_location =  $('#location').val();
             var title_spl = $('#spl_title').val();
 
             if (title_spl == "") {
@@ -2572,6 +2573,7 @@
                             hfr: hfr,
                             action_control: action_control,
                             items_spl: items_spl,
+                            id_location:id_location,
                             "_token": "{{ csrf_token() }}",
                         },
                         success: function(response) {

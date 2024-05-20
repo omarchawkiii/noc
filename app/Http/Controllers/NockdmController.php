@@ -113,6 +113,25 @@ class NockdmController extends Controller
                                         array_push($ingest_errors,  array("status" => 0 , "originalName" =>  $kdmfile->getClientOriginalName() , "id" =>  $kdm_file_data ["MessageId"],  "AnnotationText" =>  "TMS Offline"));
                                     }
 
+                                    Kdm::updateOrCreate([
+                                        'uuid' => $kdm_file_data['MessageId'],
+                                        'location_id' =>  $location_id ,
+                                    ],[
+                                        'uuid' => $kdm_file_data['MessageId'],
+                                        'name' => $kdm_file_data ["ContentTitleText"],
+                                        'ContentKeysNotValidBefore' => $kdm_file_data ["ContentKeysNotValidBefore"],
+                                        'ContentKeysNotValidAfter' => $kdm_file_data ["ContentKeysNotValidAfter"],
+                                        /* 'kdm_installed' => $kdm['kdm_installed'],
+                                        'content_present' => $kdm['content_present'], */
+                                        'serverName_by_serial' => $kdm_file_data ["SerialNumber"],
+                                        'cpl_uuid' => null,
+                                        'cpl_id' => null,
+                                        'screen_id' => $screen_id,
+                                        'location_id' => $location_id,
+
+                                    ]);
+
+
                                 }
                                 else
                                 {
@@ -122,6 +141,7 @@ class NockdmController extends Controller
                                     $error = "This KDM does not belong to any screen";
                                     array_push($ingest_errors,  array("status" => 0 , "originalName" =>  $kdmfile->getClientOriginalName() , "id" =>  $kdm_file_data ["MessageId"],  "AnnotationText" =>  $error));
                                 }
+                                $location_id = 1 ;
 
                                 $noc_kdm = Nockdm::updateOrCreate([
                                     'uuid' => $kdm_file_data['MessageId'],
@@ -143,23 +163,7 @@ class NockdmController extends Controller
                                     'location_id' => $location_id,
                                 ]);
 
-                                Kdm::updateOrCreate([
-                                    'uuid' => $kdm_file_data['MessageId'],
-                                    'location_id' =>  $location_id ,
-                                ],[
-                                    'uuid' => $kdm_file_data['MessageId'],
-                                    'name' => $kdm_file_data ["ContentTitleText"],
-                                    'ContentKeysNotValidBefore' => $kdm_file_data ["ContentKeysNotValidBefore"],
-                                    'ContentKeysNotValidAfter' => $kdm_file_data ["ContentKeysNotValidAfter"],
-                                    /* 'kdm_installed' => $kdm['kdm_installed'],
-                                    'content_present' => $kdm['content_present'], */
-                                    'serverName_by_serial' => $kdm_file_data ["SerialNumber"],
-                                    'cpl_uuid' => null,
-                                    'cpl_id' => null,
-                                    'screen_id' => $screen_id,
-                                    'location_id' => $location_id,
 
-                                ]);
 
 
                                 /*else
