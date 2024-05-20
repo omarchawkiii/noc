@@ -60,7 +60,7 @@
                                 </tr>
                             </thead>
                             <tbody id="header_body_list_kdm_errors">
-                                <div id="table_logs_processing" class="dataTables_processing card">No data available </div>
+
                             </tbody>
                         </table>
                     </div>
@@ -103,7 +103,7 @@
                                 </tr>
                             </thead>
                             <tbody id="header_body_list_server_errors">
-                                <div id="table_logs_processing" class="dataTables_processing card">No data available </div>
+
                             </tbody>
                         </table>
                     </div>
@@ -145,7 +145,7 @@
                                 </tr>
                             </thead>
                             <tbody id="header_body_list_projector_errors">
-                                <div id="table_logs_processing" class="dataTables_processing card">No data available </div>
+
                             </tbody>
                         </table>
                     </div>
@@ -178,7 +178,7 @@
                             </tr>
                             </thead>
                             <tbody id="header_body_list_storage_errors">
-                                <div id="table_logs_processing" class="dataTables_processing card">No data available </div>
+
                             </tbody>
                         </table>
                     </div>

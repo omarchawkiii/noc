@@ -222,6 +222,6 @@ class Error_listController extends Controller
             $storage_errors_list = Storage_errors_list::with('location')->get() ;
         }
 
-        return Response()->json(compact('projector_errors_list'));
+        return Response()->json(compact('storage_errors_list'));
     }
 }

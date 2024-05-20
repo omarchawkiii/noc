@@ -333,7 +333,7 @@ class ScheduleContoller extends Controller
                 {
                     if($cpl->pictureEncryptionAlgorithm != "None")
                     {
-                        $kdm = Kdm::where('cpl_id',$cpl->id)->where('screen_id', $schedule->screen_id )->first() ;
+                        $kdm = Kdm::where('cpl_uuid',$cpl->uuid)->where('screen_id', $schedule->screen_id )->first() ;
 
                         if($kdm->count() == 0)
                         {

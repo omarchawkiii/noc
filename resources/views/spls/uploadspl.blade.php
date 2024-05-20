@@ -611,7 +611,7 @@
                         },
                         success: function(response) {
                             var result ;
-                            console.log(response) ;
+
                             if (response.ingest_status.status == 1 )
                             {
                                 if (response.ingest_errors.length> 0 )
@@ -869,10 +869,19 @@
                                     var tms_ingested ='<span class=" text-danger " > No </span>' ;
                                 }
 
+                                var screen_name = " " ;
+                                if(value.screen.screen_name)
+                                {
+                                    screen_name = value.screen.screen_name
+                                }
+                                else
+                                {
+                                    screen_name = "Unknown Screen Number " ;
+                                }
 
                                 result = result
                                     +'<tr class="odd" data-id="'+value.id+'">'
-                                        +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.screen.screen_name+' </td>'
+                                        +'<td class="text-body align-middle fw-medium text-decoration-none">'+ screen_name +' </td>'
                                         +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.location.name+' </td>'
                                         +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
                                         +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ new Date(value.ContentKeysNotValidBefore).toLocaleString() +'</a></td>'
