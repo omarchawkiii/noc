@@ -60,8 +60,7 @@
                                 </tr>
                             </thead>
                             <tbody id="header_body_list_kdm_errors">
-                                <tr>
-                                </tr>
+                                <div id="table_logs_processing" class="dataTables_processing card">No data available </div>
                             </tbody>
                         </table>
                     </div>
@@ -104,8 +103,7 @@
                                 </tr>
                             </thead>
                             <tbody id="header_body_list_server_errors">
-                                <tr>
-                                </tr>
+                                <div id="table_logs_processing" class="dataTables_processing card">No data available </div>
                             </tbody>
                         </table>
                     </div>
@@ -147,8 +145,7 @@
                                 </tr>
                             </thead>
                             <tbody id="header_body_list_projector_errors">
-                                <tr>
-                                </tr>
+                                <div id="table_logs_processing" class="dataTables_processing card">No data available </div>
                             </tbody>
                         </table>
                     </div>
@@ -159,7 +156,39 @@
             </div>
         </div>
     </div>
+    <div class="modal fade show" id="header_storage_errors_modal" tabindex="-1" aria-labelledby="ModalLabel"  aria-modal="true" role="dialog">
+        <div class="modal-dialog  modal-xl"  role="document"  style="max-width: 93%; width: 93%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"> Storage Errors List</h5>
+                    <input type="hidden">
+                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
+                </div>
+                <div class="modal-body">
 
+
+                    <div id="list_storage_errors"  class="table-responsive preview-list multiplex">
+
+                        <table class="table " id="header_table_list_storage_errors">
+                            <thead>
+                            <tr>
+                                <th> Stat</th>
+                                <th> Screen</th>
+
+                            </tr>
+                            </thead>
+                            <tbody id="header_body_list_storage_errors">
+                                <div id="table_logs_processing" class="dataTables_processing card">No data available </div>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
 
 
     <!-- plugins:js -->
@@ -367,6 +396,66 @@
 
         function header_get_projector_errors_list(location) {
             var url = "{{ url('') }}" + '/get_projector_errors_list';
+                $.ajax({
+                    url: url,
+                    data:
+                    {
+                        location: location,
+                    },
+                    method: 'GET',
+                    success: function(response)
+                    {
+                        console.log(response)
+                        var data;
+                        if (response.projector_errors_list.length > 0) {
+
+                            $.each(response.projector_errors_list, function(index, projector) {
+                                data +=
+                                    '<tr class="odd ">' +
+                                    '<td class="sorting_1"> ' + projector.location.name + '  </td>' +
+                                    '<td class="sorting_1"> ' + projector.title + '  </td>' +
+                                    '<td class="sorting_1"> ' + projector.time_saved + '  </td>' +
+                                    '<td class="sorting_1" > ' + projector.code + '  </td>' +
+                                    '<td class="sorting_1"> ' + projector.severity + '  </td>' +
+                                    '<td class="sorting_1"> ' + projector.message + '  </td>' +
+                                    '<td class="sorting_1"> ' + projector.serverName + '  </td>'
+
+                                    +
+                                    '</tr>'
+
+                            })
+                            console.log(data);
+                            $('#header_body_list_projector_errors').html(data);
+
+                        } else
+                        {
+                            $('#header_body_list_projector_errors').html(
+                                '<div id="table_logs_processing" class="dataTables_processing card">No data available </div>'
+                                );
+                        }
+
+
+                    },
+                    error: function(response) {
+
+                    }
+                })
+        }
+
+
+
+
+        $(document).on('click', '.show_storage_errors_details', function() {
+
+            var location = $(this).data('location');
+            console.log(location)
+            header_get_storage_errors_list(location)
+            $('#header_storage_errors_modal').modal('show');
+        });
+        function header_get_storage_errors_list(location)
+        {
+
+            var url = "{{ url('') }}" + '/get_storage_errors_list';
             $.ajax({
                 url: url,
                 data: {
@@ -374,32 +463,25 @@
                 },
                 method: 'GET',
                 success: function(response) {
-                    console.log(response)
-                    var data;
-                    if (response.projector_errors_list.length > 0) {
+                    var data ;
+                    if(response.storage_errors_list.length > 0)
+                    {
 
-                        $.each(response.projector_errors_list, function(index, projector) {
-                            data +=
-                                '<tr class="odd ">' +
-                                '<td class="sorting_1"> ' + projector.location.name + '  </td>' +
-                                '<td class="sorting_1"> ' + projector.title + '  </td>' +
-                                '<td class="sorting_1"> ' + projector.time_saved + '  </td>' +
-                                '<td class="sorting_1" > ' + projector.code + '  </td>' +
-                                '<td class="sorting_1"> ' + projector.severity + '  </td>' +
-                                '<td class="sorting_1"> ' + projector.message + '  </td>' +
-                                '<td class="sorting_1"> ' + projector.serverName + '  </td>'
-
-                                +
-                                '</tr>'
+                        $.each(response.storage_errors_list, function(index, storage) {
+                        data +=
+                            '<tr class="odd ">'
+                                +'<td class="sorting_1"> '+ storage.storage_generale_status+'  </td>'
+                                +'<td class="sorting_1"> '+ storage.serverName+'  </td>'
+                            +'</tr>'
 
                         })
-                        console.log(data);
-                        $('#header_body_list_projector_errors').html(data);
 
-                    } else {
-                        $('#header_body_list_projector_errors').html(
-                            '<div id="table_logs_processing" class="dataTables_processing card">No data available </div>'
-                            );
+                        $('#header_body_list_storage_errors').html(data) ;
+
+                    }
+                    else
+                    {
+                        $('#header_body_list_storage_errors').html('<div id="table_logs_processing" class="dataTables_processing card">No data available </div>') ;
                     }
 
 
@@ -408,17 +490,17 @@
 
                 }
             })
+
+
+
         }
-        let header_content_height = document.querySelector('.content-wrapper').offsetHeight - 100;
-        /* let header_navbar_height = document.querySelector('.navbar').offsetHeight;
-           // let header_footer_height = document.querySelector('.footer').offsetHeight;
-            let header_page_header_height = document.querySelector('.page-header ').offsetHeight;
-            let header_content_max_height = header_content_height - header_navbar_height - header_page_header_height - 150; */
+        /*let header_content_height = document.querySelector('.content-wrapper').offsetHeight - 100;
+
 
         $(".header-popup .modal-body").height(header_content_height);
         $(".header-popup .modal-body").css({
             "maxHeight": header_content_height
-        });
+        }); */
     </script>
 
 </body>

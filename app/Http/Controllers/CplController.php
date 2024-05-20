@@ -420,8 +420,8 @@ class CplController extends Controller
             return Response()->json(compact('content_to_clean'));
 
         }
-
-        return Response()->json(compact('status','count_cpls'));
+        $content_to_clean = [];
+        return Response()->json(compact('content_to_clean'));
 
     }
 
@@ -455,10 +455,8 @@ class CplController extends Controller
             'username' => $username,
             'password' => $password,
         ];
-
         // Initialize cURL session
         $ch = curl_init($apiUrl);
-
         // Set cURL options
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($requestData));

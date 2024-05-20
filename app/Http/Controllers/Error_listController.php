@@ -7,6 +7,7 @@ use App\Models\Kdm_error_list;
 use App\Models\Location;
 use App\Models\Projector_errors_list;
 use App\Models\Server_error_list;
+use App\Models\Storage_errors_list;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -116,6 +117,20 @@ class Error_listController extends Controller
                 }
             }
 
+            Storage_errors_list::where('location_id',$location->id)->delete();
+
+            if( $contents['errors_list']['list_storage_errors'] )
+            {
+                foreach($contents['errors_list']['list_storage_errors'] as $projector_error)
+                {
+                    Storage_errors_list::create([
+                        'screen_number' => $projector_error['screen_number'],
+                        'storage_generale_status' => $projector_error['storage_generale_status'],
+                        'serverName' => $projector_error['serverName'],
+                        'location_id' => $location->id,
+                    ]);
+                }
+            }
 
         }
         return Redirect::back()->with('message' ,' The Errors list  has been updated');
@@ -189,6 +204,22 @@ class Error_listController extends Controller
         else
         {
             $projector_errors_list = Projector_errors_list::with('location')->get() ;
+        }
+
+        return Response()->json(compact('projector_errors_list'));
+    }
+
+    public function storage_errors_list(Request $request)
+    {
+        $location = $request->location;
+
+        if($location)
+        {
+            $storage_errors_list = Storage_errors_list::with('location')->where('location_id',$location)->get() ;
+        }
+        else
+        {
+            $storage_errors_list = Storage_errors_list::with('location')->get() ;
         }
 
         return Response()->json(compact('projector_errors_list'));

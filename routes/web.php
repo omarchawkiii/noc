@@ -71,7 +71,7 @@ Route::get('get_cpl_with_filter_for_noc', [App\Http\Controllers\CplController::c
 Route::get('get_screens_from_cpls', [App\Http\Controllers\CplController::class , 'get_screens_from_cpls'])->name('cpls.get_screens_from_cpls')->middleware(['auth']);
 Route::get('delete_cpls', [App\Http\Controllers\CplController::class , 'delete_cpl'])->name('cpls.delete_cpl')->middleware(['auth']);
 Route::get('cpls/clean_cpls', [App\Http\Controllers\CplController::class , 'clean_cpls'])->name('cpls.clean_cpls')->middleware(['auth']);
-Route::get('cpls/confirm_clean_cpls', [App\Http\Controllers\CplController::class , 'clean_cpls'])->name('cpls.clean_cpls')->middleware(['auth']);
+Route::get('cpls/confirm_clean_cpls', [App\Http\Controllers\CplController::class , 'confirm_clean_cpls'])->name('cpls.clean_cpls')->middleware(['auth']);
 
 
 
@@ -194,3 +194,4 @@ Route::get('get_header_error', [App\Http\Controllers\Error_listController::class
 Route::get('get_kdm_errors_list', [App\Http\Controllers\Error_listController::class , 'kdms_errors_list'])->name('error_list.kdms_errors_list')->middleware(['auth']);
 Route::get('get_server_errors_list', [App\Http\Controllers\Error_listController::class , 'server_errors_list'])->name('error_list.server_errors_list')->middleware(['auth']);
 Route::get('get_projector_errors_list', [App\Http\Controllers\Error_listController::class , 'projector_errors_list'])->name('error_list.get_projector_errors_list')->middleware(['auth']);
+Route::get('get_storage_errors_list', [App\Http\Controllers\Error_listController::class , 'storage_errors_list'])->name('error_list.get_storage_errors_list')->middleware(['auth']);

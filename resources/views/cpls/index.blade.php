@@ -1642,7 +1642,7 @@ function formatSize(sizeInBytes) {
                                 beforeSend: function () {
                                 },
                                 success: function (response) {
-                                    if(response.content_to_clean.length>0)
+                                    if(response.content_to_clean.length>0 )
                                     {
                                         var result="" ;
                                         $.each(response.content_to_clean, function( index, value ) {

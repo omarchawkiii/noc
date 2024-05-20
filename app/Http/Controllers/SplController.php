@@ -214,9 +214,14 @@ class SplController extends Controller
                 {
                     $spl = Lmsspl::where('uuid',$spl_uuid)->where('location_id',$location->id)->delete();
                 }
-                $screens= Screen::whereIn('id_server',$request->array_screens)->where('location_id',$location->id)->get()->toArray();
-                $screens_id = array_column($screens, 'id');
-                $spl = Spl::with('screen')->where('uuid',$spl_uuid)->whereIn('screen_id',$screens_id)->where('location_id',$location->id)->delete() ;
+                if($request->array_screens)
+                {
+                    $screens= Screen::whereIn('id_server',$request->array_screens)->where('location_id',$location->id)->get()->toArray();
+                    $screens_id = array_column($screens, 'id');
+                    $spl = Spl::with('screen')->where('uuid',$spl_uuid)->whereIn('screen_id',$screens_id)->where('location_id',$location->id)->delete() ;
+                }
+
+
             }
             $deleted_spls = $response['deleted_spls'] ;
             $errors = $response['errors'] ;

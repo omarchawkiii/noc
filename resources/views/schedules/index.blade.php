@@ -465,7 +465,7 @@
 
 
     <div class=" modal fade " id="sessions_details_modal" role="dialog" aria-labelledby="delete_client_modalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered  modal-xl" >
+        <div class="modal-dialog modal-dialog-centered   modal-lg" >
             <div class="modal-content border-0">
 
                 <div class="modal-header">

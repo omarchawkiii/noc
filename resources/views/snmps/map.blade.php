@@ -192,8 +192,7 @@
                             </tr>
                             </thead>
                             <tbody id="body_list_kdm_errors">
-                                <tr>
-                                </tr>
+                                <div id="table_logs_processing" class="dataTables_processing card">No data available </div>
                             </tbody>
                         </table>
                     </div>
@@ -232,8 +231,7 @@
                             </tr>
                             </thead>
                             <tbody id="body_list_server_errors">
-                                <tr>
-                                </tr>
+                                <div id="table_logs_processing" class="dataTables_processing card">No data available </div>
                             </tbody>
                         </table>
                     </div>
@@ -271,8 +269,7 @@
                             </tr>
                             </thead>
                             <tbody id="body_list_projector_errors">
-                                <tr>
-                                </tr>
+                                <div id="table_logs_processing" class="dataTables_processing card">No data available </div>
                             </tbody>
                         </table>
                     </div>
@@ -283,6 +280,41 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade show" id="storage_errors_modal" tabindex="-1" aria-labelledby="ModalLabel"  aria-modal="true" role="dialog">
+        <div class="modal-dialog  modal-xl"  role="document"  style="max-width: 93%; width: 93%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"> Storage Errors List</h5>
+                    <input type="hidden">
+                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
+                </div>
+                <div class="modal-body">
+
+
+                    <div id="list_storage_errors"  class="table-responsive preview-list multiplex">
+
+                        <table class="table " id="table_list_storage_errors">
+                            <thead>
+                            <tr>
+                                <th> Stat</th>
+                                <th> Screen</th>
+
+                            </tr>
+                            </thead>
+                            <tbody id="body_list_storage_errors">
+                                <div id="table_logs_processing" class="dataTables_processing card">No data available </div>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @section('custom_script')
@@ -364,7 +396,7 @@
                                 '<tr class="odd text-center  ">'
                                     +'<td class="sorting_1"> '+ error.location.name+'  </td>'
                                     +'<td class="sorting_1 kdm_errors" data-location="'+ error.location.id+'"> '+ error.kdm_errors+'  </td>'
-                                    +'<td class="sorting_1"> '+ error.nbr_storage_errors+'  </td>'
+                                    +'<td class="sorting_1 storage_errors"> '+ error.nbr_storage_errors+'  </td>'
                                     +'<td class="sorting_1 server_errors"  data-location="'+ error.location.id+'"> '+ error.nbr_server_alert+'  </td>'
                                     +'<td class="sorting_1 projector_errors"  data-location="'+ error.location.id+'"> '+ error.nbr_projector_alert+'  </td>'
                                     +'<td class="sorting_1"> '+ error.nbr_sound_alert+'  </td>'
@@ -625,6 +657,58 @@
 
 
         }
+
+        $(document).on('click', '.storage_errors', function() {
+
+            var location = $(this).data('location');
+            get_storage_errors_list(location)
+            $('#storage_errors_modal').modal('show');
+        });
+
+        function get_storage_errors_list(location)
+        {
+
+            var url = "{{ url('') }}" + '/get_storage_errors_list';
+            $.ajax({
+                url: url,
+                data: {
+                    location: location,
+                },
+                method: 'GET',
+                success: function(response) {
+                    var data ;
+                    if(response.storage_errors_list.length > 0)
+                    {
+
+                        $.each(response.storage_errors_list, function(index, storage) {
+                        data +=
+                            '<tr class="odd ">'
+                                +'<td class="sorting_1"> '+ storage.storage_generale_status+'  </td>'
+                                +'<td class="sorting_1"> '+ storage.serverName+'  </td>'
+                            +'</tr>'
+
+                        })
+
+                        $('#body_list_storage_errors').html(data) ;
+
+                    }
+                    else
+                    {
+                        $('#body_list_storage_errors').html('<div id="table_logs_processing" class="dataTables_processing card">No data available </div>') ;
+                    }
+
+
+                },
+                error: function(response) {
+
+                }
+            })
+
+
+
+        }
+
+
         $(".multiplex").height("700px");
         $(".multiplex").css({"maxHeight":"700px"});
 
