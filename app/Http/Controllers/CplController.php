@@ -87,6 +87,8 @@ class CplController extends Controller
                             'type' => $cpl['type'] ,
                             'editRate_numerator' => $cpl['editRate_numerator'] ,
                             'editRate_denominator' => $cpl['editRate_denominator'] ,
+                            'cinema_DCP' => $cpl['cinema_DCP'] ,
+                            'aspect_Ratio' => $cpl['Aspect_Ratio'],
                         ]);
                     }
 

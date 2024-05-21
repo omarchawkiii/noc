@@ -70,6 +70,8 @@ class LmscplController extends Controller
                             'location_id'=> $location->id,
 
 
+
+
                         ]);
 
                          //dd($cpl);

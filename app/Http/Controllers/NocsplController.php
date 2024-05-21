@@ -23,6 +23,14 @@ class NocsplController extends Controller
     public function createlocalspl(Request $request)
     {
 
+        if($request->is_template == true)
+        {
+            $is_template = true ;
+        }
+        else
+        {
+            $is_template = false ;
+        }
         //dd($request->action_type);
         if($request->action_type =="edit")
         {
@@ -52,6 +60,7 @@ class NocsplController extends Controller
             'spl_properties_hfr'=>$request ,
             'xmlpath'=>$file_name,
             'duration'=> $duration,
+            'is_template' => $is_template ,
             'location_id'=> null,
             'source'=> "NOC",
         ]) ;

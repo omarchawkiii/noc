@@ -740,7 +740,11 @@
                         }
                         else
                         {
-                            statu_content = '<spn class="text-success" > Linled</span>'
+                            statu_content = '<spn class="text-success" > Linked</span>'
+                            if(value.kdm_status =="")
+                            {
+                                statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-danger get_schedule_infos  btn-fw"> KDM Missing Detected  </button>'
+                            }
                             icon_spl =  '<i class="mdi mdi-playlist-play text-success"> </i>'
                             if(value.cpls ==1)
                             {
@@ -1892,7 +1896,12 @@
                         }
                         else
                         {
-                            statu_content = '<spn class="text-success" > Linled</span>'
+
+                            statu_content = '<spn class="text-success" > Linked</span>'
+                            if(value.kdm_status =="")
+                            {
+                                statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-danger get_schedule_infos  btn-fw"> KDM Missing Detected  </button>'
+                            }
                             icon_spl =  '<i class="mdi mdi-playlist-play text-success"> </i>'
                             if(value.cpls ==1)
                             {
@@ -2046,7 +2055,11 @@
                         }
                         else
                         {
-                            statu_content = '<spn class="text-success" > Linled</span>'
+                            statu_content = '<spn class="text-success" > Linked</span>'
+                            if(value.kdm_status =="")
+                            {
+                                statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-danger get_schedule_infos  btn-fw"> KDM Missing Detected  </button>'
+                            }
                             icon_spl =  '<i class="mdi mdi-playlist-play text-success"> </i>'
                             if(value.cpls ==1)
                             {

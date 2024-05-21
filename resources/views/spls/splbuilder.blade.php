@@ -68,7 +68,7 @@
                                             <option value="TEST">TEST</option>
                                             <option value="TRAILER">TRAILER</option>
                                             <option value="SPL"> Show Playlist</option>
-                                            <option value="Macros"> Macros</option>
+                                            <option value="MACROS"> Macros</option>
                                         </select>
                                     </div>
                                 </div>
@@ -106,9 +106,7 @@
                                     <button type="button" class="btn btn-warning btn-icon-text" id="open_spl_list">
                                         <i class="mdi mdi-new-box  btn-icon-prepend"></i> Open
                                     </button>
-                                    <button type="button" class="btn btn-info btn-icon-text" id="edit_spl_properties">
-                                        <i class="mdi mdi-wrench btn-icon-prepend"></i> Propperties
-                                    </button>
+
 
                                 </div>
                             </div>
@@ -902,7 +900,7 @@
                             <span aria-hidden="true">×</span>
                         </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body height-auto">
                     <div class="tab-pane fade active show" id="home-1" role="tabpanel" aria-labelledby="home-tab">
                         <input type="hidden"  id="spl_action" value="insert">
                         <input type="hidden"  id="spl_uuid_edit" value="">
@@ -962,10 +960,8 @@
                                 <button type="button" class="btn btn-primary btn-fw" id="upload_spl_after_edit">Upload</button>
                             </div>
                             <div class="col" style="text-align: center" id="block_save_new_spl">
-                                <button type="button" class="btn btn-primary btn-fw" id="save_new_spl">Save</button>
-                                <button class="btn btn-secondary btn-fw close" data-bs-dismiss="modal"
-                                        aria-label="Close" style="font-size: 16px;font-weight: bold;">Cancel
-                                </button>
+                                <button type="button" class="btn btn-primary btn-fw" id="save_new_spl" data-astemplate="false">Save</button>
+                                <button class="btn btn-primary btn-fw " id="save_as_template_spl" data-astemplate="true"> Save As Template </button>
                             </div>
                             <div class="col hide_div" style="text-align: center" id="block_edit_spl">
                                 <button type="button" class="btn btn-primary btn-fw" id="save_edited_spl">Save</button>
@@ -1344,7 +1340,7 @@
 
         // filter files by kind
         $(document).on('change', '#filter_type', function(event) {
-            var criteria = $(this).val().toUpperCase() ;
+            var criteria = $(this).val() ;
 
             if (criteria == 'all') {
                 $('.left-side-item').show();
@@ -2446,7 +2442,7 @@
 
         });
         //click btn save new spl
-        $(document).on('click', '#save_new_spl', function() {
+        $(document).on('click', '#save_new_spl , #save_as_template_spl', function() {
             let array_spl = [];
             let items_spl = [];
             let items_macro = [];
@@ -2454,6 +2450,16 @@
             let items_intermission = [];
             var id_location =  $('#location').val();
             var title_spl = $('#spl_title').val();
+            var as_template ;
+            if($(this).attr('data-astemplate') === 'true'){
+                as_template = true ;
+            }
+            else
+            {
+                as_template = false ;
+            }
+
+
 
             if (title_spl == "") {
                 $('#spl_title').next().text("SPL Title can't be empty.");
@@ -2581,7 +2587,7 @@
                                 console.log(response);
                                 var obj = JSON.parse(response);
                          if (obj['status'] == 1) {
-
+                            var result="" ;
                             $("#status_edit").html("SPL List Saved Successfully");
                             $("#status_edit").removeClass("badge-danger");
                             $("#status_edit").addClass("badge-success");
@@ -2589,6 +2595,35 @@
                             $('#opened_spl').attr('data-title', spl_title);
                             $('#opened_spl').attr('data-opened_spl_status', 1);
                             $('#opened_spl').attr('data-uuid', obj['uuid']);
+
+                            if (obj['ingest_errors'].length> 0 )
+                            {
+
+                                $.each(obj['ingest_errors'], function( index, value ) {
+
+                                    result = result
+                                    +'<p >'
+                                        +'<span class="align-middle fw-medium text-danger">SPL Not Ingest to '+value.location_name+' |</span>'
+                                    +'</p>';
+                                });
+                            }
+
+                            if (obj['ingest_success'].length> 0 )
+                            {
+                                result = result + "<br /> <br /> " ;
+                                    $.each(obj['ingest_success'], function( index, value ) {
+
+                                        result = result
+                                        +'<p>'
+                                            +'<span class="align-middle fw-medium text-success">SPL Ingest to '+value.location_name+' |</span>'
+                                        +'</p>';
+                                    });
+                            }
+
+                            $("#spl_ingested_success").html(result);
+
+
+
                         } else {
                             $("#status_edit").html("SPL List wasn't saved  Correctly ");
                             $("#status_edit").removeClass("badge-success");
@@ -4055,6 +4090,8 @@
                 $('#spl_title').next().addClass("form_error");
                 $('#spl_title').next().text('Title cant be empty');
                 $('#save_new_spl').prop('disabled', true);
+                $('#save_as_template_spl').prop('disabled', true);
+
             } else {
                 $.ajax({
 
@@ -4072,6 +4109,8 @@
                             $('#spl_title').next().addClass("form_error");
                             $('#spl_title').next().html('Title Already Taken')
                             $('#save_new_spl').prop('disabled', true);
+                            $('#save_as_template_spl').prop('disabled', true);
+
                         } else if (response == 'not_taken') {
                             spl_title_state = true;
                             $('#spl_title').next().removeClass("form_error");
@@ -4079,7 +4118,7 @@
                             $('#spl_title').next().html("Title  Available");
 
                             $('#save_new_spl').prop('disabled', false);
-
+                            $('#save_as_template_spl').prop('disabled', false);
                         }
                     }
                 });

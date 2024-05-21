@@ -23933,3 +23933,8 @@ table td a
     width: max-content !important;
     left: 0 !important;
 }
+.height-auto
+{
+    min-height: initial !important ;
+    max-height: initial !important ;
+}

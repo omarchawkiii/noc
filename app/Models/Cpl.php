@@ -47,7 +47,8 @@ class Cpl extends Model
         'type',
         'editRate_numerator',
         'editRate_denominator',
-
+        'cinema_DCP',
+        'aspect_Ratio',
     ];
 
     protected $primaryKey = 'id';
