@@ -17,7 +17,10 @@
             <div class="row">
                 <div class="d-flex flex-row justify-content-between mt-2 mb-3">
                     <div>
-                    <h4 class="card-title ">Playback</h4>
+                        <h4 class="card-title ">Playback</h4>
+                    </div>
+                    <div>
+                        <button id="refresh" class="btn btn-light btn-fw  btn-icon-text"> <i class="mdi mdi-reload btn-icon-prepend"></i> Refresh</button>
                     </div>
                 </div>
 
@@ -190,6 +193,7 @@
 <!-- ------- DATA TABLE ---- -->
 <script src="{{asset('/assets/vendors/datatables.net/jquery.dataTables.js')}}"></script>
 <script src="{{asset('/assets/vendors/datatables.net-bs4/dataTables.bootstrap4.js')}}"></script>
+<script src="{{ asset('/assets/vendors/sweetalert/sweetalert.min.js') }}"></script>
 <script>
 
 (function($) {
@@ -471,6 +475,69 @@
                 complete: function(jqXHR, textStatus) {}
         });
     }
+
+    $(document).on('click', '#refresh', function () {
+        $.ajax({
+                url:"{{  url('') }}"+ "/refresh_playback",
+                type: 'get',
+                beforeSend: function () {
+                    swal({
+                        title: 'Refreshing',
+                        closeOnEsc: false,
+                        allowOutsideClick: false,
+
+                        onOpen: () => {
+                            swal.showLoading();
+                        }
+                    });
+                },
+                success: function(response) {
+                    swal.close();
+                    if(response.status)
+                    {
+                        get_playback_data() ;
+                        swal({
+                                title: 'Done !',
+                                text: 'Data Refreshed Successfully ',
+                                icon: 'success',
+                                button: {
+                                    text: "Ok",
+                                    value: true,
+                                    visible: true,
+                                    className: "btn btn-primary"
+                                }
+                            })
+                    }
+                    else
+                    {
+                        swal({
+                                        title: 'Failed',
+                                        text: "Error occurred while sending the request.",
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#3f51b5',
+                                        cancelButtonColor: '#ff4081',
+                                        confirmButtonText: 'Great ',
+                                        buttons: {
+                                            cancel: {
+                                                text: "Cancel",
+                                                value: null,
+                                                visible: true,
+                                                className: "btn btn-danger",
+                                                closeModal: true,
+                                            },
+                                        }
+                                    })
+                    }
+
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                },
+                complete: function(jqXHR, textStatus) {}
+        });
+    });
+
 
 
 

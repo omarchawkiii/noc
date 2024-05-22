@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('cpls', function (Blueprint $table) {
-            $table->string("aspect_Ratio",100)->nullable();
+            //$table->string("aspect_Ratio",100)->nullable();
         });
     }
 

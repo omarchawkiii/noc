@@ -87,8 +87,10 @@ class CplController extends Controller
                             'type' => $cpl['type'] ,
                             'editRate_numerator' => $cpl['editRate_numerator'] ,
                             'editRate_denominator' => $cpl['editRate_denominator'] ,
-                            'cinema_DCP' => $cpl['cinema_DCP'] ,
+                            'cinema_DCP' => $cpl['Cinema_DCP'] ,
                             'aspect_Ratio' => $cpl['Aspect_Ratio'],
+
+
                         ]);
                     }
 
@@ -254,7 +256,7 @@ class CplController extends Controller
 
         $screens=null ;
 
-        $cpls = DB::table('cpls')->whereIn('location_id',$locations)->select('cpls.*','cpls.ScreenAspectRatio as aspect_Ratio' )->groupBy('uuid')
+        $cpls = DB::table('cpls')->whereIn('location_id',$locations)->groupBy('uuid')
         ->orderBy('contentKind', 'ASC')->orderBy('contentTitleText', 'ASC')->distinct()->get();
         $lmscpls = DB::table('lmscpls')->whereIn('location_id',$locations)->groupBy('uuid')
         ->orderBy('contentKind', 'ASC')->orderBy('contentTitleText', 'ASC')->distinct()->get();

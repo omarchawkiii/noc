@@ -18,6 +18,9 @@
                     <div>
                         <h4 class="card-title ">Snmp</h4>
                     </div>
+                    <div>
+                        <button id="refresh" class="btn btn-light btn-fw  btn-icon-text"> <i class="mdi mdi-reload btn-icon-prepend"></i> Refresh</button>
+                    </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-md-6 row">
@@ -74,6 +77,7 @@
 <!-- ------- DATA TABLE ---- -->
 <script src="{{asset('/assets/vendors/datatables.net/jquery.dataTables.js')}}"></script>
 <script src="{{asset('/assets/vendors/datatables.net-bs4/dataTables.bootstrap4.js')}}"></script>
+<script src="{{ asset('/assets/vendors/sweetalert/sweetalert.min.js') }}"></script>
 <!-- -------END  DATA TABLE ---- -->
 
 <script src="{{asset('/assets/vendors/jquery-toast-plugin/jquery.toast.min.js')}}"></script>
@@ -119,9 +123,8 @@
 
         });
 
-
-
-        $(' #location').change(function(){
+        function get_snmp(location)
+        {
 
             $("#location-listing").dataTable().fnDestroy();
             var loader_content  =
@@ -136,12 +139,6 @@
             .remove()
             .end()
             .append('<option value="null">All Screens</option>')
-
-
-            //$('#location-listing tbody').html('')
-            var location =  $('#location').val();
-            var country =  $('#country').val();
-
 
             if(location != "Locations")
             {
@@ -187,7 +184,108 @@
             {
                 $('#location-listing tbody').html('<div id="table_logs_processing" class="dataTables_processing card">Please Select Location</div>')
             }
+        }
 
+        $('#location').change(function(){
+
+
+            //$('#location-listing tbody').html('')
+            var location =  $('#location').val();
+            get_snmp(location)
+
+        });
+
+
+        $(document).on('click', '#refresh', function () {
+            var location = $('#location').val() ;
+
+
+            var url ="{{  url('') }}"+ "/refresh_snmp_data/"+location;
+            if(location == 'Locations')
+            {
+                swal({
+                        title: '',
+                        text: "Please Select Locaion.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3f51b5',
+                        cancelButtonColor: '#ff4081',
+                        confirmButtonText: 'Great ',
+                        buttons: {
+                            cancel: {
+                                text: "Cancel",
+                                value: null,
+                                visible: true,
+                                className: "btn btn-danger",
+                                closeModal: true,
+                            },
+                        }
+                    })
+            }
+            else
+            {
+                $.ajax({
+                        url:url,
+                        type: 'get',
+
+                        beforeSend: function () {
+                            swal({
+                                title: 'Refreshing',
+                                closeOnEsc: false,
+                                allowOutsideClick: false,
+                                timerProgressBar: true,
+                                onOpen: () => {
+                                    swal.showLoading();
+                                }
+                            });
+                        },
+                        success: function(response) {
+                            swal.close();
+                            if(response.status)
+                            {
+                                swal({
+                                        title: 'Done !',
+                                        text: 'Data Refreshed Successfully ',
+                                        icon: 'success',
+                                        button: {
+                                            text: "Ok",
+                                            value: true,
+                                            visible: true,
+                                            className: "btn btn-primary"
+                                        }
+                                    })
+                                    get_snmp(location)
+
+                            }
+                            else
+                            {
+                                swal({
+                                        title: 'Failed',
+                                        text: "Error occurred while sending the request.",
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#3f51b5',
+                                        cancelButtonColor: '#ff4081',
+                                        confirmButtonText: 'Great ',
+                                        buttons: {
+                                            cancel: {
+                                                text: "Cancel",
+                                                value: null,
+                                                visible: true,
+                                                className: "btn btn-danger",
+                                                closeModal: true,
+                                            },
+                                        }
+                                    })
+                            }
+
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            console.log(errorThrown);
+                        },
+                        complete: function(jqXHR, textStatus) {}
+                });
+            }
         });
 
     })(jQuery);

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('nocspls', function (Blueprint $table) {
-            $table->boolean('is_template')->default(0);
+            //$table->boolean('is_template')->default(0);
         });
     }
 

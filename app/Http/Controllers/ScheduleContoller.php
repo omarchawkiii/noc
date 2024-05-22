@@ -127,7 +127,7 @@ class ScheduleContoller extends Controller
             }
             else
             {
-                echo "no content <br />" ;
+                //echo "no content <br />" ;
             }
 
 
@@ -335,9 +335,9 @@ class ScheduleContoller extends Controller
                     {
                         $kdm = Kdm::where('cpl_uuid',$cpl->uuid)->where('screen_id', $schedule->screen_id )->first() ;
 
-                        if($kdm->count() == 0)
+                        if(!$kdm)
                         {
-                            $kdm_response = "KDM Missing" ;
+                            $kdm_response = "<spna class='text-danger' > KDM Missing </span>" ;
                         }
                         else
                         {

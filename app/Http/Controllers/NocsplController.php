@@ -23,6 +23,7 @@ class NocsplController extends Controller
     public function createlocalspl(Request $request)
     {
 
+
         if($request->is_template == true)
         {
             $is_template = true ;
@@ -53,17 +54,20 @@ class NocsplController extends Controller
         $file_url = Storage::disk('local')->put( $file_name, $file) ;
 
         $duration = $this->calculateSplDuration(simplexml_load_string($file));
-        $new_nocspl = Nocspl::create([
-            'uuid' => $uuid ,
-            'spl_title' => $request->title_spl,
-            'display_mode'=>$request->display_mode,
-            'spl_properties_hfr'=>$request ,
-            'xmlpath'=>$file_name,
-            'duration'=> $duration,
-            'is_template' => $is_template ,
-            'location_id'=> null,
-            'source'=> "NOC",
-        ]) ;
+        foreach($locations_of_spl as $location)
+        {
+            $new_nocspl = Nocspl::create([
+                'uuid' => $uuid ,
+                'spl_title' => $request->title_spl,
+                'display_mode'=>$request->display_mode,
+                'spl_properties_hfr'=>$request ,
+                'xmlpath'=>$file_name,
+                'duration'=> $duration,
+                'is_template' => $is_template ,
+                'location_id'=> $location->id,
+                'source'=> "NOC",
+            ]) ;
+        }
 
         if($new_nocspl)
         {
@@ -1078,9 +1082,18 @@ class NocsplController extends Controller
     }
 
 
-    public function get_nocspl()
+    public function get_nocspl(Request $request)
     {
-        $nocspls = Nocspl::all() ;
+
+        if($request->id_location)
+        {
+            $nocspls = Nocspl::where('is_template',0)->whereIn('location_id',$request->id_location)->get() ;
+        }
+        else
+        {
+            $nocspls = Nocspl::where('is_template',1)->get() ;
+        }
+
         if( Auth::user()->role != 1)
         {
             $locations = Auth::user()->locations ;
@@ -1092,7 +1105,20 @@ class NocsplController extends Controller
         return Response()->json(compact('nocspls','locations'));
     }
 
+    public function get_nocspl_to_ingest()
+    {
 
+        $nocspls = Nocspl::all();
+        if( Auth::user()->role != 1)
+        {
+            $locations = Auth::user()->locations ;
+        }
+        else
+        {
+            $locations = Location::all() ;
+        }
+        return Response()->json(compact('nocspls','locations'));
+    }
 
     public function sendXmlFileToApi(Request $request)
     {
@@ -1275,7 +1301,7 @@ class NocsplController extends Controller
                                     'xmlpath'=>$file_name,
                                     'duration'=> $duration,
                                     'source'=> "flash disk",
-                                    'location_id'=> null,
+                                   //'location_id'=> null,
                                 ]) ;
                                     $path =  storage_path().'/app/xml_file/'.$new_nocspl->xmlpath ;
                                     $spl_file = simplexml_load_file($path);

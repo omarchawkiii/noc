@@ -18,6 +18,9 @@
                     <div>
                         <h4 class="card-title ">Schedules</h4>
                     </div>
+                    <div>
+                        <button id="refresh" class="btn btn-light btn-fw  btn-icon-text"> <i class="mdi mdi-reload btn-icon-prepend"></i> Refresh</button>
+                    </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-md-6 row">
@@ -1789,6 +1792,250 @@
                 }
         })
 
+    });
+
+    $(document).on('click', '#refresh', function () {
+        var location = $('#location').val() ;
+        var screen =  null ;
+        var date = new Date($('#scheduleDatePicker').val());
+        var url ="{{  url('') }}"+ "/refresh_schedule_content/"+location;
+
+        if(location == 'Locations')
+        {
+            swal({
+                    title: '',
+                    text: "Please Select Locaion.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3f51b5',
+                    cancelButtonColor: '#ff4081',
+                    confirmButtonText: 'Great ',
+                    buttons: {
+                        cancel: {
+                            text: "Cancel",
+                            value: null,
+                            visible: true,
+                            className: "btn btn-danger",
+                            closeModal: true,
+                        },
+                    }
+                })
+        }
+        else
+        {
+            $.ajax({
+                    url:url,
+                    type: 'get',
+
+                    beforeSend: function () {
+                        swal({
+                            title: 'Refreshing',
+                            closeOnEsc: false,
+                            allowOutsideClick: false,
+                            timerProgressBar: true,
+                            onOpen: () => {
+                                swal.showLoading();
+                            }
+                        });
+                    },
+                    success: function(response) {
+                        swal.close();
+                        if(response.status)
+                        {
+                            swal({
+                                    title: 'Done !',
+                                    text: 'Data Refreshed Successfully ',
+                                    icon: 'success',
+                                    button: {
+                                        text: "Ok",
+                                        value: true,
+                                        visible: true,
+                                        className: "btn btn-primary"
+                                    }
+                                })
+
+                                if(location != "Locations")
+                                {
+                                    $('#scheduleDate').show();
+                                    var url = "{{  url('') }}"+ '/get_schedules_with_filter/?location=' + location +'&screen='+ screen+'&date='+ date.toLocaleDateString('en-GB')+' 00';
+                                    result =" " ;
+
+                                    $.ajax({
+                                        url: url,
+                                        method: 'GET',
+                                        success:function(response)
+                                        {
+                                            console.log(response)
+                                            screens = '<option value="null" selected>All Screens</option>';
+                                            $.each(response.screens, function( index_screen, screen ) {
+
+                                                screens = screens
+                                                    +'<option  value="'+screen.id+'">'+screen.screen_name+'</option>';
+                                            });
+                                                $('#screen').html(screens)
+
+                                            $.each(response.schedules, function( index, value ) {
+                                                bg_status="" ;
+                                                if(value.status !="linked" )
+                                                {
+                                                    bg_status = "bg-danger"
+                                                }
+
+                                                icon_spl = ""
+                                                icon_cpl = ""
+                                                icon_kdm = ""
+                                                statu_content=""
+
+
+
+                                                if(value.status !="linked" )
+                                                {
+                                                    icon_spl = '<i class="mdi mdi-playlist-play text-danger"> </i>'
+
+                                                    if(value.type == "pos")
+                                                    {
+                                                        statu_content = '<spn class="text-danger" >Unlinked  </span>'
+                                                    }
+                                                    else
+                                                    {
+                                                        statu_content = ''
+                                                    }
+
+                                                    icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
+                                                    icon_cpl = '<i class="mdi mdi-filmstrip text-warning ">'
+
+                                                    //statu_content = ''
+
+                                                }
+                                                else
+                                                {
+
+                                                    icon_spl =  '<i class="mdi mdi-playlist-play text-success"> </i>'
+                                                    if(value.cpls ==1)
+                                                    {
+                                                        icon_cpl = '<i class="mdi mdi-filmstrip text-success">'
+                                                        if(value.kdm  ==1 )
+                                                        {
+                                                            icon_kdm = '</i> <i class="mdi mdi-key-change text-success"> </i>'
+
+                                                        }
+                                                        else
+                                                        {
+                                                            icon_kdm = '</i> <i class="mdi mdi-key-remove text-danger check_need_kdm" data-scheduleidd = "'+value.id+'"> </i>'
+                                                        }
+
+                                                    }
+                                                    else
+                                                    {
+                                                        icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
+                                                        icon_cpl = '<i class="mdi mdi-filmstrip text-danger   spl_not_linked" data-scheduleidd = "'+value.id+'">'
+                                                    }
+                                                }
+                                                if(value.kdm_status =="not_valid_yet")
+                                                {
+                                                    statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-warning btn-fw get_schedule_infos"> KDM Valide in :  '+value.date_expired+'</button>'
+                                                }
+                                                if(value.kdm_status =="expired")
+                                                {
+                                                    statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-danger get_schedule_infos  btn-fw"> KDM Already Expired : '+value.date_expired+'</button>'
+                                                }
+                                                if(value.kdm_status =="warning")
+                                                {
+                                                    statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-warning get_schedule_infos btn-fw">KDM Expired in : '+value.date_expired+'</button>'
+                                                }
+                                                if(value.kdm_status =="valid")
+                                                {
+                                                    statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-success get_schedule_infos btn-fw"> KDM Expired in  : '+value.date_expired+'</button>'
+                                                }
+
+
+                                                var name =" " ;
+                                                if(value.type == "pos")
+                                                {
+                                                    if(value.status== "linked" )
+                                                    {
+                                                        var name =value.ShowTitleText  ;
+                                                    }
+                                                    else
+                                                    {
+                                                        var name =value.titleShort  ;
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    var name =value.ShowTitleText  ;
+                                                }
+
+
+
+                                                result = result
+                                                    +'<tr class="odd ">'
+                                                    +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.type+' </td>'
+                                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.screen.screen_name+'</a></td>'
+                                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+name+'</a></td>'
+                                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.date_start+'</a></td>'
+                                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+ icon_spl + icon_cpl + icon_kdm +' </i></a></td>'
+                                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+statu_content+'</a></td>'
+                                                    +'</tr>';
+                                            });
+                                            $('#location-listing tbody').html(result)
+
+                                            console.log(response.schedules)
+                                            /***** refresh datatable **** **/
+
+                                            var spl_datatable = $('#location-listing').DataTable({
+                                                "iDisplayLength": 100,
+                                                destroy: true,
+                                                "bDestroy": true,
+                                                "language": {
+                                                    search: "_INPUT_",
+                                                    searchPlaceholder: "Search..."
+                                                }
+                                            });
+
+                                        },
+                                        error: function(response) {
+
+                                        }
+                                    })
+
+                                }
+                                else
+                                {
+                                    $('#scheduleDate').hide();
+                                    $('#location-listing tbody').html('<div id="table_logs_processing" class="dataTables_processing card">Please Select Location</div>')
+                                }
+
+                        }
+                        else
+                        {
+                            swal({
+                                    title: 'Failed',
+                                    text: "Error occurred while sending the request.",
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3f51b5',
+                                    cancelButtonColor: '#ff4081',
+                                    confirmButtonText: 'Great ',
+                                    buttons: {
+                                        cancel: {
+                                            text: "Cancel",
+                                            value: null,
+                                            visible: true,
+                                            className: "btn btn-danger",
+                                            closeModal: true,
+                                        },
+                                    }
+                                })
+                        }
+
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    },
+                    complete: function(jqXHR, textStatus) {}
+            });
+        }
     });
 
 

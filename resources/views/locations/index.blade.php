@@ -48,7 +48,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($locations as $key => $location )
-                                    <tr class="odd text-center  ">
+                                    <tr class="odd text-center  " id="location-{{ $location->id }}">
                                         <td class="sorting_1"><a href="{{ route('location.show',$location) }}"> {{  $key +1 }}</a> </td>
                                         <td><a class="text-body align-middle fw-medium text-decoration-none" href="{{ route('location.show',$location) }}"> {{ $location->name }}</a></td>
                                         <td><a class="text-body align-middle fw-medium text-decoration-none" href="{{ route('location.show',$location) }}"> {{ $location->folder_title }}</a></td>
@@ -97,6 +97,7 @@
                                                     <a class="btn btn-outline-primary dropdown-item" href="{{ route('moviescod.getmoviescods',$location->id) }}">Refreesh MoviesCods </a>
                                                     <a class="btn btn-outline-primary dropdown-item" href="{{ route('diskusage.getdiskusage',$location->id) }}">Refresh diskusage </a>
 
+                                                    <a class="btn btn-outline-primary dropdown-item " id="delete_location"  href="#" data-id-location="{{ $location->id }}">Delete Location </a>
 
 
                                                 </div>
@@ -148,6 +149,7 @@
 
 
 <script src="{{asset('/assets/vendors/jquery-toast-plugin/jquery.toast.min.js')}}"></script>
+<script src="{{ asset('/assets/vendors/sweetalert/sweetalert.min.js') }}"></script>
 <script>
     (function($) {
 
@@ -416,6 +418,96 @@
 
                 }
         })
+
+    });
+    $(document).on('click', '#delete_location', function (e) {
+        e.preventDefault();
+
+        location_id = $(this).attr("data-id-location")
+        var url = "{{  url('') }}"+  "/location/destroy"
+
+        swal({
+                showCancelButton: true,
+                title: 'Locatin Deletion!',
+                text: 'You are sure you want to delete this Location',
+                icon: 'warning',
+                buttons: {
+                    cancel: {
+                        text: "Cancel",
+                        value: null,
+                        visible: true,
+                        className: "btn btn-primary",
+                        closeModal: true,
+                    },
+
+                    Confirm: {
+                        text: "Yes, delete it!",
+                        value: true,
+                        visible: true,
+                        className: "btn btn-danger",
+                        closeModal: true,
+                    },
+                }
+            }).then((result) => {
+                if (result) {
+                    $.ajax({
+                            url: url,
+                            type: 'DELETE',
+                            method: 'DELETE',
+                            data : {
+                                location_id : location_id,
+                                "_token": "{{ csrf_token() }}",
+                            },
+                            headers: {
+                                        'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                                        "_token": "{{ csrf_token() }}",
+                                    },
+                            success:function(response)
+                            {
+
+                                if (response.status)
+                                {
+                                     $( "#location-"+location_id ).remove();
+                                    swal({
+                                        title: 'Done !',
+                                        text: 'Location Deleted Successfully ',
+                                        icon: 'success',
+                                        button: {
+                                            text: "Continue",
+                                            value: true,
+                                            visible: true,
+                                            className: "btn btn-primary"
+                                        }
+                                    })
+
+                                } else {
+                                    swal({
+                                        title: 'Failed',
+                                        text: "Error occurred while sending the request.",
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#3f51b5',
+                                        cancelButtonColor: '#ff4081',
+                                        confirmButtonText: 'Great ',
+                                        buttons: {
+                                            cancel: {
+                                                text: "Cancel",
+                                                value: null,
+                                                visible: true,
+                                                className: "btn btn-danger",
+                                                closeModal: true,
+                                            },
+                                        }
+                                    })
+                                }
+                            },
+                            error: function(response) {
+
+                            }
+                    })
+                }
+            })
+
 
     });
 </script>

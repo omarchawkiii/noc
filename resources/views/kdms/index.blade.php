@@ -19,6 +19,9 @@
                     <div>
                         <h4 class="card-title ">KDMs</h4>
                     </div>
+                    <div>
+                        <button id="refresh" class="btn btn-light btn-fw  btn-icon-text"> <i class="mdi mdi-reload btn-icon-prepend"></i> Refresh</button>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 row">
@@ -117,10 +120,9 @@
 <!-- ------- DATA TABLE ---- -->
 <script src="{{asset('/assets/vendors/datatables.net/jquery.dataTables.js')}}"></script>
 <script src="{{asset('/assets/vendors/datatables.net-bs4/dataTables.bootstrap4.js')}}"></script>
-<script>
+<script src="{{ asset('/assets/vendors/sweetalert/sweetalert.min.js') }}"></script>
 
 
-</script>
 <!-- -------END  DATA TABLE ---- -->
 
 
@@ -171,6 +173,123 @@
             }
         });
 
+
+        function get_kdms(location , screen , lms ,refresh_screen)
+        {
+            $("#location-listing").dataTable().fnDestroy();
+            $('#refresh_lms').removeClass("activated") ;
+             $('#screen').find('option')
+            .remove()
+            .end()
+            .append('<option value="null">All Screens</option>')
+            var loader_content  =
+            '<div class="jumping-dots-loader">'
+                +'<span></span>'
+                +'<span></span>'
+                +'<span></span>'
+                +'</div>'
+            $('#location-listing tbody').html(loader_content)
+
+            if(location != "Locations")
+            {
+                $('#refresh_lms').show();
+                var url ="{{  url('') }}"+  '/get_kdms_with_filter/?location=' + location  +'&screen='+ screen;
+                result =" " ;
+
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    success:function(response)
+                    {
+                        screens = '<option value="null" selected>All Screens</option>';
+                        $.each(response.screens, function( index_screen, screen ) {
+
+                            screens = screens
+                                +'<option  value="'+screen.id+'">'+screen.screen_name+'</option>';
+                        });
+                            $('#screen').html(screens);
+                            $('#lms_screen_content').html(screens)
+
+                        $.each(response.kdms, function( index, value ) {
+
+                            if(value.content_present == 'yes' ){
+                                content_present = '<input type="checkbox" class="form-check-input" checked="" style="font-size: 20px; "> '
+                            }else{
+                                content_present = '<input type="checkbox" class="form-check-input"  style="font-size: 20px; ">'
+                            }
+
+                            if(value.kdm_installed == 'yes' ){
+                                kdm_installed = '<input type="checkbox" class="form-check-input" checked="" style="font-size: 20px; ">'
+                            }else{
+                                kdm_installed = '<input type="checkbox" class="form-check-input"  style="font-size: 20px; ">'
+                            }
+
+
+                            const date1 = new Date(); // Date actuelle
+                            const date2String = value.ContentKeysNotValidAfter; // Chaîne représentant la date
+
+                            const date2 = new Date(date2String);
+
+                            let diffTime = date2 - date1;
+
+                            let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                            background_difftime=""
+
+
+                            if(diffTime / (1000 * 60 * 60) > 48 )
+                            {
+                                background_difftime = "bg-success"
+                            }
+                            if(diffTime / (1000 * 60 * 60) < 48  && diffTime / (1000 * 60 * 60) > 0 )
+                            {
+                                background_difftime = "bg-warning"
+                            }
+                            if(diffTime / (1000 * 60 * 60) <= 0 )
+                            {
+                                background_difftime = "bg-danger"
+                            }
+
+
+                            result = result
+                                +'<tr class="odd '+background_difftime+'">'
+                                    +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.screen.screen_name+' </td>'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ new Date(value.ContentKeysNotValidBefore).toLocaleString() +'</a></td>'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ new Date(value.ContentKeysNotValidAfter).toLocaleString() +'</a></td>'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ content_present+'</a></td>'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ kdm_installed+'</a></td>'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ dhm (diffTime)+'</a></td>'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;">  '+value.device_target+' </a></td>'
+                                +'</tr>';
+                        });
+                        $('#location-listing tbody').html(result)
+
+                        console.log(response.kdms)
+                        /***** refresh datatable **** **/
+
+                        var kdm_datatable = $('#location-listing').DataTable({
+                            "iDisplayLength": 10,
+                            destroy: true,
+                            "bDestroy": true,
+                            "language": {
+                                search: "_INPUT_",
+                                searchPlaceholder: "Search..."
+                            }
+                        });
+
+                    },
+                    error: function(response) {
+
+                    }
+                })
+            }
+            else
+            {
+                $('#refresh_lms').hide();
+                $('#location-listing tbody').html('<div id="table_logs_processing" class="dataTables_processing card">Please Select Location</div>')
+            }
+        }
         $('#screen , #lms_screen_content').change(function(){
 
             $("#location-listing").dataTable().fnDestroy();
@@ -233,7 +352,7 @@
 
                         let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-                        console.log(diffTime / (1000 * 60 * 60))
+
                         background_difftime=""
 
                         if(diffTime / (1000 * 60 * 60) > 48 )
@@ -300,127 +419,13 @@
         });
 
         $(' #location').change(function(){
-
-            $("#location-listing").dataTable().fnDestroy();
-            $('#refresh_lms').removeClass("activated") ;
-             $('#screen').find('option')
-            .remove()
-            .end()
-            .append('<option value="null">All Screens</option>')
-            var loader_content  =
-            '<div class="jumping-dots-loader">'
-                +'<span></span>'
-                +'<span></span>'
-                +'<span></span>'
-                +'</div>'
-            $('#location-listing tbody').html(loader_content)
-
             //$('#location-listing tbody').html('')
             var location =  $('#location').val();
             var country =  $('#country').val();
             var screen =  null;
-
             $('#lms_screen').hide();
-            if(location != "Locations")
-            {
-                $('#refresh_lms').show();
-                var url ="{{  url('') }}"+  '/get_kdms_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen;
-                result =" " ;
-
-                $.ajax({
-                    url: url,
-                    method: 'GET',
-                    success:function(response)
-                    {
-                        screens = '<option value="null" selected>All Screens</option>';
-                        $.each(response.screens, function( index_screen, screen ) {
-
-                            screens = screens
-                                +'<option  value="'+screen.id+'">'+screen.screen_name+'</option>';
-                        });
-                            $('#screen').html(screens);
-                            $('#lms_screen_content').html(screens)
-
-                        $.each(response.kdms, function( index, value ) {
-
-                            if(value.content_present == 'yes' ){
-                                content_present = '<input type="checkbox" class="form-check-input" checked="" style="font-size: 20px; "> '
-                            }else{
-                                content_present = '<input type="checkbox" class="form-check-input"  style="font-size: 20px; ">'
-                            }
-
-                            if(value.kdm_installed == 'yes' ){
-                                kdm_installed = '<input type="checkbox" class="form-check-input" checked="" style="font-size: 20px; ">'
-                            }else{
-                                kdm_installed = '<input type="checkbox" class="form-check-input"  style="font-size: 20px; ">'
-                            }
-
-
-                            const date1 = new Date(); // Date actuelle
-                            const date2String = value.ContentKeysNotValidAfter; // Chaîne représentant la date
-
-                            const date2 = new Date(date2String);
-
-                            let diffTime = date2 - date1;
-
-                            let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-                            console.log(diffTime / (1000 * 60 * 60))
-                            background_difftime=""
-
-
-                            if(diffTime / (1000 * 60 * 60) > 48 )
-                            {
-                                background_difftime = "bg-success"
-                            }
-                            if(diffTime / (1000 * 60 * 60) < 48  && diffTime / (1000 * 60 * 60) > 0 )
-                            {
-                                background_difftime = "bg-warning"
-                            }
-                            if(diffTime / (1000 * 60 * 60) <= 0 )
-                            {
-                                background_difftime = "bg-danger"
-                            }
-
-
-                            result = result
-                                +'<tr class="odd '+background_difftime+'">'
-                                    +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.screen.screen_name+' </td>'
-                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
-                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ new Date(value.ContentKeysNotValidBefore).toLocaleString() +'</a></td>'
-                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ new Date(value.ContentKeysNotValidAfter).toLocaleString() +'</a></td>'
-                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ content_present+'</a></td>'
-                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ kdm_installed+'</a></td>'
-                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> '+ dhm (diffTime)+'</a></td>'
-                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;">  '+value.device_target+' </a></td>'
-                                +'</tr>';
-                        });
-                        $('#location-listing tbody').html(result)
-
-                        console.log(response.kdms)
-                        /***** refresh datatable **** **/
-
-                        var kdm_datatable = $('#location-listing').DataTable({
-                            "iDisplayLength": 10,
-                            destroy: true,
-                            "bDestroy": true,
-                            "language": {
-                                search: "_INPUT_",
-                                searchPlaceholder: "Search..."
-                            }
-                        });
-
-                    },
-                    error: function(response) {
-
-                    }
-                })
-            }
-            else
-            {
-                $('#refresh_lms').hide();
-                $('#location-listing tbody').html('<div id="table_logs_processing" class="dataTables_processing card">Please Select Location</div>')
-            }
+            var lms = false ;
+            get_kdms(location , screen , lms ,true)
 
         });
 
@@ -493,7 +498,7 @@
 
                                 let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-                                console.log(value.ContentKeysNotValidAfter)
+
                                 background_difftime=""
 
 
@@ -593,7 +598,7 @@
 
                             let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-                            console.log(diffTime)
+
                             background_difftime=""
 
 
@@ -655,6 +660,110 @@
                 })
             }
         });
+
+
+        $(document).on('click', '#refresh', function () {
+            var location = $('#location').val() ;
+            var screen =  null ;
+
+            if( $('#refresh_lms').hasClass("activated"))
+            {
+                lms = true ;
+                var url ="{{  url('') }}"+ "/refresh_lmskdm_content/"+location;
+            }
+            else
+            {
+                lms = false ;
+                var url ="{{  url('') }}"+ "/refresh_kdm_content/"+location;
+            }
+
+            if(location == 'Locations')
+            {
+                swal({
+                        title: '',
+                        text: "Please Select Locaion.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3f51b5',
+                        cancelButtonColor: '#ff4081',
+                        confirmButtonText: 'Great ',
+                        buttons: {
+                            cancel: {
+                                text: "Cancel",
+                                value: null,
+                                visible: true,
+                                className: "btn btn-danger",
+                                closeModal: true,
+                            },
+                        }
+                    })
+            }
+            else
+            {
+                $.ajax({
+                        url:url,
+                        type: 'get',
+
+                        beforeSend: function () {
+                            swal({
+                                title: 'Refreshing',
+                                closeOnEsc: false,
+                                allowOutsideClick: false,
+                                timerProgressBar: true,
+                                onOpen: () => {
+                                    swal.showLoading();
+                                }
+                            });
+                        },
+                        success: function(response) {
+                            swal.close();
+                            if(response.status)
+                            {
+                                swal({
+                                        title: 'Done !',
+                                        text: 'Data Refreshed Successfully ',
+                                        icon: 'success',
+                                        button: {
+                                            text: "Ok",
+                                            value: true,
+                                            visible: true,
+                                            className: "btn btn-primary"
+                                        }
+                                    })
+                                    get_kdms(location , screen , lms ,true)
+                            }
+                            else
+                            {
+                                swal({
+                                        title: 'Failed',
+                                        text: "Error occurred while sending the request.",
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#3f51b5',
+                                        cancelButtonColor: '#ff4081',
+                                        confirmButtonText: 'Great ',
+                                        buttons: {
+                                            cancel: {
+                                                text: "Cancel",
+                                                value: null,
+                                                visible: true,
+                                                className: "btn btn-danger",
+                                                closeModal: true,
+                                            },
+                                        }
+                                    })
+                            }
+
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            console.log(errorThrown);
+                        },
+                        complete: function(jqXHR, textStatus) {}
+                });
+            }
+        });
+
+
 
     })(jQuery);
 

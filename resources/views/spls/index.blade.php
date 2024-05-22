@@ -19,6 +19,9 @@
                     <div>
                         <h4 class="card-title ">SPLS</h4>
                     </div>
+                    <div>
+                        <button id="refresh" class="btn btn-light btn-fw  btn-icon-text"> <i class="mdi mdi-reload btn-icon-prepend"></i> Refresh</button>
+                    </div>
                 </div>
                 <div class="row">
 
@@ -871,6 +874,109 @@
                 }
             });
 
+        });
+
+        $(document).on('click', '#refresh', function () {
+            var location = $('#location').val() ;
+            var screen =  null ;
+
+            if( $('#refresh_lms').hasClass("activated"))
+            {
+                lms = true ;
+                var url ="{{  url('') }}"+ "/refresh_lmsspl_content/"+location;
+            }
+            else
+            {
+                lms = false ;
+                var url ="{{  url('') }}"+ "/refresh_spl_content/"+location;
+            }
+
+            if(location == 'Locations')
+            {
+                swal({
+                        title: '',
+                        text: "Please Select Locaion.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3f51b5',
+                        cancelButtonColor: '#ff4081',
+                        confirmButtonText: 'Great ',
+                        buttons: {
+                            cancel: {
+                                text: "Cancel",
+                                value: null,
+                                visible: true,
+                                className: "btn btn-danger",
+                                closeModal: true,
+                            },
+                        }
+                    })
+            }
+            else
+            {
+                $.ajax({
+                        url:url,
+                        type: 'get',
+
+                        beforeSend: function () {
+                            swal({
+                                title: 'Refreshing',
+                                closeOnEsc: false,
+                                allowOutsideClick: false,
+                                timerProgressBar: true,
+                                onOpen: () => {
+                                    swal.showLoading();
+                                }
+                            });
+                        },
+                        success: function(response) {
+                            swal.close();
+                            if(response.status)
+                            {
+
+                                 get_spls(location , screen , lms , true)
+
+                                swal({
+                                        title: 'Done !',
+                                        text: 'Data Refreshed Successfully ',
+                                        icon: 'success',
+                                        button: {
+                                            text: "Ok",
+                                            value: true,
+                                            visible: true,
+                                            className: "btn btn-primary"
+                                        }
+                                    })
+                            }
+                            else
+                            {
+                                swal({
+                                                title: 'Failed',
+                                                text: "Error occurred while sending the request.",
+                                                icon: 'warning',
+                                                showCancelButton: true,
+                                                confirmButtonColor: '#3f51b5',
+                                                cancelButtonColor: '#ff4081',
+                                                confirmButtonText: 'Great ',
+                                                buttons: {
+                                                    cancel: {
+                                                        text: "Cancel",
+                                                        value: null,
+                                                        visible: true,
+                                                        className: "btn btn-danger",
+                                                        closeModal: true,
+                                                    },
+                                                }
+                                            })
+                            }
+
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            console.log(errorThrown);
+                        },
+                        complete: function(jqXHR, textStatus) {}
+                });
+            }
         });
 
     })(jQuery);

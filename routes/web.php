@@ -35,6 +35,7 @@ Auth::routes(['verify' => true,'register' => false, 'reset' => false]);
 
 
 Route::resource('location', App\Http\Controllers\LocationController::class)->middleware(['auth']);
+Route::delete('location/destroy', [App\Http\Controllers\LocationController::class , 'destroy'])->name('location.destroy')->middleware(['auth']);
 Route::get('location_infos/{location}', [App\Http\Controllers\LocationController::class , 'location_infos'])->name('location.location_infos')->middleware(['auth']);
 Route::get('location/{location}/getscreens', [App\Http\Controllers\LocationController::class , 'getscreens'])->name('location.getscreens');
 Route::get('sync_spl_cpl/{location}', [App\Http\Controllers\LocationController::class , 'sync_spl_cpl'])->name('location.sync_spl_cpl');
@@ -46,7 +47,11 @@ Route::get('refresh_spl_content/{location}', [App\Http\Controllers\LocationContr
 Route::get('refresh_cpl_content/{location}', [App\Http\Controllers\LocationController::class , 'refresh_cpl_content'])->name('refresh_cpl_content');
 Route::get('refresh_kdm_content/{location}', [App\Http\Controllers\LocationController::class , 'refresh_kdm_content'])->name('refresh_kdm_content');
 Route::get('refresh_macro_data_by_location/{location}', [App\Http\Controllers\LocationController::class , 'refresh_macro_data_by_location'])->name('refresh_macro_data_by_location');
-
+Route::get('refresh_lmscpl_content/{location}', [App\Http\Controllers\LocationController::class , 'refresh_lmscpl_content'])->name('refresh_lmscpl_content');
+Route::get('refresh_lmsspl_content/{location}', [App\Http\Controllers\LocationController::class , 'refresh_lmsspl_content'])->name('refresh_lmsspl_content');
+Route::get('refresh_lmskdm_content/{location}', [App\Http\Controllers\LocationController::class , 'refresh_lmskdm_content'])->name('refresh_lmskdm_content');
+Route::get('refresh_schedule_content/{location}', [App\Http\Controllers\LocationController::class , 'refresh_schedule_content'])->name('refresh_schedule_content');
+Route::get('refresh_snmp_data/{location}', [App\Http\Controllers\LocationController::class , 'refresh_snmp_data'])->name('refresh_snmp_data');
 
 
 
@@ -105,6 +110,8 @@ Route::get('error_map', [App\Http\Controllers\SnmpController::class , 'get_snmp_
 
 
 Route::get('getplayback/{location}', [App\Http\Controllers\PlaybackController::class , 'getplayback'])->name('playback.getplayback');
+Route::get('refresh_playback', [App\Http\Controllers\LocationController::class , 'refresh_playback_data'])->name('playback.refresh_playback_data');
+
 Route::get('playback', [App\Http\Controllers\PlaybackController::class , 'index'])->name('playback.index')->middleware(['auth']);
 
 Route::get('get_playbak_detail', [App\Http\Controllers\PlaybackController::class , 'get_playbak_detail'])->name('playback.get_playbak_detail')->middleware(['auth']);
@@ -115,6 +122,7 @@ Route::get('getMacros/{location}', [App\Http\Controllers\MacroController::class 
 
 Route::post('createlocalspl', [App\Http\Controllers\NocsplController::class , 'createlocalspl'])->name('nocspl.createlocalspl')->middleware(['auth']);
 Route::get('get_nocspl', [App\Http\Controllers\NocsplController::class , 'get_nocspl'])->name('nocspl.get_nocspl')->middleware(['auth']);
+Route::get('get_nocspl_to_ingest', [App\Http\Controllers\NocsplController::class , 'get_nocspl_to_ingest'])->name('nocspl.get_nocspl_to_ingest')->middleware(['auth']);
 Route::get('open_nocspl', [App\Http\Controllers\NocsplController::class , 'openlocalspl'])->name('nocspl.openlocalspl')->middleware(['auth']);
 Route::get('delete_nocspl', [App\Http\Controllers\NocsplController::class , 'delete_nocspl'])->name('nocspl.delete_nocspl')->middleware(['auth']);
 Route::post('sendXmlFileToApi', [App\Http\Controllers\NocsplController::class , 'sendXmlFileToApi'])->name('nocspl.sendXmlFileToApi')->middleware(['auth']);

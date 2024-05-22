@@ -1258,7 +1258,7 @@
                             '                          </span>\n' +
                             '                          <span class="flat">  ' +
                             (value.aspect_Ratio == "unknown" ? value.type
-                                : value.aspect_Ratio + ' ' + value.cinema_DCP) +
+                            : value.aspect_Ratio + ' ' + value.cinema_DCP) +
                             '                           </span>\n' +
                             '                          <span class="flat">' + value.soundChannelCount + ' </span>\n' +
                             '                          <span class="flat"> ST  </span>\n' +
@@ -2329,11 +2329,12 @@
         {
 
             $("#spl-list").modal('show');
+            var id_location =  $('#location').val();
 
-            get_spl_list_data()
+            get_spl_list_data(id_location)
 
         });
-        function get_spl_list_data()
+        function get_spl_list_data(id_location)
         {
             var loader_content  =
             '<div class="jumping-dots-loader">'
@@ -2347,6 +2348,10 @@
             $.ajax({
                     url: url,
                     method: 'GET',
+                    data:
+                    {
+                        id_location: id_location,
+                    },
                     success:function(response)
                     {
                         console.log(response.spls) ;
@@ -2450,13 +2455,13 @@
             let items_intermission = [];
             var id_location =  $('#location').val();
             var title_spl = $('#spl_title').val();
-            var as_template ;
+            var is_template =false;
             if($(this).attr('data-astemplate') === 'true'){
-                as_template = true ;
+                is_template = true ;
             }
             else
             {
-                as_template = false ;
+                is_template = false ;
             }
 
 
@@ -2580,6 +2585,7 @@
                             action_control: action_control,
                             items_spl: items_spl,
                             id_location:id_location,
+                            is_template:is_template,
                             "_token": "{{ csrf_token() }}",
                         },
                         success: function(response) {
@@ -3219,7 +3225,7 @@
                 var spl_uuid = $("#id_spl_delete").val();
                 deleteSplSelected(spl_uuid);
                 $("#delete-spl").modal("hide");
-                get_spl_list_data()
+                get_spl_list_data(id_location)
             });
         });
 
@@ -4045,7 +4051,7 @@
                             $('#'+spl_uuid).remove();
                             swal("Done!", "Playlist deleted successfully!", "success");
                             //$('#order-listing').DataTable().ajax.reload();
-                            get_spl_list_data()
+                            get_spl_list_data(id_location)
                         }
                     } catch (e) {
                         console.log(e);
@@ -4167,7 +4173,7 @@
 
         $(document).on('click', '#ingest-spl', function ()
         {
-
+            var id_location =  $('#location').val();
             $("#ingest-modal").modal('show');
             var loader_content  =
             '<div class="jumping-dots-loader">'
@@ -4178,10 +4184,11 @@
                 $('#ingest-spl-list').html(loader_content)
                 $('#ingest-spl-location').html(loader_content)
 
-            var url = "{{  url('') }}"+   "/get_nocspl/";
+            var url = "{{  url('') }}"+   "/get_nocspl_to_ingest/";
             $.ajax({
                     url: url,
                     method: 'GET',
+
                     success:function(response)
                     {
                         console.log(response.spls) ;

@@ -20,6 +20,7 @@ use Illuminate\View\View;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Redirect;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 
 ini_set('max_execution_time', 600);
@@ -81,7 +82,6 @@ class LocationController extends Controller
         $diskusage = $location->diskusage ;
         return Response()->json(compact('location','diskusage'));
     }
-
 
     public function refresh_all_data()
     {
@@ -470,40 +470,115 @@ class LocationController extends Controller
 
     public function refresh_spl_content( $location)
     {
-        $location = Location::find($location);
-        foreach($location->screens as $screen)
+        try
         {
-            app(\App\Http\Controllers\SplController::class)->getspls($location->id,$screen->id);
+            $location = Location::find($location);
+            foreach($location->screens as $screen)
+            {
+                app(\App\Http\Controllers\SplController::class)->getspls($location->id,$screen->id);
+            }
+            $status = 1 ;
+        } catch (Exception $e) {
+            $status = 0 ;
+
         }
+        return Response()->json(compact('status'));
     }
 
-    public function refresh_cpl_content( $location)
+    public function refresh_lmsspl_content( $location)
     {
-        $location = Location::find($location);
-        foreach($location->screens as $screen)
+        try
         {
-            app(\App\Http\Controllers\CplController::class)->getcpls($location->id,$screen->id);
+            $location = Location::find($location);
+            app(\App\Http\Controllers\LmssplController::class)->getlmsspls($location->id);
+            $status = 1 ;
+        } catch (Exception $e) {
+            $status = 0 ;
         }
+        return Response()->json(compact('status'));
     }
+
+    public function refresh_cpl_content($location)
+    {
+
+        try
+        {
+            $location = Location::find($location);
+
+            foreach($location->screens as $screen)
+            {
+                app(\App\Http\Controllers\CplController::class)->getcpls($location->id,$screen->id);
+            }
+            $status = 1 ;
+        } catch (Exception $e) {
+            $status = 0 ;
+
+        }
+        return Response()->json(compact('status'));
+    }
+
+    public function refresh_lmscpl_content($location)
+    {
+        try
+        {
+            $location = Location::find($location);
+            app(\App\Http\Controllers\LmscplController::class)->getlmscpls($location->id);
+
+            $status = 1 ;
+        } catch (Exception $e) {
+            $status = 0 ;
+
+        }
+        return Response()->json(compact('status'));
+    }
+
 
     public function refresh_kdm_content($location)
     {
-        $location = Location::find($location);
-        foreach($location->screens as $screen)
+        try
         {
-            app(\App\Http\Controllers\KdmController::class)->getkdms($location->id,$screen->id);
+            $location = Location::find($location);
+            foreach($location->screens as $screen)
+            {
+                app(\App\Http\Controllers\KdmController::class)->getkdms($location->id,$screen->id);
+            }
+            $status = 1 ;
+        } catch (Exception $e) {
+            $status = 0 ;
+
         }
+        return Response()->json(compact('status'));
     }
+
+    public function refresh_lmskdm_content($location)
+    {
+
+        try
+        {
+            $location = Location::find($location);
+            app(\App\Http\Controllers\LmskdmController::class)->getlmskdms($location->id);
+
+            $status = 1 ;
+        } catch (Exception $e) {
+            $status = 0 ;
+
+        }
+        return Response()->json(compact('status'));
+    }
+
 
 
     public function refresh_schedule_content($location)
     {
-        $start_time = Carbon::now();
-        echo $start_time->toDateTimeString();
-
-        $location = Location::find($location);
-        dd($location) ;
-        app(\App\Http\Controllers\ScheduleContoller::class)->getschedules($location->id);
+        try
+        {
+            $location = Location::find($location);
+            app(\App\Http\Controllers\ScheduleContoller::class)->getschedules($location->id);
+            $status = 1 ;
+        } catch (Exception $e) {
+            $status = 0 ;
+        }
+        return Response()->json(compact('status'));
     }
 
     public function refresh_schedule_all_location()
@@ -612,29 +687,40 @@ class LocationController extends Controller
         }
     }
 
-
-
     public function refresh_playback_data()
     {
-        $start_time = Carbon::now();
-        echo $start_time->toDateTimeString();
-        $locations = Location::all() ;
-        foreach($locations as $location)
+        try
         {
-            app(\App\Http\Controllers\PlaybackController::class)->getplayback($location->id);
-        }
+           // $start_time = Carbon::now();
+            //echo $start_time->toDateTimeString();
+            $locations = Location::all() ;
+            foreach($locations as $location)
+            {
+                app(\App\Http\Controllers\PlaybackController::class)->getplayback($location->id);
+            }
+            $status = 1 ;
+        } catch (Exception $e) {
+            $status = 0 ;
 
+        }
+        return Response()->json(compact('status'));
     }
 
     public function refresh_snmp_data()
     {
-        $start_time = Carbon::now();
-        echo $start_time->toDateTimeString();
-        $locations = Location::all() ;
-        foreach($locations as $location)
+        try
         {
-            app(\App\Http\Controllers\SnmpController::class)->getsnmp($location->id);
+            $locations = Location::all() ;
+            foreach($locations as $location)
+            {
+                app(\App\Http\Controllers\SnmpController::class)->getsnmp($location->id);
+            }
+            $status = 1 ;
+        } catch (Exception $e) {
+            $status = 0 ;
+
         }
+        return Response()->json(compact('status'));
 
     }
 
@@ -645,7 +731,6 @@ class LocationController extends Controller
         $location = Location::find($location) ;
         app(\App\Http\Controllers\MacroController::class)->getMacros($location->id);
     }
-
 
     public function refresh_macro_data()
     {
@@ -696,7 +781,6 @@ class LocationController extends Controller
         return true  ;
     }
 
-
     public function refresh_disk_usage_data()
     {
         $start_time = Carbon::now();
@@ -720,7 +804,6 @@ class LocationController extends Controller
         }
 
     }
-
 
     public function refresh_dcp_trensfer_data()
     {
@@ -757,7 +840,19 @@ class LocationController extends Controller
 
     }
 
+    public function destroy(Request $request)
+    {
+        $location = Location::find($request->location_id) ;
+        if($location->delete())
+        {
+            $status = 1 ;
+        }
+        else
+        {
+            $status = 0 ;
+        }
+        return Response()->json(compact('status'));
 
-
+    }
 
 }
