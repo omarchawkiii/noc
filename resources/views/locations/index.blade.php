@@ -83,7 +83,7 @@
                                                 <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuOutlineButton6" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Actions </button>
                                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuOutlineButton6" style="">
                                                     <a class="btn btn-outline-primary dropdown-item" href="{{ route('location.edit',$location) }}">Edit</a>
-                                                    <a class="btn btn-outline-primary dropdown-item" href="{{ route('refresh_all_data_of_location',$location->id) }}">Refreesh All Data</a>
+                                                    <!--<a class="btn btn-outline-primary dropdown-item" href="{{ route('refresh_all_data_of_location',$location->id) }}">Refreesh All Data</a>
                                                     <a class="btn btn-outline-primary dropdown-item" href="{{ route('refresh_content_of_location',$location->id) }}">Refreesh Content DATA </a>
                                                     <a class="btn btn-outline-primary dropdown-item" href="{{ route('refresh_lms_data_of_location',$location->id) }}">Refreesh LMS Content DATA </a>
                                                     <a class="btn btn-outline-primary dropdown-item" href="{{ route('refresh_spl_content',$location->id) }}">Refreesh SPL Content </a>
@@ -95,7 +95,7 @@
                                                     <a class="btn btn-outline-primary dropdown-item" href="{{ route('playback.getplayback',$location->id) }}">Refreesh Playback </a>
                                                     <a class="btn btn-outline-primary dropdown-item" href="{{ route('refresh_macro_data_by_location',$location->id) }}">Refreesh Macros </a>
                                                     <a class="btn btn-outline-primary dropdown-item" href="{{ route('moviescod.getmoviescods',$location->id) }}">Refreesh MoviesCods </a>
-                                                    <a class="btn btn-outline-primary dropdown-item" href="{{ route('diskusage.getdiskusage',$location->id) }}">Refresh diskusage </a>
+                                                    <a class="btn btn-outline-primary dropdown-item" href="{{ route('diskusage.getdiskusage',$location->id) }}">Refresh diskusage </a> -->
 
                                                     <a class="btn btn-outline-primary dropdown-item " id="delete_location"  href="#" data-id-location="{{ $location->id }}">Delete Location </a>
 

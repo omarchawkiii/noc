@@ -508,6 +508,8 @@ class LocationController extends Controller
             foreach($location->screens as $screen)
             {
                 app(\App\Http\Controllers\CplController::class)->getcpls($location->id,$screen->id);
+
+
             }
             $status = 1 ;
         } catch (Exception $e) {
@@ -593,30 +595,31 @@ class LocationController extends Controller
     }
     public function sync_spl_cpl( $location )
     {
-        //$spls = Spl::all() ;
         $location = Location::find($location) ;
         $spls = $location->spls ;
+        $lmsspls = $location->lmsspls ;
+        splcomponents::truncate();
+
         foreach($spls as $spl)
         {
             $url = $location->connection_ip."?request=getCplsBySpl&spl_uuid=".$spl->uuid;
-
             $client = new Client();
             $response = $client->request('GET', $url);
             $contents = json_decode($response->getBody(), true);
-            //$spl->cpls()->detach() ;
+           // echo $url ."<br />" ;
+
             if($contents)
             {
                 foreach($contents as $content)
                 {
-
                     if($content)
                     {
                         foreach($content as $cpl_content)
                         {
+
                             splcomponents::updateOrCreate([
                                 'uuid_spl' => $cpl_content['uuid_spl'],
                                 'CompositionPlaylistId' => $cpl_content['CompositionPlaylistId'],
-                               // 'location_id' => $location->id
                             ],[
                                 'id_splcomponent' => $cpl_content['id'],
                                 'CompositionPlaylistId' => $cpl_content['CompositionPlaylistId'],
@@ -625,16 +628,15 @@ class LocationController extends Controller
                                 'editRate_numerator' => $cpl_content['editRate_numerator'],
                                 'editRate_denominator' => $cpl_content['editRate_denominator'],
                                 'uuid_spl' => $cpl_content['uuid_spl'],
-                                //'spl_id' => $spl->id,
-                                //'location_id'     =>$location->id,
                             ]);
 
                         }
                     }
+
                 }
 
                 $splcomponents = splcomponents::where('uuid_spl',$spl->uuid)->get() ;
-                //dd($splcomponents) ;
+
                 if(count($contents) != count($splcomponents) )
                 {
                     $uuid_spls = array_column($content, 'id');
@@ -647,8 +649,67 @@ class LocationController extends Controller
                         }
                 }
 
+
             }
+
+
         }
+
+        foreach($lmsspls as $spl)
+        {
+            $url = $location->connection_ip."?request=getCplsBySpl&spl_uuid=".$spl->uuid;
+            $client = new Client();
+            $response = $client->request('GET', $url);
+            $contents = json_decode($response->getBody(), true);
+           // echo $url ."<br />" ;
+
+            if($contents)
+            {
+                foreach($contents as $content)
+                {
+                    if($content)
+                    {
+                        foreach($content as $cpl_content)
+                        {
+
+                            splcomponents::updateOrCreate([
+                                'uuid_spl' => $cpl_content['uuid_spl'],
+                                'CompositionPlaylistId' => $cpl_content['CompositionPlaylistId'],
+                            ],[
+                                'id_splcomponent' => $cpl_content['id'],
+                                'CompositionPlaylistId' => $cpl_content['CompositionPlaylistId'],
+                                'AnnotationText' => $cpl_content['AnnotationText'],
+                                'EditRate' => $cpl_content['EditRate'],
+                                'editRate_numerator' => $cpl_content['editRate_numerator'],
+                                'editRate_denominator' => $cpl_content['editRate_denominator'],
+                                'uuid_spl' => $cpl_content['uuid_spl'],
+                            ]);
+
+                        }
+                    }
+
+                }
+
+                $splcomponents = splcomponents::where('uuid_spl',$spl->uuid)->get() ;
+
+                if(count($contents) != count($splcomponents) )
+                {
+                    $uuid_spls = array_column($content, 'id');
+                        foreach($splcomponents as $splcomponent)
+                        {
+                            if (! in_array( $splcomponent->id_splcomponent , $uuid_spls))
+                            {
+                                $splcomponent->delete() ;
+                            }
+                        }
+                }
+
+
+            }
+
+
+        }
+
     }
 
     public function sync_lms_spl_cpl( $location )
@@ -843,6 +904,7 @@ class LocationController extends Controller
     public function destroy(Request $request)
     {
         $location = Location::find($request->location_id) ;
+        Power::where('location_id',$location->id)->delete() ;
         if($location->delete())
         {
             $status = 1 ;

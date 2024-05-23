@@ -108,7 +108,7 @@ class CplController extends Controller
                 }
             }
         }
-        return Redirect::back()->with('message' ,' The cpls  has been updated');
+        //return Redirect::back()->with('message' ,' The cpls  has been updated');
     }
 
     public function cpl_by_screen(Screen $screen)
@@ -273,20 +273,15 @@ class CplController extends Controller
 
         $cpl = Cpl::where('id',$cpl)->where('location_id',$location)->first() ;
 
-        //$spls = $cpl->spls ;
-        //dd($cpl->uuid) ;
-        //$spls = splcomponents::with('spl')->where('CompositionPlaylistId',$cpl->uuid)->get() ;
         $spls = DB::table('splcomponents')
-            ->leftJoin('spls', 'splcomponents.uuid_spl', '=', 'spls.uuid')
             ->where('splcomponents.CompositionPlaylistId',$cpl->uuid)
-            ->select('splcomponents.uuid_spl','spls.name')
+            ->leftJoin('spls', 'splcomponents.uuid_spl', '=', 'spls.uuid')
+            ->leftJoin('lmsspls', 'splcomponents.uuid_spl', '=', 'lmsspls.uuid')
+            ->select('splcomponents.uuid_spl as uuid_spl','spls.name as name','lmsspls.name as lms_name')
             ->groupBy('splcomponents.uuid_spl')
             ->get();
 
 
-        //dd($spls) ;
-        //dd($cpl);
-        //$kdms = $cpl->kdms ;
 
         $kdms =Kdm::with('screen')->where('cpl_uuid',$cpl->uuid)->where('location_id',$location)->get();
       //  $schedules =  $spl->schedules ;

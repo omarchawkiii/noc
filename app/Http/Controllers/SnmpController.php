@@ -148,6 +148,7 @@ class SnmpController extends Controller
             }
             foreach($location->playbacks as $playback)
             {
+
                 if ($playback->playback_status == 'Stop')
                 {
                     $idle_screen ++ ;
@@ -171,27 +172,32 @@ class SnmpController extends Controller
                     $count_playback_generale_status ++ ;
                     if($playback->storage_generale_status == 'Red')
                     {
-                        $storage_generale_status = "Storage Greater Than 90% of disk size" ;
+                        $storage_generale_status = "<span class='text-danger' > Storage Status  : Danger ! (used space >90%) </span>  |  Screen : " . $playback->serverName ;
                     }
-                    elseif($playback->storage_generale_status == 'Yellow')
+                    elseif($playback->storage_generale_status == 'Yellow' || $playback->storage_generale_status == 'yellow')
                     {
-                        $storage_generale_status = "storage between 80% and 90% disk size" ;
+                        $storage_generale_status = "<span class='text-warning' > Storage Status  : Warning ! (used space >80%)</span> |  Screen : " . $playback->serverName ;
+                    }
+                    elseif($playback->storage_generale_status == 'Error' )
+                    {
+                        $storage_generale_status = "Disk Space Quota" ;
                     }
                     else
                     {
                         $storage_generale_status =$playback->storage_generale_status ;
                     }
-                    $infos .=  " <p class='m-2'> playback  Storage Status Is: ".$storage_generale_status ." in screen: " .$playback->screen->screen_name ." </p>";
+                    $infos .=  " <p class='m-2'> Storage Status Is: ".$storage_generale_status ." in screen: " .$playback->screen->screen_name ." </p>";
                 }
 
                 if($playback->securityManager != 'Normal' )
                 {
                     $securityManager = true ;
                     $count_securityManager ++ ;
-                    $infos .=  " <p class='m-2'>Security Manager status is: ".$playback->securityManager ." in screen: " .$playback->screen->screen_name ." </p>";
+                   // $infos .=  " <p class='m-2'>Security Manager status is: ".$playback->securityManager ." in screen: " .$playback->screen->screen_name ." </p>";
+                    $infos .=  " <p class='m-2'>Security Manager status is Offline In Screen: " .$playback->screen->screen_name ." </p>";
                 }
             }
-            $schedules = Schedule::where('location_id', $location->id )->where('date_start' , '>' , Carbon::today() )->get() ;
+            $schedules = Schedule::where('location_id', $location->id )->where('date_start' , '>' , Carbon::today() )->groupBy('cod_film')->get() ;
             foreach($schedules as $schedule)
             {
                 if($schedule->status != 'linked' && !$schedules_error )
@@ -204,24 +210,30 @@ class SnmpController extends Controller
                     $infos .="<li>  session : ".$schedule->name." Start At: ".$schedule->date_start." Is Not Linked </li> ";
                 }
 
+
+            }
+
+            foreach($schedules as $schedule)
+            {
                 if($schedule->status == 'linked'  && $schedule->kdm != 1   &&  !$missing_kdms )
                 {
                     $missing_kdms = true ;
                     $infos .=  " <p class='m-2'> Missing KDMs </p> " ;
                 }
-
-                if($schedule->status == 'linked'  && $schedule->cpls != 1  &&  !$missing_cpls )
-                {
-                    $missing_cpls = true ;
-                    $infos .=  " <p class='m-2'> Missing CPLs In </p> " ;
-                }
-
                 if($schedule->status == 'linked' && $schedule->kdm != 1)
                 {
                     $infos .="<li>  session : ".$schedule->name." Start At: ".$schedule->date_start." Has missing   KDMs </li> ";
                     $count_missing_kdm_error++;
                 }
+            }
 
+            foreach($schedules as $schedule)
+            {
+                if($schedule->status == 'linked'  && $schedule->cpls != 1  &&  !$missing_cpls )
+                {
+                    $missing_cpls = true ;
+                    $infos .=  " <p class='m-2'> Missing CPLs In </p> " ;
+                }
 
                 if( $schedule->status == 'linked'  && $schedule->cpls != 1 )
                 {
@@ -229,6 +241,7 @@ class SnmpController extends Controller
                     $infos .="<li>  session : ".$schedule->name." Start At: ".$schedule->date_start." Has missing CPLs  </li> ";
                 }
             }
+
 
 
             if( $diskusage || $playback_generale_status  || $schedules_error  || $securityManager && false)

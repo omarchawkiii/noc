@@ -938,10 +938,6 @@ function formatSize(sizeInBytes) {
             var url = "{{  url('') }}"+ "/get_cpl_infos/"+location_id+"/"+cpl_id ;
             $('#kdms-tab').show();
         }
-
-
-
-
        $.ajax({
                url: url,
                method: 'GET',
@@ -961,11 +957,19 @@ function formatSize(sizeInBytes) {
                                +'<tbody>'
 
                    $.each(response.spls, function( index, value ) {
-
+                    var name="" ;
+                    if(value.name == null)
+                    {
+                         name = value.lms_name
+                    }
+                    else
+                    {
+                        name = value.name
+                    }
                    result = result
                                    +'<tr>'
                                         +'<th>'+value.uuid_spl+'</th>'
-                                        +'<th>'+value.name+'</th>'
+                                        +'<th>'+name+'</th>'
 
 
                                    +'</tr>'

@@ -24,7 +24,7 @@ class NocsplController extends Controller
     {
 
 
-        if($request->is_template == true)
+        if($request->is_template == "true")
         {
             $is_template = true ;
         }
@@ -32,7 +32,7 @@ class NocsplController extends Controller
         {
             $is_template = false ;
         }
-        //dd($request->action_type);
+            dd($is_template);
         if($request->action_type =="edit")
         {
             Nocspl::where('uuid',$request->spl_uuid_edit)->delete() ;
@@ -60,7 +60,7 @@ class NocsplController extends Controller
                 'uuid' => $uuid ,
                 'spl_title' => $request->title_spl,
                 'display_mode'=>$request->display_mode,
-                'spl_properties_hfr'=>$request ,
+                'spl_properties_hfr'=>$request->hfr ,
                 'xmlpath'=>$file_name,
                 'duration'=> $duration,
                 'is_template' => $is_template ,

@@ -1098,15 +1098,18 @@
                 +'<span></span>'
                 +'</div>'
         $('#cpls').html(loader_content)
-
-        if(lms == true )
+        var lms ;
+        if( $('#refresh_lms').hasClass("activated"))
         {
+            lms = true ;
             var url = "{{  url('') }}"+ "/get_lmsspl_infos/"+spl_id ;
         }
         else
         {
+            lms = false ;
             var url = "{{  url('') }}"+ "/get_spl_infos/"+spl_id ;
         }
+
 
 
 

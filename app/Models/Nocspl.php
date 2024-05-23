@@ -22,7 +22,7 @@ class Nocspl extends Model
     ];
 
     protected $casts = [
-        'created_at'  => 'datetime:Y-m-d H:00',
+        'created_at'  => 'datetime:Y-m-d H:i',
        // 'joined_at' => 'datetime:Y-m-d H:00',
     ];
 

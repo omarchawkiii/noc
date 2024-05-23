@@ -100,31 +100,30 @@ class LmscplController extends Controller
 
         if($cpl)
         {
-
             $kdms =null ;
-              $schedules = null ;
-              //$spls = splcomponents::where('CompositionPlaylistId',$cpl->uuid)->get() ;
-
-              $spls = DB::table('splcomponents')
-              ->leftJoin('lmsspls', 'splcomponents.uuid_spl', '=', 'lmsspls.uuid')
-              ->where('splcomponents.CompositionPlaylistId',$cpl->uuid)
-              ->select('splcomponents.uuid_spl','lmsspls.name')
-              ->groupBy('splcomponents.uuid_spl')
-              ->get();
+            $schedules = null ;
+            $spls = DB::table('splcomponents')
+                ->leftJoin('lmsspls', 'splcomponents.uuid_spl', '=', 'lmsspls.uuid')
+                ->leftJoin('spls', 'splcomponents.uuid_spl', '=', 'spls.uuid')
+                ->where('splcomponents.CompositionPlaylistId',$cpl->uuid)
+                ->select('splcomponents.uuid_spl as uuid_spl','spls.name as name','lmsspls.name as lms_name')
+                ->groupBy('splcomponents.uuid_spl')
+                ->get();
         }
         else
         {
             $cpl = Cpl::find($cplid) ;
-              // $spls = $cpl->lmsspls ;
-              $kdms =null ;
-              $schedules = null ;
-              //$spls = splcomponents::where('CompositionPlaylistId',$cpl->uuid)->get() ;
-              $spls = DB::table('splcomponents')
-              ->leftJoin('spls', 'splcomponents.uuid_spl', '=', 'spls.uuid')
-              ->where('splcomponents.CompositionPlaylistId',$cpl->uuid)
-              ->select('splcomponents.uuid_spl','spls.name')
-              ->groupBy('splcomponents.uuid_spl')
-              ->get();
+            // $spls = $cpl->lmsspls ;
+            $kdms =null ;
+            $schedules = null ;
+            //$spls = splcomponents::where('CompositionPlaylistId',$cpl->uuid)->get() ;
+            $spls = DB::table('splcomponents')
+                ->where('splcomponents.CompositionPlaylistId',$cpl->uuid)
+                ->leftJoin('spls', 'splcomponents.uuid_spl', '=', 'spls.uuid')
+                ->leftJoin('lmsspls', 'splcomponents.uuid_spl', '=', 'lmsspls.uuid')
+                ->select('splcomponents.uuid_spl as uuid_spl','spls.name as name','lmsspls.name as lms_name')
+                ->groupBy('splcomponents.uuid_spl')
+                ->get();
 
         }
 

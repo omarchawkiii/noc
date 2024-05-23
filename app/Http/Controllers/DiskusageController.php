@@ -14,12 +14,14 @@ class DiskusageController extends Controller
     {
 
         $location = Location::find($location) ;
+
         $url = $location->connection_ip . "?request=getLmsDiskUsage";
         $client = new Client();
         $response = $client->request('GET', $url);
         $contents = json_decode($response->getBody(), true);
         if($contents)
         {
+
             $free_space_percentage=($contents['usedSpace'] * 100) / $contents['totalSpace'];
             $free_space_percentage=number_format($free_space_percentage, 2, ',', '') ;
             Diskusage::updateOrCreate([
@@ -39,6 +41,10 @@ class DiskusageController extends Controller
                 'location_id' => $location->id,
 
             ]);
+        }
+        else
+        {
+            echo " No Content ";
         }
         return Redirect::back()->with('message' ,' The Disk Usage  has been updated');
     }

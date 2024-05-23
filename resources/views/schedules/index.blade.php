@@ -690,8 +690,8 @@
 
         });
 
-        $('#screen').change(function(){
-
+        function get_schedule(location, screen, date, refresh_screen)
+        {
             $("#location-listing").dataTable().fnDestroy();
             $('#location-listing tbody').html('')
             var loader_content  =
@@ -701,188 +701,35 @@
                 +'<span></span>'
                 +'</div>'
             $('#location-listing tbody').html(loader_content)
-
-            var country =  $('#country').val();
-            var screen =  $('#screen').val();
-            var date = new Date($('#scheduleDatePicker').val());
-            var location =  $('#location').val();
-
-
-            var url = "{{  url('') }}"+ '/get_schedules_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen+'&date='+ date.toLocaleDateString('en-GB')+' 00';
-
-            result =" " ;
-
-            $.ajax({
-                url: url,
-                method: 'GET',
-                success:function(response)
-                {
-                    $.each(response.schedules, function( index, value ) {
-                        bg_status="" ;
-                        if(value.status !="linked" )
-                        {
-                            bg_status = "bg-danger"
-                        }
-                        icon_spl = ""
-                        icon_cpl = ""
-                        icon_kdm = ""
-                        statu_content=""
-                        if(value.status !="linked" )
-                        {
-                            icon_spl = '<i class="mdi mdi-playlist-play text-danger"> </i>'
-                            if(value.type == "pos")
-                            {
-                                statu_content = '<spn class="text-danger" >Unlinked  </span>'
-                            }
-                            else
-                            {
-                                statu_content = ''
-                            }
-                            icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
-                            icon_cpl = '<i class="mdi mdi-filmstrip text-warning ">'
-                        }
-                        else
-                        {
-                            statu_content = '<spn class="text-success" > Linked</span>'
-                            if(value.kdm_status =="")
-                            {
-                                statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-danger get_schedule_infos  btn-fw"> KDM Missing Detected  </button>'
-                            }
-                            icon_spl =  '<i class="mdi mdi-playlist-play text-success"> </i>'
-                            if(value.cpls ==1)
-                            {
-                                icon_cpl = '<i class="mdi mdi-filmstrip text-success">'
-                                if(value.kdm  ==1 )
-                                {
-                                    icon_kdm = '</i> <i class="mdi mdi-key-change text-success"> </i>'
-                                }
-                                else
-                                {
-                                    icon_kdm = '</i> <i class="mdi mdi-key-remove text-danger check_need_kdm" data-scheduleidd = "'+value.id+'"> </i>'
-                                }
-
-                            }
-                            else
-                            {
-                                icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
-                                icon_cpl = '<i class="mdi mdi-filmstrip text-danger   spl_not_linked" data-scheduleidd = "'+value.id+'">'
-                            }
-
-                        }
-                        if(value.kdm_status =="not_valid_yet")
-                        {
-                            statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-warning btn-fw get_schedule_infos"> KDM Valide in :  '+value.date_expired+'</button>'
-                        }
-                        if(value.kdm_status =="expired")
-                        {
-                            statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-danger get_schedule_infos  btn-fw"> KDM Already Expired : '+value.date_expired+'</button>'
-                        }
-                        if(value.kdm_status =="warning")
-                        {
-                            statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-warning get_schedule_infos btn-fw">KDM Expired in : '+value.date_expired+'</button>'
-                        }
-                        if(value.kdm_status =="valid")
-                        {
-                            statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-success get_schedule_infos btn-fw"> KDM Expired in  : '+value.date_expired+'</button>'
-                        }
-                        var name =" " ;
-                        if(value.type == "pos")
-                        {
-                            if(value.status== "linked" )
-                            {
-                                var name =value.ShowTitleText  ;
-                            }
-                            else
-                            {
-                                var name =value.titleShort  ;
-                            }
-                        }
-                        else
-                        {
-                            var name =value.ShowTitleText  ;
-                        }
-
-
-                        result = result
-                            +'<tr class="odd ">'
-                            +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.type+' </td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.screen.screen_name+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+name+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.date_start+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+ icon_spl + icon_cpl + icon_kdm +' </i></a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+statu_content+'</a></td>'
-                            +'</tr>';
-                    });
-                    console.log(response.schedules)
-
-                    $('#location-listing tbody').html(result)
-                    /***** refresh datatable ***** */
-
-                    var spl_datatable = $('#location-listing').DataTable({
-
-                        "iDisplayLength": 100,
-                        destroy: true,
-                        "bDestroy": true,
-                        "language": {
-                            search: "_INPUT_",
-                            searchPlaceholder: "Search..."
-                        }
-
-                    });
-
-                },
-                error: function(response) {
-
-                }
-            })
-
-
-
-
-        });
-
-        $('#location').change(function(){
-
-            $("#location-listing").dataTable().fnDestroy();
-            var loader_content  =
-            '<div class="jumping-dots-loader">'
-                +'<span></span>'
-                +'<span></span>'
-                +'<span></span>'
-                +'</div>'
-            $('#location-listing tbody').html(loader_content)
-
-             $('#screen').find('option')
-            .remove()
-            .end()
-            .append('<option value="null">All Screens</option>')
-
-            //$('#location-listing tbody').html('')
-            var location =  $('#location').val();
-            var country =  $('#country').val();
-            var screen =  null;
-            var date = new Date($('#scheduleDatePicker').val());
-
-
             if(location != "Locations")
             {
                 $('#scheduleDate').show();
-                var url = "{{  url('') }}"+ '/get_schedules_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen+'&date='+ date.toLocaleDateString('en-GB')+' 00';
                 result =" " ;
-
+                date = date.toLocaleDateString('en-GB')+' 00' ;
+                //var url = "{{  url('') }}"+ '/get_schedules_with_filter/?location=' + location  +'&screen='+ screen+'&date='+ date.toLocaleDateString('en-GB')+' 00';
+                var url = "{{  url('') }}"+ '/get_schedules_with_filter';
                 $.ajax({
                     url: url,
                     method: 'GET',
+                    data :{
+                        location : location ,
+                        screen : screen ,
+                        date : date ,
+                    },
                     success:function(response)
                     {
                         console.log(response)
-                        screens = '<option value="null" selected>All Screens</option>';
-                        $.each(response.screens, function( index_screen, screen ) {
+                        if(refresh_screen)
+                        {
+                            screens = '<option value="null" selected>All Screens</option>';
+                            $.each(response.screens, function( index_screen, screen ) {
 
-                            screens = screens
-                                +'<option  value="'+screen.id+'">'+screen.screen_name+'</option>';
-                        });
+                                screens = screens
+                                    +'<option  value="'+screen.id+'">'+screen.screen_name+'</option>';
+                            });
                             $('#screen').html(screens)
+                        }
+
 
                         $.each(response.schedules, function( index, value ) {
                             bg_status="" ;
@@ -890,18 +737,13 @@
                             {
                                 bg_status = "bg-danger"
                             }
-
                             icon_spl = ""
                             icon_cpl = ""
                             icon_kdm = ""
                             statu_content=""
-
-
-
                             if(value.status !="linked" )
                             {
                                 icon_spl = '<i class="mdi mdi-playlist-play text-danger"> </i>'
-
                                 if(value.type == "pos")
                                 {
                                     statu_content = '<spn class="text-danger" >Unlinked  </span>'
@@ -910,24 +752,23 @@
                                 {
                                     statu_content = ''
                                 }
-
                                 icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
                                 icon_cpl = '<i class="mdi mdi-filmstrip text-warning ">'
-
-                                //statu_content = ''
-
                             }
                             else
                             {
-
+                                statu_content = '<spn class="text-success" > Linked</span>'
+                                if(value.kdm_status =="")
+                                {
+                                    statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-danger get_schedule_infos  btn-fw"> KDM Missing Detected  </button>'
+                                }
                                 icon_spl =  '<i class="mdi mdi-playlist-play text-success"> </i>'
                                 if(value.cpls ==1)
                                 {
                                     icon_cpl = '<i class="mdi mdi-filmstrip text-success">'
                                     if(value.kdm  ==1 )
                                     {
-                                        icon_kdm = '</i> <i class="mdi mdi-key-change text-success"> </i>'
-
+                                        icon_kdm = '</i> <i data-scheduleidd = "'+value.id+'" class="mdi mdi-key-change text-success get_schedule_infos"> </i>'
                                     }
                                     else
                                     {
@@ -940,8 +781,9 @@
                                     icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
                                     icon_cpl = '<i class="mdi mdi-filmstrip text-danger   spl_not_linked" data-scheduleidd = "'+value.id+'">'
                                 }
+
                             }
-                            if(value.kdm_status =="not_valid_yet")
+                            /*if(value.kdm_status =="not_valid_yet")
                             {
                                 statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-warning btn-fw get_schedule_infos"> KDM Valide in :  '+value.date_expired+'</button>'
                             }
@@ -956,9 +798,8 @@
                             if(value.kdm_status =="valid")
                             {
                                 statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-success get_schedule_infos btn-fw"> KDM Expired in  : '+value.date_expired+'</button>'
-                            }
-
-
+                            }*/
+                            statu_content = value.kdm_status ;
                             var name =" " ;
                             if(value.type == "pos")
                             {
@@ -977,7 +818,6 @@
                             }
 
 
-
                             result = result
                                 +'<tr class="odd ">'
                                 +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.type+' </td>'
@@ -985,15 +825,16 @@
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+name+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.date_start+'</a></td>'
                                 +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+ icon_spl + icon_cpl + icon_kdm +' </i></a></td>'
-                                +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+statu_content+'</a></td>'
+                                +'<td>'+statu_content+'</td>'
                                 +'</tr>';
                         });
-                        $('#location-listing tbody').html(result)
-
                         console.log(response.schedules)
-                        /***** refresh datatable **** **/
+
+                        $('#location-listing tbody').html(result)
+                        /***** refresh datatable ***** */
 
                         var spl_datatable = $('#location-listing').DataTable({
+
                             "iDisplayLength": 100,
                             destroy: true,
                             "bDestroy": true,
@@ -1001,6 +842,7 @@
                                 search: "_INPUT_",
                                 searchPlaceholder: "Search..."
                             }
+
                         });
 
                     },
@@ -1008,16 +850,32 @@
 
                     }
                 })
-
             }
             else
             {
                 $('#scheduleDate').hide();
                 $('#location-listing tbody').html('<div id="table_logs_processing" class="dataTables_processing card">Please Select Location</div>')
             }
+        }
+        $('#screen').change(function(){
+            var screen =  $('#screen').val();
+            var date = new Date($('#scheduleDatePicker').val());
+            var location =  $('#location').val();
 
+            get_schedule(location, screen, date,false)
 
         });
+
+        $('#location').change(function(){
+            var location =  $('#location').val();
+            var country =  $('#country').val();
+            var screen =  null;
+            var date = new Date($('#scheduleDatePicker').val());
+
+            get_schedule(location, screen, date,true)
+
+        });
+
         $(document).on('click', '#linking_btn , #no_linked_spls_movies_tab', function () {
             $('#search_unlinked_spl').val('') ;
             $('#search_unlinked_film').val('') ;
@@ -1348,7 +1206,6 @@
         });
 
 
-
         $(document).on('click', '.spl_not_linked', function ()
         {
             var schedule_idd = $(this).attr('data-scheduleidd') ;
@@ -1583,7 +1440,176 @@
 
         })
 
+        $(document).on('click', '#refresh', function () {
+            var location = $('#location').val() ;
+            var screen =  null ;
+            var date = new Date($('#scheduleDatePicker').val());
+            var url ="{{  url('') }}"+ "/refresh_schedule_content/"+location;
 
+            if(location == 'Locations')
+            {
+                swal({
+                        title: '',
+                        text: "Please Select Locaion.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3f51b5',
+                        cancelButtonColor: '#ff4081',
+                        confirmButtonText: 'Great ',
+                        buttons: {
+                            cancel: {
+                                text: "Cancel",
+                                value: null,
+                                visible: true,
+                                className: "btn btn-danger",
+                                closeModal: true,
+                            },
+                        }
+                    })
+            }
+            else
+            {
+                $.ajax({
+                        url:url,
+                        type: 'get',
+
+                        beforeSend: function () {
+                            swal({
+                                title: 'Refreshing',
+                                closeOnEsc: false,
+                                allowOutsideClick: false,
+                                timerProgressBar: true,
+                                onOpen: () => {
+                                    swal.showLoading();
+                                }
+                            });
+                        },
+                        success: function(response) {
+                            swal.close();
+                            if(response.status)
+                            {
+                                swal({
+                                        title: 'Done !',
+                                        text: 'Data Refreshed Successfully ',
+                                        icon: 'success',
+                                        button: {
+                                            text: "Ok",
+                                            value: true,
+                                            visible: true,
+                                            className: "btn btn-primary"
+                                        }
+                                    })
+
+                                    get_schedule(location, screen, date, true)
+
+                            }
+                            else
+                            {
+                                swal({
+                                        title: 'Failed',
+                                        text: "Error occurred while sending the request.",
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#3f51b5',
+                                        cancelButtonColor: '#ff4081',
+                                        confirmButtonText: 'Great ',
+                                        buttons: {
+                                            cancel: {
+                                                text: "Cancel",
+                                                value: null,
+                                                visible: true,
+                                                className: "btn btn-danger",
+                                                closeModal: true,
+                                            },
+                                        }
+                                    })
+                            }
+
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            console.log(errorThrown);
+                        },
+                        complete: function(jqXHR, textStatus) {}
+                });
+            }
+        });
+
+
+        var currentDate = new Date();
+         var selectedDate = new Date();
+         var startDate = new Date();
+         var endDate = new Date();
+
+         selectedDate.setDate(currentDate.getDate());
+         startDate.setDate(currentDate.getDate() - 7);
+         endDate.setDate(currentDate.getDate() + 7);
+
+         $("#scheduleDatePicker").kendoDatePicker({
+            value: selectedDate,
+            min: startDate,
+            max: endDate,
+            change: function (e) {
+
+                var datepicker = $('#scheduleDatePicker').data('kendoDatePicker');
+
+                selectedDate.setDate(datepicker.value().getDate());
+
+                if (selectedDate.getDate() == endDate.getDate()) {
+                     //$('#btnNextDate').prop('disabled', true);
+                 } else if (selectedDate.getDate() == startDate.getDate()) {
+                     //$('#btnPrevDate').prop('disabled', true);
+                 }
+
+                 if (selectedDate.getDate() != endDate.getDate()) {
+                     //$('#btnNextDate').prop('disabled', false);
+                 }
+                 if (selectedDate.getDate() != startDate.getDate()) {
+                     //$('#btnPrevDate').prop('disabled', false);
+                 }
+
+            }
+         });
+
+         $('#btnPrevDate').on('click', function () {
+            //$('#btnPrevDate').prop('disabled', true);
+            var datepicker = $('#scheduleDatePicker').data('kendoDatePicker');
+            selectedDate.setDate(selectedDate.getDate() - 1);
+            datepicker.value(selectedDate);
+
+            //$('#btnNextDate').prop('disabled', false);
+
+            /*if (selectedDate.getDate() == startDate.getDate()) {
+                $(this).prop('disabled', true);
+            }*/
+
+            var location =  $('#location').val();
+
+            var screen =  $('#screen').val();
+            var date = selectedDate;
+
+            get_schedule(location, screen, date,false)
+
+         });
+
+         $('#btnNextDate').on('click', function () {
+            //$('#btnNextDate').prop('disabled', true);
+            var datepicker = $('#scheduleDatePicker').data('kendoDatePicker');
+            selectedDate.setDate(selectedDate.getDate() + 1);
+            datepicker.value(selectedDate);
+
+            //$('#btnPrevDate').prop('disabled', false);
+
+            /*if (selectedDate.getDate() == endDate.getDate()) {
+                $(this).prop('disabled', true);
+            }*/
+
+            var location =  $('#location').val();
+            var country =  $('#country').val();
+            var screen =  $('#screen').val();
+            var date = selectedDate ;
+            get_schedule(location, screen, date,false)
+
+         });
 
     })(jQuery);
 
@@ -1794,249 +1820,7 @@
 
     });
 
-    $(document).on('click', '#refresh', function () {
-        var location = $('#location').val() ;
-        var screen =  null ;
-        var date = new Date($('#scheduleDatePicker').val());
-        var url ="{{  url('') }}"+ "/refresh_schedule_content/"+location;
 
-        if(location == 'Locations')
-        {
-            swal({
-                    title: '',
-                    text: "Please Select Locaion.",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3f51b5',
-                    cancelButtonColor: '#ff4081',
-                    confirmButtonText: 'Great ',
-                    buttons: {
-                        cancel: {
-                            text: "Cancel",
-                            value: null,
-                            visible: true,
-                            className: "btn btn-danger",
-                            closeModal: true,
-                        },
-                    }
-                })
-        }
-        else
-        {
-            $.ajax({
-                    url:url,
-                    type: 'get',
-
-                    beforeSend: function () {
-                        swal({
-                            title: 'Refreshing',
-                            closeOnEsc: false,
-                            allowOutsideClick: false,
-                            timerProgressBar: true,
-                            onOpen: () => {
-                                swal.showLoading();
-                            }
-                        });
-                    },
-                    success: function(response) {
-                        swal.close();
-                        if(response.status)
-                        {
-                            swal({
-                                    title: 'Done !',
-                                    text: 'Data Refreshed Successfully ',
-                                    icon: 'success',
-                                    button: {
-                                        text: "Ok",
-                                        value: true,
-                                        visible: true,
-                                        className: "btn btn-primary"
-                                    }
-                                })
-
-                                if(location != "Locations")
-                                {
-                                    $('#scheduleDate').show();
-                                    var url = "{{  url('') }}"+ '/get_schedules_with_filter/?location=' + location +'&screen='+ screen+'&date='+ date.toLocaleDateString('en-GB')+' 00';
-                                    result =" " ;
-
-                                    $.ajax({
-                                        url: url,
-                                        method: 'GET',
-                                        success:function(response)
-                                        {
-                                            console.log(response)
-                                            screens = '<option value="null" selected>All Screens</option>';
-                                            $.each(response.screens, function( index_screen, screen ) {
-
-                                                screens = screens
-                                                    +'<option  value="'+screen.id+'">'+screen.screen_name+'</option>';
-                                            });
-                                                $('#screen').html(screens)
-
-                                            $.each(response.schedules, function( index, value ) {
-                                                bg_status="" ;
-                                                if(value.status !="linked" )
-                                                {
-                                                    bg_status = "bg-danger"
-                                                }
-
-                                                icon_spl = ""
-                                                icon_cpl = ""
-                                                icon_kdm = ""
-                                                statu_content=""
-
-
-
-                                                if(value.status !="linked" )
-                                                {
-                                                    icon_spl = '<i class="mdi mdi-playlist-play text-danger"> </i>'
-
-                                                    if(value.type == "pos")
-                                                    {
-                                                        statu_content = '<spn class="text-danger" >Unlinked  </span>'
-                                                    }
-                                                    else
-                                                    {
-                                                        statu_content = ''
-                                                    }
-
-                                                    icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
-                                                    icon_cpl = '<i class="mdi mdi-filmstrip text-warning ">'
-
-                                                    //statu_content = ''
-
-                                                }
-                                                else
-                                                {
-
-                                                    icon_spl =  '<i class="mdi mdi-playlist-play text-success"> </i>'
-                                                    if(value.cpls ==1)
-                                                    {
-                                                        icon_cpl = '<i class="mdi mdi-filmstrip text-success">'
-                                                        if(value.kdm  ==1 )
-                                                        {
-                                                            icon_kdm = '</i> <i class="mdi mdi-key-change text-success"> </i>'
-
-                                                        }
-                                                        else
-                                                        {
-                                                            icon_kdm = '</i> <i class="mdi mdi-key-remove text-danger check_need_kdm" data-scheduleidd = "'+value.id+'"> </i>'
-                                                        }
-
-                                                    }
-                                                    else
-                                                    {
-                                                        icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
-                                                        icon_cpl = '<i class="mdi mdi-filmstrip text-danger   spl_not_linked" data-scheduleidd = "'+value.id+'">'
-                                                    }
-                                                }
-                                                if(value.kdm_status =="not_valid_yet")
-                                                {
-                                                    statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-warning btn-fw get_schedule_infos"> KDM Valide in :  '+value.date_expired+'</button>'
-                                                }
-                                                if(value.kdm_status =="expired")
-                                                {
-                                                    statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-danger get_schedule_infos  btn-fw"> KDM Already Expired : '+value.date_expired+'</button>'
-                                                }
-                                                if(value.kdm_status =="warning")
-                                                {
-                                                    statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-warning get_schedule_infos btn-fw">KDM Expired in : '+value.date_expired+'</button>'
-                                                }
-                                                if(value.kdm_status =="valid")
-                                                {
-                                                    statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-success get_schedule_infos btn-fw"> KDM Expired in  : '+value.date_expired+'</button>'
-                                                }
-
-
-                                                var name =" " ;
-                                                if(value.type == "pos")
-                                                {
-                                                    if(value.status== "linked" )
-                                                    {
-                                                        var name =value.ShowTitleText  ;
-                                                    }
-                                                    else
-                                                    {
-                                                        var name =value.titleShort  ;
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    var name =value.ShowTitleText  ;
-                                                }
-
-
-
-                                                result = result
-                                                    +'<tr class="odd ">'
-                                                    +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.type+' </td>'
-                                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.screen.screen_name+'</a></td>'
-                                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+name+'</a></td>'
-                                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.date_start+'</a></td>'
-                                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+ icon_spl + icon_cpl + icon_kdm +' </i></a></td>'
-                                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+statu_content+'</a></td>'
-                                                    +'</tr>';
-                                            });
-                                            $('#location-listing tbody').html(result)
-
-                                            console.log(response.schedules)
-                                            /***** refresh datatable **** **/
-
-                                            var spl_datatable = $('#location-listing').DataTable({
-                                                "iDisplayLength": 100,
-                                                destroy: true,
-                                                "bDestroy": true,
-                                                "language": {
-                                                    search: "_INPUT_",
-                                                    searchPlaceholder: "Search..."
-                                                }
-                                            });
-
-                                        },
-                                        error: function(response) {
-
-                                        }
-                                    })
-
-                                }
-                                else
-                                {
-                                    $('#scheduleDate').hide();
-                                    $('#location-listing tbody').html('<div id="table_logs_processing" class="dataTables_processing card">Please Select Location</div>')
-                                }
-
-                        }
-                        else
-                        {
-                            swal({
-                                    title: 'Failed',
-                                    text: "Error occurred while sending the request.",
-                                    icon: 'warning',
-                                    showCancelButton: true,
-                                    confirmButtonColor: '#3f51b5',
-                                    cancelButtonColor: '#ff4081',
-                                    confirmButtonText: 'Great ',
-                                    buttons: {
-                                        cancel: {
-                                            text: "Cancel",
-                                            value: null,
-                                            visible: true,
-                                            className: "btn btn-danger",
-                                            closeModal: true,
-                                        },
-                                    }
-                                })
-                        }
-
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        console.log(errorThrown);
-                    },
-                    complete: function(jqXHR, textStatus) {}
-            });
-        }
-    });
 
 
 </script>
@@ -2047,353 +1831,6 @@
     (function($) {
 
 
-         var currentDate = new Date();
-         var selectedDate = new Date();
-         var startDate = new Date();
-         var endDate = new Date();
-
-         selectedDate.setDate(currentDate.getDate());
-         startDate.setDate(currentDate.getDate() - 7);
-         endDate.setDate(currentDate.getDate() + 7);
-
-         $("#scheduleDatePicker").kendoDatePicker({
-            value: selectedDate,
-            min: startDate,
-            max: endDate,
-            change: function (e) {
-
-                var datepicker = $('#scheduleDatePicker').data('kendoDatePicker');
-
-                selectedDate.setDate(datepicker.value().getDate());
-
-                if (selectedDate.getDate() == endDate.getDate()) {
-                     $('#btnNextDate').prop('disabled', true);
-                 } else if (selectedDate.getDate() == startDate.getDate()) {
-                     $('#btnPrevDate').prop('disabled', true);
-                 }
-
-                 if (selectedDate.getDate() != endDate.getDate()) {
-                     $('#btnNextDate').prop('disabled', false);
-                 }
-                 if (selectedDate.getDate() != startDate.getDate()) {
-                     $('#btnPrevDate').prop('disabled', false);
-                 }
-
-            }
-         });
-
-         $('#btnPrevDate').on('click', function () {
-            $('#btnPrevDate').prop('disabled', true);
-            var datepicker = $('#scheduleDatePicker').data('kendoDatePicker');
-            selectedDate.setDate(selectedDate.getDate() - 1);
-            datepicker.value(selectedDate);
-
-            $('#btnNextDate').prop('disabled', false);
-
-            if (selectedDate.getDate() == startDate.getDate()) {
-                $(this).prop('disabled', true);
-            }
-
-           $("#location-listing").dataTable().fnDestroy();
-            $('#location-listing tbody').html('')
-            var loader_content  =
-            '<div class="jumping-dots-loader">'
-                +'<span></span>'
-                +'<span></span>'
-                +'<span></span>'
-                +'</div>'
-            $('#location-listing tbody').html(loader_content)
-
-            var location =  $('#location').val();
-            var country =  $('#country').val();
-            var screen =  $('#screen').val();
-
-            var url = "{{  url('') }}"+ '/get_schedules_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen +'&date='+ selectedDate.toLocaleDateString('en-GB')+' 00' ;
-            result =" " ;
-
-            $.ajax({
-                url: url,
-                method: 'GET',
-                success:function(response)
-                {
-                    $.each(response.schedules, function( index, value ) {
-                        bg_status="" ;
-                        if(value.status !="linked" )
-                        {
-                            bg_status = "bg-danger"
-                        }
-
-                        icon_spl = ""
-                        icon_cpl = ""
-                        icon_kdm = ""
-                        statu_content=""
-                        if(value.status !="linked" )
-                        {
-                            icon_spl = '<i class="mdi mdi-playlist-play text-danger"> </i>'
-                            if(value.type == "pos")
-                            {
-                                statu_content = '<spn class="text-danger" >Unlinked  </span>'
-                            }
-                            else
-                            {
-                                statu_content = ''
-                            }
-                            icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
-                            icon_cpl = '<i class="mdi mdi-filmstrip text-warning ">'
-                        }
-                        else
-                        {
-
-                            statu_content = '<spn class="text-success" > Linked</span>'
-                            if(value.kdm_status =="")
-                            {
-                                statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-danger get_schedule_infos  btn-fw"> KDM Missing Detected  </button>'
-                            }
-                            icon_spl =  '<i class="mdi mdi-playlist-play text-success"> </i>'
-                            if(value.cpls ==1)
-                            {
-                                icon_cpl = '<i class="mdi mdi-filmstrip text-success">'
-                                if(value.kdm  ==1 )
-                                {
-                                    icon_kdm = '</i> <i class="mdi mdi-key-change text-success"> </i>'
-                                }
-                                else
-                                {
-                                    icon_kdm = '</i> <i class="mdi mdi-key-remove text-danger check_need_kdm" data-scheduleidd = "'+value.id+'"> </i>'
-                                }
-
-                            }
-                            else
-                            {
-                                icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
-                                icon_cpl = '<i class="mdi mdi-filmstrip text-danger   spl_not_linked" data-scheduleidd = "'+value.id+'">'
-                            }
-                        }
-                        if(value.kdm_status =="not_valid_yet")
-                        {
-                            statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-warning btn-fw get_schedule_infos"> KDM Valide in :  '+value.date_expired+'</button>'
-                        }
-                        if(value.kdm_status =="expired")
-                        {
-                            statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-danger get_schedule_infos  btn-fw"> KDM Already Expired : '+value.date_expired+'</button>'
-                        }
-                        if(value.kdm_status =="warning")
-                        {
-                            statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-warning get_schedule_infos btn-fw">KDM Expired in : '+value.date_expired+'</button>'
-                        }
-                        if(value.kdm_status =="valid")
-                        {
-                            statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-success get_schedule_infos btn-fw"> KDM Expired in  : '+value.date_expired+'</button>'
-                        }
-
-                        var name =" " ;
-                        if(value.type == "pos")
-                        {
-                            if(value.status== "linked" )
-                            {
-                                var name =value.ShowTitleText  ;
-                            }
-                            else
-                            {
-                                var name =value.titleShort  ;
-                            }
-                        }
-                        else
-                        {
-                            var name =value.ShowTitleText  ;
-                        }
-
-
-                        result = result
-                            +'<tr class="odd ">'
-                            +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.type+' </td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.screen.screen_name+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+name+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.date_start+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+ icon_spl + icon_cpl + icon_kdm +' </i></a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+statu_content+'</a></td>'
-                            +'</tr>';
-                    });
-                    $('#location-listing tbody').html(result)
-                    $('#btnPrevDate').prop('disabled', false);
-                    console.log(response.schedules)
-                    /***** refresh datatable **** **/
-
-                    var spl_datatable = $('#location-listing').DataTable({
-                        "iDisplayLength": 100,
-                        destroy: true,
-                        "bDestroy": true,
-                        "language": {
-                            search: "_INPUT_",
-                            searchPlaceholder: "Search..."
-                        }
-                    });
-
-                },
-                error: function(response) {
-
-                }
-            })
-
-
-         });
-
-         $('#btnNextDate').on('click', function () {
-            $('#btnNextDate').prop('disabled', true);
-            var datepicker = $('#scheduleDatePicker').data('kendoDatePicker');
-            selectedDate.setDate(selectedDate.getDate() + 1);
-            datepicker.value(selectedDate);
-
-            $('#btnPrevDate').prop('disabled', false);
-
-            if (selectedDate.getDate() == endDate.getDate()) {
-                $(this).prop('disabled', true);
-            }
-
-            $("#location-listing").dataTable().fnDestroy();
-            $('#location-listing tbody').html('')
-            var loader_content  =
-            '<div class="jumping-dots-loader">'
-                +'<span></span>'
-                +'<span></span>'
-                +'<span></span>'
-                +'</div>'
-            $('#location-listing tbody').html(loader_content)
-
-            var location =  $('#location').val();
-            var country =  $('#country').val();
-            var screen =  $('#screen').val();
-
-            var url = "{{  url('') }}"+ '/get_schedules_with_filter/?location=' + location + '&country='+ country +'&screen='+ screen +'&date='+ selectedDate.toLocaleDateString('en-GB')+' 00' ;
-            result =" " ;
-
-            $.ajax({
-                url: url,
-                method: 'GET',
-                success:function(response)
-                {
-
-
-
-                    $.each(response.schedules, function( index, value ) {
-                        bg_status="" ;
-                        if(value.status !="linked" )
-                        {
-                            bg_status = "bg-danger"
-                        }
-
-                        icon_spl = ""
-                        icon_cpl = ""
-                        icon_kdm = ""
-                        statu_content=""
-                        if(value.status !="linked" )
-                        {
-                            icon_spl = '<i class="mdi mdi-playlist-play text-danger"> </i>'
-                            if(value.type == "pos")
-                            {
-                                statu_content = '<spn class="text-danger" >Unlinked  </span>'
-                            }
-                            else
-                            {
-                                statu_content = ''
-                            }
-                            icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
-                            icon_cpl = '<i class="mdi mdi-filmstrip text-warning ">'
-                        }
-                        else
-                        {
-                            statu_content = '<spn class="text-success" > Linked</span>'
-                            if(value.kdm_status =="")
-                            {
-                                statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-danger get_schedule_infos  btn-fw"> KDM Missing Detected  </button>'
-                            }
-                            icon_spl =  '<i class="mdi mdi-playlist-play text-success"> </i>'
-                            if(value.cpls ==1)
-                            {
-                                icon_cpl = '<i class="mdi mdi-filmstrip text-success">'
-                                if(value.kdm  ==1 )
-                                {
-                                    icon_kdm = '</i> <i class="mdi mdi-key-change text-success"> </i>'
-                                }
-                                else
-                                {
-                                    icon_kdm = '</i> <i class="mdi mdi-key-remove text-danger check_need_kdm" data-scheduleidd = "'+value.id+'"> </i>'
-                                }
-
-                            }
-                            else
-                            {
-                                icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
-                                icon_cpl = '<i class="mdi mdi-filmstrip text-danger   spl_not_linked" data-scheduleidd = "'+value.id+'">'
-                            }
-                        }
-                        if(value.kdm_status =="not_valid_yet")
-                        {
-                            statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-warning btn-fw get_schedule_infos"> KDM Valide in :  '+value.date_expired+'</button>'
-                        }
-                        if(value.kdm_status =="expired")
-                        {
-                            statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-danger get_schedule_infos  btn-fw"> KDM Already Expired : '+value.date_expired+'</button>'
-                        }
-                        if(value.kdm_status =="warning")
-                        {
-                            statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-warning get_schedule_infos btn-fw">KDM Expired in : '+value.date_expired+'</button>'
-                        }
-                        if(value.kdm_status =="valid")
-                        {
-                            statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-success get_schedule_infos btn-fw"> KDM Expired in  : '+value.date_expired+'</button>'
-                        }
-
-                        var name =" " ;
-                        if(value.type == "pos")
-                        {
-                            if(value.status== "linked" )
-                            {
-                                var name =value.ShowTitleText  ;
-                            }
-                            else
-                            {
-                                var name =value.titleShort  ;
-                            }
-                        }
-                        else
-                        {
-                            var name =value.ShowTitleText  ;
-                        }
-
-
-                        result = result
-                            +'<tr class="odd ">'
-                            +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.type+' </td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.screen.screen_name+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+name+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.date_start+'</a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+ icon_spl + icon_cpl + icon_kdm +' </i></a></td>'
-                            +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+statu_content+'</a></td>'
-                            +'</tr>';
-                    });
-                    $('#location-listing tbody').html(result)
-                    $('#btnNextDate').prop('disabled', false);
-                    console.log(response.schedules)
-                    /***** refresh datatable **** **/
-
-                    var spl_datatable = $('#location-listing').DataTable({
-                        "iDisplayLength": 100,
-                        destroy: true,
-                        "bDestroy": true,
-                        "language": {
-                            search: "_INPUT_",
-                            searchPlaceholder: "Search..."
-                        }
-                    });
-
-                },
-                error: function(response) {
-
-                }
-            })
-
-         });
     })(jQuery);
 
     //search Spls

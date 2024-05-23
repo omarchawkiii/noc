@@ -72,11 +72,52 @@ class ScheduleContoller extends Controller
                                         $spl_id =null ;
                                    }
                                 }
-
+                                $kdm_status="";
+                                $disable_kdm_not_valide =false ;
                                 if(count($schedule['list_kdm_notes']) > 0 )
                                 {
-                                    $kdm_status = $schedule['list_kdm_notes'][0]['list_not'][0]['status'] ;
+                                    foreach($schedule['list_kdm_notes'] as $kdm_note )
+                                    {
+                                        foreach($kdm_note['list_not'] as $note)
+                                        {
+                                            if($note['status'] == 'valid')
+                                            {
+                                                $disable_kdm_not_valide = true ;
+                                            }
+                                        }
+                                    }
+
+                                    foreach($schedule['list_kdm_notes'] as $kdm_note )
+                                    {
+                                        foreach($kdm_note['list_not'] as $note)
+                                        {
+                                            if($note['status'] == 'valid')
+                                            {
+                                                $kdm_status .= '<a class="btn btn-success btn-fw mr-1" >KDM Expired in : ' .$note['date_expired'].' </a>';
+                                            }
+                                            elseif($note['status'] == 'not_valid_yet')
+                                            {
+                                                $kdm_status .= '<a class="btn btn-light  btn-fw mr-1" > KDM Valide in : ' .$note['date_expired'].' </a>';
+                                            }
+                                            elseif($note['status'] == 'warning')
+                                            {
+                                                $kdm_status .= '<a class="btn btn-warning btn-fw mr-1" >KDM Expired in : ' .$note['date_expired'].' </a>';
+                                            }
+                                            else
+                                            {
+                                                if(!$disable_kdm_not_valide)
+                                                {
+                                                    $kdm_status .= '<a class="btn btn-danger btn-fw mr-1">KDM Already Expired : ' .$note['date_expired'].'</a>';
+                                                }
+
+                                            }
+                                            $date_expired ="";
+                                        }
+                                    }
+                                    /*$kdm_status = $schedule['list_kdm_notes'][0]['list_not'][0]['status'] ;
                                     $date_expired = $schedule['list_kdm_notes'][0]['list_not'][0]['date_expired'] ;
+                                            */
+
                                 }
                                 else
                                 {
@@ -140,13 +181,14 @@ class ScheduleContoller extends Controller
         $setting = Config::all()->first() ;
         $setting_schedule_timeStart = "Y-m-d ".$setting->timeStart.":00" ;
         $setting_schedule_timeEnd = "Y-m-d ".$setting->timeEnd.":00" ;
+        //dd( $date) ;
         if($date)
         {
             $date = Carbon::createFromFormat('d/m/Y H', $date);
-            if($date->isToday())
+            if($date->isToday() &&false )
             {
                 $current_datetime = date('Y-m-d H:i:s');
-                if (date('H', strtotime($current_datetime)) >= 5) {
+                if (date('H', strtotime($current_datetime)) >= 5 || true ) {
                     // If the current time is after 5 AM, consider it as the start of the day
                     $startDate = date("$setting_schedule_timeStart", strtotime($current_datetime));
                     $nextDayStart = date("$setting_schedule_timeEnd", strtotime('+1 day', strtotime($current_datetime)));
@@ -156,7 +198,7 @@ class ScheduleContoller extends Controller
                     $nextDayStart = date("$setting_schedule_timeEnd", strtotime($current_datetime));
                 }
 
-
+                //dd($startDate , $nextDayStart) ;
             }
             else
             {
@@ -173,23 +215,30 @@ class ScheduleContoller extends Controller
         }
 
 
-        //dd($schedules) ;
-
         if(isset($location) &&  $location != 'null' )
         {
             $location = Location::find($location) ;
             $screens =$location->screens ;
             $schedules =Schedule::with('screen','spls')->where('location_id',$location->id) ;
+                /*$schedules = DB::table('schedules')
+                ->where('schedules.location_id',$location->id)
+                ->leftJoin('screens', 'schedules.screen_id', '=', 'screens.id')
+                ->leftJoin('spls', 'schedules.uuid_spl', '=', 'spls.uuid')
+                ->leftJoin('splcomponents', 'splcomponents.uuid_spl', '=', 'spls.uuid')
+                ->leftJoin('kdms', 'splcomponents.CompositionPlaylistId', '=', 'kdms.uuid')
+                ->groupBy('schedules.scheduleId');
+            */
 
             $next_date = $date ;
 
-            $schedules = $schedules->where('date_start','>=',$startDate)->where('date_start','<',$nextDayStart);
 
+            $schedules = $schedules->where('date_start','>=',$startDate)->where('date_start','<',$nextDayStart);
+            //dd($startDate , $nextDayStart,$schedules->get()) ;
             if(isset($screen) && $screen != 'null' )
             {
-                $schedules = $schedules->where('screen_id',$screen) ;
+                $schedules = $schedules->where('schedules.screen_id',$screen) ;
             }
-            $schedules = $schedules->orderBy('screen_id')->orderBy('date_start')->get();
+            $schedules = $schedules->orderBy('schedules.screen_id')->orderBy('schedules.date_start')->get();
 
             return Response()->json(compact('schedules','screens'));
         }
@@ -341,7 +390,15 @@ class ScheduleContoller extends Controller
                         }
                         else
                         {
+                            1480687
 
+                            <button type="button" class="btn btn-success btn-fw mr-1" >KDM Valide in : 12 days, 20 hours, 7 minutes </button>
+                            <button type="button" class="btn btn-success btn-fw mr-1" >KDM Valide in : 12 days, 20 hours, 7 minutes </button>
+                            <button type="button" class="
+                            <button type="button" class="btn btn-success btn-fw mr-1" >KDM Valide in : 12 days, 20 hours, 7 minutes </button>
+                            <button type="button" class="btn btn-success btn-fw mr-1" >KDM Valide in : 12 days, 20 hours, 7 minutes </button>
+                            <button type="button" class="
+                            $kdm_status="" ;
                             if($schedule->kdm_status =="not_valid_yet")
                             {
                                 $kdm_status = '<button  type="button" class="btn btn-warning btn-fw get_schedule_infos"> KDM Valide in :  '.$schedule->date_expired.'</button>' ;
