@@ -59,7 +59,7 @@
                                 </div>
                             </div>
 
-                            <div class="row mt-4">
+                            <div class="row mt-4 ">
                                 <div class="col-xl-3 ">
                                     <div class="input-group mb-2 mr-sm-2">
                                         <div class="input-group-prepend">
@@ -213,7 +213,7 @@
                 <div class="  col-md-12">
                     <div class="card">
                         <div class="card-body ">
-                            <div class="row mt-4">
+                            <div class="row mt-4 d-none">
                                 <div class="col-xl-2 ">
                                     <div class="input-group mb-2 mr-sm-2">
                                         <div class="input-group-prepend">
@@ -488,6 +488,57 @@
 <script src="{{asset('/assets/js/ingester.js')}}"></script>
 <script src="{{ asset('/assets/vendors/sweetalert/sweetalert.min.js') }}"></script>
 
+
+<script>
+
+    // filter location
+    (function($) {
+
+
+        $(document).on('click', '#logs-tab', function (e) {
+            e.preventDefault();
+            console.log('tes')
+            var url = "{{  url('') }}"+ "/ingest/logs" ;
+            $.ajax({
+               url: url,
+               method: 'GET',
+               success:function(response)
+               {
+                console.log(response)
+                var result ="" ;
+                if(response.dcp_trensfers.length>0)
+                {
+                    $.each(response.spls, function( index, value ) {
+                        result = result
+                            +'<tr class="odd" >'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none" >'+value.status+'</a></td>'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none" >'+value.name+'</a></td>'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> DCP</a></td>'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+value.created_at+'</a></td>'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+value.updated_at+'</a></td>'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+value.progress+'</a></td>'
+                            +'</tr>';
+                    });
+                    $('#body_ingest_logs').html(result)
+                }
+                else
+                {
+                    $('#body_ingest_logs').html('<div id="table_logs_processing" class="dataTables_processing card">No Data</div>')
+                }
+
+               },
+               error: function(response) {
+
+               }
+            })
+
+
+        });
+
+    })(jQuery);
+
+
+</script>
 @endsection
 
 @section('custom_css')

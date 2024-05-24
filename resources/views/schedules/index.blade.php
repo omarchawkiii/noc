@@ -86,39 +86,40 @@
                 </div>
 
                 <div class="col-12">
-                    <div class="table-responsive preview-list multiplex">
-                        <table id="location-listing" class="table text-center">
-                            <thead>
-                                <tr>
-                                    <th class="sorting sorting_asc">Type #</th>
-                                    <th class="sorting">Screen</th>
-                                    <th class="sorting">Movie </th>
-                                    <th class="sorting">Date/Time </th>
-                                    <th class="sorting">Spl</th>
-                                    <th class="sorting">Note</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if ($screen)
-                                    @foreach ($screen->spls as $key => $spl )
-                                        <tr class="odd">
-                                            <td class="sorting_1"><a>{{ $spl->id }}</a> </td>
-                                            <td><a class="text-body align-middle fw-medium text-decoration-none" > {{ $spl->name }}</a> <br /></td>
-                                            <td><a class="text-body align-middle fw-medium text-decoration-none" > {{ $spl->available_on }}</a></td>
-                                            <td><a class="text-body align-middle fw-medium text-decoration-none" > {{ $spl->duration }}</a></td>
-                                            <td>
-                                                <a class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#"><i class="mdi mdi-magnify"> </i> </a>
+                    <div class="preview-list multiplex  ">
+                        <div class="table-responsive ">
+                            <table id="location-listing" class="table ">
+                                <thead>
+                                    <tr>
+                                        <th class="sorting sorting_asc">Type #</th>
+                                        <th class="sorting">Screen</th>
+                                        <th class="sorting">Movie </th>
+                                        <th class="sorting">Date/Time </th>
+                                        <th class="sorting">Spl</th>
+                                        <th class="sorting">Note</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if ($screen)
+                                        @foreach ($screen->spls as $key => $spl )
+                                            <tr class="odd">
+                                                <td class="sorting_1"><a>{{ $spl->id }}</a> </td>
+                                                <td><a class="text-body align-middle fw-medium text-decoration-none" > {{ $spl->name }}</a> <br /></td>
+                                                <td><a class="text-body align-middle fw-medium text-decoration-none" > {{ $spl->available_on }}</a></td>
+                                                <td><a class="text-body align-middle fw-medium text-decoration-none" > {{ $spl->duration }}</a></td>
+                                                <td>
+                                                    <a class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#infos_modal" href="#"><i class="mdi mdi-magnify"> </i> </a>
 
 
-                                            </td>
+                                                </td>
 
-                                        </tr>
-                                    @endforeach
-                                @endif
+                                            </tr>
+                                        @endforeach
+                                    @endif
 
-                            </tbody>
-                        </table>
-
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -741,6 +742,8 @@
                             icon_cpl = ""
                             icon_kdm = ""
                             statu_content=""
+                            statu_content = value.kdm_status ;
+
                             if(value.status !="linked" )
                             {
                                 icon_spl = '<i class="mdi mdi-playlist-play text-danger"> </i>'
@@ -748,16 +751,13 @@
                                 {
                                     statu_content = '<spn class="text-danger" >Unlinked  </span>'
                                 }
-                                else
-                                {
-                                    statu_content = ''
-                                }
+
                                 icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
                                 icon_cpl = '<i class="mdi mdi-filmstrip text-warning ">'
                             }
                             else
                             {
-                                statu_content = '<spn class="text-success" > Linked</span>'
+                                //statu_content = '<spn class="text-success" > Linked</span>'
                                 if(value.kdm_status =="")
                                 {
                                     statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-danger get_schedule_infos  btn-fw"> KDM Missing Detected  </button>'
@@ -780,6 +780,7 @@
                                 {
                                     icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
                                     icon_cpl = '<i class="mdi mdi-filmstrip text-danger   spl_not_linked" data-scheduleidd = "'+value.id+'">'
+                                    statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-danger get_schedule_infos  btn-fw"> CPL Missing Detected  </button>'
                                 }
 
                             }
@@ -799,7 +800,7 @@
                             {
                                 statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-success get_schedule_infos btn-fw"> KDM Expired in  : '+value.date_expired+'</button>'
                             }*/
-                            statu_content = value.kdm_status ;
+
                             var name =" " ;
                             if(value.type == "pos")
                             {
@@ -2189,10 +2190,10 @@
         color: white;
     }
 
-    .table-responsive {
+    /*.table-responsive {
         max-height: 600px;
         overflow-y: auto;
-    }
+    }*/
     #table_cpls_details td:nth-child(2),
     #table_cpls_details th:nth-child(2) {
         width: 160px; /* Set the desired width */
@@ -2236,6 +2237,10 @@
         border: 0!important;
 
         line-height: 1!important;
+    }
+    .mr-1
+    {
+        margin-right: 5px !important ;
     }
 </style>
 

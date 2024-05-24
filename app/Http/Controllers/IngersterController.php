@@ -467,23 +467,6 @@ class IngersterController extends Controller
 
                     if($response['status'] === 1 )
                     {
-                       // $command = "mktorrent -o $torrentPath $directoryPath >> /DATA/logs/noc_torrent_log.log 2>&1";
-                       /* $source = "/DATA/assets/$file/";
-                        $destination = "noc@172.17.42.2:/".$response['dcp_path']."/";
-                        // Define the hardcoded password (security risk)
-                        $password = "noc"; // Caution: This is insecure, avoid in production
-                        // Rsync command with sshpass and hardcoded password
-                        $rsync_command = "sshpass -p " . escapeshellarg($password) . " rsync -avz --partial --no-t " . escapeshellarg($source) . " " . escapeshellarg($destination);
-
-                        // Execute the rsync command and capture the
-                        //$command ="rsync -avz --partial --no-t  /DATA/assets/$file/ noc@172.17.42.2:/".$response['dcp_path'].">> /DATA/logs/noc_ingest_file_log.log 2>&1";
-                        $output = [];
-                        $return_code = 0;
-
-                        //exec($rsync_command, $output, $return_code);
-
-
-                       // exec($command, $output, $returnVar);*/
 
                         Dcp_trensfer::updateOrCreate([
                             'id_cpl' => $cpl->cpl_id ,
@@ -565,6 +548,18 @@ class IngersterController extends Controller
         return $totalSize;
     }
 
+    public function logs()
+    {
+
+        $dcp_trensfers = Dcp_trensfer::where(function ($query) {
+            $query->where('status', '=','Complete' )
+                  ->orWhere('status', '=', "Failed");
+                })->get();
+
+
+        return Response()->json(compact('dcp_trensfers'));
+
+    }
 
 
 }

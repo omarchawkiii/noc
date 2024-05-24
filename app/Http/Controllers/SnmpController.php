@@ -176,7 +176,7 @@ class SnmpController extends Controller
                     }
                     elseif($playback->storage_generale_status == 'Yellow' || $playback->storage_generale_status == 'yellow')
                     {
-                        $storage_generale_status = "<span class='text-warning' > Storage Status  : Warning ! (used space >80%)</span> |  Screen : " . $playback->serverName ;
+                        $storage_generale_status = "<span class='text-warning' > Storage Status  : Warning ! (used space >80%) </span> |  Screen : " . $playback->serverName ;
                     }
                     elseif($playback->storage_generale_status == 'Error' )
                     {
@@ -186,7 +186,7 @@ class SnmpController extends Controller
                     {
                         $storage_generale_status =$playback->storage_generale_status ;
                     }
-                    $infos .=  " <p class='m-2'> Storage Status Is: ".$storage_generale_status ." in screen: " .$playback->screen->screen_name ." </p>";
+                    $infos .=  " <p class='m-2'> ".$storage_generale_status ." </p>";
                 }
 
                 if($playback->securityManager != 'Normal' )
@@ -197,19 +197,22 @@ class SnmpController extends Controller
                     $infos .=  " <p class='m-2'>Security Manager status is Offline In Screen: " .$playback->screen->screen_name ." </p>";
                 }
             }
-            $schedules = Schedule::where('location_id', $location->id )->where('date_start' , '>' , Carbon::today() )->groupBy('cod_film')->get() ;
+            //$schedules = Schedule::where('location_id', $location->id )->where('date_start' , '>' , Carbon::today() )->groupBy('cod_film')->get() ;
+            $schedules = Schedule::leftJoin('moviescods', 'schedules.cod_film', '=', 'moviescods.code')
+            ->leftJoin('screens', 'schedules.screen_id', '=', 'screens.id')
+            ->where('schedules.location_id', $location->id )->where('schedules.date_start' , '>' , Carbon::today() )->groupBy('cod_film')->get() ;
+
             foreach($schedules as $schedule)
             {
                 if($schedule->status != 'linked' && !$schedules_error )
                 {
                     $schedules_error = true ;
-                    $infos .=  " <p class='m-2'> Session Not Linked  </p> " ;
+                    $infos .=  " <h4 class='m-2'>Unlinked Sessions Detected  </h4> " ;
                 }
                 if($schedule->status != 'linked' )
                 {
-                    $infos .="<li>  session : ".$schedule->name." Start At: ".$schedule->date_start." Is Not Linked </li> ";
+                    $infos .="<li>  session : ".$schedule->name." | Start : ".$schedule->date_start ;
                 }
-
 
             }
 
@@ -218,11 +221,11 @@ class SnmpController extends Controller
                 if($schedule->status == 'linked'  && $schedule->kdm != 1   &&  !$missing_kdms )
                 {
                     $missing_kdms = true ;
-                    $infos .=  " <p class='m-2'> Missing KDMs </p> " ;
+                    $infos .=  " <h4  class='m-2'> Missing KDMs Detected </h4> " ;
                 }
                 if($schedule->status == 'linked' && $schedule->kdm != 1)
                 {
-                    $infos .="<li>  session : ".$schedule->name." Start At: ".$schedule->date_start." Has missing   KDMs </li> ";
+                    $infos .="<li>  Session : ".$schedule->name." | Start At: ".$schedule->date_start ." | Screen : " . $schedule->screen_name;
                     $count_missing_kdm_error++;
                 }
             }
@@ -232,13 +235,13 @@ class SnmpController extends Controller
                 if($schedule->status == 'linked'  && $schedule->cpls != 1  &&  !$missing_cpls )
                 {
                     $missing_cpls = true ;
-                    $infos .=  " <p class='m-2'> Missing CPLs In </p> " ;
+                    $infos .=  " <h4  class='m-2'> Missing CPLs Detected </h4> " ;
                 }
 
                 if( $schedule->status == 'linked'  && $schedule->cpls != 1 )
                 {
                     $count_missing_cpl_error++ ;
-                    $infos .="<li>  session : ".$schedule->name." Start At: ".$schedule->date_start." Has missing CPLs  </li> ";
+                    $infos .="<li>  session : ".$schedule->name." | Start At: ".$schedule->date_start ." | Screen : " . $schedule->screen_name;
                 }
             }
 

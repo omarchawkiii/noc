@@ -390,14 +390,7 @@ class ScheduleContoller extends Controller
                         }
                         else
                         {
-                            1480687
 
-                            <button type="button" class="btn btn-success btn-fw mr-1" >KDM Valide in : 12 days, 20 hours, 7 minutes </button>
-                            <button type="button" class="btn btn-success btn-fw mr-1" >KDM Valide in : 12 days, 20 hours, 7 minutes </button>
-                            <button type="button" class="
-                            <button type="button" class="btn btn-success btn-fw mr-1" >KDM Valide in : 12 days, 20 hours, 7 minutes </button>
-                            <button type="button" class="btn btn-success btn-fw mr-1" >KDM Valide in : 12 days, 20 hours, 7 minutes </button>
-                            <button type="button" class="
                             $kdm_status="" ;
                             if($schedule->kdm_status =="not_valid_yet")
                             {

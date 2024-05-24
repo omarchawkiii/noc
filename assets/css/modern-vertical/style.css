@@ -23938,3 +23938,8 @@ table td a
     min-height: initial !important ;
     max-height: initial !important ;
 }
+
+.mr-1
+{
+    margin-right: 5px ;
+}

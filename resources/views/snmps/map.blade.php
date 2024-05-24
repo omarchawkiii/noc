@@ -482,7 +482,7 @@
         map.on('click', function(event) {
             map.forEachFeatureAtPixel(event.pixel, function(feature, layer) {
                 $('#location_errors .modal-body ').html(layer.get('content'))
-                $('#location_errors .modal-header h4 ').html("Errors in location : " + layer.get('title'))
+                $('#location_errors .modal-header h4 ').html("Location : " + layer.get('title'))
                 $('#location_errors').modal('show');
 
             });
