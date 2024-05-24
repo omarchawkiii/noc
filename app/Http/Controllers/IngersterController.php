@@ -553,10 +553,29 @@ class IngersterController extends Controller
     {
         $dcp_trensfers = Dcp_trensfer::
             leftJoin('ingests', 'dcp_trensfers.id_ingest', '=', 'ingests.id')
+            ->leftJoin('locations', 'dcp_trensfers.location_id', '=', 'locations.id')
             ->where(function ($query) {
-            $query->where('status', '=','Completed' )
-                  ->orWhere('status', '=', "Failed");
-                })->get();
+            $query->where('dcp_trensfers.status', '=','Completed' )
+                  ->orWhere('dcp_trensfers.status', '=', "Failed");
+                })
+                ->select('dcp_trensfers.*','ingests.cpl_description','locations.name')
+                ->get();
+
+        return Response()->json(compact('dcp_trensfers'));
+
+    }
+
+    public function monitors()
+    {
+        $dcp_trensfers = Dcp_trensfer::
+            leftJoin('ingests', 'dcp_trensfers.id_ingest', '=', 'ingests.id')
+            ->leftJoin('locations', 'dcp_trensfers.location_id', '=', 'locations.id')
+            ->where(function ($query) {
+            $query->where('dcp_trensfers.status', '=','Running' )
+                  ->orWhere('dcp_trensfers.status', '=', "Pending");
+                })
+                ->select('dcp_trensfers.*','ingests.cpl_description','locations.name')
+                ->get();
 
         return Response()->json(compact('dcp_trensfers'));
 

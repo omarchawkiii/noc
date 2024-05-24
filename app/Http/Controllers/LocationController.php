@@ -865,44 +865,51 @@ class LocationController extends Controller
 
     public function refresh_dcp_trensfer_data()
     {
-        $start_time = Carbon::now();
-        echo $start_time->toDateTimeString();
-        $locations = Location::all() ;
-            $dcps = Dcp_trensfer::where('status','Pending')->get() ;
-            foreach($dcps as $dcp)
+        $dcps = Dcp_trensfer::where(function ($query) {
+                $query->where('dcp_trensfers.status', '=','Pending' )
+                    ->orWhere('dcp_trensfers.status', '=', "Running");
+                })->get() ;
+
+        foreach($dcps as $dcp)
+        {
+            $location = Location::find($dcp->location_id) ;
+            $url = $location->connection_ip."?request=get_ingest_progress&path_in_tms=".$dcp->torrent_path;
+            $client = new Client();
+            $response = $client->request('GET', $url);
+            $contents = json_decode($response->getBody(), true);
+
+
+            echo " status ".$contents['status'] ."\n <br />";
+            echo " progress API ".$contents['progress'] ."<br />";
+            echo " progress DCP ".$dcp->progress."<br />";
+            echo " id ".$dcp->id."<br />";
+            echo " Path ".$dcp->torrent_path."<br />";
+
+            if($contents['status'])
             {
-                $location = Location::find($dcps->location_id) ;
-                $url = $location->connection_ip."?request=getCplListByScreenNumber&screen_number=".$screen->screen_number;
-                $client = new Client();
-                $response = $client->request('GET', $url);
-                $contents = json_decode($response->getBody(), true);
-                if($contents['status'])
-                {
-                    if($contents['progress']> 0 )
-                    {
-                        $dcp->update([
-                            'status'     =>"Running",
-                            "progress" => $contents['progress'] ,
-                        ]);
-                    }
-                    if($contents['progress'] ==  $dcp->progress )
-                    {
-                        $dcp->update([
-                            'status'     =>"Completed",
-                            "progress" => $contents['progress'] ,
-                        ]);
-                    }
-                }
-                else
+                if($contents['progress']> 0 )
                 {
                     $dcp->update([
-                        'status'     =>"Failed",
+                        'status'     =>"Running",
+                        "progress" => $contents['progress'] ,
                     ]);
                 }
-
+                if($contents['progress'] ==  $dcp->progress )
+                {
+                    $dcp->update([
+                        'status'     =>"Completed",
+                        "progress" => $contents['progress'] ,
+                    ]);
+                }
+            }
+            else
+            {
+                $dcp->update([
+                    'status'     =>"Failed",
+                ]);
             }
 
-
+        }
     }
 
     public function destroy(Request $request)

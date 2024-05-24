@@ -10,16 +10,11 @@
         </ol>
         </nav>
     </div>
-
-
-
             <div class="row mb-2">
                 <div class="d-flex flex-row justify-content-between mt-2 mb-3">
-
                     <div>
                     <h4 class="card-title ">Files</h4>
                     </div>
-
 
                 </div>
 
@@ -173,21 +168,20 @@
 
                                                 <div class="row">
                                                     <div class="col-12">
-                                                        <div class="preview-list multiplex" id="parent_table_monitoring" style="height: 411.742px; max-height: 411.742px;">
+                                                        <div class="preview-list multiplex" id="monitor-card">
                                                             <div class="table-responsive">
-                                                                <table class="table " id="table_monitoring" style="overflow-y: auto;">
+                                                                <table class="table " id="table_monitor">
                                                                     <thead>
-                                                                    <tr>
+                                                                    <tr style="text-align: center">
                                                                         <th> State</th>
-                                                                        <th> Destination</th>
                                                                         <th> Progress</th>
-                                                                        <th> Contenty Type</th>
                                                                         <th> Description</th>
                                                                         <th> Creation date</th>
-
+                                                                        <th> Destination </th>
+                                                                        <th> Option</th>
                                                                     </tr>
                                                                     </thead>
-                                                                    <tbody id="table_monitoring_body" style="overflow-y: hidden;"><div class="no-screen-select-msg">Tasks List Empty !</div></tbody>
+                                                                    <tbody id="tbody_monitor" style="text-align: center"></tbody>
                                                                 </table>
                                                             </div>
                                                         </div>
@@ -251,9 +245,9 @@
                                                                     <tr style="text-align: center">
                                                                         <th> State</th>
                                                                         <th> Progress</th>
-                                                                        <th> Content Type</th>
                                                                         <th> Description</th>
                                                                         <th> Creation date</th>
+                                                                        <th> Location</th>
                                                                         <th> Option</th>
                                                                     </tr>
                                                                     </thead>
@@ -862,9 +856,15 @@
 
 
     //Logs
+    function calculatePercentage(part, total) {
+        if (total === 0) {
+            return 0 ;
+        }
+        return (part / total) * 100;
+    }
 
-    $(document).on('click', '#logs-tab', function (e) {
-        e.preventDefault();
+    function get_logs_tab()
+    {
         console.log('tes')
         var url = "{{  url('') }}"+ "/ingest/logs" ;
         var status ="" ;
@@ -885,15 +885,16 @@
                         {
                             status ='<i class="mdi mdi-alert text-danger"> Failed</i> ';
                         }
-
+                        var progress_Percentage = calculatePercentage(value.progress, value.pkl_size)
 
                         result = result
                             +'<tr class="odd" >'
                                 +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none" >'+status+'</a></td>'
-                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+Math.round( value.progress ) +' %</a></td>'
-                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> Unknown</a></td>'
-                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none" >'+value.name+'</a></td>'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+Math.round( progress_Percentage ) +' %</a></td>'
+
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none" >'+value.cpl_description+'</a></td>'
                                 +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+value.updated_at+'</a></td>'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+value.name+'</a></td>'
                                 +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none">  <span class="btn btn-primary  custom-search mdi mdi-magnify search_logs" data-id="16503" data-ip="172.17.42.14" data-id_server="1700893303656192775ae083.79334895">  </span> </a></td>'
 
                             +'</tr>';
@@ -911,11 +912,69 @@
 
             }
         })
+    }
 
-
+    $(document).on('click', '#logs-tab', function (e) {
+        e.preventDefault();
+        get_logs_tab();
     });
 
+    function get_monitor_tab()
+    {
+        console.log('tes')
+        var url = "{{  url('') }}"+ "/ingest/monitors" ;
+        var status ="" ;
+        $.ajax({
+            url: url,
+            method: 'GET',
+            success:function(response)
+            {
+                var result ="" ;
+                if(response.dcp_trensfers.length>0)
+                {
+                    $.each(response.dcp_trensfers, function( index, value ) {
+                        if(value.status == "Running")
+                        {
+                            status ='<span class="mdi mdi-checkbox-multiple-marked-circle-outline text-primary"> Running </span>' ;
+                        }
+                        else
+                        {
+                            status ='<i class="mdi mdi-alert text-warning"> Pending</i> ';
+                        }
+                        var progress_Percentage = calculatePercentage(value.progress, value.pkl_size)
 
+                        result = result
+                            +'<tr class="odd" >'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none" >'+status+'</a></td>'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+Math.round( progress_Percentage ) +' %</a></td>'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none" >'+value.cpl_description+'</a></td>'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+value.updated_at+'</a></td>'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+value.name+'</a></td>'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none">  <span class="btn btn-primary  custom-search mdi mdi-magnify search_logs" data-id="16503" data-ip="172.17.42.14" data-id_server="1700893303656192775ae083.79334895">  </span> </a></td>'
+
+                            +'</tr>';
+                    });
+
+                    $('#tbody_logs').html(result)
+                }
+                else
+                {
+                    $('#tbody_logs').html('<div id="table_logs_processing" class="dataTables_processing card">No Data</div>')
+                }
+
+            },
+            error: function(response) {
+
+            }
+        })
+    }
+    $(document).on('click', '#monitor-tab', function (e) {
+        e.preventDefault();
+        get_monitor_tab();
+    });
+    const interval = setInterval(function() {
+        get_monitor_tab();
+    }, 5000);
 })(jQuery);
 </script>
 

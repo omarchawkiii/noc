@@ -31,6 +31,7 @@ class refresh_dcp_trensfer_data extends Command
             app(\App\Http\Controllers\LocationController::class)->refresh_dcp_trensfer_data();
             sleep (1) ;
             $counter++;
+            echo $counter . "<br />" ;
         }
     }
 }
