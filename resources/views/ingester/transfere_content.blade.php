@@ -32,9 +32,12 @@
                                 <li class="nav-item">
                                     <a class="nav-link" id="monitor-tab" data-bs-toggle="tab" href="#monitor" role="tab" aria-controls="Monitor" aria-selected="false">Monitor</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="logs-tab" data-bs-toggle="tab" href="#logs" role="tab" aria-controls="logs" aria-selected="false">Logs</a>
+                                </li>
 
                             </ul>
-                            <div class="tab-content" style="height: 567px; max-height: 567px;">
+                            <div class="tab-content" style="padding:25px ;">
                                 <!-- tab Logest -->
                                 <div class="tab-pane fade active show" id="logest" role="tabpanel" aria-labelledby="home-tab">
                                     <div class="row mb-2 mt-2">
@@ -198,28 +201,77 @@
                                     </div>
                                 </div>
 
+                                <div class="tab-pane fade" id="logs" role="tabpanel" aria-labelledby="logs">
+                                    <div class="  col-md-12">
+
+                                        <div class="card">
+                                            <div class="card-body ">
+                                                <div class="d-flex flex-row justify-content-between">
+                                                    <h4 class="card-title ">Logs</h4>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xl-4 ">
+                                                        <div class="input-group mb-2 mr-sm-2">
+                                                            <div class="input-group-prepend">
+                                                                <div class="input-group-text"><i class="mdi mdi-screwdriver"></i></div>
+                                                            </div>
+                                                            <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="screens_logs">  <option value="Select_Library" selected="selected"> Select Screen</option>   <option value="1700893303656192775ae083.79334895">Screen-01</option>   <option value="17009153036561e867d6ce58.72359968">Screen-02</option>   <option value="17009154626561e9065feac9.85601297">Screen-03</option>   <option value="17009155876561e983bb7116.71074696">Screen-04</option>   <option value="17009159516561eaefec2c21.59001603">Screen-05</option>   <option value="17009160796561eb6f0939b7.04353106">Screen-06</option>   <option value="17009164546561ece64ebc19.67602338">Screen-07</option>   <option value="17009167916561ee370908f6.11011832">Screen-08</option>   <option value="17009173756561f07fe82f85.32714049">Screen-09</option>   <option value="17009175216561f1119f57d3.72173190">Beanie-01</option>   <option value="17009176836561f1b3871981.15975975">Beanie-02</option>   <option value="17009185356561f507ae9621.05017494">Junior</option>   <option value="17009186326561f56802cfe8.37487333">Indulge-01</option>   <option value="17009187356561f5cf5b0a71.87363035">Indulge--02</option>   <option value="17009188286561f62c0f2386.78798376">Indulge-03</option> </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-6 ">
+
+
+                                                        <select class="btn btn-dark  btn-fw" aria-label=".form-select-sm example" id="filter_logs" style="    text-align: left;">
+                                                            <option value="all" selected="selected">All
+                                                            </option>
+                                                            <option value="Completed">Completed</option>
+                                                            <option value="Failed">Failed</option>
+                                                            <option value="Cancelled">Cancelled</option>
+                                                        </select>
+
+
+                                                        <button type="button" class="btn btn-secondary custom-btn btn-icon-text center-block">
+                                                            <i class="mdi mdi-refresh btn-icon-prepend"></i> Refresh
+                                                        </button>
+
+
+                                                        <button type="button" class="btn btn-danger custom-btn btn-icon-text" id="delete_tasks">
+                                                            <i class="mdi mdi-delete-forever btn-icon-prepend"></i> Delete
+                                                        </button>
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="preview-list multiplex" id="logs-card" style="height: 619px; max-height: 619px;">
+                                                            <div class="table-responsive">
+                                                                <table class="table " id="table_logs">
+                                                                    <thead>
+                                                                    <tr style="text-align: center">
+                                                                        <th> State</th>
+                                                                        <th> Progress</th>
+                                                                        <th> Content Type</th>
+                                                                        <th> Description</th>
+                                                                        <th> Creation date</th>
+                                                                        <th> Option</th>
+                                                                    </tr>
+                                                                    </thead>
+                                                                    <tbody id="tbody_logs" style="text-align: center"></tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
 
                             </div>
-
-                            <!--<div class="row">
-
-                                    <div class="preview-list multiplex" id="div_ingest_logs">
-                                        <div class="table-responsive">
-                                            <table class="table " id="files-listing">
-                                                <thead>
-                                                <tr>
-                                                    <th> State</th>
-                                                    <th> File Name</th>
-                                                    <th> Available On On</th>
-
-                                                </tr>
-                                                </thead>
-                                                <tbody id="body_ingest_logs"></tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-
-                            </div> -->
 
                 </div>
             </div>
@@ -237,6 +289,29 @@
                 </div>
                 <div class="modal-body minauto">
                     <h4 class="text-center"> No File Selected!</h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" style="margin: auto" class="btn btn-secondary btn-fw close"
+                            data-bs-dismiss="modal" aria-label="Close">OK
+                    </button>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade " id="no-location-selected" tabindex="-1" role="dialog" aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ModalLabel">Please Select File </h5>
+                    <button type="button" class="close btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">x</span>
+                    </button>
+                </div>
+                <div class="modal-body minauto">
+                    <h4 class="text-center"> No Location Selected!</h4>
                 </div>
                 <div class="modal-footer">
                     <button type="button" style="margin: auto" class="btn btn-secondary btn-fw close"
@@ -472,113 +547,120 @@
 
     $(document).on('click', '#ingest_content', function (event) {
        // alert('Comming soon ') ;
+       var location =  $('#location').val();
 
         var array_files = [];
         $("#files-listing  .item-content.selected").each(function() {
             var id = $(this).data("id_cpl");
             array_files.push(id);
         });
-        console.log(array_files)
-        if (array_files.length ==  0 ) {
-            $("#no-file-selected").modal('show');
-        }else{
-        var url = "{{  url('') }}"+ '/ingester/generate_torrent_file';
-            $.ajax({
-                url: url,
-                type: 'POST',
-                data: {
-                    array_files:array_files,
-
-                },
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                beforeSend: function () {
-                },
-                success: function (response) {
-                    var result ;
-                    console.log(response) ;
-                    if (response.ingest_status.status == 1 )
-                    {
-                        if (response.ingest_errors.length> 0 )
+        if(location != "Locations")
+        {
+            if (array_files.length ==  0 ) {
+                $("#no-file-selected").modal('show');
+            }else{
+            var url = "{{  url('') }}"+ '/ingester/generate_torrent_file';
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {
+                        array_files:array_files,
+                        location:location,
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    beforeSend: function () {
+                    },
+                    success: function (response) {
+                        var result ;
+                        console.log(response) ;
+                        if (response.ingest_status.status == 1 )
                         {
-
-                            $('#cpl_ingest_error').modal('show') ;
-                            result = "<h4> Failed Cpls Ingest  </h4>" ;
-                            $.each(response.ingest_errors, function( index, value ) {
-
-                                result = result
-                                +'<p>'
-                                    +'<span class="align-middle fw-medium text-danger ">'+value.pkl_description+' </span>'
-                                    +'<span class="align-middle fw-medium text-danger "> '+value.message+' </span>'
-                                +'</p>';
-                            });
-
-                            if (response.ingest_success.length> 0 )
+                            if (response.ingest_errors.length> 0 )
                             {
-                                result = result + "<br /> <br /> <h4>  Succeeded  kdms Ingest   </h4>" ;
-                                $.each(response.ingest_success, function( index, value )
-                                {
+
+                                $('#cpl_ingest_error').modal('show') ;
+                                result = "<h4> Failed Cpls Ingest  </h4>" ;
+                                $.each(response.ingest_errors, function( index, value ) {
+
                                     result = result
                                     +'<p>'
                                         +'<span class="align-middle fw-medium text-danger ">'+value.pkl_description+' </span>'
                                         +'<span class="align-middle fw-medium text-danger "> '+value.message+' </span>'
                                     +'</p>';
                                 });
+
+                                if (response.ingest_success.length> 0 )
+                                {
+                                    result = result + "<br /> <br /> <h4>  Succeeded  kdms Ingest   </h4>" ;
+                                    $.each(response.ingest_success, function( index, value )
+                                    {
+                                        result = result
+                                        +'<p>'
+                                            +'<span class="align-middle fw-medium text-danger ">'+value.pkl_description+' </span>'
+                                            +'<span class="align-middle fw-medium text-danger "> '+value.message+' </span>'
+                                        +'</p>';
+                                    });
+                                }
+                                $('#cpl_ingest_error .modal-body').html(result) ;
+
+
                             }
-                            $('#cpl_ingest_error .modal-body').html(result) ;
+                            else
+                            {
 
 
+                                swal({
+                                    title: 'Done!',
+                                    text: 'Ingest Created Successfully ',
+                                    icon: 'success',
+                                    button: {
+                                        text: "Close",
+                                        value: true,
+                                        visible: true,
+                                        className: "btn btn-primary"
+                                    }
+                                })
+
+                            }
                         }
                         else
                         {
 
 
-                            swal({
-                                title: 'Done!',
-                                text: 'Ingest Created Successfully ',
-                                icon: 'success',
-                                button: {
-                                    text: "Close",
-                                    value: true,
-                                    visible: true,
-                                    className: "btn btn-primary"
+                                swal({
+                                title: 'Failed',
+                                text: "Error occurred while sending the request.",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3f51b5',
+                                cancelButtonColor: '#ff4081',
+                                confirmButtonText: 'Great ',
+                                buttons: {
+                                    cancel: {
+                                        text: "Cancel",
+                                        value: null,
+                                        visible: true,
+                                        className: "btn btn-danger",
+                                        closeModal: true,
+                                    },
                                 }
                             })
-
                         }
+
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    },
+                    complete: function (jqXHR, textStatus) {
                     }
-                    else
-                    {
-
-
-                            swal({
-                            title: 'Failed',
-                            text: "Error occurred while sending the request.",
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonColor: '#3f51b5',
-                            cancelButtonColor: '#ff4081',
-                            confirmButtonText: 'Great ',
-                            buttons: {
-                                cancel: {
-                                    text: "Cancel",
-                                    value: null,
-                                    visible: true,
-                                    className: "btn btn-danger",
-                                    closeModal: true,
-                                },
-                            }
-                        })
-                    }
-
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.log(errorThrown);
-                },
-                complete: function (jqXHR, textStatus) {
-                }
-            });
+                });
+            }
+        }
+        else
+        {
+            $("#no-location-selected").modal('show');
         }
     });
 
@@ -734,8 +816,6 @@
         })
     }
 
-
-
     $('#location').change(function(){
         $("#location-listing").dataTable().fnDestroy();
             $('#screen').find('option')
@@ -758,12 +838,12 @@
 
         if(location != "Locations")
         {
-            $('#refresh_lms').show();
+            //$('#refresh_lms').show();
             get_cpls(location , screen , true , multiplex,true)
         }
         else
         {
-            $('#refresh_lms').hide();
+            //$('#refresh_lms').hide();
             $('#location-listing tbody').html('<div id="table_logs_processing" class="dataTables_processing card">Please Select Location</div>')
         }
 
@@ -781,6 +861,58 @@
     }
 
 
+    //Logs
+
+    $(document).on('click', '#logs-tab', function (e) {
+        e.preventDefault();
+        console.log('tes')
+        var url = "{{  url('') }}"+ "/ingest/logs" ;
+        var status ="" ;
+        $.ajax({
+            url: url,
+            method: 'GET',
+            success:function(response)
+            {
+                var result ="" ;
+                if(response.dcp_trensfers.length>0)
+                {
+                    $.each(response.spls, function( index, value ) {
+                        if(value.status == "Completed")
+                        {
+                            status ='<span class="mdi mdi-check-all text-success"></span>Completed' ;
+                        }
+                        else
+                        {
+                            status ='<i class="mdi mdi-alert"></i> Failed';
+                        }
+
+
+                        result = result
+                            +'<tr class="odd" >'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none" >'+status+'</a></td>'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+value.progress+'</a></td>'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> Unknown</a></td>'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none" >'+value.name+'</a></td>'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+value.updated_at+'</a></td>'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none">  <span class="btn btn-primary  custom-search mdi mdi-magnify search_logs" data-id="16503" data-ip="172.17.42.14" data-id_server="1700893303656192775ae083.79334895">  </span> </a></td>'
+
+                            +'</tr>';
+                    });
+                    $('#tbody_logs').html(result)
+                }
+                else
+                {
+                    $('#tbody_logs').html('<div id="table_logs_processing" class="dataTables_processing card">No Data</div>')
+                }
+
+            },
+            error: function(response) {
+
+            }
+        })
+
+
+    });
 
 
 })(jQuery);

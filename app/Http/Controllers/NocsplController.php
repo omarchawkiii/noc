@@ -32,7 +32,7 @@ class NocsplController extends Controller
         {
             $is_template = false ;
         }
-            dd($is_template);
+
         if($request->action_type =="edit")
         {
             Nocspl::where('uuid',$request->spl_uuid_edit)->delete() ;

@@ -450,6 +450,9 @@ class IngersterController extends Controller
         $ingest_success = array() ;
         $ingest_errors = array();
         $ingest_status= array();
+
+        $location = Location::find($request->location) ;
+
         try
         {
             foreach ($request->array_files as $file )
@@ -457,7 +460,7 @@ class IngersterController extends Controller
                 $cpl = $result = DB::table('ingests')
                     ->where('cpl_id', $file)
                     ->first();
-                    $location = Location::find(1) ;
+
                 if($cpl)
                 {
                     $pkl_size = $this->getFolderSize($cpl->tms_dir);
@@ -551,7 +554,9 @@ class IngersterController extends Controller
     public function logs()
     {
 
-        $dcp_trensfers = Dcp_trensfer::where(function ($query) {
+        $dcp_trensfers = Dcp_trensfer::
+        leftJoin('spls', 'splcomponents.uuid_spl', '=', 'spls.uuid')
+        ->where(function ($query) {
             $query->where('status', '=','Complete' )
                   ->orWhere('status', '=', "Failed");
                 })->get();
