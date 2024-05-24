@@ -876,21 +876,21 @@
                 var result ="" ;
                 if(response.dcp_trensfers.length>0)
                 {
-                    $.each(response.spls, function( index, value ) {
+                    $.each(response.dcp_trensfers, function( index, value ) {
                         if(value.status == "Completed")
                         {
-                            status ='<span class="mdi mdi-check-all text-success"></span>Completed' ;
+                            status ='<span class="mdi mdi-check-all text-success"> Completed </span>' ;
                         }
                         else
                         {
-                            status ='<i class="mdi mdi-alert"></i> Failed';
+                            status ='<i class="mdi mdi-alert text-danger"> Failed</i> ';
                         }
 
 
                         result = result
                             +'<tr class="odd" >'
                                 +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none" >'+status+'</a></td>'
-                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+value.progress+'</a></td>'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+Math.round( value.progress ) +' %</a></td>'
                                 +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> Unknown</a></td>'
                                 +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none" >'+value.name+'</a></td>'
                                 +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+value.updated_at+'</a></td>'
@@ -898,6 +898,7 @@
 
                             +'</tr>';
                     });
+
                     $('#tbody_logs').html(result)
                 }
                 else

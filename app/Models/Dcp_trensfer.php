@@ -18,7 +18,14 @@ class Dcp_trensfer extends Model
         "source",
         "id_cpl",
         'location_id',
+        'pkl_size',
     ];
+
+    protected $casts = [
+        'created_at'  => 'datetime:Y-m-d H:i',
+        'updated_at' => 'datetime:Y-m-d H:i',
+    ];
+
 
     public function location(): BelongsTo
     {

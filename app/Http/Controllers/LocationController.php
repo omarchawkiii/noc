@@ -500,7 +500,6 @@ class LocationController extends Controller
 
     public function refresh_cpl_content($location)
     {
-
         try
         {
             $location = Location::find($location);
@@ -508,8 +507,6 @@ class LocationController extends Controller
             foreach($location->screens as $screen)
             {
                 app(\App\Http\Controllers\CplController::class)->getcpls($location->id,$screen->id);
-
-
             }
             $status = 1 ;
         } catch (Exception $e) {
@@ -871,33 +868,40 @@ class LocationController extends Controller
         $start_time = Carbon::now();
         echo $start_time->toDateTimeString();
         $locations = Location::all() ;
-        foreach($locations as $location)
-        {
-            $dcps = Dcp_trensfer::where('location_id',$location->id)->where('status','pending')->get() ;
+            $dcps = Dcp_trensfer::where('status','Pending')->get() ;
             foreach($dcps as $dcp)
             {
-
-                $password = "noc" ;
-                $command = "sshpass -p " . escapeshellarg($password) . " rsync -avz --partial --no-t ".$dcp['source']." noc@172.17.42.2:/".$dcp['torrent_path'] ;
-
-                //$rsync_command = "sshpass rsync -avz --partial --no-t " . escapeshellarg($source) . " " . escapeshellarg($destination). " > " . escapeshellarg($log_file) . " 2>&1";
-                $output = [];
-                $return_code = 0;
-
-                exec($command, $output, $return_code);
-
-                if ($return_code === 0) {
-                    echo "Rsync completed successfully.";
-
-                     $dcp->update([
-                    'status' => "running" ,
-                    ]);
-                } else {
-                    echo "Rsync failed with code: " . $return_code;
-                   // echo "Output:\n" . implode("\n", $output);
+                $location = Location::find($dcps->location_id) ;
+                $url = $location->connection_ip."?request=getCplListByScreenNumber&screen_number=".$screen->screen_number;
+                $client = new Client();
+                $response = $client->request('GET', $url);
+                $contents = json_decode($response->getBody(), true);
+                if($contents['status'])
+                {
+                    if($contents['progress']> 0 )
+                    {
+                        $dcp->update([
+                            'status'     =>"Running",
+                            "progress" => $contents['progress'] ,
+                        ]);
+                    }
+                    if($contents['progress'] ==  $dcp->progress )
+                    {
+                        $dcp->update([
+                            'status'     =>"Completed",
+                            "progress" => $contents['progress'] ,
+                        ]);
+                    }
                 }
+                else
+                {
+                    $dcp->update([
+                        'status'     =>"Failed",
+                    ]);
+                }
+
             }
-        }
+
 
     }
 

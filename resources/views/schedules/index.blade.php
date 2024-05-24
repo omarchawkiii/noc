@@ -752,7 +752,7 @@
                                     statu_content = '<spn class="text-danger" >Unlinked  </span>'
                                 }
 
-                                icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
+                                icon_kdm = '</i> <i data-scheduleidd = "'+value.id+'" class="mdi mdi-key-remove get_schedule_infos text-warning"> </i>'
                                 icon_cpl = '<i class="mdi mdi-filmstrip text-warning ">'
                             }
                             else
@@ -778,7 +778,7 @@
                                 }
                                 else
                                 {
-                                    icon_kdm = '</i> <i class="mdi mdi-key-remove text-warning"> </i>'
+                                    icon_kdm = '</i> <i data-scheduleidd = "'+value.id+'"  class="mdi mdi-key-remove text-warning get_schedule_infos"> </i>'
                                     icon_cpl = '<i class="mdi mdi-filmstrip text-danger   spl_not_linked" data-scheduleidd = "'+value.id+'">'
                                     statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-danger get_schedule_infos  btn-fw"> CPL Missing Detected  </button>'
                                 }
@@ -2241,6 +2241,11 @@
     .mr-1
     {
         margin-right: 5px !important ;
+    }
+    .check_need_kdm,
+    .get_schedule_infos
+    {
+        cursor: pointer;
     }
 </style>
 

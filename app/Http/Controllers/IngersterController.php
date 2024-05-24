@@ -446,13 +446,10 @@ class IngersterController extends Controller
 
     public function generate_torrent_file(Request $request)
     {
-
         $ingest_success = array() ;
         $ingest_errors = array();
         $ingest_status= array();
-
         $location = Location::find($request->location) ;
-
         try
         {
             foreach ($request->array_files as $file )
@@ -475,8 +472,9 @@ class IngersterController extends Controller
                             'id_cpl' => $cpl->cpl_id ,
                             'location_id' => $location->id
                         ],[
-                            'status'     =>"pending",
+                            'status'     =>"Pending",
                             "torrent_path" =>$response['dcp_path'],
+                            'pkl_size' => $pkl_size ,
                             "source" =>$cpl->tms_dir,
                             "progress" => 0 ,
                             "id_ingest"=> $cpl->id,
@@ -553,18 +551,15 @@ class IngersterController extends Controller
 
     public function logs()
     {
-
         $dcp_trensfers = Dcp_trensfer::
-        leftJoin('spls', 'splcomponents.uuid_spl', '=', 'spls.uuid')
-        ->where(function ($query) {
-            $query->where('status', '=','Complete' )
+            leftJoin('ingests', 'dcp_trensfers.id_ingest', '=', 'ingests.id')
+            ->where(function ($query) {
+            $query->where('status', '=','Completed' )
                   ->orWhere('status', '=', "Failed");
                 })->get();
-
 
         return Response()->json(compact('dcp_trensfers'));
 
     }
-
 
 }
