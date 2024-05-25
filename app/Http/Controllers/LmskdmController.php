@@ -41,7 +41,7 @@ class LmskdmController extends Controller
                         }
                         if($lmscpl)
                         {
-                            Lmskdm::updateOrCreate([
+                            Lmskdm::create([
 
                                 'uuid' => $kdm ['uuid'],
                                 'name' => $kdm ['ContentTitleText'],

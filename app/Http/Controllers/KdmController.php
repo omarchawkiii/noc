@@ -36,7 +36,7 @@ class KdmController extends Controller
                     {
                         $cpl = Cpl::where('uuid','=',$kdm['cplId'])->where('location_id','=',$location->id)->first() ;
 
-                        Kdm::updateOrCreate([
+                        Kdm::create([
                             'uuid' => $kdm['uuid'],
                             'name' => $kdm['ContentTitleText'],
                             'ContentKeysNotValidBefore' => $kdm['ContentKeysNotValidBefore'],

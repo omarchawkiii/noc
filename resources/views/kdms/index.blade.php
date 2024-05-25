@@ -126,22 +126,7 @@
 <!-- -------END  DATA TABLE ---- -->
 
 
-<script src="{{asset('/assets/vendors/jquery-toast-plugin/jquery.toast.min.js')}}"></script>
-<script>
-    (function($) {
-    @if (session('message'))
-        $.toast({
-            heading: 'Success',
-            text: '{{ session("message") }}',
-            showHideTransition: 'slide',
-            icon: 'success',
-            loaderBg: '#f96868',
-            position: 'top-right',
-            timeout: 5000
-        })
-    @endif
-})(jQuery);
-</script>
+
 
 
 <script>

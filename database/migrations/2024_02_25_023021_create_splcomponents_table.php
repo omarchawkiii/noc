@@ -21,8 +21,8 @@ return new class extends Migration
             $table->string('editRate_denominator', 255)->nullable();
             $table->string('uuid_spl', 255)->nullable();
             $table->unsignedBigInteger('spl_id');
-            $table->foreign('spl_id')->references('id')->on('spls')->onDelete('cascade');
-            $table->foreignId('location_id')->nullable()->constrained()->onDelete('cascade');
+            /*$table->foreign('spl_id')->references('id')->on('spls')->onDelete('cascade');
+            $table->foreignId('location_id')->nullable()->constrained()->onDelete('cascade');*/
             $table->timestamps();
         });
     }
