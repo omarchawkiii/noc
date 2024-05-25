@@ -894,7 +894,7 @@ class LocationController extends Controller
                         "progress" => $contents['progress'] ,
                     ]);
                 }
-                if($contents['progress'] ==  $dcp->progress )
+                if($contents['progress'] ==  $dcp->pkl_size )
                 {
                     $dcp->update([
                         'status'     =>"Completed",

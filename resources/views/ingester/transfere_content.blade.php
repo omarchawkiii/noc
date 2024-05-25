@@ -143,7 +143,7 @@
                                                                 <div class="input-group-text"><i class="mdi mdi-magnify"></i>
                                                                 </div>
                                                             </div>
-                                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Search ">
+                                                            <input type="text" class="form-control" id="search_monitor" placeholder="Search ">
                                                         </div>
                                                     </div>
 
@@ -204,12 +204,14 @@
                                                     <h4 class="card-title ">Logs</h4>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-xl-4 ">
+                                                    <div class="col-xl-3">
                                                         <div class="input-group mb-2 mr-sm-2">
                                                             <div class="input-group-prepend">
-                                                                <div class="input-group-text"><i class="mdi mdi-screwdriver"></i></div>
+                                                                <div class="input-group-text"><i class="mdi mdi-home-map-marker"></i></div>
                                                             </div>
-                                                            <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="screens_logs">  <option value="Select_Library" selected="selected"> Select Screen</option>   <option value="1700893303656192775ae083.79334895">Screen-01</option>   <option value="17009153036561e867d6ce58.72359968">Screen-02</option>   <option value="17009154626561e9065feac9.85601297">Screen-03</option>   <option value="17009155876561e983bb7116.71074696">Screen-04</option>   <option value="17009159516561eaefec2c21.59001603">Screen-05</option>   <option value="17009160796561eb6f0939b7.04353106">Screen-06</option>   <option value="17009164546561ece64ebc19.67602338">Screen-07</option>   <option value="17009167916561ee370908f6.11011832">Screen-08</option>   <option value="17009173756561f07fe82f85.32714049">Screen-09</option>   <option value="17009175216561f1119f57d3.72173190">Beanie-01</option>   <option value="17009176836561f1b3871981.15975975">Beanie-02</option>   <option value="17009185356561f507ae9621.05017494">Junior</option>   <option value="17009186326561f56802cfe8.37487333">Indulge-01</option>   <option value="17009187356561f5cf5b0a71.87363035">Indulge--02</option>   <option value="17009188286561f62c0f2386.78798376">Indulge-03</option> </select>
+                                                            <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="locations_log">
+                                                                <option selected="">Locations</option>
+                                                            </select>
                                                         </div>
                                                     </div>
                                                     <div class="col-xl-6 ">
@@ -863,7 +865,7 @@
         return (part / total) * 100;
     }
 
-    function get_logs_tab()
+    function get_logs_tab(location_log,refresh_locations)
     {
         console.log('tes')
         var url = "{{  url('') }}"+ "/ingest/logs" ;
@@ -871,9 +873,25 @@
         $.ajax({
             url: url,
             method: 'GET',
+            data :{
+                location_log :location_log
+            },
             success:function(response)
             {
                 var result ="" ;
+                if(refresh_locations)
+                {
+                    locations_log = '<option value="null" selected>All Location </option>';
+                        $.each(response.locations, function( index_location_log, location_log ) {
+
+                            locations_log = locations_log
+                                +'<option  value="'+location_log.id+'">'+location_log.name+'</option>';
+                        });
+                            console.log(locations_log)
+                            $('#locations_log').html(locations_log)
+
+                }
+
                 if(response.dcp_trensfers.length>0)
                 {
                     $.each(response.dcp_trensfers, function( index, value ) {
@@ -916,12 +934,18 @@
 
     $(document).on('click', '#logs-tab', function (e) {
         e.preventDefault();
-        get_logs_tab();
+        get_logs_tab(null ,true);
+    });
+
+
+    $('#locations_log').change(function(){
+        var locations_log =  $('#locations_log').val();
+        get_logs_tab(locations_log, false);
     });
 
     function get_monitor_tab()
     {
-        console.log('tes')
+
         var url = "{{  url('') }}"+ "/ingest/monitors" ;
         var status ="" ;
         $.ajax({
@@ -947,7 +971,7 @@
                             +'<tr class="odd" >'
                                 +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none" >'+status+'</a></td>'
                                 +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+Math.round( progress_Percentage ) +' %</a></td>'
-                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none" >'+value.cpl_description+'</a></td>'
+                                +'<td class="cpl-item cpl_description"><a class="text-body align-middle fw-medium text-decoration-none" >'+value.cpl_description+'</a></td>'
                                 +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+value.updated_at+'</a></td>'
                                 +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+value.name+'</a></td>'
                                 +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none">  <span class="btn btn-primary  custom-search mdi mdi-magnify search_logs" data-id="16503" data-ip="172.17.42.14" data-id_server="1700893303656192775ae083.79334895">  </span> </a></td>'
@@ -955,11 +979,11 @@
                             +'</tr>';
                     });
 
-                    $('#tbody_logs').html(result)
+                    $('#tbody_monitor').html(result)
                 }
                 else
                 {
-                    $('#tbody_logs').html('<div id="table_logs_processing" class="dataTables_processing card">No Data</div>')
+                    $('#tbody_monitor').html('<div id="table_logs_processing" class="dataTables_processing card">No Data</div>')
                 }
 
             },
@@ -968,6 +992,7 @@
             }
         })
     }
+
     $(document).on('click', '#monitor-tab', function (e) {
         e.preventDefault();
         get_monitor_tab();
@@ -975,6 +1000,17 @@
     const interval = setInterval(function() {
         get_monitor_tab();
     }, 5000);
+
+
+    $("#search_monitor").on("keyup", function() {
+        console.log('te')
+        var value = $(this).val().toLowerCase();
+        $("#table_monitor td.cpl_description").filter(function() {
+        $(this).parent().toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+
 })(jQuery);
 </script>
 

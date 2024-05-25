@@ -549,8 +549,16 @@ class IngersterController extends Controller
         return $totalSize;
     }
 
-    public function logs()
+    public function logs( Request $request)
     {
+        if( Auth::user()->role != 1)
+        {
+            $locations = Auth::user()->locations ;
+        }
+        else
+        {
+            $locations = Location::all() ;
+        }
         $dcp_trensfers = Dcp_trensfer::
             leftJoin('ingests', 'dcp_trensfers.id_ingest', '=', 'ingests.id')
             ->leftJoin('locations', 'dcp_trensfers.location_id', '=', 'locations.id')
@@ -558,10 +566,15 @@ class IngersterController extends Controller
             $query->where('dcp_trensfers.status', '=','Completed' )
                   ->orWhere('dcp_trensfers.status', '=', "Failed");
                 })
-                ->select('dcp_trensfers.*','ingests.cpl_description','locations.name')
-                ->get();
+                ->select('dcp_trensfers.*','ingests.cpl_description','locations.name') ;
 
-        return Response()->json(compact('dcp_trensfers'));
+            if($request->location_log != "null")
+            {
+                $dcp_trensfers =$dcp_trensfers->where('dcp_trensfers.location_id', '=',$request->location_log) ;
+            }
+            $dcp_trensfers =$dcp_trensfers->get();
+
+        return Response()->json(compact('dcp_trensfers','locations'));
 
     }
 
