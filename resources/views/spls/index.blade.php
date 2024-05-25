@@ -1007,12 +1007,12 @@
         if(lms == true )
         {
             var url = "{{  url('') }}"+ "/get_lmsspl_infos/"+spl_id ;
-            $('#schedules-tab').hide();
+            //$('#schedules-tab').hide();
         }
         else
         {
             var url = "{{  url('') }}"+ "/get_spl_infos/"+spl_id ;
-            $('#schedules-tab').show();
+            //$('#schedules-tab').show();
         }
 
         $.ajax({
@@ -1167,7 +1167,16 @@
                 +'<span></span>'
                 +'</div>'
         $('#schedules').html(loader_content)
-        var url = "{{  url('') }}"+ "/get_spl_infos/"+spl_id ;
+        if(lms == true )
+        {
+            var url = "{{  url('') }}"+ "/get_lmsspl_infos/"+spl_id ;
+            //$('#schedules-tab').hide();
+        }
+        else
+        {
+            var url = "{{  url('') }}"+ "/get_spl_infos/"+spl_id ;
+            //$('#schedules-tab').show();
+        }
         $.ajax({
                 url: url,
                 method: 'GET',

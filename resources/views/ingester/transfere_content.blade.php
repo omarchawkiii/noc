@@ -865,16 +865,16 @@
         return (part / total) * 100;
     }
 
-    function get_logs_tab(location_log,refresh_locations)
+    function get_logs_tab(location_log,state_log,refresh_locations)
     {
-        console.log('tes')
         var url = "{{  url('') }}"+ "/ingest/logs" ;
         var status ="" ;
         $.ajax({
             url: url,
             method: 'GET',
             data :{
-                location_log :location_log
+                location_log :location_log,
+                state_log:state_log
             },
             success:function(response)
             {
@@ -934,14 +934,25 @@
 
     $(document).on('click', '#logs-tab', function (e) {
         e.preventDefault();
-        get_logs_tab(null ,true);
+
+        var location_log ="null";
+        var state_log = "all";
+        get_logs_tab(location_log,state_log,true);
+
     });
 
 
     $('#locations_log').change(function(){
         var locations_log =  $('#locations_log').val();
-        get_logs_tab(locations_log, false);
+        var state_log =  $('#filter_logs').val();
+        get_logs_tab(locations_log,state_log, false);
     });
+    $('#filter_logs').change(function(){
+        var locations_log =  $('#locations_log').val();
+        var state_log =  $('#filter_logs').val();
+        get_logs_tab(locations_log,state_log ,false);
+    });
+
 
     function get_monitor_tab()
     {

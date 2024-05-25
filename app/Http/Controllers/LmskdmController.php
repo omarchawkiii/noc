@@ -19,7 +19,7 @@ class LmskdmController extends Controller
         $client = new Client();
         $response = $client->request('GET', $url);
         $contents = json_decode($response->getBody(), true);
-
+        Lmskdm::where('location_id',$location->id)->delete() ;
         if($contents)
         {
             foreach($contents as $content)
@@ -42,9 +42,6 @@ class LmskdmController extends Controller
                         if($lmscpl)
                         {
                             Lmskdm::updateOrCreate([
-                                'uuid' => $kdm["uuid"],
-                                'location_id' => $location->id
-                            ],[
 
                                 'uuid' => $kdm ['uuid'],
                                 'name' => $kdm ['ContentTitleText'],
@@ -75,11 +72,7 @@ class LmskdmController extends Controller
                         }
                         else
                         {
-
                             Lmskdm::updateOrCreate([
-                                'uuid' => $kdm["uuid"],
-                                'location_id' => $location->id
-                            ],[
                                 'uuid' => $kdm ['uuid'],
                                 'name' => $kdm ['ContentTitleText'],
                                 'idkdm_files' => $kdm ['idkdm_files'],
@@ -100,7 +93,6 @@ class LmskdmController extends Controller
                                 'serverName_by_serial' => $kdm ['serverName_by_serial'],
                                 'kdm_installed' => $kdm ['kdm_installed'],
                                 'content_present' => $kdm ['content_present'],
-
                                 //'lmscpl_id' => $cpl->id,
                                 'screen_id' => $id_screen,
                                 'location_id' => $location->id,
@@ -109,7 +101,7 @@ class LmskdmController extends Controller
                         }
                     }
 
-                    if(count($content) != $location->lmskdms->count() )
+                    /*if(count($content) != $location->lmskdms->count() )
                     {
 
                         $uuid_lmskdms = array_column($content, 'uuid');
@@ -124,7 +116,7 @@ class LmskdmController extends Controller
                             }
 
                         //dd('we should delete screens ') ;
-                    }
+                    }*/
 
                 }
             }

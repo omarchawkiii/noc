@@ -527,12 +527,10 @@ function formatSize(sizeInBytes) {
        if(lms == true )
         {
             var url = "{{  url('') }}"+   "/get_lmscpl_infos/"+cpl_id;
-            $('#kdms-tab').hide();
         }
         else
         {
             var url = "{{  url('') }}"+ "/get_cpl_infos/"+location_id+"/"+cpl_id ;
-            $('#kdms-tab').show();
         }
        $.ajax({
                url: url,
@@ -931,12 +929,12 @@ function formatSize(sizeInBytes) {
        if(lms == true )
         {
             var url = "{{  url('') }}"+   "/get_lmscpl_infos/"+cpl_id;
-            $('#kdms-tab').hide();
+            //$('#kdms-tab').hide();
         }
         else
         {
             var url = "{{  url('') }}"+ "/get_cpl_infos/"+location_id+"/"+cpl_id ;
-            $('#kdms-tab').show();
+            //$('#kdms-tab').show();
         }
        $.ajax({
                url: url,
@@ -951,6 +949,7 @@ function formatSize(sizeInBytes) {
                                    +'<tr>'
                                        +'<th>UUID</th>'
                                        +'<th>SPL Name</th>'
+                                       +'<th>Duration</th>'
 
                                    +'</tr>'
                                +'</thead>'
@@ -970,6 +969,7 @@ function formatSize(sizeInBytes) {
                                    +'<tr>'
                                         +'<th>'+value.uuid_spl+'</th>'
                                         +'<th>'+name+'</th>'
+                                        +'<th>'+value.duration+'</th>'
 
 
                                    +'</tr>'
@@ -1001,8 +1001,17 @@ function formatSize(sizeInBytes) {
                +'<span></span>'
                +'</div>'
        $('#kdms').html(loader_content)
+       if(lms == true )
+        {
+            var url = "{{  url('') }}"+   "/get_lmscpl_infos/"+cpl_id;
+            //$('#kdms-tab').hide();
+        }
+        else
+        {
+            var url = "{{  url('') }}"+ "/get_cpl_infos/"+location_id+"/"+cpl_id ;
+           // $('#kdms-tab').show();
+        }
 
-       var url = "{{  url('') }}"+ "/get_cpl_infos/"+location_id+"/"+cpl_id ;
 
 
        $.ajax({
@@ -1577,6 +1586,7 @@ function formatSize(sizeInBytes) {
         $(document).on('click', '#clean_cpl', function (event) {
 
             var location = $('#location').val() ;
+            var screen =  $('#screen').val();
             var lms = false ;
             if( $('#refresh_lms').hasClass("activated"))
             {
@@ -1588,11 +1598,11 @@ function formatSize(sizeInBytes) {
                 lms = false ;
                 $('#cpl_to_clean_model h5.modal-title').html("Screen CPLs to Clean")
             }
-            if(location == 'Locations')
+            if(screen == 'null' && lms == false )
             {
                 swal({
                         title: '',
-                        text: "Please Select Locaion.",
+                        text: "Please Select Locaion And Screen .",
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#3f51b5',
@@ -1641,7 +1651,8 @@ function formatSize(sizeInBytes) {
                                 type: 'GET',
                                 data: {
                                     location :location,
-                                    lms :lms
+                                    lms :lms ,
+                                    screen:screen
                                 },
                                 headers: {
                                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1671,7 +1682,8 @@ function formatSize(sizeInBytes) {
                                                 type: 'GET',
                                                 data: {
                                                     location :location,
-                                                    lms :lms
+                                                    lms :lms,
+                                                    screen:screen
                                                 },
                                                 headers: {
                                                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

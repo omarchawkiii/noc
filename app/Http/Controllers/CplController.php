@@ -274,10 +274,11 @@ class CplController extends Controller
         $cpl = Cpl::where('id',$cpl)->where('location_id',$location)->first() ;
 
         $spls = DB::table('splcomponents')
+            ->where('splcomponents.location_id',$cpl->location_id)
             ->where('splcomponents.CompositionPlaylistId',$cpl->uuid)
             ->leftJoin('spls', 'splcomponents.uuid_spl', '=', 'spls.uuid')
             ->leftJoin('lmsspls', 'splcomponents.uuid_spl', '=', 'lmsspls.uuid')
-            ->select('splcomponents.uuid_spl as uuid_spl','spls.name as name','lmsspls.name as lms_name')
+            ->select('splcomponents.uuid_spl as uuid_spl','spls.name as name','lmsspls.name as lms_name','spls.duration as duration')
             ->groupBy('splcomponents.uuid_spl')
             ->get();
 
@@ -286,7 +287,8 @@ class CplController extends Controller
         $kdms =Kdm::with('screen')->where('cpl_uuid',$cpl->uuid)->where('location_id',$location)->get();
       //  $schedules =  $spl->schedules ;
         //$schedules =Schedule::with('screen')->where('spl_id',$cpl->id)->get();
-        $schedules = null ;
+       // $schedules = null ;
+
         return Response()->json(compact('cpl','spls','kdms'));
     }
 
@@ -398,6 +400,7 @@ class CplController extends Controller
     {
 
         $lms = $request->lms;
+        $screen= $request->screen;
         $location = Location::find($request->location) ;
 
         if($lms)
@@ -406,7 +409,7 @@ class CplController extends Controller
         }
         else
         {
-            $url = $location->connection_ip."?request=get_screen_content_to_clean";
+            $url = $location->connection_ip."?request=get_screen_content_to_clean&id_screen=".$screen;
         }
 
         $client = new Client();
@@ -428,7 +431,7 @@ class CplController extends Controller
     {
         $location = Location::findOrFail($request->location) ;
         $lms = $request->lms;
-
+        $screen= $request->screen;
         if($lms)
         {
            $action = 'clean_lms_content' ;
@@ -436,23 +439,21 @@ class CplController extends Controller
         else
         {
             $action = 'clean_screen_content' ;
-
         }
 
-        $response = $this->clean_cplRequest($location->connection_ip,$action , $location->email, $location->password);
-        dd($response) ;
-
+        $response = $this->clean_cplRequest($location->connection_ip,$action, $screen , $location->email, $location->password);
         return Response()->json(compact('status','count_cpls'));
 
     }
 
 
-    function clean_cplRequest($apiUrl,$action,$username,$password) {
+    function clean_cplRequest($apiUrl,$action, $id_screen, $username,$password) {
         // Prepare the request data
         $requestData = [
             'action' => $action,
             'username' => $username,
             'password' => $password,
+            'id_screen' =>$id_screen,
         ];
         // Initialize cURL session
         $ch = curl_init($apiUrl);

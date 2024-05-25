@@ -2330,7 +2330,14 @@
 
             $("#spl-list").modal('show');
             var id_location =  $('#location').val();
-
+            if(id_location.length)
+            {
+                $('#spl-list .modal-header h5').html('Playlists Available on NOC')
+            }
+            else
+            {
+                $('#spl-list .modal-header h5').html('Playlists Available In Template format ')
+            }
             get_spl_list_data(id_location)
 
         });

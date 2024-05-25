@@ -24,6 +24,8 @@ class KdmController extends Controller
         $client = new Client();
         $response = $client->request('GET', $url);
         $contents = json_decode($response->getBody(), true);
+        Kdm::where('location_id',$location->id)->where('screen_id',$screen->id)->delete() ;
+
         if($contents)
         {
             foreach($contents as $content)
@@ -35,9 +37,6 @@ class KdmController extends Controller
                         $cpl = Cpl::where('uuid','=',$kdm['cplId'])->where('location_id','=',$location->id)->first() ;
 
                         Kdm::updateOrCreate([
-                            'uuid' => $kdm["uuid"],
-                            'location_id' => $location->id
-                        ],[
                             'uuid' => $kdm['uuid'],
                             'name' => $kdm['ContentTitleText'],
                             'ContentKeysNotValidBefore' => $kdm['ContentKeysNotValidBefore'],
@@ -53,7 +52,7 @@ class KdmController extends Controller
                         ]);
                     }
 
-                    if(count($content) != $screen->kdms->count() )
+                    /*if(count($content) != $screen->kdms->count() )
                     {
                         $uuid_kdms = array_column($content, 'uuid');
                             foreach($screen->kdms as $kdm)
@@ -64,7 +63,7 @@ class KdmController extends Controller
                                 }
                             }
                         //dd('we should delete screens ') ;
-                    }
+                    }*/
                 }
             }
         }

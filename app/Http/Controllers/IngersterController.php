@@ -572,6 +572,10 @@ class IngersterController extends Controller
             {
                 $dcp_trensfers =$dcp_trensfers->where('dcp_trensfers.location_id', '=',$request->location_log) ;
             }
+            if($request->location_log != "all")
+            {
+                $dcp_trensfers =$dcp_trensfers->where('dcp_trensfers.status', '=',$request->state_log) ;
+            }
             $dcp_trensfers =$dcp_trensfers->get();
 
         return Response()->json(compact('dcp_trensfers','locations'));

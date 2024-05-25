@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cpl;
+use App\Models\Kdm;
 use App\Models\Lmscpl;
 use App\Models\Location;
 use App\Models\splcomponents;
@@ -97,12 +98,10 @@ class LmscplController extends Controller
     public function get_lmscpl_infos($cplid )
     {
         $cpl = Lmscpl::find($cplid) ;
-
         if($cpl)
         {
-            $kdms =null ;
-            $schedules = null ;
             $spls = DB::table('splcomponents')
+                ->where('splcomponents.location_id',$cpl->location_id)
                 ->leftJoin('lmsspls', 'splcomponents.uuid_spl', '=', 'lmsspls.uuid')
                 ->leftJoin('spls', 'splcomponents.uuid_spl', '=', 'spls.uuid')
                 ->where('splcomponents.CompositionPlaylistId',$cpl->uuid)
@@ -114,8 +113,6 @@ class LmscplController extends Controller
         {
             $cpl = Cpl::find($cplid) ;
             // $spls = $cpl->lmsspls ;
-            $kdms =null ;
-            $schedules = null ;
             //$spls = splcomponents::where('CompositionPlaylistId',$cpl->uuid)->get() ;
             $spls = DB::table('splcomponents')
                 ->where('splcomponents.CompositionPlaylistId',$cpl->uuid)
@@ -127,7 +124,7 @@ class LmscplController extends Controller
 
         }
 
-
+        $kdms =Kdm::with('screen')->where('cpl_uuid',$cpl->uuid)->where('location_id',$cpl->location_id)->get();
         return Response()->json(compact('cpl','spls','kdms'));
     }
 

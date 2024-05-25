@@ -595,7 +595,7 @@ class LocationController extends Controller
         $location = Location::find($location) ;
         $spls = $location->spls ;
         $lmsspls = $location->lmsspls ;
-        splcomponents::truncate();
+        splcomponents::where('location_id',$location->id)->delete();
 
         foreach($spls as $spl)
         {
@@ -614,10 +614,7 @@ class LocationController extends Controller
                         foreach($content as $cpl_content)
                         {
 
-                            splcomponents::updateOrCreate([
-                                'uuid_spl' => $cpl_content['uuid_spl'],
-                                'CompositionPlaylistId' => $cpl_content['CompositionPlaylistId'],
-                            ],[
+                            splcomponents::Create([
                                 'id_splcomponent' => $cpl_content['id'],
                                 'CompositionPlaylistId' => $cpl_content['CompositionPlaylistId'],
                                 'AnnotationText' => $cpl_content['AnnotationText'],
@@ -625,14 +622,13 @@ class LocationController extends Controller
                                 'editRate_numerator' => $cpl_content['editRate_numerator'],
                                 'editRate_denominator' => $cpl_content['editRate_denominator'],
                                 'uuid_spl' => $cpl_content['uuid_spl'],
+                                'location_id'     =>$location->id,
                             ]);
-
                         }
                     }
-
                 }
 
-                $splcomponents = splcomponents::where('uuid_spl',$spl->uuid)->get() ;
+                /*$splcomponents = splcomponents::where('uuid_spl',$spl->uuid)->get() ;
 
                 if(count($contents) != count($splcomponents) )
                 {
@@ -644,7 +640,7 @@ class LocationController extends Controller
                                 $splcomponent->delete() ;
                             }
                         }
-                }
+                }*/
 
 
             }

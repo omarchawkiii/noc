@@ -73,14 +73,14 @@ class SplController extends Controller
         return Redirect::back()->with('message' ,' The Screens  has been updated');
     }
 
-    public function get_spl_infos($spl )
+    public function get_spl_infos($spl)
     {
         $spl = Spl::find($spl) ;
        // $cpls = $spl->cpls ;
         //$cpls = $spl->splcomponents ;
-        $cpls = splcomponents::where('uuid_spl',$spl->uuid)->get() ;
+        $cpls = splcomponents::where('uuid_spl',$spl->uuid)->where('location_id',$spl->location_id)->get() ;
       //  $schedules =  $spl->schedules ;
-        $schedules =Schedule::with('screen')->where('spl_id',$spl->id)->get();
+        $schedules =Schedule::with('screen')->where('uuid_spl',$spl->uuid)->where('location_id',$spl->location_id)->get();
         return Response()->json(compact('spl','cpls','schedules'));
     }
 
