@@ -94,39 +94,36 @@ class LmscplController extends Controller
         }
         return Redirect::back()->with('message' ,' The LMS cpls  has been updated');
     }
-
     public function get_lmscpl_infos($cplid )
     {
         $cpl = Lmscpl::find($cplid) ;
         if($cpl)
         {
             $spls = DB::table('splcomponents')
-                ->where('splcomponents.location_id',$cpl->location_id)
                 ->leftJoin('lmsspls', 'splcomponents.uuid_spl', '=', 'lmsspls.uuid')
                 ->leftJoin('spls', 'splcomponents.uuid_spl', '=', 'spls.uuid')
                 ->where('splcomponents.CompositionPlaylistId',$cpl->uuid)
-                ->select('splcomponents.uuid_spl as uuid_spl','spls.name as name','lmsspls.name as lms_name')
+                ->where('splcomponents.location_id',$cpl->location_id)
+                ->select('splcomponents.uuid_spl as uuid_spl','lmsspls.name as lms_name','spls.name as name','lmsspls.duration as lms_duration')
                 ->groupBy('splcomponents.uuid_spl')
                 ->get();
         }
         else
         {
+
             $cpl = Cpl::find($cplid) ;
-            // $spls = $cpl->lmsspls ;
-            //$spls = splcomponents::where('CompositionPlaylistId',$cpl->uuid)->get() ;
             $spls = DB::table('splcomponents')
                 ->where('splcomponents.CompositionPlaylistId',$cpl->uuid)
                 ->leftJoin('spls', 'splcomponents.uuid_spl', '=', 'spls.uuid')
                 ->leftJoin('lmsspls', 'splcomponents.uuid_spl', '=', 'lmsspls.uuid')
-                ->select('splcomponents.uuid_spl as uuid_spl','spls.name as name','lmsspls.name as lms_name')
+                ->where('splcomponents.location_id',$cpl->location_id)
+
+                ->select('splcomponents.uuid_spl as uuid_spl','lmsspls.name as lms_name','spls.name as name','lmsspls.duration as lms_duration')
                 ->groupBy('splcomponents.uuid_spl')
                 ->get();
-
         }
-
         $kdms =Kdm::with('screen')->where('cpl_uuid',$cpl->uuid)->where('location_id',$cpl->location_id)->get();
+
         return Response()->json(compact('cpl','spls','kdms'));
     }
-
-
 }

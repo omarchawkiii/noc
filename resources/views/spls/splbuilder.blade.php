@@ -4500,7 +4500,7 @@
                                     +'<thead>'
                                         +'<tr>'
                                             +'<th>UUID</th>'
-                                            +'<th>CPL Name</th>'
+                                            +'<th>Title</th>'
 
                                         +'</tr>'
                                     +'</thead>'
@@ -4508,10 +4508,18 @@
 
                         $.each(response.spls, function( index, value ) {
 
+                            if(value.name == null)
+                            {
+                                name = value.lms_name
+                            }
+                            else
+                            {
+                                name = value.name
+                            }
                         result = result
                                         +'<tr>'
                                             +'<th>'+value.uuid_spl+'</th>'
-                                            +'<th>'+value.name+'</th>'
+                                            +'<th>'+name+'</th>'
 
                                         +'</tr>'
                         });

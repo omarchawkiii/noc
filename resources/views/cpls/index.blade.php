@@ -474,20 +474,21 @@
 <!-- -------END  DATA TABLE ---- -->
 
 
-function formatSize(sizeInBytes) {
-    if (sizeInBytes >= 1024 * 1024 * 1024) {
-        return (sizeInBytes / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
-    } else if (sizeInBytes >= 1024 * 1024) {
-        return (sizeInBytes / (1024 * 1024)).toFixed(2) + ' MB';
-    } else {
-        return sizeInBytes + ' Bytes';
-    }
-}
 
-</script>
 
 
 <script>
+
+    function formatSize(sizeInBytes) {
+        if (sizeInBytes >= 1024 * 1024 * 1024) {
+            return (sizeInBytes / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
+        } else if (sizeInBytes >= 1024 * 1024) {
+            return (sizeInBytes / (1024 * 1024)).toFixed(2) + ' MB';
+        } else {
+            return sizeInBytes + ' Bytes';
+        }
+    }
+
     $(document).on('click', '.infos_modal', function (e) {
         e.preventDefault();
        var loader_content  =
@@ -933,8 +934,6 @@ function formatSize(sizeInBytes) {
                                    +'<tr>'
                                        +'<th>UUID</th>'
                                        +'<th>SPL Name</th>'
-                                       +'<th>Duration</th>'
-
                                    +'</tr>'
                                +'</thead>'
                                +'<tbody>'
@@ -953,8 +952,6 @@ function formatSize(sizeInBytes) {
                                    +'<tr>'
                                         +'<th>'+value.uuid_spl+'</th>'
                                         +'<th>'+name+'</th>'
-                                        +'<th>'+value.duration+'</th>'
-
 
                                    +'</tr>'
                    });

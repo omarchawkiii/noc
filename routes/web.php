@@ -177,6 +177,8 @@ Route::delete('ingester/delete_transfered_file', [App\Http\Controllers\Ingerster
 Route::post('ingester/generate_torrent_file', [App\Http\Controllers\IngersterController::class , 'generate_torrent_file'])->name('ingester.generate_torrent_file')->middleware(['auth']);
 Route::get('ingest/logs', [App\Http\Controllers\IngersterController::class , 'logs'])->name('ingester.logs')->middleware(['auth']);
 Route::get('ingest/monitors', [App\Http\Controllers\IngersterController::class , 'monitors'])->name('ingester.monitors')->middleware(['auth']);
+Route::get('ingest/logs_details', [App\Http\Controllers\IngersterController::class , 'logs_details'])->name('ingester.logs_details')->middleware(['auth']);
+
 
 
 

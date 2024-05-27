@@ -1116,6 +1116,7 @@
 
                     $.each(response.cpls, function( index, value ) {
 
+
                     result = result
                                     +'<tr>'
                                         +'<th>'+value.CompositionPlaylistId+'</th>'

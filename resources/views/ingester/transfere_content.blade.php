@@ -340,7 +340,20 @@
         </div>
     </div>
 
+    <div class="modal fade " id="details_modal" tabindex="-1" role="dialog" aria-labelledby="delete_client_modalLabel" aria-modal="true">
+        <div class="modal-dialog modal-dialog-centered  modal-xl">
+            <div class="modal-content border-0">
+                <div class="modal-header">
+                    <h4>Details</h4>
+                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
+                </div>
+                <div class="modal-body row  ">
 
+                </div>
+            </div>
+        <!--end modal-content-->
+        </div>
+    </div>
 @endsection
 
 @section('custom_script')
@@ -902,7 +915,7 @@
                                 +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none" >'+value.cpl_description+'</a></td>'
                                 +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+value.updated_at+'</a></td>'
                                 +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+value.name+'</a></td>'
-                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none">  <span class="btn btn-primary  custom-search mdi mdi-magnify search_logs" data-id="16503" data-ip="172.17.42.14" data-id_server="1700893303656192775ae083.79334895">  </span> </a></td>'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none">  <span class="btn btn-primary  custom-search mdi mdi-magnify logs_details" data-id="'+ value.id+'" >  </span> </a></td>'
 
                             +'</tr>';
                     });
@@ -929,6 +942,83 @@
         get_logs_tab(location_log,state_log,true);
 
     });
+    function formatBytes(bytes, decimals = 2) {
+        if (!+bytes) return '0 Bytes'
+
+        const k = 1024
+        const dm = decimals < 0 ? 0 : decimals
+        const sizes = ['Bytes', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
+
+        const i = Math.floor(Math.log(bytes) / Math.log(k))
+
+        return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
+    }
+    $(document).on('click', '.logs_details', function (e) {
+
+        e.preventDefault();
+        var id  =$(this).attr("data-id") ;
+        console.log(id)
+        var url = "{{  url('') }}"+ "/ingest/logs_details" ;
+
+
+
+        $.ajax({
+            url: url,
+            method: 'GET',
+            data :{
+                id :id,
+            },
+            success:function(response)
+            {
+                var result ="" ;
+                var status="" ;
+                var status_text="" ;
+
+
+                if(response.dcp_trensfer.status == "Completed")
+                {
+                    status ='mdi mdi-check-all text-success ' ;
+                    status_text ='<i class="text-success"> Completed </i>' ;
+                }
+                if(response.dcp_trensfer.status == "Running")
+                {
+                    status = ' mdi mdi-check  text-primary';
+                    status_text ='<i class="text-primary"> Running</i> ';
+                }
+                if(response.dcp_trensfer.status == "Pending")
+                {
+
+                    status ='mdi mdi-alert  text-warning ';
+                    status_text ='<i class="text-warning"> Pending</i> ';
+                }
+                if(response.dcp_trensfer.status == "Failed")
+                {
+                    status =' mdi mdi-alert text-danger ';
+                    status_text ='<i class="text-danger"> Failed</i> ';
+                }
+
+
+
+                result = result
+                +'<p class="col-md-3"> <i class="align-middle icon-md  mdi mdi-play-circle"> </i> <span> Description  </span></p><p class="col-md-9" style="margin-top:15px"> '+response.dcp_trensfer.cpl_description+' </p>'
+                +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-play-circle"> </i> <span> CPL UUID   </span></p><p class="col-md-9" style="margin-top:15px"> '+response.dcp_trensfer.cpl_id+' </p>'
+                +'<p class="col-md-3"> <i class="align-middle icon-md  mdi '+status+'"> </i> <span> Status  </span></p><p class="col-md-9" style="margin-top:15px"> '+status_text+' </p>'
+                +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi mdi-scale-bathroom"> </i> <span> Size  </span></p><p class="col-md-9" style="margin-top:15px"> '+formatBytes(response.dcp_trensfer.pkl_size)+' </p>'
+                +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-home-modern"> </i> <span> Destination  </span></p><p class="col-md-9" style="margin-top:15px"> '+response.dcp_trensfer.name+' </p>'
+
+
+                $('#details_modal .modal-body  ').html(result);
+                $('#details_modal').modal('show');
+            },
+            error: function(response) {
+
+            }
+        })
+
+        // get_logs_tab(location_log,state_log,true);
+
+    });
+
 
 
     $('#locations_log').change(function(){
@@ -945,7 +1035,6 @@
 
     function get_monitor_tab()
     {
-
         var url = "{{  url('') }}"+ "/ingest/monitors" ;
         var status ="" ;
         $.ajax({
@@ -974,7 +1063,7 @@
                                 +'<td class="cpl-item cpl_description"><a class="text-body align-middle fw-medium text-decoration-none" >'+value.cpl_description+'</a></td>'
                                 +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+value.updated_at+'</a></td>'
                                 +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+value.name+'</a></td>'
-                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none">  <span class="btn btn-primary  custom-search mdi mdi-magnify search_logs" data-id="16503" data-ip="172.17.42.14" data-id_server="1700893303656192775ae083.79334895">  </span> </a></td>'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none">  <span class="btn btn-primary  custom-search mdi mdi-magnify logs_details" data-id="'+ value.id+'" >  </span> </a></td>'
 
                             +'</tr>';
                     });
@@ -998,12 +1087,11 @@
         get_monitor_tab();
     });
     const interval = setInterval(function() {
-        get_monitor_tab();
+    //    get_monitor_tab();
     }, 5000);
 
 
     $("#search_monitor").on("keyup", function() {
-        console.log('te')
         var value = $(this).val().toLowerCase();
         $("#table_monitor td.cpl_description").filter(function() {
         $(this).parent().toggle($(this).text().toLowerCase().indexOf(value) > -1)

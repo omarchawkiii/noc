@@ -184,7 +184,8 @@ class SnmpController extends Controller
                     }
                     else
                     {
-                        $storage_generale_status =$playback->storage_generale_status ;
+                        //$storage_generale_status =$playback->storage_generale_status ;
+                        $storage_generale_status ="" ;
                     }
                     $infos .=  " <p class='m-2'> ".$storage_generale_status ." </p>";
                 }
@@ -194,7 +195,7 @@ class SnmpController extends Controller
                     $securityManager = true ;
                     $count_securityManager ++ ;
                    // $infos .=  " <p class='m-2'>Security Manager status is: ".$playback->securityManager ." in screen: " .$playback->screen->screen_name ." </p>";
-                    $infos .=  " <p class='m-2'>Security Manager status is Offline In Screen: " .$playback->screen->screen_name ." </p>";
+                    $infos .=  " <p class='m-2'>Security Manager status : Offline | Screen: " .$playback->screen->screen_name ." </p>";
                 }
             }
             //$schedules = Schedule::where('location_id', $location->id )->where('date_start' , '>' , Carbon::today() )->groupBy('cod_film')->get() ;
@@ -221,7 +222,7 @@ class SnmpController extends Controller
                 if($schedule->status == 'linked'  && $schedule->kdm != 1   &&  !$missing_kdms )
                 {
                     $missing_kdms = true ;
-                    $infos .=  " <h4  class='m-2'> Missing KDMs Detected </h4> " ;
+                    $infos .=  " <h4  class='m-2' > Missing KDMs Detected </h4> " ;
                 }
                 if($schedule->status == 'linked' && $schedule->kdm != 1)
                 {

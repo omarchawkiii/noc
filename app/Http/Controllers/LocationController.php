@@ -593,7 +593,7 @@ class LocationController extends Controller
     public function sync_spl_cpl( $location )
     {
         $location = Location::find($location) ;
-        $spls = $location->spls ;
+        $spls = Spl::where('location_id',$location->id)->groupBy('uuid')->get();
         $lmsspls = $location->lmsspls ;
         splcomponents::where('location_id',$location->id)->delete();
 
@@ -603,7 +603,6 @@ class LocationController extends Controller
             $client = new Client();
             $response = $client->request('GET', $url);
             $contents = json_decode($response->getBody(), true);
-           // echo $url ."<br />" ;
 
             if($contents)
             {
@@ -613,7 +612,6 @@ class LocationController extends Controller
                     {
                         foreach($content as $cpl_content)
                         {
-
                             splcomponents::Create([
                                 'id_splcomponent' => $cpl_content['id'],
                                 'CompositionPlaylistId' => $cpl_content['CompositionPlaylistId'],
@@ -627,28 +625,10 @@ class LocationController extends Controller
                         }
                     }
                 }
-
-                /*$splcomponents = splcomponents::where('uuid_spl',$spl->uuid)->get() ;
-
-                if(count($contents) != count($splcomponents) )
-                {
-                    $uuid_spls = array_column($content, 'id');
-                        foreach($splcomponents as $splcomponent)
-                        {
-                            if (! in_array( $splcomponent->id_splcomponent , $uuid_spls))
-                            {
-                                $splcomponent->delete() ;
-                            }
-                        }
-                }*/
-
-
             }
-
-
         }
 
-        foreach($lmsspls as $spl)
+        /*foreach($lmsspls as $spl)
         {
             $url = $location->connection_ip."?request=getCplsBySpl&spl_uuid=".$spl->uuid;
             $client = new Client();
@@ -701,12 +681,14 @@ class LocationController extends Controller
             }
 
 
-        }
+        }*/
 
     }
 
     public function sync_lms_spl_cpl( $location )
     {
+
+        dd('');
         $lms_spls = Lmsspl::all() ;
         $location = Location::find($location) ;
         foreach($lms_spls as $lms_spl)

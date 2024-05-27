@@ -23938,7 +23938,10 @@ table td a
     min-height: initial !important ;
     max-height: initial !important ;
 }
-
+.modal-height-xl
+{
+    max-height: 750px ;
+}
 .mr-1
 {
     margin-right: 5px ;

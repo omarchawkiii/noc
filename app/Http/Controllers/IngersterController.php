@@ -598,4 +598,17 @@ class IngersterController extends Controller
 
     }
 
+    public function logs_details( Request $request)
+    {
+        $id =$request->id ;
+
+        $dcp_trensfer = Dcp_trensfer::
+        leftJoin('ingests', 'dcp_trensfers.id_ingest', '=', 'ingests.id')
+        ->leftJoin('locations', 'dcp_trensfers.location_id', '=', 'locations.id')
+        ->where('dcp_trensfers.id',$id)
+        ->select('dcp_trensfers.*','ingests.cpl_description','ingests.cpl_id','locations.name')
+        ->first();
+        return Response()->json(compact('dcp_trensfer'));
+    }
+
 }

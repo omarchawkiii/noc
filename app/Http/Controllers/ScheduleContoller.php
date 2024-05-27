@@ -277,7 +277,7 @@ class ScheduleContoller extends Controller
         $screen = $schedule->screen ;
         //dd($schedule, $schedule->uuid_spl ,$schedule->location_id,$schedule->screen_id) ;
         $spl = Spl::where('uuid',$schedule->uuid_spl)->where('screen_id',$schedule->screen_id)->where('location_id',$schedule->location_id)->first() ;
-        $cpls_from_splcomponent = splcomponents::where('uuid_spl',$spl->uuid)->get() ;
+        $cpls_from_splcomponent = splcomponents::where('uuid_spl',$spl->uuid)->where('location_id',$schedule->location_id)->get() ;
         //$cpls_spl = $spl->cpls;
         $cpls_screen= $screen->cpls ;
         $missing_cpls = array();
@@ -314,7 +314,7 @@ class ScheduleContoller extends Controller
         $spl = Spl::where('uuid',$schedule->uuid_spl)->where('screen_id',$schedule->screen_id)->where('location_id',$schedule->location_id)->first() ;
 
        // $cpls_spl = $spl->cpls;
-        $cpls_spl = splcomponents::where('uuid_spl',$spl->uuid)->get() ;
+        $cpls_spl = splcomponents::where('uuid_spl',$spl->uuid)->where('location_id',$schedule->location_id)->get() ;
 
         $cpls_screen= $screen->cpls ;
         $missing_kdms = array();
@@ -335,7 +335,6 @@ class ScheduleContoller extends Controller
                     }
                 }
             }
-
         }
         return Response()->json(compact('missing_kdms'));
 
@@ -349,9 +348,12 @@ class ScheduleContoller extends Controller
 
 
         $spl = Spl::where('uuid',$schedule->uuid_spl)->where('screen_id',$schedule->screen_id)->where('location_id',$schedule->location_id)->first() ;
+
         if($spl)
         {
-            $cpls_from_splcomponent = splcomponents::where('uuid_spl',$spl->uuid)->get() ;
+
+            $cpls_from_splcomponent = splcomponents::where('uuid_spl',$spl->uuid)->where('location_id',$spl->location_id)->groupBy('CompositionPlaylistId')->get() ;
+
 
             foreach($cpls_from_splcomponent as $cpl_from_splcomponent)
             {
@@ -361,7 +363,6 @@ class ScheduleContoller extends Controller
                 if($cpl == null)
                 {
                     $cpl_present = "No" ;
-                // array_push($missing_cpls,array("uuid" => $cpl_from_splcomponent->CompositionPlaylistId, "contentTitleText" => $cpl_from_splcomponent->AnnotationText, "playable" => 1) ) ;
                 }
 
                 else
@@ -369,7 +370,6 @@ class ScheduleContoller extends Controller
                     $cpl_present = "Yes" ;
                     if($cpl->playable != 1)
                     {
-                        //array_push($unplayable_cpls,array("uuid" => $cpl->uuid, "contentTitleText" => $cpl->contentTitleText, "playable" => $cpl->playable) ) ;
                         $cpl_playable = "No" ;
                     }
                     else
@@ -412,7 +412,7 @@ class ScheduleContoller extends Controller
                             $kdm_response = "KDM Available" ;
                             $kdm_infos ['kdm_uuid'] = $kdm->uuid ;
                             $kdm_infos ['device_target'] = $kdm->device_target ;
-                        //  $kdm_infos ['ContentKeysNotValidBefore'] = $kdm->ContentKeysNotValidBefore ;
+                            //  $kdm_infos ['ContentKeysNotValidBefore'] = $kdm->ContentKeysNotValidBefore ;
                             $kdm_infos ['kdm_status'] = $kdm_status ;
                         }
                     }
