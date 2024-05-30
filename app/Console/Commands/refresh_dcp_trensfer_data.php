@@ -26,12 +26,11 @@ class refresh_dcp_trensfer_data extends Command
     public function handle()
     {
         $counter = 0;
-        while ($counter < 30)
+        while ($counter <59)
         {
             app(\App\Http\Controllers\LocationController::class)->refresh_dcp_trensfer_data();
             sleep (1) ;
             $counter++;
-            echo $counter . "<br />" ;
         }
     }
 }

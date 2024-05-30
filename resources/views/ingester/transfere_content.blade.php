@@ -1027,7 +1027,6 @@
         get_logs_tab(locations_log,state_log ,false);
     });
 
-
     function get_monitor_tab()
     {
         var url = "{{  url('') }}"+ "/ingest/monitors" ;
@@ -1058,13 +1057,14 @@
                             progress_Percentage_bar = 100;
                         }
 
+                        progress_Percentage_bar = 30
                         if(progress_Percentage < 100)
                         {
-                            var progress_bar =' <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" role="progressbar" style="height: 17px ; width: '+progress_Percentage_bar+'%; " aria-valuenow="'+progress_Percentage_bar+'" aria-valuemin="0" aria-valuemax="100">'+progress_Percentage_bar+' %</div>' ;
+                            var progress_bar ='<div class="progress progress-lg"> <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" role="progressbar" style="height: 17px ; width: '+progress_Percentage_bar+'%; " aria-valuenow="'+progress_Percentage_bar+'" aria-valuemin="0" aria-valuemax="100">'+progress_Percentage_bar+' %</div></div>' ;
                         }
                         else
                         {
-                            var progress_bar =' <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" style="height: 17px ; width: '+progress_Percentage_bar+'%; " aria-valuenow="'+progress_Percentage_bar+'" aria-valuemin="0" aria-valuemax="100">'+progress_Percentage_bar+' %</div>' ;
+                            var progress_bar ='<div class="progress progress-lg"> <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" style="height: 17px ; width: '+progress_Percentage_bar+'%; " aria-valuenow="'+progress_Percentage_bar+'" aria-valuemin="0" aria-valuemax="100">'+progress_Percentage_bar+' %</div></div>' ;
                         }
 
                         result = result
@@ -1098,9 +1098,8 @@
         get_monitor_tab();
     });
     const interval = setInterval(function() {
-       get_monitor_tab();
-    }, 5000);
-
+     //  get_monitor_tab();
+    }, 2000);
 
     $("#search_monitor").on("keyup", function() {
         var value = $(this).val().toLowerCase();

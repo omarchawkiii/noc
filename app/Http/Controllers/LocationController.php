@@ -841,12 +841,11 @@ class LocationController extends Controller
                 $return_code = 0;
                 $output = [];
                 exec($rsync_command, $output, $return_code);
+                $dcp->update([
+                    'status'=>"Running",
+                ]);
                 if ($return_code === 0) {
-                    $dcp->update([
-                        'status'     =>"Running",
-                    ]);
 
-                    break;
                 } else {
                     $dcp->update([
                         'status'     =>"Failed",
@@ -855,18 +854,14 @@ class LocationController extends Controller
                     echo "Rsync failed with code: " . $return_code;
                 //  echo "Output:\n" . implode("\n", $output);
                 }
-
+                break;
             }
         }
 
     }
     public function refresh_dcp_trensfer_data()
     {
-        //$this->execute_dcp_command();
-        /*$dcps = Dcp_trensfer::where(function ($query) {
-                $query->where('dcp_trensfers.status', '=','Pending' )
-                    ->orWhere('dcp_trensfers.status', '=', "Running");
-                })->get() ;*/
+
         $dcps = Dcp_trensfer::where('dcp_trensfers.status', '=','Running' )
        ->get() ;
 
@@ -880,6 +875,8 @@ class LocationController extends Controller
 
             if($contents['status'])
             {
+
+                echo $contents['progress'] ."<br />" ;
                 $dcp->update([
                     "progress" => $contents['progress'] ,
                 ]);
@@ -897,7 +894,6 @@ class LocationController extends Controller
                     'status'     =>"Failed",
                 ]);
             }
-
         }
     }
 
