@@ -593,8 +593,11 @@ class LocationController extends Controller
     public function sync_spl_cpl( $location )
     {
         $location = Location::find($location) ;
+
         $spls = Spl::where('location_id',$location->id)->groupBy('uuid')->get();
-        $lmsspls = $location->lmsspls ;
+        $lmsspls = Lmsspl::where('location_id',$location->id)
+            ->groupBy('uuid')->get();
+
         splcomponents::where('location_id',$location->id)->delete();
 
         foreach($spls as $spl)
@@ -627,61 +630,41 @@ class LocationController extends Controller
                 }
             }
         }
-
-        /*foreach($lmsspls as $spl)
+        foreach($lmsspls as $spl)
         {
-            $url = $location->connection_ip."?request=getCplsBySpl&spl_uuid=".$spl->uuid;
-            $client = new Client();
-            $response = $client->request('GET', $url);
-            $contents = json_decode($response->getBody(), true);
-           // echo $url ."<br />" ;
-
-            if($contents)
+            $spls = Spl::where('location_id',$location->id)->where('uuid',$spl->uuid)->get();
+            if($spls->isEmpty())
             {
-                foreach($contents as $content)
+
+                $url = $location->connection_ip."?request=getCplsBySpl&spl_uuid=".$spl->uuid;
+                $client = new Client();
+                $response = $client->request('GET', $url);
+                $contents = json_decode($response->getBody(), true);
+                if($contents)
                 {
-                    if($content)
+                    foreach($contents as $content)
                     {
-                        foreach($content as $cpl_content)
+                        if($content)
                         {
-
-                            splcomponents::updateOrCreate([
-                                'uuid_spl' => $cpl_content['uuid_spl'],
-                                'CompositionPlaylistId' => $cpl_content['CompositionPlaylistId'],
-                            ],[
-                                'id_splcomponent' => $cpl_content['id'],
-                                'CompositionPlaylistId' => $cpl_content['CompositionPlaylistId'],
-                                'AnnotationText' => $cpl_content['AnnotationText'],
-                                'EditRate' => $cpl_content['EditRate'],
-                                'editRate_numerator' => $cpl_content['editRate_numerator'],
-                                'editRate_denominator' => $cpl_content['editRate_denominator'],
-                                'uuid_spl' => $cpl_content['uuid_spl'],
-                            ]);
-
-                        }
-                    }
-
-                }
-
-                $splcomponents = splcomponents::where('uuid_spl',$spl->uuid)->get() ;
-
-                if(count($contents) != count($splcomponents) )
-                {
-                    $uuid_spls = array_column($content, 'id');
-                        foreach($splcomponents as $splcomponent)
-                        {
-                            if (! in_array( $splcomponent->id_splcomponent , $uuid_spls))
+                            foreach($content as $cpl_content)
                             {
-                                $splcomponent->delete() ;
+                                splcomponents::Create([
+                                    'id_splcomponent' => $cpl_content['id'],
+                                    'CompositionPlaylistId' => $cpl_content['CompositionPlaylistId'],
+                                    'AnnotationText' => $cpl_content['AnnotationText'],
+                                    'EditRate' => $cpl_content['EditRate'],
+                                    'editRate_numerator' => $cpl_content['editRate_numerator'],
+                                    'editRate_denominator' => $cpl_content['editRate_denominator'],
+                                    'uuid_spl' => $cpl_content['uuid_spl'],
+                                    'location_id'     =>$location->id,
+                                ]);
                             }
                         }
+                    }
                 }
-
-
             }
+        }
 
-
-        }*/
 
     }
 

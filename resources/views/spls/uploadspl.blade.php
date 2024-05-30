@@ -1291,8 +1291,8 @@
 
                 swal({
                         showCancelButton: true,
-                        title: 'Delete All KDMs !',
-                        text: 'You are sure you want to delete All KDMs',
+                        title: 'Clear KDM Upload List.',
+                        text: 'You are sure you want to Clear KDMs',
                         icon: 'warning',
                         buttons: {
                             cancel: {

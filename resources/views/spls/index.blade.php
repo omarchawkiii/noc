@@ -1174,9 +1174,9 @@
                                 +'<table class="table">'
                                     +'<thead>'
                                         +'<tr>'
-                                            +'<th>Date</th>'
-                                            +'<th>Screen Name</th>'
-                                            +'<th>Screen Number</th>'
+                                            +'<th>Start Time</th>'
+                                            +'<th>Movie Title</th>'
+                                            +'<th>screen_name</th>'
                                         +'</tr>'
                                     +'</thead>'
                                     +'<tbody>'
@@ -1185,9 +1185,9 @@
 
                         result = result
                                         +'<tr>'
-                                            +'<th>'+value.date_end+'</th>'
+                                            +'<th>'+value.date_start+'</th>'
+                                            +'<th>'+value.ShowTitleText+'</th>'
                                             +'<th>'+value.screen.screen_name+'</th>'
-                                            +'<th>'+value.screen.screen_number+'</th>'
 
                                         +'</tr>'
                         });

@@ -30,6 +30,15 @@ class MoviescodController extends Controller
                 {
                     foreach($content as $moviescod)
                     {
+                        if($moviescod['exist_inPos'] == 1 )
+                        {
+                            $exist_inPos = 1 ;
+                        }
+                        else
+                        {
+                            $exist_inPos = 0 ;
+                        }
+
                         Moviescod::updateOrCreate([
                             'moviescods_id' => $moviescod['id'],
                             'location_id' => $location->id,
@@ -41,6 +50,7 @@ class MoviescodController extends Controller
                             'titleShort' => $moviescod['titleShort'],
                             'last_update' => $moviescod['last_update'],
                             'status' => $moviescod['status'],
+                            'exist_inPos' =>$exist_inPos,
                             'location_id'     =>$location->id,
                             'spl_uuid'     =>$moviescod['id_spl'],
                         ]);
@@ -70,7 +80,7 @@ class MoviescodController extends Controller
     {
         $location = $request->location;
         //$location = Location::find($location) ;
-        $movies = Moviescod::where('location_id',$request->location)->where('status','unlinked')->orderBy('title', 'ASC')->get() ;
+        $movies = Moviescod::where('location_id',$request->location)->where('status','unlinked')->where('exist_inPos',1)->orderBy('title', 'ASC')->get() ;
 
 
         $lms_spl = Lmsspl::where('location_id' ,$location )->select('lmsspls.*','lmsspls.name as spl_title')->groupBy('uuid')->orderBy('spl_title', 'ASC')->get() ;
@@ -114,7 +124,6 @@ class MoviescodController extends Controller
                 //dd($response);
             if($response['result'] === 1 )
             {
-
                 $moviescod = Moviescod::findOrFail($request->movie_id)->update([
                 'spl_uuid' => $request->spl_id,
                 'status' => "linked"
@@ -165,7 +174,7 @@ class MoviescodController extends Controller
         $location = Location::findOrFail($request->location) ;
         $apiUrl = $location->connection_ip ;
         $response = $this->sendUnlinkSplRequest($apiUrl, $moviescod->code, $location->email , $location->password);
-       // $response['result'] = 1 ;
+       $response['result'] = 1 ;
         if($response['result'] === 1 )
         {
             $moviescod = $moviescod->update([

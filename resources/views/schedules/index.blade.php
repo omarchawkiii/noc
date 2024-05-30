@@ -760,7 +760,7 @@
                                 //statu_content = '<spn class="text-success" > Linked</span>'
                                 if(value.kdm_status =="")
                                 {
-                                    statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-danger get_schedule_infos  btn-fw"> KDM Missing Detected  </button>'
+                                    statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-danger   btn-fw statu_content"> KDM Missing Detected  </button>'
                                 }
                                 icon_spl =  '<i class="mdi mdi-playlist-play text-success"> </i>'
                                 if(value.cpls ==1)
@@ -772,7 +772,7 @@
                                     }
                                     else
                                     {
-                                        icon_kdm = '</i> <i class="mdi mdi-key-remove text-danger check_need_kdm" data-scheduleidd = "'+value.id+'"> </i>'
+                                        icon_kdm = '</i> <i class="mdi mdi-key-remove text-danger check_need_kdm get_schedule_infos"  data-scheduleidd = "'+value.id+'"> </i>'
                                     }
 
                                 }
@@ -780,7 +780,7 @@
                                 {
                                     icon_kdm = '</i> <i data-scheduleidd = "'+value.id+'"  class="mdi mdi-key-remove text-warning get_schedule_infos"> </i>'
                                     icon_cpl = '<i class="mdi mdi-filmstrip text-danger   spl_not_linked" data-scheduleidd = "'+value.id+'">'
-                                    statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-danger get_schedule_infos  btn-fw"> CPL Missing Detected  </button>'
+                                    statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-danger get_schedule_infos  btn-fw statu_content" > CPL Missing Detected  </button>'
                                 }
 
                             }
@@ -2246,6 +2246,11 @@
     .get_schedule_infos
     {
         cursor: pointer;
+    }
+
+    #location-listing table tr td:last-child  a.btn
+    {
+        cursor: unset;
     }
 </style>
 

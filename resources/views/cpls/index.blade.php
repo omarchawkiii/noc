@@ -432,9 +432,12 @@
                       </tbody>
                     </table>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" id="confirm_clean_cpl" class="btn btn-danger" style=" margin: auto;font-size: 21px;font-weight: bold;" data-dismiss="modal">
-                        Confirm  Clean CPLs
+                <div class="modal-footer" style=" margin: auto;">
+                    <button type="button" id="confirm_clean_cpl" class="btn btn-danger"  data-dismiss="modal">
+                        Confirm
+                    </button>
+                    <button  data-bs-dismiss="modal" aria-label="Close" type="button"  class="btn btn-light" data-dismiss="modal" >
+                        Cancel
                     </button>
                 </div>
 
@@ -934,6 +937,8 @@
                                    +'<tr>'
                                        +'<th>UUID</th>'
                                        +'<th>SPL Name</th>'
+
+
                                    +'</tr>'
                                +'</thead>'
                                +'<tbody>'
@@ -952,6 +957,8 @@
                                    +'<tr>'
                                         +'<th>'+value.uuid_spl+'</th>'
                                         +'<th>'+name+'</th>'
+
+
 
                                    +'</tr>'
                    });
@@ -1602,157 +1609,135 @@
             }
             else
             {
-                swal({
-                        showCancelButton: true,
-                        title: 'Clean Content!',
-                        text: 'You are sure you want to clean cpls',
-                        icon: 'warning',
-                        buttons: {
-                            cancel: {
-                                text: "Cancel",
-                                value: null,
-                                visible: true,
-                                className: "btn btn-primary",
-                                closeModal: true,
-                            },
-
-                            Confirm: {
-                                text: "Yes, Clean Content!",
-                                value: true,
-                                visible: true,
-                                className: "btn btn-danger",
-                                closeModal: true,
-                            },
-                        }
-                    }).then((result) => {
-                        if (result) {
-                            var url = "{{  url('') }}"+ '/cpls/clean_cpls/';
-                            $.ajax({
-                                url: url,
-                                type: 'GET',
-                                data: {
-                                    location :location,
-                                    lms :lms ,
-                                    screen:screen
-                                },
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                },
-                                beforeSend: function () {
-                                },
-                                success: function (response) {
-                                    if(response.content_to_clean.length>0 )
-                                    {
-                                        var result="" ;
-                                        $.each(response.content_to_clean, function( index, value ) {
-                                            result =  result +
-                                                '<tr>'
-                                                    +'<td>'+value.uuid+'</td>'
-                                                    +'<td>'+value.contentTitleText+'</td>'
-                                                +'</t>'
-                                        });
 
 
-                                        $('#cpl_to_clean_table tbody').html(result)
-                                        $('#cpl_to_clean_model').modal('show');
-
-                                        $('#confirm_clean_cpl').click(function(){
-
-                                            $.ajax({
-                                                url : "{{  url('') }}"+ '/cpls/confirm_clean_cpls/',
-                                                type: 'GET',
-                                                data: {
-                                                    location :location,
-                                                    lms :lms,
-                                                    screen:screen
-                                                },
-                                                headers: {
-                                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                                },
-                                                beforeSend: function () {
-                                                },
-                                                success: function (response) {
-                                                    result ="" ;
-                                                    if (response.status )
-                                                    {
-
-                                                        $('#cpl_delete_model').modal('hide');
-                                                        $('#cpl_deleted_model .modal-body').html(result) ;
-                                                        $('#cpl_deleted_model').modal('show') ;
-                                                        //showSwal('warning-message-and-cancel')
-                                                        if( $('#refresh_lms').hasClass("activated"))
-                                                        {
-                                                            get_cpls(location , screen , true , multiplex)
-                                                        }
-                                                        else
-                                                        {
-                                                            get_cpls(location , screen , false , multiplex)
-                                                        }
-
-                                                    } else {
-                                                        swal({
-                                                            title: 'Failed',
-                                                            text: "Error occurred while sending the request.",
-                                                            icon: 'warning',
-                                                            showCancelButton: true,
-                                                            confirmButtonColor: '#3f51b5',
-                                                            cancelButtonColor: '#ff4081',
-                                                            confirmButtonText: 'Great ',
-                                                            buttons: {
-                                                                cancel: {
-                                                                    text: "Cancel",
-                                                                    value: null,
-                                                                    visible: true,
-                                                                    className: "btn btn-danger",
-                                                                    closeModal: true,
-                                                                },
-                                                            }
-                                                        })
-                                                    }
-
-                                                },
-                                                error: function (jqXHR, textStatus, errorThrown) {
-                                                    console.log(errorThrown);
-                                                },
-                                                complete: function (jqXHR, textStatus) {
-                                                }
-                                            });
-
-                                        });
-
-                                    }
-                                    else
-                                    {
-                                        swal({
-                                            title: '',
-                                            text: "Nothnothing To Delete .",
-                                            icon: 'warning',
-                                            showCancelButton: true,
-                                            confirmButtonColor: '#3f51b5',
-                                            cancelButtonColor: '#ff4081',
-                                            confirmButtonText: 'Great ',
-                                            buttons: {
-                                                cancel: {
-                                                    text: "Cancel",
-                                                    value: null,
-                                                    visible: true,
-                                                    className: "btn btn-danger",
-                                                    closeModal: true,
-                                                },
-                                            }
-                                        })
-                                    }
-
-
-                                },
-                                error: function (jqXHR, textStatus, errorThrown) {
-                                    console.log(errorThrown);
-                                },
-                                complete: function (jqXHR, textStatus) {
-                                }
+                var url = "{{  url('') }}"+ '/cpls/clean_cpls/';
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    data: {
+                        location :location,
+                        lms :lms ,
+                        screen:screen
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    beforeSend: function () {
+                    },
+                    success: function (response) {
+                        if(response.content_to_clean.length>0 )
+                        {
+                            var result="" ;
+                            $.each(response.content_to_clean, function( index, value ) {
+                                result =  result +
+                                    '<tr>'
+                                        +'<td>'+value.uuid+'</td>'
+                                        +'<td>'+value.contentTitleText+'</td>'
+                                    +'</t>'
                             });
+
+
+                            $('#cpl_to_clean_table tbody').html(result)
+                            $('#cpl_to_clean_model').modal('show');
+
+                            $('#confirm_clean_cpl').click(function(){
+
+                                $.ajax({
+                                    url : "{{  url('') }}"+ '/cpls/confirm_clean_cpls/',
+                                    type: 'GET',
+                                    data: {
+                                        location :location,
+                                        lms :lms,
+                                        screen:screen
+                                    },
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                    },
+                                    beforeSend: function () {
+                                    },
+                                    success: function (response) {
+                                        result ="" ;
+                                        if (response.status )
+                                        {
+
+                                            $('#cpl_delete_model').modal('hide');
+                                            $('#cpl_deleted_model .modal-body').html(result) ;
+                                            $('#cpl_deleted_model').modal('show') ;
+                                            //showSwal('warning-message-and-cancel')
+                                            if( $('#refresh_lms').hasClass("activated"))
+                                            {
+                                                get_cpls(location , screen , true , multiplex)
+                                            }
+                                            else
+                                            {
+                                                get_cpls(location , screen , false , multiplex)
+                                            }
+
+                                        } else {
+                                            swal({
+                                                title: 'Failed',
+                                                text: "Error occurred while sending the request.",
+                                                icon: 'warning',
+                                                showCancelButton: true,
+                                                confirmButtonColor: '#3f51b5',
+                                                cancelButtonColor: '#ff4081',
+                                                confirmButtonText: 'Great ',
+                                                buttons: {
+                                                    cancel: {
+                                                        text: "Cancel",
+                                                        value: null,
+                                                        visible: true,
+                                                        className: "btn btn-danger",
+                                                        closeModal: true,
+                                                    },
+                                                }
+                                            })
+                                        }
+
+                                    },
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        console.log(errorThrown);
+                                    },
+                                    complete: function (jqXHR, textStatus) {
+                                    }
+                                });
+
+                            });
+
                         }
-                    })
+                        else
+                        {
+                            swal({
+                                title: '',
+                                text: "Nothnothing To Delete .",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3f51b5',
+                                cancelButtonColor: '#ff4081',
+                                confirmButtonText: 'Great ',
+                                buttons: {
+                                    cancel: {
+                                        text: "Cancel",
+                                        value: null,
+                                        visible: true,
+                                        className: "btn btn-danger",
+                                        closeModal: true,
+                                    },
+                                }
+                            })
+                        }
+
+
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    },
+                    complete: function (jqXHR, textStatus) {
+                    }
+                });
+
+
 
             }
 

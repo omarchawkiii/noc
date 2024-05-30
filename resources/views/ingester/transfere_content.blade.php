@@ -1054,12 +1054,31 @@
                         {
                             status ='<i class="mdi mdi-alert text-warning"> Pending</i> ';
                         }
+
+
+
+
                         var progress_Percentage = calculatePercentage(value.progress, value.pkl_size)
+                        progress_Percentage = Math.round( progress_Percentage )
+                        var progress_Percentage_bar = progress_Percentage
+                        if(progress_Percentage > 100)
+                        {
+                            progress_Percentage_bar = 100;
+                        }
+
+                        if(progress_Percentage < 100)
+                        {
+                            var progress_bar =' <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" role="progressbar" style="height: 17px ; width: '+progress_Percentage+'%; " aria-valuenow="'+progress_Percentage+'" aria-valuemin="0" aria-valuemax="100">'+progress_Percentage+' %</div>' ;
+                        }
+                        else
+                        {
+                            var progress_bar =' <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" style="height: 17px ; width: '+progress_Percentage+'%; " aria-valuenow="'+progress_Percentage+'" aria-valuemin="0" aria-valuemax="100">'+progress_Percentage+' %</div>' ;
+                        }
 
                         result = result
                             +'<tr class="odd" >'
                                 +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none" >'+status+'</a></td>'
-                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+Math.round( progress_Percentage ) +' %</a></td>'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+progress_bar +' </a></td>'
                                 +'<td class="cpl-item cpl_description"><a class="text-body align-middle fw-medium text-decoration-none" >'+value.cpl_description+'</a></td>'
                                 +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+value.updated_at+'</a></td>'
                                 +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+value.name+'</a></td>'

@@ -201,7 +201,12 @@ class SnmpController extends Controller
             //$schedules = Schedule::where('location_id', $location->id )->where('date_start' , '>' , Carbon::today() )->groupBy('cod_film')->get() ;
             $schedules = Schedule::leftJoin('moviescods', 'schedules.cod_film', '=', 'moviescods.code')
             ->leftJoin('screens', 'schedules.screen_id', '=', 'screens.id')
-            ->where('schedules.location_id', $location->id )->where('schedules.date_start' , '>' , Carbon::today() )->groupBy('cod_film')->get() ;
+            ->where('schedules.location_id', $location->id )
+            ->where('schedules.date_start' , '>' , Carbon::today() )
+           ->groupBy('schedules.scheduleId')
+           ->orderBy('screens.id', 'ASC')
+            ->orderBy('schedules.date_start', 'ASC')
+            ->get() ;
 
             foreach($schedules as $schedule)
             {
@@ -264,6 +269,8 @@ class SnmpController extends Controller
                     array_push($states_green, $location->city);
                 }
             }
+
+
         }
         foreach ($states_red as $state)
         {

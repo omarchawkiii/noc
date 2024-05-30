@@ -3732,7 +3732,7 @@
                                     '            </p>' +
                                     '            <p class="mb-0 text-muted float-right">\n' +
                                     '                 <span class=" ">\n' +
-                                    '                    <i class="btn btn-primary  mdi mdi-magnify custom-search  segment-details" data-uuid="' + pack.Id + '"></i>\n' +
+                                    '                    <i class="btn btn-primary  mdi mdi-magnify custom-search  segment-details" id="' + pack.Id + '" data-uuid="' + pack.Id + '"></i>\n' +
                                     '                    <i class="btn btn-danger mdi mdi-delete-forever remove-cpl custom-search"></i>\n' +
                                     '                 </span>   ' +
                                     '            </p>' +
@@ -3891,7 +3891,7 @@
                                             '            <p class="mb-0 text-muted float-left">00:00:00</p>\n' +
                                             '            <p class="mb-0 text-muted float-right">\n' +
                                             '              <span class=" ">\n' +
-                                            '                <i class="btn btn-primary  mdi mdi-magnify custom-search  cpl-details" data-uuid="' + Composition.CompositionPlaylistId + '"  ></i>\n' +
+                                            '                <i class="btn btn-primary  mdi mdi-magnify custom-search    infos_modal"  data-uuid="' + Composition.id + '"   id="' + Composition.CompositionPlaylistId + '" ></i>\n' +
                                             '                <i class="btn btn-danger mdi mdi-delete-forever remove-cpl custom-search"></i>\n' +
                                             '              </span>' +
                                             '             </p>\n' +

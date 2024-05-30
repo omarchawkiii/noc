@@ -10,6 +10,7 @@ use App\Models\Schedule;
 use App\Models\Screen;
 use App\Models\Spl;
 use App\Models\splcomponents;
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -80,7 +81,7 @@ class SplController extends Controller
         //$cpls = $spl->splcomponents ;
         $cpls = splcomponents::where('uuid_spl',$spl->uuid)->where('location_id',$spl->location_id)->get() ;
       //  $schedules =  $spl->schedules ;
-        $schedules =Schedule::with('screen')->where('uuid_spl',$spl->uuid)->where('location_id',$spl->location_id)->get();
+        $schedules =Schedule::with('screen')->where('uuid_spl',$spl->uuid)->where('date_start' , '>' , Carbon::today() )->where('location_id',$spl->location_id)->get();
         return Response()->json(compact('spl','cpls','schedules'));
     }
 

@@ -17,7 +17,8 @@ class Moviescod extends Model
         'last_update',
         'status',
         'location_id',
-        'spl_uuid'
+        'spl_uuid',
+        'exist_inPos'
 
     ];
 
