@@ -129,12 +129,7 @@
                         <div class="card-body ">
                             <div class="d-flex flex-row justify-content-between mt-2" style="margin-bottom: 5px">
                                 <div>
-                                    <button type="button" class="btn btn-success btn-icon-text" id="resume_ingest">
-                                        <i class="mdi mdi-play  btn-icon-prepend"></i> Resume
-                                    </button>
-                                    <button type="button" class="btn btn-warning  btn-icon-text" id="pause_ingest">
-                                        <i class="mdi mdi-refresh  btn-icon-prepend"></i> Pause
-                                    </button>
+
                                     <button type="button" class="btn btn-danger btn-icon-text" id="cancel_ingest">
                                         <i class="mdi mdi-server-remove btn-icon-prepend"></i> Cancel
                                     </button>

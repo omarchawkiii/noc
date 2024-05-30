@@ -151,12 +151,7 @@
                                                         <button type="button" class="btn btn-secondary custom-btn btn-icon-text" id="refresh_monitoring">
                                                             <i class="mdi mdi-refresh btn-icon-prepend"></i> Refresh
                                                         </button>
-                                                        <button type="button" class="btn btn-success custom-btn btn-icon-text" id="resume_ingesting">
-                                                            <i class="mdi mdi-play btn-icon-prepend"></i> Resume
-                                                        </button>
-                                                        <button type="button" class="btn btn-primary custom-btn btn-icon-text" id="pause_ingesting">
-                                                            <i class="mdi mdi-upload btn-icon-prepend"></i> Pause
-                                                        </button>
+
                                                         <button type="button" class="btn btn-danger custom-btn btn-icon-text" id="cancel_ingesting">
                                                             <i class="mdi mdi-server-remove  btn-icon-prepend"></i> Cancel
                                                         </button>
@@ -1045,6 +1040,7 @@
                 var result ="" ;
                 if(response.dcp_trensfers.length>0)
                 {
+                    console.log(response.dcp_trensfers)
                     $.each(response.dcp_trensfers, function( index, value ) {
                         if(value.status == "Running")
                         {
@@ -1054,10 +1050,6 @@
                         {
                             status ='<i class="mdi mdi-alert text-warning"> Pending</i> ';
                         }
-
-
-
-
                         var progress_Percentage = calculatePercentage(value.progress, value.pkl_size)
                         progress_Percentage = Math.round( progress_Percentage )
                         var progress_Percentage_bar = progress_Percentage
@@ -1068,11 +1060,11 @@
 
                         if(progress_Percentage < 100)
                         {
-                            var progress_bar =' <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" role="progressbar" style="height: 17px ; width: '+progress_Percentage+'%; " aria-valuenow="'+progress_Percentage+'" aria-valuemin="0" aria-valuemax="100">'+progress_Percentage+' %</div>' ;
+                            var progress_bar =' <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" role="progressbar" style="height: 17px ; width: '+progress_Percentage_bar+'%; " aria-valuenow="'+progress_Percentage_bar+'" aria-valuemin="0" aria-valuemax="100">'+progress_Percentage_bar+' %</div>' ;
                         }
                         else
                         {
-                            var progress_bar =' <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" style="height: 17px ; width: '+progress_Percentage+'%; " aria-valuenow="'+progress_Percentage+'" aria-valuemin="0" aria-valuemax="100">'+progress_Percentage+' %</div>' ;
+                            var progress_bar =' <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" style="height: 17px ; width: '+progress_Percentage_bar+'%; " aria-valuenow="'+progress_Percentage_bar+'" aria-valuemin="0" aria-valuemax="100">'+progress_Percentage_bar+' %</div>' ;
                         }
 
                         result = result
@@ -1106,7 +1098,7 @@
         get_monitor_tab();
     });
     const interval = setInterval(function() {
-    //    get_monitor_tab();
+       get_monitor_tab();
     }, 5000);
 
 

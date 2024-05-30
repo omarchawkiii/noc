@@ -824,12 +824,51 @@ class LocationController extends Controller
 
     }
 
+
+    public function execute_dcp_command()
+    {
+        $check_processing = Dcp_trensfer::where('dcp_trensfers.status', '=','Running')->get() ;
+        if($check_processing->isEmpty())
+        {
+            $dcps = Dcp_trensfer::where('dcp_trensfers.status', '=','Pending')->get() ;
+            foreach($dcps as $dcp)
+            {
+                $password = "noc";
+                $source = $dcp['source'];
+
+                $destination = "noc@172.17.42.2:".$dcp['torrent_path'];
+                $rsync_command = "sshpass -p " . escapeshellarg($password) . " rsync -avz --partial --no-t " . escapeshellarg($source) . " " . escapeshellarg($destination);
+                $return_code = 0;
+                $output = [];
+                exec($rsync_command, $output, $return_code);
+                if ($return_code === 0) {
+                    $dcp->update([
+                        'status'     =>"Running",
+                    ]);
+
+                    break;
+                } else {
+                    $dcp->update([
+                        'status'     =>"Failed",
+                    ]);
+                    echo "Source :" . $dcp['source']. "\n" ;
+                    echo "Rsync failed with code: " . $return_code;
+                //  echo "Output:\n" . implode("\n", $output);
+                }
+
+            }
+        }
+
+    }
     public function refresh_dcp_trensfer_data()
     {
-        $dcps = Dcp_trensfer::where(function ($query) {
+        //$this->execute_dcp_command();
+        /*$dcps = Dcp_trensfer::where(function ($query) {
                 $query->where('dcp_trensfers.status', '=','Pending' )
                     ->orWhere('dcp_trensfers.status', '=', "Running");
-                })->get() ;
+                })->get() ;*/
+        $dcps = Dcp_trensfer::where('dcp_trensfers.status', '=','Running' )
+       ->get() ;
 
         foreach($dcps as $dcp)
         {
@@ -839,27 +878,16 @@ class LocationController extends Controller
             $response = $client->request('GET', $url);
             $contents = json_decode($response->getBody(), true);
 
-
-            echo " status ".$contents['status'] ."\n <br />";
-            echo " progress API ".$contents['progress'] ."<br />";
-            echo " progress DCP ".$dcp->progress."<br />";
-            echo " id ".$dcp->id."<br />";
-            echo " Path ".$dcp->torrent_path."<br />";
-
             if($contents['status'])
             {
-                if($contents['progress']> 0 )
-                {
-                    $dcp->update([
-                        'status'     =>"Running",
-                        "progress" => $contents['progress'] ,
-                    ]);
-                }
-                if($contents['progress'] ==  $dcp->pkl_size )
+                $dcp->update([
+                    "progress" => $contents['progress'] ,
+                ]);
+
+                if($contents['progress'] >= $dcp->pkl_size )
                 {
                     $dcp->update([
                         'status'     =>"Completed",
-                        "progress" => $contents['progress'] ,
                     ]);
                 }
             }
