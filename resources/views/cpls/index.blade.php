@@ -72,19 +72,23 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-xl-2">
+                    <div class="col-xl-1">
                         <button type="button" class="btn btn-danger btn-icon-text" id="delete_cpl">
                             <i class="mdi mdi-delete-forever btn-icon-prepend"></i> Delete
                         </button>
                     </div>
-
                     <div class="col-xl-2">
+                        <button type="button" class="btn btn-danger btn-icon-text" id="clean_cpl">
+                            <i class="mdi mdi-delete-sweep btn-icon-prepend"></i> Clean Content
+                        </button>
+                    </div>
+                    <div class="col-xl-1">
                         <button type="button" id="refresh_lms"  class="btn btn-icon-text " style="color: #6f6f6f;background: #2a3038; height: 37px; display:none">
                             <i class="mdi mdi-server-network"></i> LMS </button>
                     </div>
                     <div class="col-xl-2">
-                        <button type="button" class="btn btn-danger btn-icon-text" id="clean_cpl">
-                            <i class="mdi mdi-delete-sweep btn-icon-prepend"></i> Clean Content
+                        <button type="button" class="btn btn-icon-text" id="noc_local_storage"  style="color: #6f6f6f;background: #2a3038; height: 37px; ">
+                            <i class="mdi mdi-file-tree btn-icon-prepend"></i> NOC Local Storage
                         </button>
                     </div>
                 </div>
@@ -308,7 +312,6 @@
                                         <tr>
                                             <th>UUID</th>
                                             <th>CPL Name</th>
-
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -1064,7 +1067,7 @@
     (function($) {
 
         var cpl_datatable = $('#location-listing').DataTable({
-            "iDicplayLength": 10,
+            "iDisplayLength": 100,
             destroy: true,
             "bDestroy": true,
             "language": {
@@ -1073,7 +1076,7 @@
             }
         });
 
-        function get_cpls(location , screen , lms , multiplex,refresh_screen)
+        function get_cpls(location , screen , lms , multiplex,refresh_screen,noc_local_storage)
         {
             $("#location-listing").dataTable().fnDestroy();
             $('#location-listing tbody').html('')
@@ -1097,6 +1100,7 @@
                     screen_id: screen,
                     multiplex: multiplex,
                     lms : lms,
+                    noc_local_storage:noc_local_storage
                 },
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1202,7 +1206,7 @@
                     /***** refresh datatable **** **/
 
                     var cpl_datatable = $('#location-listing').DataTable({
-                        "iDicplayLength": 10,
+                        "iDisplayLength": 100,
                         destroy: true,
                         "bDestroy": true,
                         "language": {
@@ -1210,52 +1214,36 @@
                             searchPlaceholder: "Search..."
                         }
                     });
-
                 },
                 error: function(response) {
-
                 }
             })
         }
 
-
         $('#screen').change(function(){
-
             var country =  $('#country').val();
             var screen =  $('#screen').val();
             window.lms = false ;
             var location =  $('#location').val();
             var multiplex =  $('#multiplex').val();
             $('#refresh_lms').removeClass("activated") ;
-            get_cpls(location , screen , false , multiplex,false)
-
+            $('#noc_local_storage').removeClass("activated") ;
+            get_cpls(location , screen , false , multiplex,false,false)
         });
 
         $('#location').change(function(){
-            $("#location-listing").dataTable().fnDestroy();
-             $('#screen').find('option')
-            .remove()
-            .end()
-            .append('<option value="null">All Screens</option>')
 
-            var loader_content  =
-           '<div class="jumping-dots-loader">'
-               +'<span></span>'
-               +'<span></span>'
-               +'<span></span>'
-               +'</div>'
-            $('#location-listing tbody').html(loader_content)
-            //$('#location-listing tbody').html('')
             var location =  $('#location').val();
             var country =  $('#country').val();
             var multiplex =  $('#multiplex').val();
             var screen =  null;
             window.lms = false ;
             $('#refresh_lms').removeClass("activated") ;
+            $('#noc_local_storage').removeClass("activated") ;
             if(location != "Locations")
             {
                 $('#refresh_lms').show();
-                get_cpls(location , screen , false , multiplex,true)
+                get_cpls(location , screen , false , multiplex,true,false)
             }
             else
             {
@@ -1263,28 +1251,15 @@
                 $('#location-listing tbody').html('<div id="table_logs_processing" class="dataTables_processing card">Please Select Location</div>')
             }
 
-
-
         });
 
         $('#refresh_lms').click(function(){
 
-
-             //$('#location-listing tbody').html('')
              var location =  $('#location').val();
             var country =  $('#country').val();
             var multiplex =  $('#multiplex').val();
             window.lms = true ;
             var screen =  null;
-
-            $("#location-listing").dataTable().fnDestroy();
-                var loader_content  =
-                '<div class="jumping-dots-loader">'
-                    +'<span></span>'
-                    +'<span></span>'
-                    +'<span></span>'
-                    +'</div>'
-                $('#location-listing tbody').html(loader_content)
 
                 $('#screen').find('option')
                 .remove()
@@ -1293,19 +1268,50 @@
 
             if( $('#refresh_lms').hasClass("activated"))
             {
-                get_cpls(location , screen , false , true)
+                get_cpls(location , screen , false ,'null', true,false)
+                $('#refresh_lms').removeClass("activated") ;
+                $('#noc_local_storage').removeClass("activated") ;
+            }
+            else
+            {
+                get_cpls(location , screen , true,'null' ,true,false)
+                $(this).addClass("activated") ;
+                $('#noc_local_storage').removeClass("activated") ;
+            }
+        });
+
+        $('#noc_local_storage').click(function(){
+            //$('#location-listing tbody').html('')
+            var location =  $('#location').val();
+            var country =  $('#country').val();
+            var multiplex =  $('#multiplex').val();
+            window.lms = true ;
+            var screen =  null;
+
+
+
+            $('#screen').find('option')
+            .remove()
+            .end()
+            .append('<option value="null">All Screens</option>')
+
+            if( $('#noc_local_storage').hasClass("activated"))
+            {
+                get_cpls(location , screen , false ,'null', true,false)
+                $('#noc_local_storage').removeClass("activated") ;
                 $('#refresh_lms').removeClass("activated") ;
             }
             else
             {
-
-                get_cpls(location , screen , true ,true)
+                $("#location").val('Locations');
+                get_cpls(location , screen , false ,'null', true,true)
                 $(this).addClass("activated") ;
+                $('#refresh_lms').removeClass("activated") ;
+
             }
         });
 
         $('#multiplex').change(function(){
-
 
             var location =  $('#location').val();
                 var country =  $('#country').val();
@@ -1315,35 +1321,20 @@
 
             if(location != "Locations")
             {
-                $("#location-listing").dataTable().fnDestroy();
-
-                var loader_content  =
-            '<div class="jumping-dots-loader">'
-                +'<span></span>'
-                +'<span></span>'
-                +'<span></span>'
-                +'</div>'
-                $('#location-listing tbody').html(loader_content)
-                //$('#location-listing tbody').html('')
-
-
-                    $('#refresh_lms').show();
-                    get_cpls(location , screen , false , multiplex ,false)
+                $('#refresh_lms').show();
+                get_cpls(location , screen , false , multiplex ,false)
             }
             else
             {
                 $('#refresh_lms').hide();
             }
 
-
-
-
-
         });
 
         $(document).on('click', '.cpl-item', function (event) {
             $(this).parent('tr').toggleClass('selected');
         });
+
         $(document).ready(function() {
             // Handle the change event of the #check_all_server checkbox
             $('#check_all_server').change(function() {
@@ -1357,6 +1348,7 @@
                 }
             });
         });
+
         $(document).on('click', '.cpl_can_not_be_deleted', function (event) {
             swal({
                     title: '',
@@ -1378,6 +1370,7 @@
                 })
 
         });
+
         $(document).on('click', '#delete_cpl', function (event) {
             $('#check_all_server').prop('checked', false);
 
@@ -1743,7 +1736,6 @@
 
 
         });
-
 
         $(document).on('click', '#refresh', function () {
             var location = $('#location').val() ;

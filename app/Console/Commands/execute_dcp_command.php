@@ -25,6 +25,15 @@ class execute_dcp_command extends Command
      */
     public function handle()
     {
-        app(\App\Http\Controllers\LocationController::class)->execute_dcp_command();
+        $counter = 0;
+        while ($counter <30)
+        {
+            app(\App\Http\Controllers\LocationController::class)->execute_dcp_command();
+            sleep (5) ;
+            $counter++;
+        }
+
+
+
     }
 }

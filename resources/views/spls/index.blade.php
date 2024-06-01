@@ -324,7 +324,7 @@
     // filter location
     (function($) {
         var spl_datatable = $('#location-listing').DataTable({
-        "iDisplayLength": 10,
+        "iDisplayLength": 100,
             destroy: true,
             "bDestroy": true,
             "language": {
@@ -386,7 +386,6 @@
                                     }
                                     available_on_content = available_on_content + '<div class="badge badge-outline-primary m-1">'+ available_on_array[i]+'</div>'
                                 }
-
                             }
                         }
                         else
@@ -405,11 +404,10 @@
                     });
                     $('#location-listing tbody').html(result)
 
-                    console.log(response.spls)
-                    /***** refresh datatable **** **/
+
 
                     var spl_datatable = $('#location-listing').DataTable({
-                        "iDisplayLength": 10,
+                        "iDisplayLength": 100,
                         destroy: true,
                         "bDestroy": true,
                         "language": {
@@ -575,7 +573,7 @@
                         /***** refresh datatable **** **/
 
                         var spl_datatable = $('#location-listing').DataTable({
-                            "iDisplayLength": 10,
+                            "iDisplayLength": 100,
                             destroy: true,
                             "bDestroy": true,
                             "language": {

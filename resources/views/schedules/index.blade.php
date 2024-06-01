@@ -810,12 +810,20 @@
                                 }
                                 else
                                 {
-                                    var name =value.titleShort  ;
+                                    var name =value.name  ;
                                 }
                             }
                             else
                             {
-                                var name =value.ShowTitleText  ;
+                                if(value.status != "linked" )
+                                {
+                                    var name =value.name  ;
+                                }
+                                else
+                                {
+                                    var name =value.ShowTitleText  ;
+                                }
+
                             }
 
 

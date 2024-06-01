@@ -149,7 +149,7 @@
 
         var kdm_datatable = $('#location-listing').DataTable({
 
-        "iDisplayLength": 10,
+        "iDisplayLength": 100,
             destroy: true,
             "bDestroy": true,
             "language": {
@@ -254,7 +254,7 @@
                         /***** refresh datatable **** **/
 
                         var kdm_datatable = $('#location-listing').DataTable({
-                            "iDisplayLength": 10,
+                            "iDisplayLength": 100,
                             destroy: true,
                             "bDestroy": true,
                             "language": {
@@ -382,7 +382,7 @@
 
                     var kdm_datatable = $('#location-listing').DataTable({
 
-                        "iDisplayLength": 10,
+                        "iDisplayLength": 100,
                         destroy: true,
                         "bDestroy": true,
                         "language": {
@@ -519,7 +519,7 @@
                             /***** refresh datatable **** **/
 
                             var kdm_datatable = $('#location-listing').DataTable({
-                                "iDisplayLength": 10,
+                                "iDisplayLength": 100,
                                 destroy: true,
                                 "bDestroy": true,
                                 "language": {
@@ -629,7 +629,7 @@
                         /***** refresh datatable **** **/
 
                         var kdm_datatable = $('#location-listing').DataTable({
-                            "iDisplayLength": 10,
+                            "iDisplayLength": 100,
                             destroy: true,
                             "bDestroy": true,
                             "language": {

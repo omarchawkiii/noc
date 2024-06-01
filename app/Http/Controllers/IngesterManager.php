@@ -3450,7 +3450,6 @@ $data_dcp = json_decode(json_encode($data_dcp), true);
         // You can also log the error to a file or perform other actions for different error types if needed
     }
 
-
     public function getDcpLogs()
     {
         try {
@@ -3471,7 +3470,7 @@ $data_dcp = json_decode(json_encode($data_dcp), true);
                 )
                 ->leftJoin('ingestsources', 'ingests.id_source', '=', 'ingestsources.id')
                 ->whereNotIn('ingests.status', ['Running', 'pending', 'Pending', 'running'])
-                ->orderByDesc('ingests.order')
+                ->orderByDesc('ingests.id')
                 ->get();
 
             return $result;
@@ -3515,10 +3514,7 @@ $data_dcp = json_decode(json_encode($data_dcp), true);
         }
     }
 
-
-
     //method add for next update
-
     public function getSourceDirByCplUuidANDIdServer($cpl_uuid, $id_server)
     {
         /*$q = $this->_db->prepare(' SELECT source_dir FROM scanned_libraries

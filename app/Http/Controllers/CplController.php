@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cpl;
+use App\Models\Dcp_trensfer;
 use App\Models\Kdm;
 use App\Models\Lmscpl;
 use App\Models\Location;
@@ -137,109 +138,118 @@ class CplController extends Controller
         $playlist_builder= $request->playlist_builder ;
         $macros = null ;
 
-        if( $lms == 'true' )
+        $noc_local_storage= $request->noc_local_storage ;
+        if($noc_local_storage == 'true')
         {
-            $cpls =Lmscpl::with('location');
+            $dcp_trensfers = Dcp_trensfer::
+            leftJoin('ingests', 'dcp_trensfers.id_ingest', '=', 'ingests.id')
+            ->leftJoin('cpls', 'dcp_trensfers.id_cpl', '=', 'cpls.id')
+            ->where('dcp_trensfers.status', '=','Completed' )
+            ->get();
+            dd($dcp_trensfers) ;
+                //->select('dcp_trensfers.*','ingests.cpl_description','locations.name') ;
         }
         else
         {
-            $cpls =Cpl::with('location');
-        }
-
-
-
-        if(isset($location) &&  $location != 'null' )
-        {
-            if($location != 'all')
+            if( $lms == 'true' )
             {
-                $location = Location::find($location) ;
-                $screens =$location->screens ;
-                $cpls =$cpls->where('location_id',$location->id)->groupBy('uuid');
-            }
-
-        }
-        else
-        {
-
-            $screens =null;
-            $screen=null ;
-            if( Auth::user()->role != 1)
-            {
-                $locations = Auth::user()->locations ;
+                $cpls =Lmscpl::with('location');
             }
             else
             {
-                $locations = Location::all() ;
+                $cpls =Cpl::with('location');
             }
-            return view('cpls.index', compact('screen','screens','locations'));
-        }
-       // dd($cpls->get()) ;
 
-        if(isset($screen) && $screen != 'null' )
-        {
-            $cpls =$cpls->where('screen_id',$screen);
-        }
-
-        if(isset($playlist_builder) && $playlist_builder != 'null')
-        {
-
-            if($location == 'all')
+            if(isset($location) &&  $location != 'null' )
             {
-                $location = null ;
-                $screens =null ;
-                $cpls =Lmscpl::with('location')->groupBy('uuid');
-               // dd($cpls->get()) ;
-               $macros = Macro::get() ;
+                if($location != 'all')
+                {
+                    $location = Location::find($location) ;
+                    $screens =$location->screens ;
+                    $cpls =$cpls->where('location_id',$location->id)->groupBy('uuid');
+                }
+
             }
             else
             {
-                $macros = Macro::where('location_id',$location->id)->get() ;
+
+                $screens =null;
+                $screen=null ;
+                if( Auth::user()->role != 1)
+                {
+                    $locations = Auth::user()->locations ;
+                }
+                else
+                {
+                    $locations = Location::all() ;
+                }
+                return view('cpls.index', compact('screen','screens','locations'));
             }
 
+            if(isset($screen) && $screen != 'null' )
+            {
+                $cpls =$cpls->where('screen_id',$screen);
+            }
 
-            $cpls = $cpls->orderBy('contentKind', 'ASC')->orderBy('contentTitleText', 'ASC') ;
+            if(isset($playlist_builder) && $playlist_builder != 'null')
+            {
+
+                if($location == 'all')
+                {
+                    $location = null ;
+                    $screens =null ;
+                    $cpls =Lmscpl::with('location')->groupBy('uuid');
+                // dd($cpls->get()) ;
+                $macros = Macro::get() ;
+                }
+                else
+                {
+                    $macros = Macro::where('location_id',$location->id)->get() ;
+                }
 
 
+                $cpls = $cpls->orderBy('contentKind', 'ASC')->orderBy('contentTitleText', 'ASC') ;
+
+
+            }
+
+            if(isset($multiplex) && $multiplex != 'null' )
+            {
+
+                if($multiplex =='linked')
+                {
+                    $cpls =$cpls->where('cpl_is_linked',1);
+                // dd($cpls->get()) ;
+                }
+                if($multiplex =='unlinked')
+                {
+                    $cpls =$cpls->where('cpl_is_linked',0);
+                // dd($cpls->get()) ;
+                }
+                if($multiplex =='Encryped')
+                {
+                    $cpls =$cpls->where('pictureEncryptionAlgorithm','!=','None')->where('pictureEncryptionAlgorithm','!=','0')->where('pictureEncryptionAlgorithm','!=',null);
+
+                }
+                if($multiplex =='NoEncryped')
+                {
+                    $cpls =$cpls->where('pictureEncryptionAlgorithm','None')->orWhere('pictureEncryptionAlgorithm','0')->orWhere('pictureEncryptionAlgorithm',null);
+                }
+
+                if($multiplex =='Flat')
+                {
+                    $cpls =$cpls->where('type','Flat');
+                }
+
+                if($multiplex =='Scope')
+                {
+                    $cpls =$cpls->where('type','Scope');
+                }
+
+
+            }
+            $cpls = $cpls->orderBy('contentTitleText', 'ASC')->get() ;
         }
-
-        if(isset($multiplex) && $multiplex != 'null' )
-        {
-
-            if($multiplex =='linked')
-            {
-                $cpls =$cpls->where('cpl_is_linked',1);
-               // dd($cpls->get()) ;
-            }
-            if($multiplex =='unlinked')
-            {
-                $cpls =$cpls->where('cpl_is_linked',0);
-               // dd($cpls->get()) ;
-            }
-            if($multiplex =='Encryped')
-            {
-                $cpls =$cpls->where('pictureEncryptionAlgorithm','!=','None')->where('pictureEncryptionAlgorithm','!=','0')->where('pictureEncryptionAlgorithm','!=',null);
-
-            }
-            if($multiplex =='NoEncryped')
-            {
-                $cpls =$cpls->where('pictureEncryptionAlgorithm','None')->orWhere('pictureEncryptionAlgorithm','0')->orWhere('pictureEncryptionAlgorithm',null);
-            }
-
-            if($multiplex =='Flat')
-            {
-                $cpls =$cpls->where('type','Flat');
-            }
-
-            if($multiplex =='Scope')
-            {
-                $cpls =$cpls->where('type','Scope');
-            }
-
-
-        }
-
-
-        $cpls = $cpls->orderBy('contentTitleText', 'ASC')->get() ;
         return Response()->json(compact('cpls','screens','macros'));
 
     }
@@ -400,16 +410,15 @@ class CplController extends Controller
     {
 
         $lms = $request->lms;
-        $screen= $request->screen;
         $location = Location::find($request->location) ;
-
-        if($lms)
+        $screen = Screen::find($request->screen) ;
+        if($lms == "true")
         {
             $url = $location->connection_ip."?request=get_lms_content_to_clean";
         }
         else
         {
-            $url = $location->connection_ip."?request=get_screen_content_to_clean&id_screen=".$screen;
+            $url = $location->connection_ip."?request=get_screen_content_to_clean&id_screen=".$screen->id_server;
         }
 
         $client = new Client();
@@ -432,7 +441,7 @@ class CplController extends Controller
         $location = Location::findOrFail($request->location) ;
         $lms = $request->lms;
         $screen= $request->screen;
-        if($lms)
+        if($lms == "true")
         {
            $action = 'clean_lms_content' ;
         }

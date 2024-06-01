@@ -488,7 +488,7 @@
 
     // filter location
     (function($) {
-
+/*
 
         $(document).on('click', '#logs-tab', function (e) {
             e.preventDefault();
@@ -529,7 +529,7 @@
 
 
         });
-
+*/
     })(jQuery);
 
 
