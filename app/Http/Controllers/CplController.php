@@ -141,12 +141,21 @@ class CplController extends Controller
         $noc_local_storage= $request->noc_local_storage ;
         if($noc_local_storage == 'true')
         {
-            $dcp_trensfers = Dcp_trensfer::
+            $cpls = Dcp_trensfer::
             leftJoin('ingests', 'dcp_trensfers.id_ingest', '=', 'ingests.id')
-            ->leftJoin('cpls', 'dcp_trensfers.id_cpl', '=', 'cpls.id')
+            //leftJoin('cpls', 'dcp_trensfers.id_cpl', '=', 'cpls.uuid')
+            //leftJoin('lmscpls', 'dcp_trensfers.id_cpl', '=', 'lmscpls.uuid')
+            ->leftJoin('locations', 'dcp_trensfers.location_id', '=', 'locations.id')
             ->where('dcp_trensfers.status', '=','Completed' )
+           // ->where('lmscpls.location_id', '=','dcp_trensfers.location_id' )
+            //->groupBy('cpls.uuid')
+            ->select('locations.name as location_name','locations.id as location_id','dcp_trensfers.*','ingests.*','dcp_trensfers.pkl_size as size')
             ->get();
-            dd($dcp_trensfers) ;
+
+            $screens =null ;
+            $macros = null ;
+            return Response()->json(compact('cpls','screens','macros'));
+           // dd($dcp_trensfers) ;
                 //->select('dcp_trensfers.*','ingests.cpl_description','locations.name') ;
         }
         else
@@ -330,37 +339,54 @@ class CplController extends Controller
 
     public function delete_cpl(Request $request )
     {
-        $location = Location::findOrFail($request->location) ;
 
-        //$response = $this->delete_cplRequest($request->connection_ip, $request->lms, $request->array_cpls, $request->array_screens, $location->email , $location->password);
-        $response = $this->delete_cplRequest($location->connection_ip,$request->array_cpls, $request->array_screens, $request->lms,$location->email, $location->password);
-        //$response['result'] = 1 ;
-
-        if(count($response['errors']) === 0)
+        if($request->noc_local_storage == 'true')
         {
             foreach($request->array_cpls as $cpl_uuid)
             {
-                if($request->lms)
-                {
-                    $cpl = Lmscpl::where('uuid',$cpl_uuid)->where('location_id',$location->id)->delete();
-                }
-                $screens= Screen::whereIn('id_server',$request->array_screens)->where('location_id',$location->id)->get()->toArray();
-                $screens_id = array_column($screens, 'id');
-                $cpl = Cpl::with('screen')->where('uuid',$cpl_uuid)->whereIn('screen_id',$screens_id)->where('location_id',$location->id)->delete() ;
+                Dcp_trensfer::where('id_cpl',$cpl_uuid)->delete() ;
             }
-            $deleted_cpls = $response['deleted_cpls'] ;
-            $errors = $response['errors'] ;
+            $deleted_cpls = null ;
+            $errors = null ;
             $status = 1 ;
             return Response()->json(compact('status','deleted_cpls','errors'));
-
         }
         else
         {
-            $deleted_cpls =null ;
-            $errors =null ;
-            $status = 0 ;
-            return Response()->json(compact('status','deleted_cpls','errors'));
+            $location = Location::findOrFail($request->location) ;
+
+            //$response = $this->delete_cplRequest($request->connection_ip, $request->lms, $request->array_cpls, $request->array_screens, $location->email , $location->password);
+            $response = $this->delete_cplRequest($location->connection_ip,$request->array_cpls, $request->array_screens, $request->lms,$location->email, $location->password);
+            //$response['result'] = 1 ;
+
+            if(count($response['errors']) === 0)
+            {
+                foreach($request->array_cpls as $cpl_uuid)
+                {
+                    if($request->lms)
+                    {
+                        $cpl = Lmscpl::where('uuid',$cpl_uuid)->where('location_id',$location->id)->delete();
+                    }
+                    $screens= Screen::whereIn('id_server',$request->array_screens)->where('location_id',$location->id)->get()->toArray();
+                    $screens_id = array_column($screens, 'id');
+                    $cpl = Cpl::with('screen')->where('uuid',$cpl_uuid)->whereIn('screen_id',$screens_id)->where('location_id',$location->id)->delete() ;
+                }
+                $deleted_cpls = $response['deleted_cpls'] ;
+                $errors = $response['errors'] ;
+                $status = 1 ;
+                return Response()->json(compact('status','deleted_cpls','errors'));
+
+            }
+            else
+            {
+                $deleted_cpls =null ;
+                $errors =null ;
+                $status = 0 ;
+                return Response()->json(compact('status','deleted_cpls','errors'));
+            }
         }
+
+
     }
 
 

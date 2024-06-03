@@ -107,123 +107,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @if ($screen)
-                                    @foreach ($screen->cpls as $key => $cpl )
-                                        <tr class="odd">
-                                            <td class="sorting_1"><a>{{ $cpl->uuid }}</a> </td>
-                                            <td><a class="text-body align-middle fw-medium text-decoration-none" > {{ $cpl->contentTitleText }}</a></td>
-                                            <td><a class="text-body align-middle fw-medium text-decoration-none" > {{ $cpl->contentKind }}</a></td>
-                                            <td><a class="text-body align-middle fw-medium text-decoration-none" >{{ $cpl->available_on }}</a></td>
-                                            <td>
-                                                <a class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#cpl_model_-{{ $cpl->uuid }}" href="#"><i class="mdi mdi-magnify"> </i> </a>
-                                                <div class=" modal fade " id="cpl_model_-{{ $cpl->uuid }}" tabindex="-1" role="dialog"  aria-labelledby="delete_client_modalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog modal-dialog-centered  modal-xl">
-                                                        <div class="modal-content border-0">
-                                                            <div class="modal-header p-4 pb-0">
-                                                                <ul class="nav nav-tabs" role="tablist">
-                                                                    <li class="nav-item">
-                                                                      <a class="nav-link active" id="Properties-tab" data-bs-toggle="tab" href="#Properties-{{ $cpl->uuid }}" role="tab" aria-controls="home" aria-selected="true">Properties</a>
-                                                                    </li>
-                                                                    <li class="nav-item">
-                                                                      <a class="nav-link" id="cpls-tab" data-bs-toggle="tab" href="#cpls-{{ $cpl->uuid }}" role="tab" aria-controls="Content CPLs" aria-selected="false">Content CPLs</a>
-                                                                    </li>
-                                                                    <li class="nav-item">
-                                                                      <a class="nav-link" id="schedules-tab" data-bs-toggle="tab" href="#schedules-{{ $cpl->uuid }}" role="tab" aria-controls="schedules" aria-selected="false">Related Schedules</a>
-                                                                    </li>
-                                                                  </ul>
-                                                                <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
-                                                            </div>
-                                                            <div class="modal-body text-center p-4">
-
-                                                                <div class="tab-content border-0">
-                                                                    <div class="tab-pane fade show active" id="Properties-{{ $cpl->uuid }}" role="tabpanel" aria-labelledby="Properties-tab">
-                                                                        <div class="card rounded border mb-2">
-                                                                            <div class="card-body p-3">
-                                                                                <div class="media  justify-content-start">
-                                                                                    <div class="media-body d-flex align-items-center">
-                                                                                        <i class=" mdi mdi-star icon-sm align-self-center me-3"></i>
-                                                                                        <h6 class="mb-1">Title : </h6>
-                                                                                    </div>
-                                                                                    <div class="media-body">
-                                                                                        <p class="mb-0  m-1">   </p>
-                                                                                    </div>
-                                                                                    <div class="media-body">
-                                                                                        <p class="mb-0 "> {{ $cpl->contentTitleText }} </p>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="card rounded border mb-2">
-                                                                            <div class="card-body p-3">
-                                                                                <div class="media  d-flex justify-content-start">
-                                                                                    <div class="media-body d-flex align-items-center">
-                                                                                        <i class="mdi mdi-star icon-sm align-self-center me-3"></i>
-                                                                                        <h6 class="mb-1">UUID : </h6>
-                                                                                    </div>
-                                                                                    <div class="media-body">
-                                                                                        <p class="mb-0  m-1">   </p>
-                                                                                    </div>
-                                                                                    <div class="media-body">
-                                                                                        <p class="mb-0 "> {{ $cpl->uuid }} </p>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="card rounded border mb-2">
-                                                                            <div class="card-body p-3">
-                                                                                <div class="media  d-flex justify-content-start mr-5">
-                                                                                    <div class="media-body d-flex align-items-center">
-                                                                                        <i class="mdi mdi-timer icon-sm align-self-center me-3"></i>
-                                                                                        <h6 class="mb-1">Content Kind : </h6>
-                                                                                    </div>
-                                                                                    <div class="media-body">
-                                                                                        <p class="mb-0  m-1">   </p>
-                                                                                    </div>
-                                                                                    <div class="media-body">
-                                                                                        <p class="mb-0 "> {{ $cpl->contentKind }} </p>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="tab-pane fade" id="cpls-{{ $cpl->uuid }}" role="tabpanel" aria-labelledby="cpls-tab">
-                                                                        <div class="">
-                                                                            <table class="table">
-                                                                                <thead>
-                                                                                    <tr>
-                                                                                        <th>UUID</th>
-                                                                                        <th>KDM Name</th>
-
-                                                                                    </tr>
-                                                                                </thead>
-                                                                                <tbody>
-                                                                                    @foreach ($cpl->kdms as $kdm )
-                                                                                        <tr>
-                                                                                            <td> {{  $kdm->uuid }}</td>
-                                                                                            <td> {{  $kdm->name }}</td>
-                                                                                        </tr>
-                                                                                    @endforeach
-                                                                              </tbody>
-                                                                            </table>
-                                                                          </div>
-                                                                    </div>
-                                                                    <div class="tab-pane fade" id="schedules-{{ $cpl->uuid }}" role="tabpanel" aria-labelledby="schedules-tab">
-                                                                     Lorem ipsum dolor sit amet consectetur adipisicing elit.<br />Fugiat ipsum facilis debitis similique, libero ratione labore laudantium <br />repellendus illum sit reprehenderit voluptatem laborum repudiandae molestias rem ea aperiam impedit praesentium.
-                                                                    </div>
-                                                                </div>
-
-
-                                                            </div>
-                                                        </div>
-                                                    <!--end modal-content-->
-                                                    </div>
-                                                </div>
-
-                                            </td>
-
-                                        </tr>
-                                    @endforeach
-                                @endif
 
                             </tbody>
                         </table>
@@ -1080,7 +963,7 @@
         {
             $("#location-listing").dataTable().fnDestroy();
             $('#location-listing tbody').html('')
-
+            var head ="" ;
             var loader_content  =
            '<div class="jumping-dots-loader">'
                +'<span></span>'
@@ -1120,91 +1003,206 @@
                             $('#screen').html(screens)
                     }
 
-                    if(response.cpls.length>0)
+
+                    if( noc_local_storage)
                     {
-                        $.each(response.cpls, function( index, value ) {
-                            index ++ ;
-                            if( value.available_on)
-                            {
-                                available_on_array =  value.available_on.split(",");
-                                available_on_content=""
-                                for(i = 0 ; i< available_on_array.length ; i++ )
+                        head ='<tr>'
+                                    +'<th class="sorting sorting_asc">No #</th>'
+                                    +'<th class="sorting">Cpl Name</th>'
+                                    +'<th class="sorting">Content Kind</th>'
+                                    +'<th class="sorting">Size</th>'
+
+                                +'</tr>'
+                        if(response.cpls.length>0)
+                        {
+
+
+                            $.each(response.cpls, function( index, value ) {
+
+
+
+                                index ++ ;
+                                if( value.available_on)
                                 {
-                                    if(i != 0 &&  i % 9 == 0 )
+                                    available_on_array =  value.available_on.split(",");
+                                    available_on_content=""
+                                    for(i = 0 ; i< available_on_array.length ; i++ )
                                     {
-                                        available_on_content = available_on_content + '<br />'
+                                        if(i != 0 &&  i % 9 == 0 )
+                                        {
+                                            available_on_content = available_on_content + '<br />'
+                                        }
+                                        available_on_content = available_on_content + '<div class="badge badge-outline-primary m-1">'+ available_on_array[i]+'</div>'
                                     }
-                                    available_on_content = available_on_content + '<div class="badge badge-outline-primary m-1">'+ available_on_array[i]+'</div>'
-                                }
-                            }
-                            else
-                            {
-                                available_on_content=""
-                            }
-
-
-                            playable =""
-                            if(value.playable == 1 || lms == true )
-                            {
-                                playable = "bg-playable" ;
-                            }
-                            else
-                            {
-                                playable = "bg-no-playable";
-                            }
-
-                            var encrypted="";
-                                if(value.pictureEncryptionAlgorithm=="None" || value.pictureEncryptionAlgorithm=="0"){
-                                    encrypted="";
-                                }else{
-                                    encrypted="<i class=\"cpl_need_kdm mdi btn-success mdi-lock-outline p-1 m-1 rounded\"  ></i> ";
-                                }
-                                var style = "" ;
-                                if(value.type == "Flat")
-                                {
-                                    style = "color:#52d4f7;" ;
-                                }
-                                else if(value.type == "Scope")
-                                {
-                                    style = "color:#36ffb9;" ;
                                 }
                                 else
                                 {
-                                    style = "color:white;" ;
+                                    available_on_content=""
                                 }
-                                var deleting_ipossibility ="" ;
-                                if(value.cpl_is_linked == 1 )
+
+                                playable =""
+                                if(value.playable == 1 || lms == true )
                                 {
-                                    deleting_ipossibility ="cpl_can_not_be_deleted" ;
+                                    playable = "bg-playable" ;
                                 }
                                 else
                                 {
-                                    deleting_ipossibility ="cpl-item" ;
+                                    playable = "bg-no-playable";
                                 }
 
-                                var title= '<span style="'+style+'"">' + value.contentTitleText +
-                                    encrypted +
-                                    (value.cpl_is_linked == "1" ? ' <span class=\"mdi mdi-calendar-clock custom-calendar p-1 m-1 btn-primary rounded\"  ></span>':"  ")
-                                    +'  </span>';
+                                var encrypted="";
+                                    if(value.pictureEncryptionAlgorithm=="None" || value.pictureEncryptionAlgorithm=="0"){
+                                        encrypted="";
+                                    }else{
+                                        encrypted="<i class=\"cpl_need_kdm mdi btn-success mdi-lock-outline p-1 m-1 rounded\"  ></i> ";
+                                    }
+                                    var style = "" ;
+                                    if(value.type == "Flat")
+                                    {
+                                        style = "color:#52d4f7;" ;
+                                    }
+                                    else if(value.type == "Scope")
+                                    {
+                                        style = "color:#36ffb9;" ;
+                                    }
+                                    else
+                                    {
+                                        style = "color:white;" ;
+                                    }
+                                    var deleting_ipossibility ="" ;
+                                    if(value.cpl_is_linked == 1 )
+                                    {
+                                        deleting_ipossibility ="cpl_can_not_be_deleted" ;
+                                    }
+                                    else
+                                    {
+                                        deleting_ipossibility ="cpl-item" ;
+                                    }
+
+                                    var title= '<span style="'+style+'"">' + value.contentTitleText +
+                                        encrypted +
+                                        (value.cpl_is_linked == "1" ? ' <span class=\"mdi mdi-calendar-clock custom-calendar p-1 m-1 btn-primary rounded\"  ></span>':"  ")
+                                        +'  </span>';
 
 
-                                result = result
-                                    +'<tr class="  odd  '+playable+' text-center" data-id="'+value.uuid+'">'
-                                    +'<td class="sorting_1 '+deleting_ipossibility+'">'+ index+' </td>'
-                                    +'<td class="'+deleting_ipossibility+'"><a class="text-body align-middle fw-medium text-decoration-none text-center" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+title+'</a></td>'
-                                    +'<td class="'+deleting_ipossibility+'" ><a class="text-body align-middle fw-medium text-decoration-none text-center">'+value.contentKind+'</a></td>'
-                                    +'<td class="'+deleting_ipossibility+'" ><a class="text-body align-middle fw-medium text-decoration-none text-center">' +formatSize(value.totalSize)+ '</a></td>'
-                                    +'<td class="'+deleting_ipossibility+'" ><a class="text-body align-middle fw-medium text-decoration-none text-center">' + available_on_content + '</a></td>'
-                                    +'<td><a class="btn btn-primary infos_modal text-center"  href="#" id="'+value.id+' " data-location="'+value.location.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
-                                    +'</tr>';
-                        });
+                                    result = result
+                                        +'<tr class="  odd   text-center" data-id="'+value.cpl_id+'">'
+                                        +'<td class="sorting_1 '+deleting_ipossibility+'">'+ index+' </td>'
+                                        +'<td class="'+deleting_ipossibility+'"><a class="text-body align-middle fw-medium text-decoration-none text-center" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.cpl_description+'</a></td>'
+                                        +'<td class="'+deleting_ipossibility+'" ><a class="text-body align-middle fw-medium text-decoration-none text-center"> NOC Local Storage</a></td>'
+                                        +'<td class="'+deleting_ipossibility+'" ><a class="text-body align-middle fw-medium text-decoration-none text-center">' +formatSize(value.size)+ '</a></td>'
+                                        +'</tr>';
+
+
+                            });
+                        }
+                        else
+                        {
+                            $('#location-listing tbody').html('<div id="table_logs_processing" class="dataTables_processing card">No data available in table</div>')
+                        }
+                    }
+                    else
+                    {
+                        if(response.cpls.length>0)
+                        {
+                            head ='<tr>'
+                                    +'<th class="sorting sorting_asc">No #</th>'
+                                    +'<th class="sorting">Cpl Name</th>'
+                                    +'<th class="sorting">Content Kind</th>'
+                                    +'<th class="sorting">Size</th>'
+                                    +'<th class="sorting" style="max-width: 250px">Available On </th>'
+                                    +'<th class="sorting">Action</th>'
+                                +'</tr>'
+                            $.each(response.cpls, function( index, value ) {
+
+
+
+                                index ++ ;
+                                if( value.available_on)
+                                {
+                                    available_on_array =  value.available_on.split(",");
+                                    available_on_content=""
+                                    for(i = 0 ; i< available_on_array.length ; i++ )
+                                    {
+                                        if(i != 0 &&  i % 9 == 0 )
+                                        {
+                                            available_on_content = available_on_content + '<br />'
+                                        }
+                                        available_on_content = available_on_content + '<div class="badge badge-outline-primary m-1">'+ available_on_array[i]+'</div>'
+                                    }
+                                }
+                                else
+                                {
+                                    available_on_content=""
+                                }
+
+                                playable =""
+                                if(value.playable == 1 || lms == true )
+                                {
+                                    playable = "bg-playable" ;
+                                }
+                                else
+                                {
+                                    playable = "bg-no-playable";
+                                }
+
+                                var encrypted="";
+                                        if(value.pictureEncryptionAlgorithm=="None" || value.pictureEncryptionAlgorithm=="0"){
+                                            encrypted="";
+                                        }else{
+                                            encrypted="<i class=\"cpl_need_kdm mdi btn-success mdi-lock-outline p-1 m-1 rounded\"  ></i> ";
+                                        }
+                                        var style = "" ;
+                                        if(value.type == "Flat")
+                                        {
+                                            style = "color:#52d4f7;" ;
+                                        }
+                                        else if(value.type == "Scope")
+                                        {
+                                            style = "color:#36ffb9;" ;
+                                        }
+                                        else
+                                        {
+                                            style = "color:white;" ;
+                                        }
+                                        var deleting_ipossibility ="" ;
+                                        if(value.cpl_is_linked == 1 )
+                                        {
+                                            deleting_ipossibility ="cpl_can_not_be_deleted" ;
+                                        }
+                                        else
+                                        {
+                                            deleting_ipossibility ="cpl-item" ;
+                                        }
+
+                                        var title= '<span style="'+style+'"">' + value.contentTitleText +
+                                            encrypted +
+                                            (value.cpl_is_linked == "1" ? ' <span class=\"mdi mdi-calendar-clock custom-calendar p-1 m-1 btn-primary rounded\"  ></span>':"  ")
+                                            +'  </span>';
+
+
+                                        result = result
+                                            +'<tr class="  odd  '+playable+' text-center" data-id="'+value.uuid+'">'
+                                            +'<td class="sorting_1 '+deleting_ipossibility+'">'+ index+' </td>'
+                                            +'<td class="'+deleting_ipossibility+'"><a class="text-body align-middle fw-medium text-decoration-none text-center" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+title+'</a></td>'
+                                            +'<td class="'+deleting_ipossibility+'" ><a class="text-body align-middle fw-medium text-decoration-none text-center">'+value.contentKind+'</a></td>'
+                                            +'<td class="'+deleting_ipossibility+'" ><a class="text-body align-middle fw-medium text-decoration-none text-center">' +formatSize(value.totalSize)+ '</a></td>'
+                                            +'<td class="'+deleting_ipossibility+'" ><a class="text-body align-middle fw-medium text-decoration-none text-center">' + available_on_content + '</a></td>'
+                                            +'<td><a class="btn btn-primary infos_modal text-center"  href="#" id="'+value.id+' " data-location="'+value.location.id+'"> <i class="mdi mdi-magnify"> </i> </a></td>'
+                                            +'</tr>';
+
+                            });
+
+                        }
+                        else
+                        {
+                            $('#location-listing tbody').html('<div id="table_logs_processing" class="dataTables_processing card">No data available in table</div>')
+                        }
                     }
 
                     $('#location-listing tbody').html(result)
 
-
-                    /***** refresh datatable **** **/
-
+                    $('#location-listing thead').html(head)
                     var cpl_datatable = $('#location-listing').DataTable({
                         "iDisplayLength": 100,
                         destroy: true,
@@ -1214,6 +1212,9 @@
                             searchPlaceholder: "Search..."
                         }
                     });
+                    /***** refresh datatable **** **/
+
+
                 },
                 error: function(response) {
                 }
@@ -1297,7 +1298,8 @@
 
             if( $('#noc_local_storage').hasClass("activated"))
             {
-                get_cpls(location , screen , false ,'null', true,false)
+                //get_cpls(location , screen , false ,'null', true,false)
+                $('#location-listing tbody').html('<div id="table_logs_processing" class="dataTables_processing card">Please Select Location</div>')
                 $('#noc_local_storage').removeClass("activated") ;
                 $('#refresh_lms').removeClass("activated") ;
             }
@@ -1372,6 +1374,7 @@
         });
 
         $(document).on('click', '#delete_cpl', function (event) {
+
             $('#check_all_server').prop('checked', false);
 
             var screen =  $('#screen').val();
@@ -1379,7 +1382,14 @@
             var multiplex =  $('#multiplex').val();
             var array_cpls = [];
             var location = $('#location').val() ;
-
+            if( $('#noc_local_storage').hasClass("activated"))
+            {
+                var noc_local_storage = true ;
+            }
+            else
+            {
+                var noc_local_storage = false ;
+            }
             $("#location-listing tr.selected").each(function() {
                 var id = $(this).data("id");
                 array_cpls.push(id);
@@ -1388,179 +1398,231 @@
             if (array_cpls.length ==  0) {
                 $("#empty-warning-modal").modal('show');
             }else{
-                var url = "{{  url('') }}"+ '/get_screens_from_cpls/';
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    data: {
-                        array_cpls:array_cpls,
-                        location :location
-                    },
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    beforeSend: function () {
-                    },
-                    success: function (response) {
 
-                        var result = '<li>'
-                                    +'<button type="button" class="btn btn-outline-secondary btn-fw" style="text-align: left;">'
-                                        +'<label class="form-check-label custom-check2">'
-                                            +'<input id="delete_from_lms" type="checkbox" class="form-check-input" name="lms" style="font-size: 20px;margin-bottom:  3px; margin-right:  5px">'
-                                            +'<span style="font-weight: bold;">LMS</span> <i class="input-helper"></i>'
-                                        +'</label>'
-                                    +'</button>'
-                                +'</li>' ;
 
-                            $.each(response.screens, function( index, value ) {
-
-                                if(value.playback_status == "Unknown")
+                if( $('#noc_local_storage').hasClass("activated"))
+                {
+                    $.ajax({
+                            url : "{{  url('') }}"+ '/delete_cpls/',
+                            type: 'GET',
+                            data: {
+                                array_cpls:array_cpls,
+                                location :location,
+                                array_screens:null,
+                                lms:false,
+                                noc_local_storage:noc_local_storage,
+                            },
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            beforeSend: function () {
+                            },
+                            success: function (response) {
+                                result ="" ;
+                                if( $('#noc_local_storage').hasClass("activated"))
                                 {
-                                    result =  result +
-                                    '<li>'
-                                        +'<button type="button" class="btn btn-outline-secondary btn-fw" style="text-align: left;">'
-                                            +'<label class="form-check-label custom-check2">'
-                                                +'<input disabled="true" type="checkbox" class="form-check-input" name="screen_to_ingest" data-id="'+value.screen_number+'" value="'+value.screen_number+'" style="font-size: 20px;margin-bottom:  3px; margin-right:  5px">'
-                                                +'<span style="font-weight: bold; color:red">'+value.name+' ( Screen offline )</span> <i class="input-helper"></i>'
-                                            +'</label>'
-                                        +'</button>'
-                                    +'</li>'
-                                }
-                                else
-                                {
-                                    result =  result +
-                                    '<li>'
-                                        +'<button type="button" class="btn btn-outline-secondary btn-fw" style="text-align: left;">'
-                                            +'<label class="form-check-label custom-check2">'
-                                                +'<input type="checkbox" class="form-check-input" name="screen_to_ingest" data-id="'+value.screen_number+'" value="'+value.screen_number+'" style="font-size: 20px;margin-bottom:  3px; margin-right:  5px">'
-                                                +'<span style="font-weight: bold;">'+value.name+'</span> <i class="input-helper"></i>'
-                                            +'</label>'
-                                        +'</button>'
-                                    +'</li>'
+                                    if (response.status )
+                                    {
+                                        swal({
+                                            title: 'Done !',
+                                            text: 'NOC Local Storage Deleted Successfully ',
+                                            icon: 'success',
+                                            button: {
+                                                text: "Ok",
+                                                value: true,
+                                                visible: true,
+                                                className: "btn btn-primary"
+                                            }
+                                        })
+                                        //get_cpls(location , screen , true , multiplex,noc_local_storage)
+                                        get_cpls(location , screen , false ,'null', true,true)
+                                    }
                                 }
 
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                console.log(errorThrown);
+                            },
+                            complete: function (jqXHR, textStatus) {
+                            }
+                        });
+                }
+                else
+                {
+                    var url = "{{  url('') }}"+ '/get_screens_from_cpls/';
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        data: {
+                            array_cpls:array_cpls,
+                            location :location,
 
-                            });
+                        },
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        beforeSend: function () {
+                        },
+                        success: function (response) {
 
-                            $('#list_servers_cpls_to_delete').html(result)
-                            $('#cpl_delete_model').modal('show')
+                            var result = '<li>'
+                                        +'<button type="button" class="btn btn-outline-secondary btn-fw" style="text-align: left;">'
+                                            +'<label class="form-check-label custom-check2">'
+                                                +'<input id="delete_from_lms" type="checkbox" class="form-check-input" name="lms" style="font-size: 20px;margin-bottom:  3px; margin-right:  5px">'
+                                                +'<span style="font-weight: bold;">LMS</span> <i class="input-helper"></i>'
+                                            +'</label>'
+                                        +'</button>'
+                                    +'</li>' ;
 
-                            $('#confirm_delete_cpl_group').click(function(){
-                                var array_screens = [];
-                               $("#list_servers_cpls_to_delete [name='screen_to_ingest']:checked").each(function() {
-                                    var screen_id = $(this).data("id");
-                                    array_screens.push(screen_id);
+                                $.each(response.screens, function( index, value ) {
+
+                                    if(value.playback_status == "Unknown")
+                                    {
+                                        result =  result +
+                                        '<li>'
+                                            +'<button type="button" class="btn btn-outline-secondary btn-fw" style="text-align: left;">'
+                                                +'<label class="form-check-label custom-check2">'
+                                                    +'<input disabled="true" type="checkbox" class="form-check-input" name="screen_to_ingest" data-id="'+value.screen_number+'" value="'+value.screen_number+'" style="font-size: 20px;margin-bottom:  3px; margin-right:  5px">'
+                                                    +'<span style="font-weight: bold; color:red">'+value.name+' ( Screen offline )</span> <i class="input-helper"></i>'
+                                                +'</label>'
+                                            +'</button>'
+                                        +'</li>'
+                                    }
+                                    else
+                                    {
+                                        result =  result +
+                                        '<li>'
+                                            +'<button type="button" class="btn btn-outline-secondary btn-fw" style="text-align: left;">'
+                                                +'<label class="form-check-label custom-check2">'
+                                                    +'<input type="checkbox" class="form-check-input" name="screen_to_ingest" data-id="'+value.screen_number+'" value="'+value.screen_number+'" style="font-size: 20px;margin-bottom:  3px; margin-right:  5px">'
+                                                    +'<span style="font-weight: bold;">'+value.name+'</span> <i class="input-helper"></i>'
+                                                +'</label>'
+                                            +'</button>'
+                                        +'</li>'
+                                    }
+
+
                                 });
 
-                                var delete_from_lms = $('#delete_from_lms' ).is(":checked")
+                                $('#list_servers_cpls_to_delete').html(result)
+                                $('#cpl_delete_model').modal('show')
+
+                                $('#confirm_delete_cpl_group').click(function(){
+                                    var array_screens = [];
+                                $("#list_servers_cpls_to_delete [name='screen_to_ingest']:checked").each(function() {
+                                        var screen_id = $(this).data("id");
+                                        array_screens.push(screen_id);
+                                    });
+
+                                    var delete_from_lms = $('#delete_from_lms' ).is(":checked")
 
 
-                                $.ajax({
-                                    url : "{{  url('') }}"+ '/delete_cpls/',
-                                    type: 'GET',
-                                    data: {
-                                        array_cpls:array_cpls,
-                                        location :location,
-                                        array_screens:array_screens,
-                                        lms:delete_from_lms
-                                    },
-                                    headers: {
-                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                    },
-                                    beforeSend: function () {
-                                    },
-                                    success: function (response) {
-                                        result ="" ;
-                                        if (response.status )
-                                        {
-                                            console.log(response.status)
-                                            console.log(response.errors.length)
-                                            console.log(response.deleted_cpls.length)
-
-                                            if (response.errors.length> 0 )
+                                    $.ajax({
+                                        url : "{{  url('') }}"+ '/delete_cpls/',
+                                        type: 'GET',
+                                        data: {
+                                            array_cpls:array_cpls,
+                                            location :location,
+                                            array_screens:array_screens,
+                                            lms:delete_from_lms,
+                                            noc_local_storage:noc_local_storage,
+                                        },
+                                        headers: {
+                                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                        },
+                                        beforeSend: function () {
+                                        },
+                                        success: function (response) {
+                                            result ="" ;
+                                            if (response.status )
                                             {
-                                                $('#cpl_deleted_model').modal('show') ;
-                                                result = "<h4> Failed  cpls Deleted</h4>" ;
-                                                $.each(response.errors, function( index, value ) {
-                                                    result = result
-                                                    +'<p>'
-                                                        +'<span class="align-middle fw-medium text-danger ">'+value.uuid+' |  </span>'
-                                                        +'<span class="align-middle fw-medium text-danger "> '+value.ShowTitleText+' </span>'
-                                                        +'<span class="align-middle fw-medium text-danger "> : '+value.status+' </span>'
-                                                        +'<span class="align-middle fw-medium text-success" > From Screen : '+value.screen+' </span>'
-                                                    +'</p>';
-                                                });
-                                            }
 
-                                            if (response.deleted_cpls.length> 0 )
-                                            {
-                                                result = result + "<br /> <br /> <h4>  Succeeded  CPLs Deleted   </h4>" ;
-                                                    $.each(response.deleted_cpls, function( index, value ) {
-
+                                                if (response.errors.length> 0 )
+                                                {
+                                                    $('#cpl_deleted_model').modal('show') ;
+                                                    result = "<h4> Failed  cpls Deleted</h4>" ;
+                                                    $.each(response.errors, function( index, value ) {
                                                         result = result
                                                         +'<p>'
-                                                            +'<span class="align-middle fw-medium text-success">'+value.uuid+' |</span>'
-                                                            +'<span class="align-middle fw-medium text-success" >'+value.ShowTitleText+' </span>'
-                                                            +'<span class="align-middle fw-medium text-success" >'+value.status+' </span>'
+                                                            +'<span class="align-middle fw-medium text-danger ">'+value.uuid+' |  </span>'
+                                                            +'<span class="align-middle fw-medium text-danger "> '+value.ShowTitleText+' </span>'
+                                                            +'<span class="align-middle fw-medium text-danger "> : '+value.status+' </span>'
                                                             +'<span class="align-middle fw-medium text-success" > From Screen : '+value.screen+' </span>'
                                                         +'</p>';
                                                     });
-                                            }
-                                            console.log(result)
-                                            $('#cpl_delete_model').modal('hide');
-                                            $('#cpl_deleted_model .modal-body').html(result) ;
-                                            $('#cpl_deleted_model').modal('show') ;
-                                            //showSwal('warning-message-and-cancel')
-                                            if( $('#refresh_lms').hasClass("activated"))
-                                            {
-                                                get_cpls(location , screen , true , multiplex)
-                                            }
-                                            else
-                                            {
-                                                get_cpls(location , screen , false , multiplex)
-                                            }
-
-                                        } else {
-                                            swal({
-                                                title: 'Failed',
-                                                text: "Error occurred while sending the request.",
-                                                icon: 'warning',
-                                                showCancelButton: true,
-                                                confirmButtonColor: '#3f51b5',
-                                                cancelButtonColor: '#ff4081',
-                                                confirmButtonText: 'Great ',
-                                                buttons: {
-                                                    cancel: {
-                                                        text: "Cancel",
-                                                        value: null,
-                                                        visible: true,
-                                                        className: "btn btn-danger",
-                                                        closeModal: true,
-                                                    },
                                                 }
-                                            })
-                                        }
 
-                                    },
-                                    error: function (jqXHR, textStatus, errorThrown) {
-                                        console.log(errorThrown);
-                                    },
-                                    complete: function (jqXHR, textStatus) {
-                                    }
+                                                if (response.deleted_cpls.length> 0 )
+                                                {
+                                                    result = result + "<br /> <br /> <h4>  Succeeded  CPLs Deleted   </h4>" ;
+                                                        $.each(response.deleted_cpls, function( index, value ) {
+
+                                                            result = result
+                                                            +'<p>'
+                                                                +'<span class="align-middle fw-medium text-success">'+value.uuid+' |</span>'
+                                                                +'<span class="align-middle fw-medium text-success" >'+value.ShowTitleText+' </span>'
+                                                                +'<span class="align-middle fw-medium text-success" >'+value.status+' </span>'
+                                                                +'<span class="align-middle fw-medium text-success" > From Screen : '+value.screen+' </span>'
+                                                            +'</p>';
+                                                        });
+                                                }
+
+                                                $('#cpl_delete_model').modal('hide');
+                                                $('#cpl_deleted_model .modal-body').html(result) ;
+                                                $('#cpl_deleted_model').modal('show') ;
+                                                //showSwal('warning-message-and-cancel')
+                                                if( $('#refresh_lms').hasClass("activated"))
+                                                {
+                                                    get_cpls(location , screen , true , multiplex)
+                                                }
+                                                else
+                                                {
+                                                    get_cpls(location , screen , false , multiplex)
+                                                }
+
+                                            } else {
+                                                swal({
+                                                    title: 'Failed',
+                                                    text: "Error occurred while sending the request.",
+                                                    icon: 'warning',
+                                                    showCancelButton: true,
+                                                    confirmButtonColor: '#3f51b5',
+                                                    cancelButtonColor: '#ff4081',
+                                                    confirmButtonText: 'Great ',
+                                                    buttons: {
+                                                        cancel: {
+                                                            text: "Cancel",
+                                                            value: null,
+                                                            visible: true,
+                                                            className: "btn btn-danger",
+                                                            closeModal: true,
+                                                        },
+                                                    }
+                                                })
+                                            }
+
+                                        },
+                                        error: function (jqXHR, textStatus, errorThrown) {
+                                            console.log(errorThrown);
+                                        },
+                                        complete: function (jqXHR, textStatus) {
+                                        }
+                                    });
+
+
                                 });
 
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.log(errorThrown);
+                        },
+                        complete: function (jqXHR, textStatus) {
+                        }
+                    });
+                }
 
-                                console.log(array_screens)
 
-                            });
 
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        console.log(errorThrown);
-                    },
-                    complete: function (jqXHR, textStatus) {
-                    }
-                });
             }
         });
 

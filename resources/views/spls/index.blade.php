@@ -64,7 +64,11 @@
                             <button type="button" id="refresh_lms"  class="btn btn-icon-text " style="color: #6f6f6f;background: #2a3038; height: 37px; display:none">
                                 <i class="mdi mdi-server-network"></i> LMS </button>
                         </div>
-
+                        <div class="col-xl-2">
+                            <button type="button" class="btn btn-icon-text" id="noc_local_storage"  style="color: #6f6f6f;background: #2a3038; height: 37px; ">
+                                <i class="mdi mdi-file-tree btn-icon-prepend"></i> NOC Local Storage
+                            </button>
+                        </div>
 
                     </div>
 
@@ -333,9 +337,10 @@
             }
         });
 
-        function get_spls(location , screen , lms , refresh_screen)
+        function get_spls(location , screen , lms , refresh_screen,noc_local_storage)
         {
             result =" " ;
+            var head="" ;
             $("#location-listing").dataTable().fnDestroy();
             $('#location-listing tbody').html('')
             var loader_content  =
@@ -352,6 +357,7 @@
                     location: location,
                     screen: screen,
                     lms : lms,
+                    noc_local_storage:noc_local_storage,
                 },
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -370,38 +376,80 @@
                         $('#screen').html(screens)
                         $('#lms_screen_content').html(screens)
                     }
-                    $.each(response.spls, function( index, value ) {
-                        index++ ;
-                        if(value.available_on)
-                        {
-                            available_on_array =  value.available_on.split(",");
-                            available_on_content=""
-                            for(i = 0 ; i< available_on_array.length ; i++ )
+
+                    if( noc_local_storage)
+                    {
+                        head ='<tr>'
+                                +'<th class="sorting sorting_asc">No #</th>'
+                                +'<th class="sorting">Playlist</th>'
+                                +'<th class="sorting">Duration </th>'
+                                +'<th class="sorting">Is Template </th>'
+                                +'<th class="sorting">Action</th>'
+                            +'</tr>'
+
+                        $.each(response.spls, function( index, value ) {
+                            index++ ;
+
+                            var is_template='No' ;
+                            if(value.is_template == 1 )
                             {
-                                if(available_on_array[i] != " " && available_on_array[i] != "" && available_on_array[i] != "  ")
+                                is_template='Yes' ;
+                            }
+                            result = result
+                                +'<tr class="odd" data-id="'+value.uuid+'">'
+                                +'<td class="sorting_1 cpl-item">'+index +' </td>'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.spl_title+'</a></td>'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+value.duration+'</a></td>'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+is_template+'</a></td>'
+                                +'<td > <a href="#" id="'+value.uuid+'" href="" class="btn btn-success   mdi mdi-download download_spl" ></a></td>'
+                                +'</tr>';
+                        });
+                    }
+                    else
+                    {
+                        head ='<tr>'
+                                +'<th class="sorting sorting_asc">No #</th>'
+                                +'<th class="sorting">Playlist</th>'
+                                +'<th class="sorting">Available On </th>'
+                                +'<th class="sorting">Duration </th>'
+                                +'<th class="sorting">Action</th>'
+                            +'</tr>'
+
+
+                        $.each(response.spls, function( index, value ) {
+                            index++ ;
+                            if(value.available_on)
+                            {
+                                available_on_array =  value.available_on.split(",");
+                                available_on_content=""
+                                for(i = 0 ; i< available_on_array.length ; i++ )
                                 {
-                                    if(i != 0 &&  i % 9 == 0  )
+                                    if(available_on_array[i] != " " && available_on_array[i] != "" && available_on_array[i] != "  ")
                                     {
-                                        available_on_content = available_on_content + '<br />'
+                                        if(i != 0 &&  i % 9 == 0  )
+                                        {
+                                            available_on_content = available_on_content + '<br />'
+                                        }
+                                        available_on_content = available_on_content + '<div class="badge badge-outline-primary m-1">'+ available_on_array[i]+'</div>'
                                     }
-                                    available_on_content = available_on_content + '<div class="badge badge-outline-primary m-1">'+ available_on_array[i]+'</div>'
                                 }
                             }
-                        }
-                        else
-                        {
-                            available_on_content="" ;
-                        }
+                            else
+                            {
+                                available_on_content="" ;
+                            }
 
-                        result = result
-                            +'<tr class="odd" data-id="'+value.uuid+'">'
-                            +'<td class="sorting_1 cpl-item">'+index +' </td>'
-                            +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
-                            +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+available_on_content+'</a></td>'
-                            +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+value.duration+'</a></td>'
-                            +'<td ><a class="btn btn-primary infos_modal"  href="#" id="'+value.id+'"> <i class="mdi mdi-magnify"> </i>  </a> <a  href="#" id="'+value.uuid+'" href="" class="btn btn-success   mdi mdi-download download_spl" ></a></td>'
-                            +'</tr>';
-                    });
+                            result = result
+                                +'<tr class="odd" data-id="'+value.uuid+'">'
+                                +'<td class="sorting_1 cpl-item">'+index +' </td>'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</a></td>'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+available_on_content+'</a></td>'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+value.duration+'</a></td>'
+                                +'<td ><a class="btn btn-primary infos_modal"  href="#" id="'+value.id+'"> <i class="mdi mdi-magnify"> </i>  </a> <a  href="#" id="'+value.uuid+'" href="" class="btn btn-success   mdi mdi-download download_spl" ></a></td>'
+                                +'</tr>';
+                        });
+                    }
+                    $('#location-listing thead').html(head)
                     $('#location-listing tbody').html(result)
 
 
@@ -415,7 +463,6 @@
                             searchPlaceholder: "Search..."
                         }
                     });
-
                 },
                 error: function(response) {
 
@@ -433,13 +480,13 @@
                 lms=false ;
                 $('#lms_screen').hide();
                 var screen =  $('#screen').val();
-                get_spls(location , screen , lms , false)
+                get_spls(location , screen , lms , false, false)
             }
             else
             {
                 lms= true ;
                 var screen =  $('#lms_screen_content').val();
-                get_spls(location , screen , lms , false)
+                get_spls(location , screen , lms , false, false)
             }
         });
 
@@ -469,18 +516,13 @@
             if(location != "Locations")
             {
                 $('#refresh_lms').show();
-                get_spls(location , screen , false , true)
+                get_spls(location , screen , false , true, false)
             }
             else
             {
                 $('#refresh_lms').hide();
                 $('#location-listing tbody').html('<div id="table_logs_processing" class="dataTables_processing card">Please Select Location</div>')
-
             }
-
-
-
-
 
         });
 
@@ -494,12 +536,18 @@
 
             if( $('#refresh_lms').hasClass("activated"))
             {
-                get_spls(location , screen , false , true)
+                get_spls(location , screen , false , true, false)
                 $('#refresh_lms').removeClass("activated") ;
             }
             else
             {
-
+                head ='<tr>'
+                                +'<th class="sorting sorting_asc">No #</th>'
+                                +'<th class="sorting">Playlist</th>'
+                                +'<th class="sorting">Available On </th>'
+                                +'<th class="sorting">Duration </th>'
+                                +'<th class="sorting">Action</th>'
+                            +'</tr>'
                 $("#location-listing").dataTable().fnDestroy();
                 var loader_content  =
                 '<div class="jumping-dots-loader">'
@@ -567,6 +615,7 @@
                                 +'</tr>';
                         });
                         $('#refresh_lms').addClass("activated") ;
+                        $('#location-listing thead').html(head)
                         $('#location-listing tbody').html(result)
 
                         console.log(response.spls)
@@ -590,6 +639,38 @@
             }
 
         });
+
+        $('#noc_local_storage').click(function(){
+            //$('#location-listing tbody').html('')
+            var location =  $('#location').val();
+            var country =  $('#country').val();
+            var lms = false ;
+            var screen =  null;
+
+
+
+            $('#screen').find('option')
+            .remove()
+            .end()
+            .append('<option value="null">All Screens</option>')
+
+            if( $('#noc_local_storage').hasClass("activated"))
+            {
+                $('#location-listing tbody').html('<div id="table_logs_processing" class="dataTables_processing card">Please Select Location</div>')
+                $('#noc_local_storage').removeClass("activated") ;
+                $('#refresh_lms').removeClass("activated") ;
+            }
+            else
+            {
+                $("#location").val('Locations');
+                get_spls(location , screen , false ,'null', true, true)
+                $(this).addClass("activated") ;
+                $('#refresh_lms').removeClass("activated") ;
+
+            }
+        });
+
+
         $(document).on('click', '.cpl-item', function (event) {
             $(this).parent('tr').toggleClass('selected');
         });
@@ -613,6 +694,14 @@
             var array_spls = [];
             var location = $('#location').val() ;
             var lms = false ;
+            if( $('#noc_local_storage').hasClass("activated"))
+            {
+                var noc_local_storage = true ;
+            }
+            else
+            {
+                var noc_local_storage = false ;
+            }
             if( $('#refresh_lms').hasClass("activated"))
             {
                 lms = true ;
@@ -632,187 +721,262 @@
             if (array_spls.length ==  0) {
                 $("#empty-warning-modal").modal('show');
             }else{
-                var url = "{{  url('') }}"+ '/get_screens_from_spls/';
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    data: {
-                        array_spls:array_spls,
-                        location :location,
-                        lms:lms,
-                    },
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    beforeSend: function () {
-                    },
-                    success: function (response) {
 
-                        var result = '<li>'
-                                    +'<button type="button" class="btn btn-outline-secondary btn-fw" style="text-align: left;">'
-                                        +'<label class="form-check-label custom-check2">'
-                                            +'<input id="delete_from_lms" type="checkbox" class="form-check-input" name="lms" style="font-size: 20px;margin-bottom:  3px; margin-right:  5px">'
-                                            +'<span style="font-weight: bold; display: inline-block; margin-top: 6px;">LMS</span> <i class="input-helper"></i>'
-                                        +'</label>'
-                                    +'</button>'
-                                +'</li>' ;
+                if(noc_local_storage)
+                {
+                    $.ajax({
+                        url : "{{  url('') }}"+ '/spls/delete_spls',
+                        type: 'GET',
+                        data: {
+                            array_spls:array_spls,
+                            lms:false,
+                            noc_local_storage:noc_local_storage
+                        },
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        beforeSend: function () {
+                        },
+                        success: function (response) {
+                            result ="" ;
+                            if (response.status )
+                            {
 
-                            $.each(response.screens, function( index, value ) {
+                                if (response.status )
+                                    {
+                                        swal({
+                                            title: 'Done !',
+                                            text: 'NOC Local Storage SPLs Deleted Successfully ',
+                                            icon: 'success',
+                                            button: {
+                                                text: "Ok",
+                                                value: true,
+                                                visible: true,
+                                                className: "btn btn-primary"
+                                            }
+                                        })
+                                        //get_cpls(location , screen , true , multiplex,noc_local_storage)
+                                        get_spls(location , screen , false , multiplex, true)
+                                    }
 
-                                if(value.playback_status == "Unknown")
-                                {
-                                    result =  result +
-                                    '<li>'
+                            }
+                            else
+                            {
+                                swal({
+                                    title: 'Failed',
+                                    text: "Error occurred while sending the request.",
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3f51b5',
+                                    cancelButtonColor: '#ff4081',
+                                    confirmButtonText: 'Great ',
+                                    buttons: {
+                                        cancel: {
+                                            text: "Cancel",
+                                            value: null,
+                                            visible: true,
+                                            className: "btn btn-danger",
+                                            closeModal: true,
+                                        },
+                                    }
+                                })
+                            }
+
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.log(errorThrown);
+                        },
+                        complete: function (jqXHR, textStatus) {
+                        }
+                    });
+
+                }
+                else
+                {
+                    var url = "{{  url('') }}"+ '/get_screens_from_spls/';
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        data: {
+                            array_spls:array_spls,
+                            location :location,
+                            lms:lms,
+                        },
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        beforeSend: function () {
+                        },
+                        success: function (response) {
+
+                            var result = '<li>'
                                         +'<button type="button" class="btn btn-outline-secondary btn-fw" style="text-align: left;">'
                                             +'<label class="form-check-label custom-check2">'
-                                                +'<input disabled="true" type="checkbox" class="form-check-input" name="screen_to_ingest" data-id="'+value.id_server+'" value="'+value.id_server+'" style="font-size: 20px;margin-bottom:  3px; margin-right:  5px">'
-                                                +'<span style=" color:red; font-weight: bold; display: inline-block; margin-top: 6px;"> '+value.name+' ( Screen offline ) </span> <i class="input-helper"></i>'
+                                                +'<input id="delete_from_lms" type="checkbox" class="form-check-input" name="lms" style="font-size: 20px;margin-bottom:  3px; margin-right:  5px">'
+                                                +'<span style="font-weight: bold; display: inline-block; margin-top: 6px;">LMS</span> <i class="input-helper"></i>'
                                             +'</label>'
                                         +'</button>'
-                                    +'</li>'
+                                    +'</li>' ;
 
-                                }
-                                else
-                                {
-                                    result =  result +
-                                    '<li>'
-                                        +'<button type="button" class="btn btn-outline-secondary btn-fw" style="text-align: left;">'
-                                            +'<label class="form-check-label custom-check2">'
-                                                +'<input type="checkbox" class="form-check-input" name="screen_to_ingest" data-id="'+value.id_server+'" value="'+value.id_server+'" style="font-size: 20px;margin-bottom:  3px; margin-right:  5px">'
-                                                +'<span style="font-weight: bold; display: inline-block; margin-top: 6px;">'+value.name+'</span> <i class="input-helper"></i>'
-                                            +'</label>'
-                                        +'</button>'
-                                    +'</li>'
-                                }
+                                $.each(response.screens, function( index, value ) {
 
-                            });
+                                    if(value.playback_status == "Unknown")
+                                    {
+                                        result =  result +
+                                        '<li>'
+                                            +'<button type="button" class="btn btn-outline-secondary btn-fw" style="text-align: left;">'
+                                                +'<label class="form-check-label custom-check2">'
+                                                    +'<input disabled="true" type="checkbox" class="form-check-input" name="screen_to_ingest" data-id="'+value.id_server+'" value="'+value.id_server+'" style="font-size: 20px;margin-bottom:  3px; margin-right:  5px">'
+                                                    +'<span style=" color:red; font-weight: bold; display: inline-block; margin-top: 6px;"> '+value.name+' ( Screen offline ) </span> <i class="input-helper"></i>'
+                                                +'</label>'
+                                            +'</button>'
+                                        +'</li>'
 
-                            $('#list_servers_spls_to_delete').html(result)
-                            $('#spl_delete_model').modal('show')
+                                    }
+                                    else
+                                    {
+                                        result =  result +
+                                        '<li>'
+                                            +'<button type="button" class="btn btn-outline-secondary btn-fw" style="text-align: left;">'
+                                                +'<label class="form-check-label custom-check2">'
+                                                    +'<input type="checkbox" class="form-check-input" name="screen_to_ingest" data-id="'+value.id_server+'" value="'+value.id_server+'" style="font-size: 20px;margin-bottom:  3px; margin-right:  5px">'
+                                                    +'<span style="font-weight: bold; display: inline-block; margin-top: 6px;">'+value.name+'</span> <i class="input-helper"></i>'
+                                                +'</label>'
+                                            +'</button>'
+                                        +'</li>'
+                                    }
 
-                            $('#confirm_delete_cpl_group').click(function(){
-                                var array_screens = [];
-                               $("#list_servers_spls_to_delete [name='screen_to_ingest']:checked").each(function() {
-                                    var screen_id = $(this).data("id");
-                                    array_screens.push(screen_id);
                                 });
 
-                                var delete_from_lms = $('#delete_from_lms' ).is(":checked")
-                                if(delete_from_lms)
-                                {
-                                    delete_from_lms = 1 ;
-                                }
-                                else
-                                {
-                                    delete_from_lms = 0 ;
-                                }
+                                $('#list_servers_spls_to_delete').html(result)
+                                $('#spl_delete_model').modal('show')
 
-                                $.ajax({
-                                    url : "{{  url('') }}"+ '/spls/delete_spls',
-                                    type: 'GET',
-                                    data: {
-                                        array_spls:array_spls,
-                                        location :location,
-                                        array_screens:array_screens,
-                                        lms:delete_from_lms
-                                    },
-                                    headers: {
-                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                    },
-                                    beforeSend: function () {
-                                    },
-                                    success: function (response) {
-                                        result ="" ;
-                                        if (response.status )
-                                        {
-                                            if (response.errors.length> 0 )
+                                $('#confirm_delete_cpl_group').click(function(){
+                                    var array_screens = [];
+                                $("#list_servers_spls_to_delete [name='screen_to_ingest']:checked").each(function() {
+                                        var screen_id = $(this).data("id");
+                                        array_screens.push(screen_id);
+                                    });
+
+                                    var delete_from_lms = $('#delete_from_lms' ).is(":checked")
+                                    if(delete_from_lms)
+                                    {
+                                        delete_from_lms = 1 ;
+                                    }
+                                    else
+                                    {
+                                        delete_from_lms = 0 ;
+                                    }
+
+                                    $.ajax({
+                                        url : "{{  url('') }}"+ '/spls/delete_spls',
+                                        type: 'GET',
+                                        data: {
+                                            array_spls:array_spls,
+                                            location :location,
+                                            array_screens:array_screens,
+                                            lms:delete_from_lms,
+                                            noc_local_storage:noc_local_storage
+                                        },
+                                        headers: {
+                                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                        },
+                                        beforeSend: function () {
+                                        },
+                                        success: function (response) {
+                                            result ="" ;
+                                            if (response.status )
                                             {
+                                                if (response.errors.length> 0 )
+                                                {
 
-                                                $('#spl_deleted_model').modal('show') ;
-                                                result = "<h4> Failed  Spls Deleted</h4>" ;
-                                                $.each(response.errors, function( index, value ) {
-
-                                                    result = result
-                                                    +'<p>'
-                                                        +'<span class="align-middle fw-medium text-danger ">'+value.uuid+' |  </span>'
-                                                        +'<span class="align-middle fw-medium text-danger "> '+value.ShowTitleText+' </span>'
-                                                        +'<span class="align-middle fw-medium text-danger "> : '+value.status+' </span>'
-                                                        +'<span class="align-middle fw-medium text-success" > From Screen : '+value.screen+' </span>'
-                                                    +'</p>';
-                                                });
-                                            }
-
-                                            if (response.deleted_spls.length> 0 )
-                                            {
-                                                result = result + "<br /> <br /> <h4>  Succeeded  SPLs Deleted   </h4>" ;
-                                                    $.each(response.deleted_spls, function( index, value ) {
+                                                    $('#spl_deleted_model').modal('show') ;
+                                                    result = "<h4> Failed  Spls Deleted</h4>" ;
+                                                    $.each(response.errors, function( index, value ) {
 
                                                         result = result
                                                         +'<p>'
-                                                            +'<span class="align-middle fw-medium text-success">'+value.uuid+' |</span>'
-                                                            +'<span class="align-middle fw-medium text-success" >'+value.ShowTitleText+' </span>'
-                                                            +'<span class="align-middle fw-medium text-success" >'+value.status+' </span>'
+                                                            +'<span class="align-middle fw-medium text-danger ">'+value.uuid+' |  </span>'
+                                                            +'<span class="align-middle fw-medium text-danger "> '+value.ShowTitleText+' </span>'
+                                                            +'<span class="align-middle fw-medium text-danger "> : '+value.status+' </span>'
                                                             +'<span class="align-middle fw-medium text-success" > From Screen : '+value.screen+' </span>'
                                                         +'</p>';
                                                     });
-                                            }
+                                                }
 
-                                            $('#spl_delete_model').modal('hide');
-                                            $('#spl_deleted_model .modal-body').html(result) ;
-                                            $('#spl_deleted_model').modal('show') ;
-                                            //showSwal('warning-message-and-cancel')
-                                            if( $('#refresh_lms').hasClass("activated"))
-                                            {
-                                                get_spls(location , screen , true , multiplex)
+                                                if (response.deleted_spls.length> 0 )
+                                                {
+                                                    result = result + "<br /> <br /> <h4>  Succeeded  SPLs Deleted   </h4>" ;
+                                                        $.each(response.deleted_spls, function( index, value ) {
+
+                                                            result = result
+                                                            +'<p>'
+                                                                +'<span class="align-middle fw-medium text-success">'+value.uuid+' |</span>'
+                                                                +'<span class="align-middle fw-medium text-success" >'+value.ShowTitleText+' </span>'
+                                                                +'<span class="align-middle fw-medium text-success" >'+value.status+' </span>'
+                                                                +'<span class="align-middle fw-medium text-success" > From Screen : '+value.screen+' </span>'
+                                                            +'</p>';
+                                                        });
+                                                }
+
+                                                $('#spl_delete_model').modal('hide');
+                                                $('#spl_deleted_model .modal-body').html(result) ;
+                                                $('#spl_deleted_model').modal('show') ;
+                                                //showSwal('warning-message-and-cancel')
+                                                if( $('#refresh_lms').hasClass("activated"))
+                                                {
+                                                    get_spls(location , screen , true , multiplex, false)
+                                                }
+                                                else
+                                                {
+                                                get_spls(location , screen , false , multiplex, false)
+                                                }
+
                                             }
                                             else
                                             {
-                                            get_spls(location , screen , false , multiplex)
+                                                swal({
+                                                    title: 'Failed',
+                                                    text: "Error occurred while sending the request.",
+                                                    icon: 'warning',
+                                                    showCancelButton: true,
+                                                    confirmButtonColor: '#3f51b5',
+                                                    cancelButtonColor: '#ff4081',
+                                                    confirmButtonText: 'Great ',
+                                                    buttons: {
+                                                        cancel: {
+                                                            text: "Cancel",
+                                                            value: null,
+                                                            visible: true,
+                                                            className: "btn btn-danger",
+                                                            closeModal: true,
+                                                        },
+                                                    }
+                                                })
                                             }
 
+                                        },
+                                        error: function (jqXHR, textStatus, errorThrown) {
+                                            console.log(errorThrown);
+                                        },
+                                        complete: function (jqXHR, textStatus) {
                                         }
-                                        else
-                                        {
-                                            swal({
-                                                title: 'Failed',
-                                                text: "Error occurred while sending the request.",
-                                                icon: 'warning',
-                                                showCancelButton: true,
-                                                confirmButtonColor: '#3f51b5',
-                                                cancelButtonColor: '#ff4081',
-                                                confirmButtonText: 'Great ',
-                                                buttons: {
-                                                    cancel: {
-                                                        text: "Cancel",
-                                                        value: null,
-                                                        visible: true,
-                                                        className: "btn btn-danger",
-                                                        closeModal: true,
-                                                    },
-                                                }
-                                            })
-                                        }
+                                    });
 
-                                    },
-                                    error: function (jqXHR, textStatus, errorThrown) {
-                                        console.log(errorThrown);
-                                    },
-                                    complete: function (jqXHR, textStatus) {
-                                    }
+
+                                    console.log(array_screens)
+
                                 });
 
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.log(errorThrown);
+                        },
+                        complete: function (jqXHR, textStatus) {
+                        }
+                    });
+                }
 
-                                console.log(array_screens)
-
-                            });
-
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        console.log(errorThrown);
-                    },
-                    complete: function (jqXHR, textStatus) {
-                    }
-                });
             }
         });
 

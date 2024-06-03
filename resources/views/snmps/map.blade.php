@@ -396,7 +396,7 @@
                                 '<tr class="odd text-center  ">'
                                     +'<td class="sorting_1"> '+ error.location.name+'  </td>'
                                     +'<td class="sorting_1 kdm_errors" data-location="'+ error.location.id+'"> '+ error.kdm_errors+'  </td>'
-                                    +'<td class="sorting_1 storage_errors"> '+ error.nbr_storage_errors+'  </td>'
+                                    +'<td class="sorting_1 storage_errors" data-location="'+ error.location.id+'"> '+ error.nbr_storage_errors+'  </td>'
                                     +'<td class="sorting_1 server_errors"  data-location="'+ error.location.id+'"> '+ error.nbr_server_alert+'  </td>'
                                     +'<td class="sorting_1 projector_errors"  data-location="'+ error.location.id+'"> '+ error.nbr_projector_alert+'  </td>'
                                     +'<td class="sorting_1"> '+ error.nbr_sound_alert+'  </td>'
@@ -683,7 +683,7 @@
                         $.each(response.storage_errors_list, function(index, storage) {
                         data +=
                             '<tr class="odd ">'
-                                +'<td class="sorting_1"> '+ storage.storage_generale_status+'  </td>'
+                                +'<td class="sorting_1"> Disk Space Quota  </td>'
                                 +'<td class="sorting_1"> '+ storage.serverName+'  </td>'
                             +'</tr>'
 

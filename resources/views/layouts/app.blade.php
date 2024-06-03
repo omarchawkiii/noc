@@ -172,6 +172,7 @@
                         <table class="table " id="header_table_list_storage_errors">
                             <thead>
                             <tr>
+                                <th> Location</th>
                                 <th> Stat</th>
                                 <th> Screen</th>
 
@@ -463,19 +464,20 @@
                 },
                 method: 'GET',
                 success: function(response) {
-                    var data ;
+
+                    var data ="";
                     if(response.storage_errors_list.length > 0)
                     {
 
                         $.each(response.storage_errors_list, function(index, storage) {
-                        data +=
-                            '<tr class="odd ">'
-                                +'<td class="sorting_1"> '+ storage.storage_generale_status+'  </td>'
+                        data +='<tr class="odd ">'
+                                +'<td class="sorting_1"> ' + storage.location.name + '  </td>'
+                                +'<td class="sorting_1">  Disk Space Quota   </td>'
                                 +'<td class="sorting_1"> '+ storage.serverName+'  </td>'
                             +'</tr>'
 
                         })
-
+                        console.log(data)
                         $('#header_body_list_storage_errors').html(data) ;
 
                     }

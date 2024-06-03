@@ -106,47 +106,57 @@ class SplController extends Controller
         $screen = $request->screen;
 
         $lms= $request->lms ;
-
-        if( $lms == 'true')
+        $noc_local_storage= $request->noc_local_storage ;
+        if($noc_local_storage == 'true')
         {
-            $spls =Lmsspl::groupBy('uuid');
+            $spls = Nocspl::with('location')->get() ;
+            $screens =null ;
+            return Response()->json(compact('spls','screens'));
         }
         else
         {
-            $spls =Spl::groupBy('uuid');
-        }
-        if(isset($location) &&  $location != 'null' )
-        {
-            $location = Location::find($location) ;
-            $screens =$location->screens ;
-            $spls =$spls->where('location_id',$location->id);
-        }
-        else
-        {
-            $screens =null;
-            $screen=null ;
-
-            if( Auth::user()->role != 1)
+            if( $lms == 'true')
             {
-                $locations = Auth::user()->locations ;
+                $spls =Lmsspl::groupBy('uuid');
             }
             else
             {
-                $locations = Location::all() ;
+                $spls =Spl::groupBy('uuid');
+            }
+            if(isset($location) &&  $location != 'null' )
+            {
+                $location = Location::find($location) ;
+                $screens =$location->screens ;
+                $spls =$spls->where('location_id',$location->id);
+            }
+            else
+            {
+                $screens =null;
+                $screen=null ;
+
+                if( Auth::user()->role != 1)
+                {
+                    $locations = Auth::user()->locations ;
+                }
+                else
+                {
+                    $locations = Location::all() ;
+                }
+
+                return view('spls.index', compact('screen','screens','locations'));
             }
 
-            return view('spls.index', compact('screen','screens','locations'));
+            if(isset($screen) && $screen != 'null' )
+            {
+                $spls =$spls->where('screen_id',$screen);
+
+            }
+            // $spls =$spls->groupBy('uuid') ;
+
+            $spls = $spls->get() ;
+            return Response()->json(compact('spls','screens'));
         }
 
-        if(isset($screen) && $screen != 'null' )
-        {
-            $spls =$spls->where('screen_id',$screen);
-
-        }
-       // $spls =$spls->groupBy('uuid') ;
-
-        $spls = $spls->get() ;
-        return Response()->json(compact('spls','screens'));
     }
 
 
@@ -202,39 +212,73 @@ class SplController extends Controller
 
     public function delete_spls(Request $request )
     {
-        $location = Location::findOrFail($request->location) ;
-        $response = $this->delete_splRequest($location->connection_ip, $request->lms, $request->array_spls, $request->array_screens, $location->email , $location->password);
-        //dd($response);
-        //$response['result'] = 1 ;
 
-        if(count($response['errors']) === 0)
+        if($request->noc_local_storage == 'true')
         {
             foreach($request->array_spls as $spl_uuid)
             {
-                if($request->lms)
+                $nocspl = Nocspl::where('uuid',$spl_uuid)->first() ;
+                $path = storage_path(). '/app/xml_file/'.$nocspl->xmlpath ;
+                if($nocspl->delete())
                 {
-                    $spl = Lmsspl::where('uuid',$spl_uuid)->where('location_id',$location->id)->delete();
+                    $res =unlink($path);
+                    if($res)
+                    {
+                        echo 'Success' ;
+                    }
+                    else
+                    {
+                        echo 'Failed' ;
+                    }
                 }
-                if($request->array_screens)
+                else
                 {
-                    $screens= Screen::whereIn('id_server',$request->array_screens)->where('location_id',$location->id)->get()->toArray();
-                    $screens_id = array_column($screens, 'id');
-                    $spl = Spl::with('screen')->where('uuid',$spl_uuid)->whereIn('screen_id',$screens_id)->where('location_id',$location->id)->delete() ;
+                    echo 'Failed' ;
                 }
-
 
             }
-            $deleted_spls = $response['deleted_spls'] ;
-            $errors = $response['errors'] ;
+            $deleted_cpls = null ;
+            $errors = null ;
             $status = 1 ;
-            return Response()->json(compact('status','deleted_spls','errors'));
+            return Response()->json(compact('status','deleted_cpls','errors'));
         }
         else
         {
-            $deleted_spls =null ;
-            $errors =null ;
-            $status = 0 ;
-            return Response()->json(compact('status','deleted_spls','errors'));
+
+            $location = Location::findOrFail($request->location) ;
+            $response = $this->delete_splRequest($location->connection_ip, $request->lms, $request->array_spls, $request->array_screens, $location->email , $location->password);
+            //dd($response);
+            //$response['result'] = 1 ;
+
+            if(count($response['errors']) === 0)
+            {
+                foreach($request->array_spls as $spl_uuid)
+                {
+                    if($request->lms)
+                    {
+                        $spl = Lmsspl::where('uuid',$spl_uuid)->where('location_id',$location->id)->delete();
+                    }
+                    if($request->array_screens)
+                    {
+                        $screens= Screen::whereIn('id_server',$request->array_screens)->where('location_id',$location->id)->get()->toArray();
+                        $screens_id = array_column($screens, 'id');
+                        $spl = Spl::with('screen')->where('uuid',$spl_uuid)->whereIn('screen_id',$screens_id)->where('location_id',$location->id)->delete() ;
+                    }
+
+
+                }
+                $deleted_spls = $response['deleted_spls'] ;
+                $errors = $response['errors'] ;
+                $status = 1 ;
+                return Response()->json(compact('status','deleted_spls','errors'));
+            }
+            else
+            {
+                $deleted_spls =null ;
+                $errors =null ;
+                $status = 0 ;
+                return Response()->json(compact('status','deleted_spls','errors'));
+            }
         }
     }
 
