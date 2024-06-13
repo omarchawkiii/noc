@@ -1302,6 +1302,7 @@
                 $('#location-listing tbody').html('<div id="table_logs_processing" class="dataTables_processing card">Please Select Location</div>')
                 $('#noc_local_storage').removeClass("activated") ;
                 $('#refresh_lms').removeClass("activated") ;
+                $('#refresh_lms').hide();
             }
             else
             {
@@ -1309,6 +1310,7 @@
                 get_cpls(location , screen , false ,'null', true,true)
                 $(this).addClass("activated") ;
                 $('#refresh_lms').removeClass("activated") ;
+                $('#refresh_lms').hide();
 
             }
         });
@@ -1399,8 +1401,7 @@
                 $("#empty-warning-modal").modal('show');
             }else{
 
-
-                if( $('#noc_local_storage').hasClass("activated"))
+                if(noc_local_storage)
                 {
                     $.ajax({
                             url : "{{  url('') }}"+ '/delete_cpls/',

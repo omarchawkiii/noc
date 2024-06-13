@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('nocspls', function (Blueprint $table) {
-            $table->boolean('is_template')->default(0);
+        Schema::table('moviescods', function (Blueprint $table) {
+            $table->dateTime('date_linking')->nullable();
         });
     }
 
@@ -21,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('nocspls', function (Blueprint $table) {
+        Schema::table('moviescods', function (Blueprint $table) {
             //
         });
     }

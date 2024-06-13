@@ -18,7 +18,8 @@ class Moviescod extends Model
         'status',
         'location_id',
         'spl_uuid',
-        'exist_inPos'
+        'exist_inPos',
+        'date_linking'
 
     ];
 

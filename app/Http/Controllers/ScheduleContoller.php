@@ -22,156 +22,156 @@ class ScheduleContoller extends Controller
 {
     public function getschedules($location)
     {
-            $location = Location::find($location) ;
-            $url = $location->connection_ip."?request=getListSessionsScheduleFromNow";
-            $client = new Client();
-            $response = $client->request('GET', $url);
-            $contents = json_decode($response->getBody(), true);
-            if($contents)
+        $location = Location::find($location) ;
+        $url = $location->connection_ip."?request=getListSessionsScheduleFromNow";
+        $client = new Client();
+        $response = $client->request('GET', $url);
+        $contents = json_decode($response->getBody(), true);
+        if($contents)
+        {
+            foreach($contents as $content)
             {
-                foreach($contents as $content)
+                if($content)
                 {
-                    if($content)
+                    foreach($content as $schedule)
                     {
-                        foreach($content as $schedule)
+                        if( isset($schedule['cpls']))
                         {
-                            if( isset($schedule['cpls']))
+                            $cpls = $schedule['cpls'] ;
+                        }
+                        else
+                        {
+                            $cpls = null ;
+                        }
+
+                        if( isset($schedule['kdm']))
+                        {
+                            $kdm = $schedule['kdm'] ;
+                        }
+                        else
+                        {
+                            $kdm = null ;
+                        }
+
+                        $screen = Screen::where('screen_number', $schedule['number'])->first() ;
+                        if($screen)
+                        {
+                            if( $schedule['status'] != "linked" || $schedule['uuid_spl'] == 'null'  )
                             {
-                                $cpls = $schedule['cpls'] ;
+                                $spl_id =null ;
                             }
                             else
                             {
-                                $cpls = null ;
-                            }
-
-                            if( isset($schedule['kdm']))
-                            {
-                                $kdm = $schedule['kdm'] ;
-                            }
-                            else
-                            {
-                                $kdm = null ;
-                            }
-
-                            $screen = Screen::where('screen_number', $schedule['number'])->first() ;
-                            if($screen)
-                            {
-                                if( $schedule['status'] != "linked" || $schedule['uuid_spl'] == 'null'  )
+                                $spl = Spl::where('uuid',$schedule['uuid_spl'])->first() ;
+                                if($spl )
+                                {
+                                    $spl_id = $spl->id ;
+                                }
+                                else
                                 {
                                     $spl_id =null ;
                                 }
-                                else
-                                {
-                                    $spl = Spl::where('uuid',$schedule['uuid_spl'])->first() ;
-                                   if($spl )
-                                   {
-                                        $spl_id = $spl->id ;
-                                   }
-                                   else
-                                   {
-                                        $spl_id =null ;
-                                   }
-                                }
-                                $kdm_status="";
-                                $disable_kdm_not_valide =false ;
-                                if(count($schedule['list_kdm_notes']) > 0 )
-                                {
-                                    foreach($schedule['list_kdm_notes'] as $kdm_note )
-                                    {
-                                        foreach($kdm_note['list_not'] as $note)
-                                        {
-                                            if($note['status'] == 'valid')
-                                            {
-                                                $disable_kdm_not_valide = true ;
-                                            }
-                                        }
-                                    }
-
-                                    foreach($schedule['list_kdm_notes'] as $kdm_note )
-                                    {
-                                        foreach($kdm_note['list_not'] as $note)
-                                        {
-                                            if($note['status'] == 'valid')
-                                            {
-                                                $kdm_status .= '<a class="btn btn-success btn-fw mr-1" >KDM Expired in : ' .$note['date_expired'].' </a>';
-                                            }
-                                            elseif($note['status'] == 'not_valid_yet')
-                                            {
-                                                $kdm_status .= '<a class="btn btn-light  btn-fw mr-1" > KDM Valide in : ' .$note['date_expired'].' </a>';
-                                            }
-                                            elseif($note['status'] == 'warning')
-                                            {
-                                                $kdm_status .= '<a class="btn btn-warning btn-fw mr-1" >KDM Expired in : ' .$note['date_expired'].' </a>';
-                                            }
-                                            else
-                                            {
-                                                if(!$disable_kdm_not_valide)
-                                                {
-                                                    $kdm_status .= '<a class="btn btn-danger btn-fw mr-1">KDM Already Expired : ' .$note['date_expired'].'</a>';
-                                                }
-
-                                            }
-                                            $date_expired ="";
-                                        }
-                                    }
-                                    /*$kdm_status = $schedule['list_kdm_notes'][0]['list_not'][0]['status'] ;
-                                    $date_expired = $schedule['list_kdm_notes'][0]['list_not'][0]['date_expired'] ;
-                                            */
-
-                                }
-                                else
-                                {
-                                    $kdm_status ="";
-                                    $date_expired ="";
-                                }
-                                Schedule::updateOrCreate([
-                                    'scheduleId' => $schedule["id"],
-                                    'location_id' => $location->id,
-                                ],[
-                                   'name' => $schedule['name'],
-                                   'scheduleId' => $schedule['id'],
-                                   'titleShort' => $schedule['titleShort'],
-                                   'uuid_spl' => $schedule['uuid_spl'],
-                                   'screen_number' => $schedule['number'],
-                                   //'duration' => $schedule['Lorem'],
-                                   'cod_film' => $schedule['cod_film'],
-                                   'id_film' => $schedule['id_film'],
-                                   'color' => $schedule['color'],
-                                   'date_start' => $schedule['start'],
-                                   'date_end' => $schedule['end'],
-                                   'type' => $schedule['type'],
-                                   'status' => $schedule['status'],
-                                    'cpls' => $cpls,
-                                   'kdm' => $kdm,
-                                   "idserver" =>  $schedule['idserver'],
-                                   'ShowTitleText' => $schedule['ShowTitleText'],
-                                   'spl_available' => $schedule['spl_available'],
-                                   'screen_id' => $screen->id ,
-                                    'spl_id' => $spl_id ,
-                                    'location_id' => $location->id ,
-                                    'kdm_status' => $kdm_status,
-                                    'date_expired' => $date_expired,
-                                ]);
                             }
-
-                        }
-                        $uuid_schedule = array_column($content, 'id');
-                        foreach($location->schedules as $schedule)
-                        {
-                            if (! in_array( $schedule->scheduleId , $uuid_schedule) &&  strtotime($schedule->date_start) > strtotime('now')  )
+                            $kdm_status="";
+                            $disable_kdm_not_valide =false ;
+                            if(count($schedule['list_kdm_notes']) > 0 )
                             {
-                                $schedule->delete() ;
+                                foreach($schedule['list_kdm_notes'] as $kdm_note )
+                                {
+                                    foreach($kdm_note['list_not'] as $note)
+                                    {
+                                        if($note['status'] == 'valid')
+                                        {
+                                            $disable_kdm_not_valide = true ;
+                                        }
+                                    }
+                                }
+
+                                foreach($schedule['list_kdm_notes'] as $kdm_note )
+                                {
+                                    foreach($kdm_note['list_not'] as $note)
+                                    {
+                                        if($note['status'] == 'valid')
+                                        {
+                                            $kdm_status .= '<a class="btn btn-success btn-fw mr-1" >KDM Expired in : ' .$note['date_expired'].' </a>';
+                                        }
+                                        elseif($note['status'] == 'not_valid_yet')
+                                        {
+                                            $kdm_status .= '<a class="btn btn-light  btn-fw mr-1" > KDM Valid After : ' .$note['date_start_valid'].' </a>';
+                                        }
+                                        elseif($note['status'] == 'warning')
+                                        {
+                                            $kdm_status .= '<a class="btn btn-warning btn-fw mr-1" >KDM Expired in : ' .$note['date_expired'].' </a>';
+                                        }
+                                        else
+                                        {
+                                            if(!$disable_kdm_not_valide)
+                                            {
+                                                $kdm_status .= '<a class="btn btn-danger btn-fw mr-1">KDM Already Expired : ' .$note['date_expired'].'</a>';
+                                            }
+
+                                        }
+                                        $date_expired ="";
+                                    }
+                                }
+                                /*$kdm_status = $schedule['list_kdm_notes'][0]['list_not'][0]['status'] ;
+                                $date_expired = $schedule['list_kdm_notes'][0]['list_not'][0]['date_expired'] ;
+                                        */
+
                             }
+                            else
+                            {
+                                $kdm_status ="";
+                                $date_expired ="";
+                            }
+                            Schedule::updateOrCreate([
+                                'scheduleId' => $schedule["id"],
+                                'location_id' => $location->id,
+                            ],[
+                                'name' => $schedule['name'],
+                                'scheduleId' => $schedule['id'],
+                                'titleShort' => $schedule['titleShort'],
+                                'uuid_spl' => $schedule['uuid_spl'],
+                                'screen_number' => $schedule['number'],
+                                //'duration' => $schedule['Lorem'],
+                                'cod_film' => $schedule['cod_film'],
+                                'id_film' => $schedule['id_film'],
+                                'color' => $schedule['color'],
+                                'date_start' => $schedule['start'],
+                                'date_end' => $schedule['end'],
+                                'type' => $schedule['type'],
+                                'status' => $schedule['status'],
+                                'cpls' => $cpls,
+                                'kdm' => $kdm,
+                                "idserver" =>  $schedule['idserver'],
+                                'ShowTitleText' => $schedule['ShowTitleText'],
+                                'spl_available' => $schedule['spl_available'],
+                                'screen_id' => $screen->id ,
+                                'spl_id' => $spl_id ,
+                                'location_id' => $location->id ,
+                                'kdm_status' => $kdm_status,
+                                'date_expired' => $date_expired,
+                            ]);
+                        }
+
+                    }
+                    $uuid_schedule = array_column($content, 'id');
+                    $schedules = Schedule::where('location_id',$location->id)->where('date_start','>=',Carbon::now())->get();
+
+                    foreach($schedules as $schedule)
+                    {
+                        if (! in_array( $schedule->scheduleId , $uuid_schedule  ))
+                        {
+                            $schedule->delete() ;
                         }
                     }
                 }
             }
-            else
-            {
-                //echo "no content <br />" ;
-            }
-
-
+        }
+        else
+        {
+            //echo "no content <br />" ;
+        }
     }
     public function get_schedules_with_filter(Request $request )
     {

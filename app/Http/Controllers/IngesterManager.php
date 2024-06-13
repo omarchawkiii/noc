@@ -3587,6 +3587,22 @@ $data_dcp = json_decode(json_encode($data_dcp), true);
     }
 
 
+    public function checkIsArrayOfArrays($my_array)
+    {
+        // Check if the array is an array of arrays
+        if (is_array($my_array) && isset($my_array[0]) && is_array($my_array[0])) {
+            return true;
+        }
+        return false;
+    }
+
+    public function convertToArrayOfArrays($my_asset)
+    {
+        // Convert a single associative array to an array of arrays
+        return array($my_asset);
+    }
+
+
 
 }
 

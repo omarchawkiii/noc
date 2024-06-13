@@ -327,6 +327,15 @@
 
     // filter location
     (function($) {
+
+        function sToTime(s) {
+            var secs = s % 60;
+            s = (s - secs) / 60;
+            var mins = s % 60;
+            var hrs = (s - mins) / 60;
+
+            return hrs + ':' + mins + ':' + secs;
+        }
         var spl_datatable = $('#location-listing').DataTable({
         "iDisplayLength": 100,
             destroy: true,
@@ -395,11 +404,13 @@
                             {
                                 is_template='Yes' ;
                             }
+
+                            var duration =  sToTime(value.duration);
                             result = result
                                 +'<tr class="odd" data-id="'+value.uuid+'">'
                                 +'<td class="sorting_1 cpl-item">'+index +' </td>'
                                 +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none" style="line-height: 22px; width: 10vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.spl_title+'</a></td>'
-                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+value.duration+'</a></td>'
+                                +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+ duration +'</a></td>'
                                 +'<td class="cpl-item"><a class="text-body align-middle fw-medium text-decoration-none"> '+is_template+'</a></td>'
                                 +'<td > <a href="#" id="'+value.uuid+'" href="" class="btn btn-success   mdi mdi-download download_spl" ></a></td>'
                                 +'</tr>';
@@ -647,8 +658,6 @@
             var lms = false ;
             var screen =  null;
 
-
-
             $('#screen').find('option')
             .remove()
             .end()
@@ -659,6 +668,7 @@
                 $('#location-listing tbody').html('<div id="table_logs_processing" class="dataTables_processing card">Please Select Location</div>')
                 $('#noc_local_storage').removeClass("activated") ;
                 $('#refresh_lms').removeClass("activated") ;
+                $('#refresh_lms').hide();
             }
             else
             {
@@ -666,6 +676,7 @@
                 get_spls(location , screen , false ,'null', true, true)
                 $(this).addClass("activated") ;
                 $('#refresh_lms').removeClass("activated") ;
+                $('#refresh_lms').hide();
 
             }
         });
@@ -741,23 +752,19 @@
                             result ="" ;
                             if (response.status )
                             {
-
-                                if (response.status )
-                                    {
-                                        swal({
-                                            title: 'Done !',
-                                            text: 'NOC Local Storage SPLs Deleted Successfully ',
-                                            icon: 'success',
-                                            button: {
-                                                text: "Ok",
-                                                value: true,
-                                                visible: true,
-                                                className: "btn btn-primary"
-                                            }
-                                        })
-                                        //get_cpls(location , screen , true , multiplex,noc_local_storage)
-                                        get_spls(location , screen , false , multiplex, true)
+                                swal({
+                                    title: 'Done !',
+                                    text: 'NOC Local Storage SPLs Deleted Successfully ',
+                                    icon: 'success',
+                                    button: {
+                                        text: "Ok",
+                                        value: true,
+                                        visible: true,
+                                        className: "btn btn-primary"
                                     }
+                                })
+                                //get_cpls(location , screen , true , multiplex,noc_local_storage)
+                                get_spls(location , screen , false , multiplex, true)
 
                             }
                             else

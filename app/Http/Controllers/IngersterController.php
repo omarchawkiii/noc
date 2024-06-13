@@ -280,7 +280,11 @@ class IngersterController extends Controller
 
                         // get mxf files
                         $pkl_content = $ingester_manager->loadPkl($tms_pkl_path);
+                        if ($ingester_manager->checkIsArrayOfArrays($pkl_content)) {
 
+                        } else {
+                         $pkl_content = $ingester_manager->convertToArrayOfArrays($pkl_content);
+                        }
                         $pkl_uuid = $ingester_manager->getPklUuid($item['cpl_uuid']);
 
                         if ($ingester_manager->checkPathFromPkl($pkl_content) == 1) { // if from pkl
@@ -294,7 +298,8 @@ class IngersterController extends Controller
                             $asset_content = $ingester_manager->loadAssetMap($tms_asset_path, $dcp_dir, $item['asset_uri']);
                             $file_mxf = $ingester_manager->getLargesFilesFromAssetMap($asset_content, $pkl_content, $pkl_uuid);
                         }
-                        if (empty($file_mxf)) {
+                        //if (empty($file_mxf)) {
+                        if (empty($file_mxf) or (count($file_mxf) === 1 && $file_mxf[0]['Type'] === 'text/xml;asdcpKind=CPL')){
                             $ingester_manager->updateIngestStatusByCplUuid($item['cpl_uuid'], "Complete");
 
                             /* ************ check this ***** */
@@ -463,8 +468,6 @@ class IngersterController extends Controller
                     $pkl_size = $this->getFolderSize($cpl->tms_dir);
 
                     $response = $this->ingestDcp($location->connection_ip,$cpl->cpl_id, $pkl_size, $cpl->cpl_description,$location->email, $location->password);
-
-
                     if($response['status'] === 1 )
                     {
 
@@ -577,9 +580,7 @@ class IngersterController extends Controller
                 $dcp_trensfers =$dcp_trensfers->where('dcp_trensfers.status', '=',$request->state_log) ;
             }
             $dcp_trensfers =$dcp_trensfers->get();
-
         return Response()->json(compact('dcp_trensfers','locations'));
-
     }
 
     public function monitors()

@@ -8,6 +8,7 @@ use App\Models\Location;
 use App\Models\Moviescod;
 use App\Models\Nocspl;
 use App\Models\Spl;
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,7 +22,7 @@ class MoviescodController extends Controller
         $client = new Client();
         $response = $client->request('GET', $url);
         $contents = json_decode($response->getBody(), true);
-//dd($contents);
+        //dd($contents);
         if($contents)
         {
             foreach($contents as $content)
@@ -93,12 +94,11 @@ class MoviescodController extends Controller
         return Response()->json(compact('nos_spls','lms_spl','movies'));
 
     }
+
     public function add_movies_to_spls(Request $request)
     {
-
         //$apiUrl = 'http://localhost/tms/system/api2.php';
         $moviescod = Moviescod::findOrFail($request->movie_id) ;
-
         $splnoc= Nocspl::where('uuid',$request->spl_id)->where('location_id',$moviescod->location_id)->first();
         $spllms= Lmsspl::where('uuid',$request->spl_id)->where('location_id',$moviescod->location_id)->first();
 
@@ -106,37 +106,20 @@ class MoviescodController extends Controller
         $location = $moviescod->location ;
         $apiUrl = $location->connection_ip;
 
-        if($spllms != null)
+        if($request->time_schedule)
         {
-            $check_lms_spl  = true ;
-        }
-        else
-        {
-            $check_lms_spl = Lmsspl::where('uuid' , $request->spl_id)->where('location_id',$moviescod->location_id)->first() ;
-        }
+            $date_schedule =$request->date_schedule ;
+            $time_schedule = $request->time_schedule ;
+            $date_time = $date_schedule ." ". $time_schedule .":00";
 
-        if($check_lms_spl)
-        {
-            // $location = Location::findOrFail($check_lms_spl->location_id) ;
-            //$this->sendUpdateLinksRequest($location->connection_ip, $moviescod->moviescods_id, $splnoc->uuid);
-            $response = $this->sendUpdateLinksRequest($apiUrl, $moviescod->code, $request->spl_id, $location->email , $location->password);
-            //$response['result'] = 1 ;
-                //dd($response);
-            if($response['result'] === 1 )
-            {
-                $moviescod = Moviescod::findOrFail($request->movie_id)->update([
+            $moviescod = Moviescod::findOrFail($request->movie_id)->update([
                 'spl_uuid' => $request->spl_id,
-                'status' => "linked"
-                ]);
-
-                if($moviescod)
-                {
-                    echo "Success" ;
-                }
-                else
-                {
-                    echo "Failed" ;
-                }
+                'date_linking'=> $date_time ,
+                'status' => "pending"
+            ]);
+            if($moviescod)
+            {
+                echo "Success" ;
             }
             else
             {
@@ -145,7 +128,66 @@ class MoviescodController extends Controller
         }
         else
         {
-            echo "missing" ;
+            if($spllms != null)
+            {
+                $check_lms_spl  = true ;
+            }
+            else
+            {
+                $check_lms_spl = Lmsspl::where('uuid' , $request->spl_id)->where('location_id',$moviescod->location_id)->first() ;
+            }
+
+            if($check_lms_spl)
+            {
+                //$location = Location::findOrFail($check_lms_spl->location_id) ;
+                //$this->sendUpdateLinksRequest($location->connection_ip, $moviescod->moviescods_id, $splnoc->uuid);
+                $response = $this->sendUpdateLinksRequest($apiUrl, $moviescod->code, $request->spl_id, $location->email , $location->password);
+                //$response['result'] = 1 ;
+                //dd($response);
+                if($response['result'] === 1 )
+                {
+                    $moviescod = Moviescod::findOrFail($request->movie_id)->update([
+                    'spl_uuid' => $request->spl_id,
+                    'status' => "linked"
+                    ]);
+
+                    if($moviescod)
+                    {
+                        echo "Success" ;
+                    }
+                    else
+                    {
+                        echo "Failed" ;
+                    }
+                }
+                else
+                {
+                    echo "Failed" ;
+                }
+            }
+            else
+            {
+                echo "missing" ;
+            }
+        }
+
+    }
+
+    public function link_pending_spl_movies()
+    {
+        $moviescods = Moviescod::where('status','pending')->where('date_linking','<=',Carbon::now())->get() ;
+        dd($moviescods) ;
+        foreach($moviescods  as $moviescod)
+        {
+            $location = $moviescod->location ;
+            $apiUrl = $location->connection_ip;
+            $response = $this->sendUpdateLinksRequest($apiUrl, $moviescod->code, $moviescod->spl_uuid, $location->email , $location->password);
+            if($response['result'] === 1 )
+            {
+                $moviescod = $moviescod->update([
+                    'status' => "linked"
+                ]);
+            }
         }
     }
 
@@ -158,12 +200,13 @@ class MoviescodController extends Controller
             //->leftJoin('nocspls', 'moviescods.spl_uuid', '=', 'nocspls.uuid')
             ->leftJoin('lmsspls', 'moviescods.spl_uuid', '=', 'lmsspls.uuid')
             ->where('moviescods.location_id',$request->location)
-            ->where('status','linked')
+            ->where('status','!=','unlinked7')
             ->select('lmsspls.id as id_spl' ,'lmsspls.name as title_spl', 'moviescods.*')
             ->groupBy('uuid')
             ->get();
         return Response()->json(compact('movies'));
     }
+
     public function unlink_spl_movie(Request $request)
     {
 
@@ -174,7 +217,8 @@ class MoviescodController extends Controller
         $location = Location::findOrFail($request->location) ;
         $apiUrl = $location->connection_ip ;
         $response = $this->sendUnlinkSplRequest($apiUrl, $moviescod->code, $location->email , $location->password);
-       $response['result'] = 1 ;
+        $response['result'] = 1 ;
+
         if($response['result'] === 1 )
         {
             $moviescod = $moviescod->update([
@@ -236,6 +280,7 @@ class MoviescodController extends Controller
             return json_decode($response, true);
         }
     }
+
     function sendUnlinkSplRequest($apiUrl, $cod ,$username,$password) {
         // Prepare the request data
         $requestData = [

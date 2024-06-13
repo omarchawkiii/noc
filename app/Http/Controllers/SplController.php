@@ -224,16 +224,16 @@ class SplController extends Controller
                     $res =unlink($path);
                     if($res)
                     {
-                        echo 'Success' ;
+                        //echo 'Success' ;
                     }
                     else
                     {
-                        echo 'Failed' ;
+                        //echo 'Failed' ;
                     }
                 }
                 else
                 {
-                    echo 'Failed' ;
+                    //echo 'Failed' ;
                 }
 
             }

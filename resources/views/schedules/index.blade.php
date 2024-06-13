@@ -283,10 +283,14 @@
                                 </div>
 
                             </div>
-                            <div class="row " >
-                                <div class="col-md-12 " >
-                                    <button type="button " id="link_spl_movies_btn" class=" btn btn-primary  btn-icon-text " style="margin: 15px auto 0px auto; display: table;">
+                            <div class="row  justify-content-md-center" >
+                                <div class="col-md-2 " >
+                                    <button type="button " id="link_spl_movies_btn" class=" btn btn-primary  btn-icon-text " style="margin: 15px auto ; display: table;">
                                     <i class="mdi mdi-check "></i> Apply </button>
+                                </div>
+                                <div class="col-md-3 " >
+                                    <button type="button " id="schedule_linking_btn" class=" btn btn-primary  btn-icon-text " style="margin: 15px auto; display: table;">
+                                        <i class="mdi mdi-calendar-clock "></i> Schedule Linking </button>
                                 </div>
                             </div>
                         </div>
@@ -339,13 +343,13 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="ModalLabel">Please Select Location </h5>
+                    <h5 class="modal-title" id="ModalLabel"> </h5>
                     <button type="button" class="close btn-close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
                 <div class="modal-body minauto">
-                    <h4 class="text-center"> No Location Selected!</h4>
+                    <h4 class="text-center"></h4>
                 </div>
                 <div class="modal-footer">
                     <button type="button" style="margin: auto" class="btn btn-secondary btn-fw close"
@@ -358,6 +362,56 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade " id="schedule_linking_modal" tabindex="-1" role="dialog" aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ModalLabel"> Schedule Linking  </h5>
+                    <button type="button" class="close btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body minauto row">
+                    <div class="col-xl-6">
+                        <div class="form-group">
+
+                            <label>Date : </label>
+                            <div class="input-group date"  data-target-input="nearest">
+                                <div class="input-group" data-bs-target="#timepicker-example" data-toggle="datepicker">
+                                    <input type="date"id="date_schedule"  class="form-control form-control-sm datepicker-input" data-bs-target="#datepicker-example" name="date_schedule" >
+                                    <div class="input-group-addon input-group-append"><i class="mdi mdi-clock input-group-text"></i></div>
+                                </div>
+                            </div>
+                            <div class="label-status"></div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 ">
+                        <div class="form-group">
+
+                            <label>Time : </label>
+                            <div class="input-group date"  data-target-input="nearest">
+                                <div class="input-group" data-bs-target="#timepicker-example" data-toggle="datetimepicker">
+                                    <input type="time"id="time_schedule"  class="form-control form-control-sm datetimepicker-input" data-bs-target="#timepicker-example" name="time_schedule" >
+                                    <div class="input-group-addon input-group-append"><i class="mdi mdi-clock input-group-text"></i></div>
+                                </div>
+                            </div>
+                            <div class="label-status"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button " id="schedule_spl_movies_btn" class=" btn btn-primary  btn-icon-text " style="margin: 15px auto ; display: table;">
+                        <i class="mdi mdi-check "></i> Apply
+                    </button>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 
     <div class="modal fade " id="ingest_spl" tabindex="-1" role="dialog" aria-labelledby="delete_client_modalLabel" aria-hidden="true">>
         <div class="modal-dialog" role="document">
@@ -382,6 +436,7 @@
             </div>
         </div>
     </div>
+
     <div class=" modal fade " id="ingest-response" role="dialog" aria-labelledby="delete_client_modalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered  modal-xl" style="border: 1px solid #5f5a5a">
             <div class="modal-content border-0">
@@ -404,7 +459,6 @@
             <!--end modal-content-->
         </div>
     </div>
-
 
     <!--   delete spl -->
     <div class="modal fade show" id="unlink-spl" tabindex="-1" role="dialog" aria-labelledby="delete_client_modalLabel" aria-hidden="true">
@@ -429,7 +483,6 @@
         </div>
 
     </div>
-
 
     <div class=" modal fade " id="missing_cpls_schedule_check" role="dialog" aria-labelledby="delete_client_modalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered  modal-xl" >
@@ -464,10 +517,7 @@
         </div>
     </div>
 
-
     <!-- schedule Info -->
-
-
     <div class=" modal fade " id="sessions_details_modal" role="dialog" aria-labelledby="delete_client_modalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered   modal-lg" >
             <div class="modal-content border-0">
@@ -603,75 +653,78 @@
 
 <script src="{{asset('/assets/vendors/sweetalert/sweetalert.min.js')}}"></script>
 
+
+
+
 <script>
 
 (function($) {
         showSwal = function(type) {
-        if (type === 'success-message') {
-            swal({
-                title: 'Congratulations!',
-                //text: 'SPL and movie are linked',
-                icon: 'success',
-                button: {
-                text: "Continue",
-                value: true,
-                visible: true,
-                className: "btn btn-primary"
-                }
-            })
-
-        }
-        if (type === 'link-spl') {
-            swal({
-                title: 'Done!',
-                text: 'SPL and movie are linked',
-                icon: 'success',
-                button: {
-                text: "Continue",
-                value: true,
-                visible: true,
-                className: "btn btn-primary"
-                }
-            })
-
-        }
-
-        if (type === 'unlink-spl') {
-            swal({
-                title: 'Done!',
-                text: 'SPL and movie are unlinked',
-                icon: 'success',
-                button: {
-                text: "Continue",
-                value: true,
-                visible: true,
-                className: "btn btn-primary"
-                }
-            })
-
-        }
-
-        if (type === 'warning-message-and-cancel') {
-            swal({
-                title: 'Failed',
-                text: "Error occurred while sending the request.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3f51b5',
-                cancelButtonColor: '#ff4081',
-                confirmButtonText: 'Great ',
-                buttons: {
-                cancel: {
-                    text: "Cancel",
-                    value: null,
+            if (type === 'success-message') {
+                swal({
+                    title: 'Congratulations!',
+                    //text: 'SPL and movie are linked',
+                    icon: 'success',
+                    button: {
+                    text: "Continue",
+                    value: true,
                     visible: true,
-                    className: "btn btn-danger",
-                    closeModal: true,
-                },
+                    className: "btn btn-primary"
+                    }
+                })
 
-                }
-            })
-        }
+            }
+            if (type === 'link-spl') {
+                swal({
+                    title: 'Done!',
+                    text: 'SPL and movie are linked',
+                    icon: 'success',
+                    button: {
+                    text: "Continue",
+                    value: true,
+                    visible: true,
+                    className: "btn btn-primary"
+                    }
+                })
+
+            }
+
+            if (type === 'unlink-spl') {
+                swal({
+                    title: 'Done!',
+                    text: 'SPL and movie are unlinked',
+                    icon: 'success',
+                    button: {
+                    text: "Continue",
+                    value: true,
+                    visible: true,
+                    className: "btn btn-primary"
+                    }
+                })
+
+            }
+
+            if (type === 'warning-message-and-cancel') {
+                swal({
+                    title: 'Failed',
+                    text: "Error occurred while sending the request.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3f51b5',
+                    cancelButtonColor: '#ff4081',
+                    confirmButtonText: 'Great ',
+                    buttons: {
+                    cancel: {
+                        text: "Cancel",
+                        value: null,
+                        visible: true,
+                        className: "btn btn-danger",
+                        closeModal: true,
+                    },
+
+                    }
+                })
+            }
 
         }
 
@@ -690,6 +743,9 @@
             }
 
         });
+
+       // $('#schedule_time_input').datetimepicker();
+
 
         function get_schedule(location, screen, date, refresh_screen)
         {
@@ -760,7 +816,11 @@
                                 //statu_content = '<spn class="text-success" > Linked</span>'
                                 if(value.kdm_status =="")
                                 {
-                                    statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-danger   btn-fw statu_content"> KDM Missing Detected  </button>'
+                                    if(value.kdm  !=1 )
+                                    {
+                                        statu_content = '<button data-scheduleidd = "'+value.id+'" type="button" class="btn btn-danger   btn-fw statu_content"> KDM Missing Detected  </button>'
+                                    }
+
                                 }
                                 icon_spl =  '<i class="mdi mdi-playlist-play text-success"> </i>'
                                 if(value.cpls ==1)
@@ -891,6 +951,7 @@
             var location =  $('#location').val();
             if(location == 'Locations')
             {
+                $('#no-location-selected .modal-body h4').html('No Location Selected!') ;
                 $('#no-location-selected').modal('show');
             }
             else
@@ -983,10 +1044,20 @@
                         console.log(response)
                         //console.log(response.spl.name) ;
                         $.each(response.movies, function( index, value ) {
+
+                            if(value.status=='pending')
+                            {
+                                var title =  value.title + ' <span class="text-warning" > Pending | Linking Date :  ' + value.date_linking +'</span>' ;
+                            }
+                            else
+                            {
+                                var title =  value.title
+                            }
+
                             movies_table +=
                             '<tr id="'+value.id+'">'
                                 +'<td style="width:50%" class="text-body spl_title align-middle fw-medium text-decoration-none" data-id="'+ value.nocspl_id+'"  >'+ value.title_spl+' </td>'
-                                  +'<td style="width:50%" class="text-body film_title align-middle fw-medium text-decoration-none" data-id="'+ value.id+'"  >'+ value.title+' </td>'
+                                  +'<td style="width:50%" class="text-body film_title align-middle fw-medium text-decoration-none" data-id="'+ value.id+'"  >'+ title+' </td>'
 
                             '</tr >'
                         });
@@ -1022,57 +1093,149 @@
             var spl_id = $('#spls_table td.selected').attr('data-id') ;
             var movie_id = $('#movies_table td.selected').attr('data-id') ;
 
-            $.ajax({
-                url:"{{  url('') }}"+ "/add_movies_to_spls",
-                type: 'post',
-                cache: false,
-                data: {
-                    movie_id: movie_id,
-                    spl_id: spl_id,
-                    "_token": "{{ csrf_token() }}",
-                },
-                beforeSend: function() {
-                    swal({
-                        title: 'Refreshing',
-                        allowEscapeKey: false,
-                        allowOutsideClick: true,
-                        onOpen: () => {
-                            swal.showLoading();
+            if(spl_id != null && movie_id != null)
+            {
+                $.ajax({
+                    url:"{{  url('') }}"+ "/add_movies_to_spls",
+                    type: 'post',
+                    cache: false,
+                    data: {
+                        movie_id: movie_id,
+                        spl_id: spl_id,
+                        "_token": "{{ csrf_token() }}",
+                    },
+                    beforeSend: function() {
+                        swal({
+                            title: 'Refreshing',
+                            allowEscapeKey: false,
+                            allowOutsideClick: true,
+                            onOpen: () => {
+                                swal.showLoading();
+                            }
+                        });
+                    },
+                    success: function(response) {
+
+
+
+                        if(response == "Success")
+                        {
+                            swal.close();
+                            $('#spls_table td').removeClass('selected') ;
+                            $('#movies_table td.selected').remove() ;
+                            showSwal('link-spl') ;
                         }
-                    });
-                },
-                success: function(response) {
-
-
-
-                    if(response == "Success")
-                    {
-                        swal.close();
-                        $('#spls_table td').removeClass('selected') ;
-                        $('#movies_table td.selected').remove() ;
-                        showSwal('link-spl') ;
-                    }
-                    else if(response == "missing")
-                    {
-                        swal.close();
-                        $('#ingest_spl').modal('show') ;
-                    }
-                    else
-                    {
-                        swal.close();
-                        showSwal('warning-message-and-cancel')
-                    }
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.log(errorThrown);
-                },
-                complete: function(jqXHR, textStatus) {}
-            });
-
-
-
+                        else if(response == "missing")
+                        {
+                            swal.close();
+                            $('#ingest_spl').modal('show') ;
+                        }
+                        else
+                        {
+                            swal.close();
+                            showSwal('warning-message-and-cancel')
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    },
+                    complete: function(jqXHR, textStatus) {}
+                });
+            }
+            else
+            {
+                $('#no-location-selected .modal-body h4').html('Please select SPL and Film') ;
+                $('#no-location-selected').modal('show');
+            }
 
         })
+
+
+        $(document).on('click', '#schedule_linking_btn', function () {
+            var spl_id = $('#spls_table td.selected').attr('data-id') ;
+            var movie_id = $('#movies_table td.selected').attr('data-id') ;
+            if(spl_id != null && movie_id != null)
+            {
+                $('#schedule_linking_modal').modal('show');
+            }
+            else
+            {
+                $('#no-location-selected .modal-body h4').html('Please select SPL and Film') ;
+                $('#no-location-selected').modal('show');
+            }
+        });
+
+        $(document).on('click', '#schedule_spl_movies_btn', function () {
+
+            var spl_id = $('#spls_table td.selected').attr('data-id') ;
+            var movie_id = $('#movies_table td.selected').attr('data-id') ;
+            var date_schedule = $('#date_schedule').val();
+            var time_schedule = $('#time_schedule').val();
+
+            if(date_schedule != "" && time_schedule != "")
+            {
+                $.ajax({
+                    url:"{{  url('') }}"+ "/add_movies_to_spls",
+                    type: 'post',
+                    cache: false,
+                    data: {
+                        movie_id: movie_id,
+                        spl_id: spl_id,
+                        date_schedule : date_schedule ,
+                        time_schedule : time_schedule ,
+                        "_token": "{{ csrf_token() }}",
+                    },
+                    beforeSend: function() {
+                        swal({
+                            title: 'Refreshing',
+                            allowEscapeKey: false,
+                            allowOutsideClick: true,
+                            onOpen: () => {
+                                swal.showLoading();
+                            }
+                        });
+                    },
+                    success: function(response) {
+
+
+
+                        if(response == "Success")
+                        {
+                            swal.close();
+                            $('#spls_table td').removeClass('selected') ;
+                            $('#movies_table td.selected').remove() ;
+                            $('#schedule_linking_modal').modal('hide') ;
+                            $('#date_schedule').val('');
+                            $('#time_schedule').val('');
+                            showSwal('link-spl') ;
+                        }
+                        else if(response == "missing")
+                        {
+                            swal.close();
+                            $('#ingest_spl').modal('show') ;
+                        }
+                        else
+                        {
+                            swal.close();
+                            showSwal('warning-message-and-cancel')
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    },
+                    complete: function(jqXHR, textStatus) {}
+                });
+            }
+            else
+            {
+                $('#no-location-selected .modal-body h4').html('Please Select Date And Time') ;
+                $('#no-location-selected').modal('show');
+            }
+
+        })
+
+
+
 
         $(document).on('click', '#linked_movies_spl_table tbody tr', function () {
             movie_id = $(this).attr("id") ;
@@ -1882,6 +2045,8 @@
     let content_max_height = content_height - navbar_height - page_header_height - 170;
 
     $(".multiplex").height(content_max_height);
+    $(".modal-body:not(.minauto)").css({"maxHeight":content_max_height+200});
+
 
     $(function() {
         $('[data-toggle="tooltip"]').tooltip()
@@ -1899,7 +2064,7 @@
 <link rel="stylesheet" href="{{asset('/assets/vendors/datatables.net-bs4/dataTables.bootstrap4.css')}}">
 <link rel="stylesheet" href="{{asset('/assets/vendors/jquery-toast-plugin/jquery.toast.min.css')}}">
 <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2021.2.616/styles/kendo.default-v2.min.css"/>
-
+<link rel="stylesheet" href="{{ asset('/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css') }}">
 <style>
     #scheduleDatePicker
     {
