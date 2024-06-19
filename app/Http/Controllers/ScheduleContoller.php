@@ -162,7 +162,7 @@ class ScheduleContoller extends Controller
                     {
                         if (! in_array( $schedule->scheduleId , $uuid_schedule  ))
                         {
-                            $schedule->delete() ;
+                            //$schedule->delete() ;
                         }
                     }
                 }

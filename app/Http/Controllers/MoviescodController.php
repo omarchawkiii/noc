@@ -188,6 +188,7 @@ class MoviescodController extends Controller
         {
             $location = $moviescod->location ;
             $apiUrl = $location->connection_ip;
+            $this->sendUnlinkSplRequest($apiUrl, $moviescod->code, $location->email , $location->password);
             $response = $this->sendUpdateLinksRequest($apiUrl, $moviescod->code, $moviescod->spl_uuid, $location->email , $location->password);
             if($response['result'] === 1 )
             {
@@ -224,7 +225,7 @@ class MoviescodController extends Controller
         $location = Location::findOrFail($request->location) ;
         $apiUrl = $location->connection_ip ;
         $response = $this->sendUnlinkSplRequest($apiUrl, $moviescod->code, $location->email , $location->password);
-        $response['result'] = 1 ;
+       // $response['result'] = 1 ;
 
         if($response['result'] === 1 )
         {

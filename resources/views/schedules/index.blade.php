@@ -257,7 +257,7 @@
                                         </h4>
                                         <div class="col-xl-8">
                                             <div class="input-group mb-2 mr-sm-2">
-                                                <input type="text" class="form-control" id="search_unlinked_spl" placeholder="Search ">
+                                                <input type="text" class="form-control search_unlinked_spl"  placeholder="Search ">
                                             </div>
                                         </div>
                                     </div>
@@ -276,7 +276,7 @@
                                         </h4>
                                         <div class="col-xl-8">
                                             <div class="input-group mb-2 mr-sm-2">
-                                                <input type="text" class="form-control" id="search_unlinked_film" placeholder="Search ">
+                                                <input type="text" class="form-control search_unlinked_film" id="" placeholder="Search ">
                                             </div>
                                         </div>
                                     </div>
@@ -303,7 +303,7 @@
                                     <div class="row">
                                         <div class="col-xl-12">
                                             <div class="input-group mb-3 mr-sm-2">
-                                                <input type="text" class="form-control" id="search_linked_spl_films" placeholder="Search In SPLs List Or Films">
+                                                <input type="text" class="form-control search_linked_spl_films" id="" placeholder="Search In SPLs List Or Films">
                                             </div>
                                         </div>
                                     </div>
@@ -343,7 +343,7 @@
                                         </h4>
                                         <div class="col-xl-8">
                                             <div class="input-group mb-2 mr-sm-2">
-                                                <input type="text" class="form-control" id="search_unlinked_spl" placeholder="Search ">
+                                                <input type="text" class="form-control search_unlinked_spl"  placeholder="Search ">
                                             </div>
                                         </div>
                                     </div>
@@ -362,7 +362,7 @@
                                         </h4>
                                         <div class="col-xl-8">
                                             <div class="input-group mb-2 mr-sm-2">
-                                                <input type="text" class="form-control" id="search_unlinked_film" placeholder="Search ">
+                                                <input type="text" class="form-control search_unlinked_film" id="" placeholder="Search ">
                                             </div>
                                         </div>
                                     </div>
@@ -390,7 +390,7 @@
                                     <div class="row">
                                         <div class="col-xl-12">
                                             <div class="input-group mb-3 mr-sm-2">
-                                                <input type="text" class="form-control" id="search_linked_spl_films" placeholder="Search In SPLs List Or Films">
+                                                <input type="text" class="form-control search_linked_spl_films" id="" placeholder="Search In SPLs List Or Films">
                                             </div>
                                         </div>
                                     </div>
@@ -1037,8 +1037,8 @@
         });
 
         $(document).on('click', '#linking_btn , #no_linked_spls_movies_tab', function () {
-            $('#search_unlinked_spl').val('') ;
-            $('#search_unlinked_film').val('') ;
+            $('.search_unlinked_spl').val('') ;
+            $('.search_unlinked_film').val('') ;
             var location =  $('#location').val();
             if(location == 'Locations')
             {
@@ -1171,8 +1171,8 @@
 
         $(document).on('click', '#schedule_link_tab', function () {
 
-            $('#search_unlinked_spl').val('') ;
-            $('#search_unlinked_film').val('') ;
+            $('.search_unlinked_spl').val('') ;
+            $('.search_unlinked_film').val('') ;
             var location =  $('#location').val();
             if(location == 'Locations')
             {
@@ -2236,17 +2236,22 @@
 
     //search Spls
 
-    $("#search_unlinked_spl").on("keyup", function() {
+
+
+
+    $(".search_unlinked_spl").on("keyup", function() {
+
         var value = $(this).val().toLowerCase();
-        $("#spls_table td").filter(function() {
-        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+
+        $(this).parent().parent().parent().parent().children('.table').children('tbody').children('tr').children('td').filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         });
     });
 
 
-    $("#search_unlinked_film").on("keyup", function() {
+    $(".search_unlinked_film").on("keyup", function() {
         var value = $(this).val().toLowerCase();
-        $("#movies_table td").filter(function() {
+        $(this).parent().parent().parent().parent().children('.table').children('tbody').children('tr').children('td').filter(function() {
         $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         });
     });
@@ -2255,10 +2260,9 @@
 
 
     //search Films and films from linked list
-    $("#search_linked_spl_films").on("keyup", function() {
+    $(".search_linked_spl_films").on("keyup", function() {
         var value = $(this).val().toLowerCase();
-        $("#linked_movies_spl_table tr").filter(function() {
-            console.log($(this).parent('tr').text())
+        $(this).parent().parent().parent().parent().children('.table').children('tbody').children('tr').filter(function() {
         $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         });
     });
