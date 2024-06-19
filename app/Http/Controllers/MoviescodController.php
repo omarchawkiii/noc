@@ -39,22 +39,28 @@ class MoviescodController extends Controller
                         {
                             $exist_inPos = 0 ;
                         }
+                        $moviecod = Moviescod::where('moviescods_id',$moviescod['id'])
+                        ->where('location_id',$location->id)
+                        ->where('status','pending')->get() ;
+                        if($moviecod->isEmpty())
+                        {
+                            Moviescod::updateOrCreate([
+                                'moviescods_id' => $moviescod['id'],
+                                'location_id' => $location->id,
+                            ],[
 
-                        Moviescod::updateOrCreate([
-                            'moviescods_id' => $moviescod['id'],
-                            'location_id' => $location->id,
-                        ],[
+                                'moviescods_id' => $moviescod['id'],
+                                'code' => $moviescod['code'],
+                                'title' => $moviescod['title'],
+                                'titleShort' => $moviescod['titleShort'],
+                                'last_update' => $moviescod['last_update'],
+                                'status' => $moviescod['status'],
+                                'exist_inPos' =>$exist_inPos,
+                                'location_id'     =>$location->id,
+                                'spl_uuid'     =>$moviescod['id_spl'],
+                            ]);
+                        }
 
-                            'moviescods_id' => $moviescod['id'],
-                            'code' => $moviescod['code'],
-                            'title' => $moviescod['title'],
-                            'titleShort' => $moviescod['titleShort'],
-                            'last_update' => $moviescod['last_update'],
-                            'status' => $moviescod['status'],
-                            'exist_inPos' =>$exist_inPos,
-                            'location_id'     =>$location->id,
-                            'spl_uuid'     =>$moviescod['id_spl'],
-                        ]);
                     }
 
                     if(count($content) != $location->moviescod->count() )
@@ -108,6 +114,7 @@ class MoviescodController extends Controller
 
         if($request->time_schedule)
         {
+
             $date_schedule =$request->date_schedule ;
             $time_schedule = $request->time_schedule ;
             $date_time = $date_schedule ." ". $time_schedule .":00";
@@ -175,8 +182,8 @@ class MoviescodController extends Controller
 
     public function link_pending_spl_movies()
     {
-        $moviescods = Moviescod::where('status','pending')->where('date_linking','<=',Carbon::now())->get() ;
-        dd($moviescods) ;
+        $moviescods = Moviescod::where('status','pending')->where('date_linking','<',Carbon::now()->setTimezone('Asia/Kuala_Lumpur'))->get() ;
+
         foreach($moviescods  as $moviescod)
         {
             $location = $moviescod->location ;
@@ -200,7 +207,7 @@ class MoviescodController extends Controller
             //->leftJoin('nocspls', 'moviescods.spl_uuid', '=', 'nocspls.uuid')
             ->leftJoin('lmsspls', 'moviescods.spl_uuid', '=', 'lmsspls.uuid')
             ->where('moviescods.location_id',$request->location)
-            ->where('status','!=','unlinked7')
+            ->where('status','=','linked')
             ->select('lmsspls.id as id_spl' ,'lmsspls.name as title_spl', 'moviescods.*')
             ->groupBy('uuid')
             ->get();
@@ -318,5 +325,36 @@ class MoviescodController extends Controller
         }
     }
 
+
+    public function get_spl_and_movies_to_schedule(Request $request)
+    {
+        $location = $request->location;
+        //$location = Location::find($location) ;
+        $movies = Moviescod::where('location_id',$request->location)->where('exist_inPos',1)->orderBy('title', 'ASC')->get() ;
+
+
+        $lms_spl = Lmsspl::where('location_id' ,$location )->select('lmsspls.*','lmsspls.name as spl_title')->groupBy('uuid')->orderBy('spl_title', 'ASC')->get() ;
+        $lms_spl_uuid = array_column($lms_spl->toArray(), 'uuid');
+        $nos_spls = Nocspl::whereNotIn('uuid', $lms_spl_uuid)->get() ;
+
+       /* $noc_and_location_spls = $nosspls->merge($spl_location);
+        $nos_spls =  $noc_and_location_spls ;*/
+
+        return Response()->json(compact('nos_spls','lms_spl','movies'));
+
+    }
+
+    public function get_spl_and_movies_scheduled(Request $request)
+    {
+        $location = $request->location;
+        $movies = DB::table('moviescods')
+            ->leftJoin('lmsspls', 'moviescods.spl_uuid', '=', 'lmsspls.uuid')
+            ->where('moviescods.location_id',$request->location)
+            ->where('status','=','pending')
+            ->select('lmsspls.id as id_spl' ,'lmsspls.name as title_spl', 'moviescods.*')
+            ->groupBy('uuid')
+            ->get();
+        return Response()->json(compact('movies'));
+    }
 
 }

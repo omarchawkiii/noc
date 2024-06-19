@@ -58,7 +58,7 @@
                                         <select class="form-select  form-control form-select-sm"
                                             aria-label=".form-select-sm example" id="filter_type">
                                             <option value="all" selected="selected">All Elements</option>
-                                            <option value="Pattern">Pattern</option>
+                                            <option value="PATTERN">Pattern</option>
                                             <option value="ADVERTISEMENT">ADVERTISEMENT</option>
                                             <option value="FEATURE">FEATURE</option>
                                             <option value="POLICY">POLICY</option>

@@ -235,6 +235,12 @@
                         <li class="nav-item">
                           <a class="nav-link" id="linked_spls_movies_tab" data-bs-toggle="tab" href="#linked_spls_movies" role="tab" aria-controls="Content CPLs" aria-selected="false">Linked </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="schedule_link_tab" data-bs-toggle="tab" href="#schedule_link" role="tab" aria-controls="Content CPLs" aria-selected="false">Schedule Link </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="schedule_tasks_tab" data-bs-toggle="tab" href="#schedule_tasks" role="tab" aria-controls="Content CPLs" aria-selected="false">Schedule Tasks </a>
+                        </li>
 
                       </ul>
                     <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
@@ -288,10 +294,7 @@
                                     <button type="button " id="link_spl_movies_btn" class=" btn btn-primary  btn-icon-text " style="margin: 15px auto ; display: table;">
                                     <i class="mdi mdi-check "></i> Apply </button>
                                 </div>
-                                <div class="col-md-3 " >
-                                    <button type="button " id="schedule_linking_btn" class=" btn btn-primary  btn-icon-text " style="margin: 15px auto; display: table;">
-                                        <i class="mdi mdi-calendar-clock "></i> Schedule Linking </button>
-                                </div>
+
                             </div>
                         </div>
                         <div class="tab-pane fade" id="linked_spls_movies" role="tabpanel" aria-labelledby="linked_spls_movies-tab">
@@ -329,6 +332,94 @@
 
                             </div>
                         </div>
+
+                        <div class="tab-pane fade" id="schedule_link" role="tabpanel" aria-labelledby="schedule_link_tab-tab">
+                            <div class="row " >
+                                <div class="col-md-6 preview-list multiplex">
+                                    <div class="row">
+                                        <h4 class="card-title col-xl-3" style="font-weight: bold;padding-bottom: 8px; width: fit-content">
+                                            <span class="mdi mdi-format-list-bulleted-type   custom-icon " style="color: #26a1eb;"></span>
+                                            SPLs List
+                                        </h4>
+                                        <div class="col-xl-8">
+                                            <div class="input-group mb-2 mr-sm-2">
+                                                <input type="text" class="form-control" id="search_unlinked_spl" placeholder="Search ">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <table class="table" id="spls_table">
+
+                                    <tbody>
+
+                                    </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-md-6  preview-list multiplex" >
+                                    <div class="row">
+                                        <h4 class="card-title col-xl-3" style="font-weight: bold;padding-bottom: 8px; width: fit-content ">
+                                            <span class="mdi mdi-movie  custom-icon " style="color: #26a1eb;"></span>
+                                            Films
+                                        </h4>
+                                        <div class="col-xl-8">
+                                            <div class="input-group mb-2 mr-sm-2">
+                                                <input type="text" class="form-control" id="search_unlinked_film" placeholder="Search ">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <table class="table" id="movies_table">
+
+                                        <tbody>
+
+                                    </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                            <div class="row  justify-content-md-center" >
+
+                                <div class="col-md-3 " >
+                                    <button type="button " id="schedule_linking_btn" class=" btn btn-primary  btn-icon-text " style="margin: 15px auto; display: table;">
+                                        <i class="mdi mdi-calendar-clock "></i> Schedule Linking </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="schedule_tasks" role="tabpanel" aria-labelledby="schedule_tasks-tab">
+                            <div class="row " >
+                                <div class="col-md-12  preview-list multiplex" >
+                                    <div class="row">
+                                        <div class="col-xl-12">
+                                            <div class="input-group mb-3 mr-sm-2">
+                                                <input type="text" class="form-control" id="search_linked_spl_films" placeholder="Search In SPLs List Or Films">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 row">
+                                            <h4 class="card-title col-xl-3" style="font-weight: bold;padding-bottom: 8px; width: fit-content">
+                                                <span class="mdi mdi-format-list-bulleted-type   custom-icon " style="color: #26a1eb;"></span>
+                                                SPLs List
+                                            </h4>
+
+                                        </div>
+                                        <div class="col-md-6 row">
+                                            <h4 class="card-title col-xl-3" style="font-weight: bold;padding-bottom: 8px; width: fit-content">
+                                                <span class="mdi mdi-movie  custom-icon " style="color: #26a1eb;"></span>
+                                                Films
+                                            </h4>
+
+                                        </div>
+                                    </div>
+
+                                    <table class="table" id="linked_movies_spl_table">
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+
 
                     </div>
 
@@ -1077,6 +1168,144 @@
 
 
         });
+
+        $(document).on('click', '#schedule_link_tab', function () {
+
+            $('#search_unlinked_spl').val('') ;
+            $('#search_unlinked_film').val('') ;
+            var location =  $('#location').val();
+            if(location == 'Locations')
+            {
+                $('#no-location-selected .modal-body h4').html('No Location Selected!') ;
+                $('#no-location-selected').modal('show');
+            }
+            else
+            {
+                $('#linking_modal').modal('show');
+
+                var loader_content  =
+                '<div class="jumping-dots-loader">'
+                    +'<span></span>'
+                    +'<span></span>'
+                    +'<span></span>'
+                    +'</div>'
+                $('#movies_table tbody').html(loader_content)
+                $('#spls_table tbody').html(loader_content)
+
+            var url = "{{  url('') }}"+ "/get_spl_and_movies_to_schedule/"+location ;
+                var movies_table="" ;
+                var noc_spl_table="";
+
+            $.ajax({
+                    url: url,
+                    method: 'GET',
+
+                    success:function(response)
+                    {
+
+                        $.each(response.movies, function( index, value ) {
+                            if(value.status=='linked')
+                            {
+                                var title =  value.title + ' <i class="text-success mdi mdi-link-variant" style=" margin-left: 15px;" ></i>' ;
+                            }
+                            else
+                            {
+                                var title =  value.title
+                            }
+
+
+                            movies_table +=
+                            '<tr>'
+                                +'<td class="text-body align-middle fw-medium text-decoration-none" data-id="'+ value.id+'"  >'+ title+' </td>'
+                            '</tr >'
+                        });
+                        $('#movies_table tbody').html(movies_table)
+
+                        noc_spl_table ="" ;
+                        $.each(response.lms_spl, function( index, value ) {
+                            noc_spl_table +=
+                            '<tr>'
+                                +'<td class="text-body align-middle fw-medium text-decoration-none" data-id="'+ value.uuid+'"  >'+ value.spl_title+' </td>'
+                            '</tr >'
+
+                        });
+                        $.each(response.nos_spls, function( index, value ) {
+                            noc_spl_table +=
+                            '<tr>'
+                                +'<td class="text-body align-middle fw-medium text-decoration-none" data-id="'+ value.uuid+'"  >'+ value.spl_title+' </td>'
+                            '</tr >'
+
+                        });
+
+
+                        $('#spls_table tbody').html(noc_spl_table)
+
+                    },
+                    error: function(response) {
+
+                    }
+            })
+            }
+
+
+
+
+
+        });
+
+        $(document).on('click', '#schedule_tasks_tab', function () {
+
+            var location =  $('#location').val();
+                var loader_content  =
+                '<div class="jumping-dots-loader">'
+                    +'<span></span>'
+                    +'<span></span>'
+                    +'<span></span>'
+                    +'</div>'
+                $('#linked_movies_spl_table tbody').html(loader_content)
+
+            var url = " {{  url('') }}"+ "/get_spl_and_movies_scheduled/"+location ;
+
+            var movies_table="" ;
+
+            $.ajax({
+                    url: url,
+                    method: 'GET',
+
+                    success:function(response)
+                    {
+
+                        console.log(response)
+                        //console.log(response.spl.name) ;
+                        $.each(response.movies, function( index, value ) {
+
+                            if(value.status=='pending')
+                            {
+                                var title =  value.title + ' <span class="text-warning" > Pending | Linking Date :  ' + value.date_linking +'</span>' ;
+                            }
+                            else
+                            {
+                                var title =  value.title
+                            }
+
+                            movies_table +=
+                            '<tr id="'+value.id+'">'
+                                +'<td style="width:50%" class="text-body spl_title align-middle fw-medium text-decoration-none" data-id="'+ value.nocspl_id+'"  >'+ value.title_spl+' </td>'
+                                +'<td style="width:50%" class="text-body film_title align-middle fw-medium text-decoration-none" data-id="'+ value.id+'"  >'+ title+' </td>'
+
+                            '</tr >'
+                        });
+                        $('#linked_movies_spl_table tbody').html(movies_table)
+
+
+
+                    },
+                    error: function(response) {
+
+                    }
+            })
+        });
+
 
         $(document).on('click', '#movies_table td', function () {
             $('#movies_table td').removeClass('selected') ;
