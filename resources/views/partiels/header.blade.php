@@ -40,7 +40,7 @@
                     </div>
                     <div class="preview-item-content " id="show_kdms_errors_details">
                         <p class="preview-subject mb-1">Kdms </p>
-                        <p class="text-muted ellipsis mb-0" id="header_kdm_errors">25 Kdm Errors Detected  </p>
+                        <p class="text-muted ellipsis mb-0" id="header_kdm_errors"> Kdm Errors Detected  </p>
                     </div>
                 </a>
                 <div class="dropdown-divider"></div>
@@ -68,7 +68,7 @@
                     </div>
                 </a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item preview-item">
+                <a class="dropdown-item preview-item header_sound_errors_btn">
                     <div class="preview-thumbnail">
                         <div class="preview-icon bg-dark rounded-circle">
                             <i class="mdi mdi-volume-high  text- " id="icon_sound_errors" style="color: rgb(48, 255, 48);"></i>

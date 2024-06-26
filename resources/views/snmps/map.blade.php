@@ -146,7 +146,8 @@
                         <thead>
                             <tr>
                                 <th class="sorting sorting_asc text-center">Location</th>
-                                <th class="sorting text-center" data-bs-toggle="tooltip" data-placement="right" title="" data-bs-original-title="Missing kdm in schedules "><i class="icon-md mdi mdi mdi-calendar-today  ml-auto"></i></th>
+                                <th class="sorting text-center" data-bs-toggle="tooltip" data-placement="right" title="" data-bs-original-title="Missing kdm in schedules "><i class="icon-md mdi mdi-key-remove  ml-auto"></i></th>
+                                <th class="sorting text-center" data-bs-toggle="tooltip" data-placement="right" title="" data-bs-original-title="Unlinked Sessions Detected"><i class="icon-md mdi mdi mdi-calendar-today  ml-auto"></i></th>
                                 <th class="sorting text-center" data-bs-toggle="tooltip" data-placement="right" title="" data-bs-original-title="Diskusage"><i class="icon-md mdi mdi-chart-pie  ml-auto"></i></th>
                                 <th class="sorting text-center" data-bs-toggle="tooltip" data-placement="right" title="" data-bs-original-title="Missing cpl"><i class="icon-md mdi mdi-monitor  ml-auto"></i></th>
                                 <th class="sorting text-center" data-bs-toggle="tooltip" data-placement="right" title="" data-bs-original-title="Security Manager Status"><i class="icon-md mdi mdi-projector  ml-auto"></i></th>
@@ -390,12 +391,15 @@
                         var data ;
                        if(response.error_table.length > 0)
                        {
+
+
                             $.each(response.error_table, function(index, error) {
 
                             data +=
                                 '<tr class="odd text-center  ">'
                                     +'<td class="sorting_1"> '+ error.location.name+'  </td>'
                                     +'<td class="sorting_1 kdm_errors" data-location="'+ error.location.id+'"> '+ error.kdm_errors+'  </td>'
+                                    +'<td class="sorting_1 kdm_errors" data-location="'+ error.location.id+'"> '+ response.count_unlinked_sessions_array[error.location.id].count+'  </td>'
                                     +'<td class="sorting_1 storage_errors" data-location="'+ error.location.id+'"> '+ error.nbr_storage_errors+'  </td>'
                                     +'<td class="sorting_1 server_errors"  data-location="'+ error.location.id+'"> '+ error.nbr_server_alert+'  </td>'
                                     +'<td class="sorting_1 projector_errors"  data-location="'+ error.location.id+'"> '+ error.nbr_projector_alert+'  </td>'
@@ -481,6 +485,7 @@
 
         map.on('click', function(event) {
             map.forEachFeatureAtPixel(event.pixel, function(feature, layer) {
+                console.log(layer)
                 $('#location_errors .modal-body ').html(layer.get('content'))
                 $('#location_errors .modal-header h4 ').html("Location : " + layer.get('title'))
                 $('#location_errors').modal('show');

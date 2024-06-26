@@ -2065,6 +2065,8 @@
                 });
                 targetItem.find('.mb-0.text-muted.float-left').html(
                     '<i class="btn btn-inverse-warning  mdi mdi-package-variant-closed"></i> ' + title);
+
+                    $("#segment-modal").modal('hide');
             }
 
         });
@@ -2361,8 +2363,25 @@
                     },
                     success:function(response)
                     {
-                        console.log(response.spls) ;
-                        result =
+                        if(id_location.length)
+                        {
+                            result =
+                            '<div class="">'
+                                +'<table class="table">'
+                                    +'<thead>'
+                                        +'<tr>'
+                                                +'<th>Title</th>'
+                                                +'<th>Creation Date</th>'
+                                                +'<th>UUID </th>'
+                                                +'<th>Location </th>'
+                                                +'<th>Actions</th>'
+                                        +'</tr>'
+                                    +'</thead>'
+                                    +'<tbody>'
+                        }
+                        else
+                        {
+                            result =
                             '<div class="">'
                                 +'<table class="table">'
                                     +'<thead>'
@@ -2374,10 +2393,27 @@
                                         +'</tr>'
                                     +'</thead>'
                                     +'<tbody>'
+                        }
+
 
                         $.each(response.nocspls, function( index, value ) {
-
-                        result = result
+                            if(id_location.length)
+                            {
+                                result = result
+                                        +'<tr id="'+value.uuid+'">'
+                                            +'<td style="font-size: 14px; line-height: 22px; width: 12vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.spl_title+'</td>'
+                                            +'<td style="font-size: 14px;">'+value.created_at+'</td>'
+                                            +'<td style="font-size: 14px; line-height: 22px; width: 18vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.uuid+'</td>'
+                                            +'<td style="font-size: 14px; line-height: 22px; width: 18vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.location.name+'</td>'
+                                            +'<td> '
+                                                +'<i class="btn btn-primary mdi mdi-tooltip-edit open_spl" data-title="'+value.spl_title+'" data-uuid="'+value.uuid+'"></i> '
+                                                +'<i class="btn btn-danger mdi   mdi-delete-forever delete_spl" data-title="'+value.spl_title+'" data-uuid="'+value.uuid+'"></i>'
+                                            +'</td>'
+                                        +'</tr>'
+                            }
+                            else
+                            {
+                                result = result
                                         +'<tr id="'+value.uuid+'">'
                                             +'<td style="font-size: 14px; line-height: 22px; width: 12vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.spl_title+'</td>'
                                             +'<td style="font-size: 14px;">'+value.created_at+'</td>'
@@ -2387,6 +2423,7 @@
                                                 +'<i class="btn btn-danger mdi   mdi-delete-forever delete_spl" data-title="'+value.spl_title+'" data-uuid="'+value.uuid+'"></i>'
                                             +'</td>'
                                         +'</tr>'
+                            }
                         });
                         result = result
                                     +'</tbody>'
@@ -2405,6 +2442,8 @@
                     }
             })
         }
+
+
         $(document).on('click', '#display_spl_properties', function() {
             if ($('#dragula-right').children().length === 0) {
                 $("#empty-spl-modal").modal('show');
@@ -3232,6 +3271,7 @@
                 var spl_uuid = $("#id_spl_delete").val();
                 deleteSplSelected(spl_uuid);
                 $("#delete-spl").modal("hide");
+                var id_location =  $('#location').val();
                 get_spl_list_data(id_location)
             });
         });
@@ -4036,7 +4076,7 @@
 
 
         function deleteSplSelected(spl_uuid) {
-
+            var id_location =  $('#location').val();
             $.ajax({
                 url : "{{  url('') }}"+   "/delete_nocspl",
                 type: 'get',
@@ -4120,7 +4160,7 @@
                             spl_title_state = false;
                             $('#spl_title').next().removeClass("form_success");
                             $('#spl_title').next().addClass("form_error");
-                            $('#spl_title').next().html('Title Already Taken')
+                            $('#spl_title').next().html('<span class="text-danger">Title Already Taken</span>')
                             $('#save_new_spl').prop('disabled', true);
                             $('#save_as_template_spl').prop('disabled', true);
 
@@ -4128,7 +4168,7 @@
                             spl_title_state = true;
                             $('#spl_title').next().removeClass("form_error");
                             $('#spl_title').next().addClass("form_success");
-                            $('#spl_title').next().html("Title  Available");
+                            $('#spl_title').next().html('<span class="text-success">Title  Available</span>');
 
                             $('#save_new_spl').prop('disabled', false);
                             $('#save_as_template_spl').prop('disabled', false);

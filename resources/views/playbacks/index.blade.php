@@ -51,7 +51,7 @@
                                 @foreach ($locations as $key => $location )
 
                                     <tr class="odd text-center  ">
-                                        <td class="sorting_1"> {{ $location->name }}  </td>
+                                        <td class="sorting_1"> <a href="http://{{ parse_url($location->connection_ip, PHP_URL_HOST);  }}" target="_blanc"> {{ $location->name }}</a>  </td>
                                         @if($location->playbacks->count() >0  )
                                             @foreach ( $location->playbacks as  $playback)
                                                 <td class="sorting_1" id="{{ $playback->location_id }}-{{ $playback->screen_id }}">
@@ -464,6 +464,15 @@
                         }
 
                     }
+                    if(response.playback.securityManager != 'Normal')
+                    {
+                        var securityManager = 'Offline' ;
+                    }
+                    else
+                    {
+                        var securityManager = 'Normal' ;
+                    }
+
 
 
                    // $('#infos_modal .modal-header h4').html("Playback : " + response.playback.serverName)
@@ -471,8 +480,8 @@
                     data = '<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-playlist-play"> </i> <span> Curent SPL </span></p><p class="col-md-9"  style="margin-top:15px"> '+response.playback.spl_title+' </p> '
                     +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-play-circle"> </i> <span>  Curent CPL </span></p><p class="col-md-9"  style="margin-top:15px">'+response.playback.cpl_title+' </p> '
                     +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-timer"> </i> <span>  Time </span></p>'+ progress_bar
-                    +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-assistant"> </i> <span> playback generale status </span></p><p class="col-md-9"  style="margin-top:15px">'+response.playback.storage_generale_status+'</p>'
-                    +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-security"> </i> <span>  Security Manager status </span></p><p class="col-md-9"  style="margin-top:15px">'+response.playback.securityManager+'</p>'
+                    +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-assistant"> </i> <span> Player Status </span></p><p class="col-md-9"  style="margin-top:15px">'+response.playback.storage_generale_status+'</p>'
+                    +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-security"> </i> <span>  Security Manager status </span></p><p class="col-md-9"  style="margin-top:15px">'+securityManager+'</p>'
                     +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-volume-high"> </i> <span>  Sound Status    </span></p><p class="col-md-9"  style="margin-top:15px">'+sound_status+'</p>'
 
                     +'<p class="col-md-3"> <i class="align-middle icon-md mdi mdi-projector-screen"> </i> <span>  Projector Status   </span></p><p class="col-md-9"  style="margin-top:15px">'+projector_status+'</p>'

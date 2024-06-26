@@ -22,8 +22,6 @@ class NocsplController extends Controller
 
     public function createlocalspl(Request $request)
     {
-
-
         if($request->is_template == "true")
         {
             $is_template = true ;
@@ -35,10 +33,10 @@ class NocsplController extends Controller
 
         if($request->action_type =="edit")
         {
-            Nocspl::where('uuid',$request->spl_uuid_edit)->delete() ;
+            //Nocspl::where('uuid',$request->spl_uuid_edit)->delete() ;
             splcomponents::where('uuid_spl',$request->spl_uuid_edit)->delete() ;
             $uuid =  $request->spl_uuid_edit;
-            $locations_of_spl = Lmsspl::where('uuid',$uuid)->leftJoin('locations', 'locations.id', '=', 'lmsspls.location_id')->select('locations.*' )->groupBy('location_id')->get();
+            $locations_of_spl = Nocspl::where('uuid',$uuid)->leftJoin('locations', 'locations.id', '=', 'nocspls.location_id')->select('locations.*' )->groupBy('location_id')->get();
 
         }
         else{
@@ -54,9 +52,13 @@ class NocsplController extends Controller
         $file_url = Storage::disk('local')->put( $file_name, $file) ;
 
         $duration = $this->calculateSplDuration(simplexml_load_string($file));
+
         foreach($locations_of_spl as $location)
         {
-            $new_nocspl = Nocspl::create([
+            $new_nocspl = Nocspl::updateOrCreate([
+                'uuid' => $uuid,
+                'location_id' => $location->id,
+            ],[
                 'uuid' => $uuid ,
                 'spl_title' => $request->title_spl,
                 'display_mode'=>$request->display_mode,
@@ -67,74 +69,83 @@ class NocsplController extends Controller
                 'location_id'=> $location->id,
                 'source'=> "NOC",
             ]) ;
-        }
-
-        if($new_nocspl)
-        {
-            ////////////dd(Auth::user()->id , Auth::user()->email ) ;
-            $this->savePlayListBuilderLogs("New SPL File  Saved ", $file,Auth::user()->id, Auth::user()->email);
-
-            $path =  storage_path().'/app/xml_file/'.$new_nocspl->xmlpath ;
-            $spl_file = simplexml_load_file($path);
-                $cpls = $this->getCplsFromSplArray($spl_file);
-                foreach ($cpls as $cpl) {
-                    splcomponents::updateOrCreate([
-
-                        'uuid_spl' => $uuid,
-                        'CompositionPlaylistId' => $cpl['CompositionPlaylistId'],
-                    ],[
-                        //'id_splcomponent' => $cpl['Id'],
-                        'CompositionPlaylistId' => $cpl['CompositionPlaylistId'],
-                        'AnnotationText' => $cpl['AnnotationText'],
-                        'EditRate' => $cpl['EditRate'],
-                        'editRate_numerator' => $cpl['editRate_numerator'],
-                        'editRate_denominator' => $cpl['editRate_denominator'],
-                        'uuid_spl' => $uuid,
-
-
-                    ]);
-                }
-
-            $config = Config::all()->first() ;
-            $ingest_errors = array() ;
-            $ingest_success = array() ;
-
-            if($config->autoIngest)
+            if($new_nocspl)
             {
-                $autoIngest = true ;
-                if($request->action_type =="edit" || true )
-                {
-                    if(count($locations_of_spl)> 0 )
-                    {
-                        foreach($locations_of_spl as $location)
-                        {
-                            $response = $this->ingest_spl($new_nocspl->xmlpath,$location->connection_ip,$location->email, $location->password) ;
+                ////////////dd(Auth::user()->id , Auth::user()->email ) ;
+                $this->savePlayListBuilderLogs("New SPL File  Saved ", $file,Auth::user()->id, Auth::user()->email);
 
-                            if($response->status== 1 )
+                $path =  storage_path().'/app/xml_file/'.$new_nocspl->xmlpath ;
+                $spl_file = simplexml_load_file($path);
+                    $cpls = $this->getCplsFromSplArray($spl_file);
+                    foreach ($cpls as $cpl) {
+                        splcomponents::updateOrCreate([
+
+                            'uuid_spl' => $uuid,
+                            'CompositionPlaylistId' => $cpl['CompositionPlaylistId'],
+                        ],[
+                            //'id_splcomponent' => $cpl['Id'],
+                            'CompositionPlaylistId' => $cpl['CompositionPlaylistId'],
+                            'AnnotationText' => $cpl['AnnotationText'],
+                            'EditRate' => $cpl['EditRate'],
+                            'editRate_numerator' => $cpl['editRate_numerator'],
+                            'editRate_denominator' => $cpl['editRate_denominator'],
+                            'uuid_spl' => $uuid,
+
+
+                        ]);
+                    }
+
+                $config = Config::all()->first() ;
+                $ingest_errors = array() ;
+                $ingest_success = array() ;
+
+                if($config->autoIngest)
+                {
+                    $autoIngest = true ;
+                    if($request->action_type =="edit" || true )
+                    {
+                        if(count($locations_of_spl)> 0 )
+                        {
+                            foreach($locations_of_spl as $location)
                             {
-                                array_push($ingest_success,  array("status" => $response->status , "id" =>  $location->id , "location_name" =>  $location->name));
-                            }
-                            else
-                            {
-                                array_push($ingest_errors,  array("status" => $response->status , "id" =>  $location->id , "location_name" =>  $location->name));
+                                $response = $this->ingest_spl($new_nocspl->xmlpath,$location->connection_ip,$location->email, $location->password) ;
+
+                                if($response != null)
+                                {
+
+                                    if($response->status== 1 )
+                                    {
+                                        array_push($ingest_success,  array("status" => $response->status , "id" =>  $location->id , "location_name" =>  $location->name));
+                                    }
+                                    else
+                                    {
+                                        array_push($ingest_errors,  array("status" => $response->status , "id" =>  $location->id , "location_name" =>  $location->name));
+                                    }
+                                }
+                                else
+                                {
+                                    array_push($ingest_errors,  array("status" => null , "id" =>  $location->id , "location_name" =>  $location->name));
+                                }
+
                             }
 
                         }
-
                     }
-                }
 
+                }
+                else
+                {
+                    $autoIngest = false ;
+                }
+                $response = array("status" => 1 , "title" =>$new_nocspl->spl_title, "uuid"=>$new_nocspl->uuid , "locations_of_spl"=>$locations_of_spl , "autoIngest"=>$autoIngest , "ingest_success"=>$ingest_success , "ingest_errors"=>$ingest_errors );
             }
             else
             {
-                $autoIngest = false ;
+                $response = array("status" => 0 , "title" =>"null" , "uuid"=>"null" , "ingest_success"=>null , "ingest_errors"=>null  );
             }
-            $response = array("status" => 1 , "title" =>$new_nocspl->spl_title, "uuid"=>$new_nocspl->uuid , "locations_of_spl"=>$locations_of_spl , "autoIngest"=>$autoIngest , "ingest_success"=>$ingest_success , "ingest_errors"=>$ingest_errors );
+
         }
-        else
-        {
-            $response = array("status" => 0 , "title" =>"null" , "uuid"=>"null" , "ingest_success"=>null , "ingest_errors"=>null  );
-        }
+
 
         echo json_encode($response);
 
@@ -1087,7 +1098,7 @@ class NocsplController extends Controller
 
         if($request->id_location)
         {
-            $nocspls = Nocspl::where('is_template',0)->whereIn('location_id',$request->id_location)->get() ;
+            $nocspls = Nocspl::with('location')->where('is_template',0)->whereIn('location_id',$request->id_location)->get() ;
         }
         else
         {

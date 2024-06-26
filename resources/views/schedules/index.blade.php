@@ -1037,6 +1037,8 @@
         });
 
         $(document).on('click', '#linking_btn , #no_linked_spls_movies_tab', function () {
+
+            $('#no_linked_spls_movies_tab').tab('show');
             $('.search_unlinked_spl').val('') ;
             $('.search_unlinked_film').val('') ;
             var location =  $('#location').val();

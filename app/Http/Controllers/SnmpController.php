@@ -10,6 +10,7 @@ use App\Models\Snmp;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
 class SnmpController extends Controller
@@ -125,9 +126,10 @@ class SnmpController extends Controller
         $offline_screen =  0;
         $idle_screen =  0;
         $pause_screen =  0;
+        $count_unlinked_sessions_array= array();
         foreach($locations as $location )
         {
-            $infos ="<br /><h3 class='m-2'>Location : $location->name </h3>" ;
+            //$infos ="<br /><h3 class='m-2'>Location : $location->name </h3>" ;
             $diskusage = false ;
             $playback_generale_status = false ;
             $schedules_error =false ;
@@ -139,11 +141,12 @@ class SnmpController extends Controller
             $count_securityManager = 0 ;
             $count_missing_kdm_error = 0 ;
             $count_missing_cpl_error = 0 ;
+            $count_unlinked_sessions = 0 ;
 
             if($location->diskusage->free_space_percentage >= 90  )
             {
                 $diskusage = true ;
-                $infos =  " <p class='m-2'> Location : $location->name Disque Usage is : ".$location->diskusage->free_space_percentage." %  </p> " ;
+                //$infos =  " <p class='m-2'> Location : $location->name Disque Usage is : ".$location->diskusage->free_space_percentage." %  </p> " ;
                 $count_diskusage ++ ;
             }
             foreach($location->playbacks as $playback)
@@ -187,15 +190,15 @@ class SnmpController extends Controller
                         //$storage_generale_status =$playback->storage_generale_status ;
                         $storage_generale_status ="" ;
                     }
-                    $infos .=  " <p class='m-2'> ".$storage_generale_status ." </p>";
+                    //$infos .=  " <p class='m-2'> ".$storage_generale_status ." </p>";
                 }
 
                 if($playback->securityManager != 'Normal' )
                 {
                     $securityManager = true ;
                     $count_securityManager ++ ;
-                   // $infos .=  " <p class='m-2'>Security Manager status is: ".$playback->securityManager ." in screen: " .$playback->screen->screen_name ." </p>";
-                    $infos .=  " <p class='m-2'>Security Manager status : Offline | Screen: " .$playback->screen->screen_name ." </p>";
+                   //// $infos .=  " <p class='m-2'>Security Manager status is: ".$playback->securityManager ." in screen: " .$playback->screen->screen_name ." </p>";
+                    //$infos .=  " <p class='m-2'>Security Manager status : Offline | Screen: " .$playback->screen->screen_name ." </p>";
                 }
             }
             //$schedules = Schedule::where('location_id', $location->id )->where('date_start' , '>' , Carbon::today() )->groupBy('cod_film')->get() ;
@@ -213,11 +216,12 @@ class SnmpController extends Controller
                 if($schedule->status != 'linked' && !$schedules_error )
                 {
                     $schedules_error = true ;
-                    $infos .=  " <h4 class='m-2'>Unlinked Sessions Detected  </h4> " ;
+                    //$infos .=  " <h4 class='m-2'>Unlinked Sessions Detected  </h4> " ;
                 }
                 if($schedule->status != 'linked' )
                 {
-                    $infos .="<li>  session : ".$schedule->name." | Start : ".$schedule->date_start ;
+                    //$infos .="<li>  session : ".$schedule->name." | Start : ".$schedule->date_start ;
+                    $count_unlinked_sessions++ ;
                 }
 
             }
@@ -227,11 +231,11 @@ class SnmpController extends Controller
                 if($schedule->status == 'linked'  && $schedule->kdm != 1   &&  !$missing_kdms )
                 {
                     $missing_kdms = true ;
-                    $infos .=  " <h4  class='m-2' > Missing KDMs Detected </h4> " ;
+                    //$infos .=  " <h4  class='m-2' > Missing KDMs Detected </h4> " ;
                 }
                 if($schedule->status == 'linked' && $schedule->kdm != 1)
                 {
-                    $infos .="<li>  Session : ".$schedule->name." | Start At: ".$schedule->date_start ." | Screen : " . $schedule->screen_name;
+                    //$infos .="<li>  Session : ".$schedule->name." | Start At: ".$schedule->date_start ." | Screen : " . $schedule->screen_name;
                     $count_missing_kdm_error++;
                 }
             }
@@ -241,19 +245,51 @@ class SnmpController extends Controller
                 if($schedule->status == 'linked'  && $schedule->cpls != 1  &&  !$missing_cpls )
                 {
                     $missing_cpls = true ;
-                    $infos .=  " <h4  class='m-2'> Missing CPLs Detected </h4> " ;
+                    //$infos .=  " <h4  class='m-2'> Missing CPLs Detected </h4> " ;
                 }
 
                 if( $schedule->status == 'linked'  && $schedule->cpls != 1 )
                 {
                     $count_missing_cpl_error++ ;
-                    $infos .="<li>  session : ".$schedule->name." | Start At: ".$schedule->date_start ." | Screen : " . $schedule->screen_name;
+                    //$infos .="<li>  session : ".$schedule->name." | Start At: ".$schedule->date_start ." | Screen : " . $schedule->screen_name;
                 }
             }
 
 
+            $error_maps = Error_list::with('location')->get() ;
+            foreach($error_maps  as $error)
+            {
+                if( $error->kdm_errors != 0  ||  $count_unlinked_sessions != 0  || $error->nbr_server_alert != 0  || $error->nbr_projector_alert != 0  || $error->nbr_storage_errors != 0  )
+                {
+                    array_push($data_location,  array("title" =>$location->name, "state" => $location->city , "location" => $location->name, "latitude" => $location->latitude, "longitude" => $location->longitude, "status" => "red" , "infos" =>$infos , "count_diskusage" =>$count_diskusage, "count_playback_generale_status" =>$count_playback_generale_status, "count_securityManager" =>$count_securityManager, "count_missing_kdm_error" =>$count_missing_kdm_error, "count_missing_cpl_error" =>$count_missing_cpl_error));
+                    if (!in_array($location->city, $states_red))
+                    {
+                        array_push($states_red, $location->city);
+                    }
+                }
+                else
+                {
+                    array_push($data_location,  array("title" =>$location->name, "state" => $location->city , "location" => $location->name, "latitude" => $location->latitude, "longitude" => $location->longitude, "status" => "green", "infos" => "No Errors Detected", "count_diskusage" =>$count_diskusage, "count_playback_generale_status" =>$count_playback_generale_status, "count_securityManager" =>$count_securityManager, "count_missing_kdm_error" =>$count_missing_kdm_error, "count_missing_cpl_error" =>$count_missing_cpl_error ));
+                    if (!in_array($location->city, $states_green) && !in_array($location->city, $states_red))
+                    {
+                        array_push($states_green, $location->city);
+                    }
+                }
 
-            if( $diskusage || $playback_generale_status  || $schedules_error  || $securityManager && false)
+                $infos =  " <h3 class='m-2'> Location : $location->name  </h3> " ;
+                $infos .="<p class='d-flex'> " ;
+                $infos .="<span class='m-3'> <i class='align-middle icon-md mdi mdi-key-remove  ml-auto'></i>  Kdms  : ".$error->kdm_errors." </span>";
+                $infos .="<span class='m-3'> <i class='align-middle icon-md mdi mdi-calendar-today  ml-auto'></i>  Unlinked Sessions   : ".$count_unlinked_sessions." </span>";
+                $infos .="<span class='m-3'> <i class='align-middle icon-md mdi mdi mdi-calendar-today  ml-auto'></i>  Server   : ".$error->nbr_server_alert." </span>";
+                $infos .="<span class='m-3'> <i class='align-middle icon-md mdi mdi-projector  ml-auto'></i>  Projector  : ".$error->nbr_projector_alert." </span>";
+                $infos .="<span class='m-3'> <i class='align-middle icon-md mdi mdi-volume-high ml-auto'></i> Sound   : 0 </span>";
+                $infos .="<span class='m-3'> <i class='align-middle icon-md mdi mdi-chart-pie  ml-auto'></i> Storage  : ".$error->nbr_storage_errors." </span>";
+                $infos .="</p> " ;
+            }
+
+
+
+            /*if( $diskusage || $playback_generale_status  || $schedules_error  || $securityManager && false)
             {
                 array_push($data_location,  array("title" =>$location->name, "state" => $location->city , "location" => $location->name, "latitude" => $location->latitude, "longitude" => $location->longitude, "status" => "red" , "infos" =>$infos , "count_diskusage" =>$count_diskusage, "count_playback_generale_status" =>$count_playback_generale_status, "count_securityManager" =>$count_securityManager, "count_missing_kdm_error" =>$count_missing_kdm_error, "count_missing_cpl_error" =>$count_missing_cpl_error));
                 if (!in_array($location->city, $states_red))
@@ -268,7 +304,11 @@ class SnmpController extends Controller
                 {
                     array_push($states_green, $location->city);
                 }
-            }
+            }*/
+            array_push($count_unlinked_sessions_array,  array("location_id" =>$location->id, "count" => $count_unlinked_sessions ));
+
+
+
 
 
         }
@@ -298,6 +338,7 @@ class SnmpController extends Controller
             array_push($data_states,  array("title" => $data['state'], "state" => $data['state'] , "location" => $location->name , "latitude" => $data['latitude'], "longitude" =>$data['longitude'], "status" => "green", "infos" => $content ));
         }
         $error_table = Error_list::with('location')->get() ;
+
         $data = $request->data;
         $zoomLevel = $request->zoomLevel;
 
@@ -308,12 +349,12 @@ class SnmpController extends Controller
                 $data_count = $data_location;
                 $data_location = $data_states ;
 
-                return Response()->json(compact('data_location','data_count','error_table','locations','idle_screen','offline_screen','playing_screen','pause_screen'));
+                return Response()->json(compact('data_location','data_count','error_table','locations','idle_screen','offline_screen','playing_screen','pause_screen','count_unlinked_sessions_array'));
             }
             else
             {
                 $data_count = $data_location;
-                return Response()->json(compact('data_location','locations','error_table'));
+                return Response()->json(compact('data_location','locations','error_table','count_unlinked_sessions_array'));
             }
         }
         else
