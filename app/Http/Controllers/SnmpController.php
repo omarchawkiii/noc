@@ -256,9 +256,21 @@ class SnmpController extends Controller
             }
 
 
-            $error_maps = Error_list::with('location')->get() ;
+            $error_maps = Error_list::with('location')->where('location_id',$location->id)->get() ;
             foreach($error_maps  as $error)
             {
+
+
+                $infos =  " <h3 class='m-2'> Location : $location->name  </h3> " ;
+                $infos .="<p class='d-flex'> " ;
+                $infos .="<span class='m-3'> <i class='align-middle icon-md mdi mdi-key-remove  ml-auto'></i>  Kdms  : ".$error->kdm_errors." </span>";
+                $infos .="<span class='m-3'> <i class='align-middle icon-md mdi mdi-calendar-today  ml-auto'></i>  Unlinked Sessions   : ".$count_unlinked_sessions." </span>";
+                $infos .="<span class='m-3'> <i class='align-middle icon-md mdi mdi mdi-calendar-today  ml-auto'></i>  Server   : ".$error->nbr_server_alert." </span>";
+                $infos .="<span class='m-3'> <i class='align-middle icon-md mdi mdi-projector  ml-auto'></i>  Projector  : ".$error->nbr_projector_alert." </span>";
+                $infos .="<span class='m-3'> <i class='align-middle icon-md mdi mdi-volume-high ml-auto'></i> Sound   : 0 </span>";
+                $infos .="<span class='m-3'> <i class='align-middle icon-md mdi mdi-chart-pie  ml-auto'></i> Storage  : ".$error->nbr_storage_errors." </span>";
+                $infos .="</p> " ;
+
                 if( $error->kdm_errors != 0  ||  $count_unlinked_sessions != 0  || $error->nbr_server_alert != 0  || $error->nbr_projector_alert != 0  || $error->nbr_storage_errors != 0  )
                 {
                     array_push($data_location,  array("title" =>$location->name, "state" => $location->city , "location" => $location->name, "latitude" => $location->latitude, "longitude" => $location->longitude, "status" => "red" , "infos" =>$infos , "count_diskusage" =>$count_diskusage, "count_playback_generale_status" =>$count_playback_generale_status, "count_securityManager" =>$count_securityManager, "count_missing_kdm_error" =>$count_missing_kdm_error, "count_missing_cpl_error" =>$count_missing_cpl_error));
@@ -276,18 +288,7 @@ class SnmpController extends Controller
                     }
                 }
 
-                $infos =  " <h3 class='m-2'> Location : $location->name  </h3> " ;
-                $infos .="<p class='d-flex'> " ;
-                $infos .="<span class='m-3'> <i class='align-middle icon-md mdi mdi-key-remove  ml-auto'></i>  Kdms  : ".$error->kdm_errors." </span>";
-                $infos .="<span class='m-3'> <i class='align-middle icon-md mdi mdi-calendar-today  ml-auto'></i>  Unlinked Sessions   : ".$count_unlinked_sessions." </span>";
-                $infos .="<span class='m-3'> <i class='align-middle icon-md mdi mdi mdi-calendar-today  ml-auto'></i>  Server   : ".$error->nbr_server_alert." </span>";
-                $infos .="<span class='m-3'> <i class='align-middle icon-md mdi mdi-projector  ml-auto'></i>  Projector  : ".$error->nbr_projector_alert." </span>";
-                $infos .="<span class='m-3'> <i class='align-middle icon-md mdi mdi-volume-high ml-auto'></i> Sound   : 0 </span>";
-                $infos .="<span class='m-3'> <i class='align-middle icon-md mdi mdi-chart-pie  ml-auto'></i> Storage  : ".$error->nbr_storage_errors." </span>";
-                $infos .="</p> " ;
             }
-
-
 
             /*if( $diskusage || $playback_generale_status  || $schedules_error  || $securityManager && false)
             {
@@ -306,10 +307,6 @@ class SnmpController extends Controller
                 }
             }*/
             array_push($count_unlinked_sessions_array,  array("location_id" =>$location->id, "count" => $count_unlinked_sessions ));
-
-
-
-
 
         }
         foreach ($states_red as $state)

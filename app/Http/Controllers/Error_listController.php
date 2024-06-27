@@ -6,8 +6,10 @@ use App\Models\Error_list;
 use App\Models\Kdm_error_list;
 use App\Models\Location;
 use App\Models\Projector_errors_list;
+use App\Models\Schedule;
 use App\Models\Server_error_list;
 use App\Models\Storage_errors_list;
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -223,5 +225,20 @@ class Error_listController extends Controller
         }
 
         return Response()->json(compact('storage_errors_list'));
+    }
+
+    public function get_unlinked_sessions_errors_list(Request $request)
+    {
+        $schedules = Schedule::leftJoin('moviescods', 'schedules.cod_film', '=', 'moviescods.code')
+            ->leftJoin('screens', 'schedules.screen_id', '=', 'screens.id')
+            ->where('schedules.location_id', $request->location )
+            ->where('schedules.status','!=','linked' )
+            ->where('schedules.date_start' , '>' , Carbon::today() )
+           ->groupBy('schedules.scheduleId')
+           ->orderBy('screens.id', 'ASC')
+            ->orderBy('schedules.date_start', 'ASC')
+            ->get() ;
+
+        return Response()->json(compact('schedules'));
     }
 }

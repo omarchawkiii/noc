@@ -207,6 +207,7 @@ Route::get('get_kdm_errors_list', [App\Http\Controllers\Error_listController::cl
 Route::get('get_server_errors_list', [App\Http\Controllers\Error_listController::class , 'server_errors_list'])->name('error_list.server_errors_list')->middleware(['auth']);
 Route::get('get_projector_errors_list', [App\Http\Controllers\Error_listController::class , 'projector_errors_list'])->name('error_list.get_projector_errors_list')->middleware(['auth']);
 Route::get('get_storage_errors_list', [App\Http\Controllers\Error_listController::class , 'storage_errors_list'])->name('error_list.get_storage_errors_list')->middleware(['auth']);
+Route::get('get_unlinked_sessions_errors_list', [App\Http\Controllers\Error_listController::class , 'get_unlinked_sessions_errors_list'])->name('error_list.get_unlinked_sessions_errors_list')->middleware(['auth']);
 
 
 Route::get('planner', [App\Http\Controllers\PlannerController::class , 'index'])->name('planner.index')->middleware(['auth']);
