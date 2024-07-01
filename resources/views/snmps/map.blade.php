@@ -772,10 +772,10 @@
                 success: function(response) {
                     console.log(response);
                     var data ;
-                    if(response.storage_errors_list.length > 0)
+                    if(response.schedules.length > 0)
                     {
 
-                        $.each(response.storage_errors_list, function(index, value) {
+                        $.each(response.schedules, function(index, value) {
                         data +=
                             '<tr class="odd ">'
                                 +'<td class="sorting_1"> '+ value.scheduleId+'  </td>'

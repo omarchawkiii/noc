@@ -27,21 +27,41 @@ Planner
 
             <div class="tab-content">
                 <div class="tab-pane fade show active" id="plan" role="tabpanel" aria-labelledby="home-tab">
-                    <form method="POST" action="{{ route('location.store') }}" class="needs-validation m-5" novalidate>
+                    <form method="POST" action="{{ route('planner.store') }}" id="create_planner" class="needs-validation m-5" novalidate>
                         @csrf
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group  has-validation">
                                     <label>Name</label>
-                                    <input type="text" class="form-control" placeholder="Name"   name="name"  required>
+                                    <input type="text" class="form-control" placeholder="Name" id="name"  name="name"  required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="screen-model"> Target Location </label>
+                                    <select class="form-control" id="location" name="location_id" required >
+                                        <option value="" Selected>Select Location </option>
+                                        @foreach ($locations as $location )
+                                            <option value="{{ $location->id }}">{{ $location->name }} </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="screen-model"> Target Screen Type  </label>
+                                    <select class="form-control" id="screen_type" name="screen_type" required>
+                                        <option value="IMAP">IMAP </option>
+                                        <option value="POP">POP</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="screen-model"> CPL </label>
-                                    <select class="form-control" id="cpl" >
-                                        <option value="IMAP">IMAP </option>
-                                        <option value="POP">POP</option>
+                                    <select class="form-control" id="cpl_uuid" name="cpl_uuid"  required>
+                                        <option value="">Select Location  </option>
+
                                     </select>
                                 </div>
                             </div>
@@ -49,10 +69,7 @@ Planner
                                 <div class="form-group">
                                     <label>Date Range Start </label>
                                     <div id="datepicker-popup" class="input-group date datepicker">
-                                        <input type="text" class="form-control">
-                                        <span class="input-group-addon input-group-append border-left">
-                                            <span class="mdi mdi-calendar input-group-text"></span>
-                                        </span>
+                                        <input type="date" class="form-control" name="date_start"  id="date_start" required>
                                     </div>
                                 </div>
                             </div>
@@ -60,53 +77,36 @@ Planner
                                 <div class="form-group">
                                     <label>Date Range End </label>
                                     <div id="datepicker-popup" class="input-group date datepicker">
-                                        <input type="text" class="form-control">
-                                        <span class="input-group-addon input-group-append border-left">
-                                            <span class="mdi mdi-calendar input-group-text"></span>
-                                        </span>
+                                        <input type="date" class="form-control"  name="date_end"  id="date_end" required>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="screen-model"> Target Location </label>
-                                    <select class="form-control" id="cpl" >
-                                        <option value="IMAP">IMAP </option>
-                                        <option value="POP">POP</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="screen-model"> Target Screen Type  </label>
-                                    <select class="form-control" id="cpl" >
-                                        <option value="IMAP">IMAP </option>
-                                        <option value="POP">POP</option>
-                                    </select>
-                                </div>
-                            </div>
+
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="screen-model"> Target Movie  </label>
-                                    <select class="form-control" id="cpl" >
-                                        <option value="IMAP">IMAP </option>
-                                        <option value="POP">POP</option>
+                                    <select class="form-control" id="movie" name="movies_id" required>
+                                        <option value="">Select Location </option>
+
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="screen-model"> Template Selection   </label>
-                                    <select class="form-control" id="cpl" >
-                                        <option value="IMAP">IMAP </option>
-                                        <option value="POP">POP</option>
+                                    <select class="form-control" id="template" name="template" required>
+                                        <option value=""> Select Template</option>
+                                        @foreach ($templates as $template)
+                                            <option value="{{ $template->uuid }}">{{ $template->spl_title }} </option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="screen-model"> Template Position   </label>
-                                    <select class="form-control" id="cpl" >
+                                    <select class="form-control" id="template_position" name="template_position" required>
                                         <option value="1">1 </option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
@@ -133,7 +133,7 @@ Planner
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="screen-model">  Position   </label>
-                                    <select class="form-control" id="cpl" >
+                                    <select class="form-control" id="position" name="position" required>
                                         <option value="1">1 </option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
@@ -158,15 +158,13 @@ Planner
                                 </div>
                             </div>
                             <div class="col-md-12 ">
-                                <button type="button " id="link_spl_movies_btn" class=" btn btn-primary  btn-icon-text " style="margin: 15px auto 0px auto; display: table;">
+                                <button type="button " id="" class=" btn btn-primary  btn-icon-text " style="margin: 15px auto 0px auto; display: table;">
                                 <i class="mdi mdi-check "></i> Save </button>
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="tab-pane fade" id="spl" role="tabpanel" aria-labelledby="profile-tab">
-
-
                 </div>
               </div>
         </div>
@@ -213,20 +211,106 @@ Planner
     <script src="{{ asset('/assets/vendors/sweetalert/sweetalert.min.js') }}"></script>
     <script src="{{ asset('/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
 
+
+    <script src="{{asset('/assets/vendors/jquery-toast-plugin/jquery.toast.min.js')}}"></script>
+    <script src="{{ asset('/assets/vendors/sweetalert/sweetalert.min.js') }}"></script>
+    <script>
+        (function($) {
+
+            @if (session('message'))
+
+                $.toast({
+                    heading: 'Success',
+                    text: '{{ session("message") }}',
+                    showHideTransition: 'slide',
+                    icon: 'success',
+                    loaderBg: '#f96868',
+                    position: 'top-right',
+                    timeout: 5000
+                })
+            @endif
+        })(jQuery);
+    </script>
+
+
     <script>
 
-        (function($) {
-            'use strict';
+       // Example starter JavaScript for disabling form submissions if there are invalid fields
+       (function () {
+            'use strict'
+
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms =$( "#create_planner" )
+
+            // Loop over them and prevent submission
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+
+                    if (!form.checkValidity()) {
+
+                    event.preventDefault()
+                    event.stopPropagation()
+                    }
 
 
+                    form.classList.add('was-validated')
+                }, false)
+                })
 
         })(jQuery);
+
+
+        $('#location').change(function() {
+            var location = $('#location').val();
+
+
+            var url = "{{ url('') }}" + '/get_palnner_form_data';
+            var result = "";
+
+            $.ajax({
+                url: url,
+                method: 'GET',
+                data: {
+                    location: location,
+                },
+                success: function(response) {
+
+                    console.log(response.cpls)
+                    console.log(response.movies)
+                    result = '<option value=""> CPLs </option>';
+                    $.each(response.cpls, function(index, value) {
+                        result = result +
+                        '<option value="'+value.uuid+'"> '+value.contentTitleText+' </option>'
+
+                    });
+                    $('#cpl_uuid').html(result)
+
+                    result = '<option value=""> Movies </option>';
+                    $.each(response.movies, function(index, value) {
+                        result = result +
+                        '<option value="'+value.moviescods_id+'"> '+value.title+' </option>'
+
+                    });
+                    $('#movie').html(result)
+
+
+                },
+                error: function(response) {
+
+                }
+            })
+
+
+        });
+
     </script>
 @endsection
 
 @section('custom_css')
     <link rel="stylesheet" href="{{ asset('/assets/vendors/datatables.net-bs4/dataTables.bootstrap4.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css') }}">
+    <link rel="stylesheet" href="{{asset('/assets/vendors/jquery-toast-plugin/jquery.toast.min.css')}}">
     <style>
 
     </style>

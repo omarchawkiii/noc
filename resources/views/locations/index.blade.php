@@ -95,7 +95,7 @@
                                                     <a class="btn btn-outline-primary dropdown-item" href="{{ route('playback.getplayback',$location->id) }}">Refreesh Playback </a>
                                                     <a class="btn btn-outline-primary dropdown-item" href="{{ route('refresh_macro_data_by_location',$location->id) }}">Refreesh Macros </a>
                                                     <a class="btn btn-outline-primary dropdown-item" href="{{ route('moviescod.getmoviescods',$location->id) }}">Refreesh MoviesCods </a>
-                                                    <a class="btn btn-outline-primary dropdown-item" href="{{ route('diskusage.getdiskusage',$location->id) }}">Refresh diskusage </a> -->
+                                                    <a class="btn btn-outline-primary dropdown-item" href="{{ route('diskusage.getdiskusage',$location->id) }}">Refresh diskusage </a> -->.
 
                                                     <a class="btn btn-outline-primary dropdown-item " id="delete_location"  href="#" data-id-location="{{ $location->id }}">Delete Location </a>
 

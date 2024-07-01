@@ -211,3 +211,5 @@ Route::get('get_unlinked_sessions_errors_list', [App\Http\Controllers\Error_list
 
 
 Route::get('planner', [App\Http\Controllers\PlannerController::class , 'index'])->name('planner.index')->middleware(['auth']);
+Route::get('get_palnner_form_data', [App\Http\Controllers\PlannerController::class , 'get_palnner_form_data'])->name('planner.get_palnner_form_data')->middleware(['auth']);
+Route::post('planner/store', [App\Http\Controllers\PlannerController::class , 'store'])->name('planner.store')->middleware(['auth']);
