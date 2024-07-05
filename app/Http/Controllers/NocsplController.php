@@ -36,7 +36,8 @@ class NocsplController extends Controller
             //Nocspl::where('uuid',$request->spl_uuid_edit)->delete() ;
             splcomponents::where('uuid_spl',$request->spl_uuid_edit)->delete() ;
             $uuid =  $request->spl_uuid_edit;
-            $locations_of_spl = Nocspl::where('uuid',$uuid)->leftJoin('locations', 'locations.id', '=', 'nocspls.location_id')->select('locations.*' )->groupBy('location_id')->get();
+            //$locations_of_spl = Nocspl::where('uuid',$uuid)->leftJoin('locations', 'locations.id', '=', 'nocspls.location_id')->select('locations.*' )->groupBy('location_id')->get();
+            $locations_of_spl = Location::whereIn('id',$request->id_location)->get();
 
         }
         else{
