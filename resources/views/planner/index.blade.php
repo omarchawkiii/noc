@@ -21,13 +21,79 @@ Planner
                   <a class="nav-link  active " id="plan-tab" data-bs-toggle="tab" href="#plan" role="tab" aria-controls="home" aria-selected="true">Plan</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link " id="spl-tab" data-bs-toggle="tab" href="#spl" role="tab" aria-controls="profile" aria-selected="false"> SPL</a>
+                  <a class="nav-link " id="features-tab" data-bs-toggle="tab" href="#features" role="tab" aria-controls="features" aria-selected="false"> Features</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link " id="spl-tab" data-bs-toggle="tab" href="#spl" role="tab" aria-controls="profile" aria-selected="false"> Generated SPLs</a>
+                  </li>
             </ul>
 
             <div class="tab-content">
-                <div class="tab-pane fade show active" id="plan" role="tabpanel" aria-labelledby="home-tab">
-                    <form method="POST" action="{{ route('planner.store') }}" id="create_planner" class="needs-validation m-5" novalidate>
+                <div class="tab-pane fade show active " id="plan" role="tabpanel" aria-labelledby="home-tab">
+                    <button type="button " id="create_new_plan_btn" class=" btn btn-primary  btn-icon-text m-3 "><i class="mdi mdi-check "></i> Create New Plan </button>
+                    <div class="preview-list multiplex  ">
+                        <div class="table-responsive ">
+                            <table id="planner-listing" class="table ">
+                                <thead>
+                                    <tr>
+                                        <th class="sorting sorting_asc">No </th>
+                                        <th class="sorting">Campaingn Name</th>
+                                        <th class="sorting">Publish ID </th>
+                                        <th class="sorting">CPL </th>
+                                        <th class="sorting">Data Start</th>
+                                        <th class="sorting">Date End </th>
+                                        <th class="sorting">Target Location </th>
+                                        <th class="sorting">Target Screen Type </th>
+                                        <th class="sorting">Template </th>
+                                        <th class="sorting">Marker</th>
+                                        <th class="sorting">Priority</th>
+                                        <th class="sorting">Target Feature</th>
+                                        <th class="sorting">Film </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="features" role="tabpanel" aria-labelledby="features-tab">
+                </div>
+                <div class="tab-pane fade" id="spl" role="tabpanel" aria-labelledby="spl-tab">
+                    <div class="preview-list multiplex  ">
+                        <div class="table-responsive ">
+                            <table id="spl-listing" class="table ">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Creation Date</th>
+                                        <th>UUID </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+              </div>
+        </div>
+    </div>
+
+    <div class=" modal fade " id="Create_new_plan" tabindex="-1" role="dialog"  aria-labelledby="delete_client_modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered  modal-xl">
+            <div class="modal-content border-0">
+                <div class="modal-header">
+                    <h4>Create New Plan </h4>
+                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true"
+                            style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
+                </div>
+                <div class="modal-body  p-4">
+
+                    <form method="POST" action="" id="create_planner" class="needs-validation m-5" novalidate>
                         @csrf
                         <div class="row">
                             <div class="col-md-6">
@@ -47,16 +113,8 @@ Planner
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="screen-model"> Target Screen Type  </label>
-                                    <select class="form-control" id="screen_type" name="screen_type" required>
-                                        <option value="IMAP">IMAP </option>
-                                        <option value="POP">POP</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
+
+                            <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="screen-model"> CPL </label>
                                     <select class="form-control" id="cpl_uuid" name="cpl_uuid"  required>
@@ -81,7 +139,15 @@ Planner
                                     </div>
                                 </div>
                             </div>
-
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="screen-model"> Target Screen Type  </label>
+                                    <select class="form-control" id="screen_type" name="screen_type" required>
+                                        <option value="IMAP">IMAP </option>
+                                        <option value="POP">POP</option>
+                                    </select>
+                                </div>
+                            </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -157,50 +223,71 @@ Planner
                                     </select>
                                 </div>
                             </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="screen-model">  Marker   </label>
+                                    <select class="form-control" id="marker" name="marker" required>
+                                        <option value="" selected="selected">Select Marker</option>
+                                        <option value="PATTERN">Pattern</option>
+                                        <option value="ADVERTISEMENT">ADVERTISEMENT</option>
+                                        <option value="FEATURE">FEATURE</option>
+                                        <option value="POLICY">POLICY</option>
+                                        <option value="PSA">PSA</option>
+                                        <option value="SHORT">SHORT</option>
+                                        <option value="TEASER">TEASER</option>
+                                        <option value="TEST">TEST</option>
+                                        <option value="TRAILER">TRAILER</option>
+                                        <option value="SPL"> Show Playlist</option>
+                                        <option value="MACROS"> Macros</option>
+
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="screen-model">  Priority   </label>
+                                    <select class="form-control" id="priority" name="priority" required>
+                                        <option value=""> Priority</option>
+                                        <option value="1">1 </option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="screen-model">  Target Feature   </label>
+                                    <select class="form-control" id="position" name="position" required>
+                                        <option value="All">All </option>
+                                        <option value="Kingdom Of Apes">Kingdom Of Apes</option>
+
+                                    </select>
+                                </div>
+                            </div>
                             <div class="col-md-12 ">
                                 <button type="button " id="" class=" btn btn-primary  btn-icon-text " style="margin: 15px auto 0px auto; display: table;">
                                 <i class="mdi mdi-check "></i> Save </button>
                             </div>
                         </div>
                     </form>
-                </div>
-                <div class="tab-pane fade" id="spl" role="tabpanel" aria-labelledby="profile-tab">
-                </div>
-              </div>
-        </div>
-    </div>
 
-    <div class=" modal fade " id="upload_kdm_errors" tabindex="-1" role="dialog"  aria-labelledby="delete_client_modalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered  modal-xl">
-            <div class="modal-content border-0">
-                <div class="modal-header">
-                    <h4>Uploaded Kdms infos </h4>
-                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal"
-                        aria-label="Close"><span aria-hidden="true"
-                            style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
-                </div>
-                <div class="modal-body  p-4">
                 </div>
             </div>
         <!--end modal-content-->
         </div>
     </div>
 
-    <div class=" modal fade " id="upload_spl_errors" tabindex="-1" role="dialog"  aria-labelledby="delete_client_modalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered  modal-xl">
-            <div class="modal-content border-0">
-                <div class="modal-header">
-                    <h4>Uploaded SPLs infos </h4>
-                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal"
-                        aria-label="Close"><span aria-hidden="true"
-                            style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
-                </div>
-                <div class="modal-body  p-4">
-                </div>
-            </div>
-        <!--end modal-content-->
-        </div>
-    </div>
 
 @endsection
 
@@ -208,9 +295,8 @@ Planner
     <!-- ------- DATA TABLE ---- -->
     <script src="{{ asset('/assets/vendors/datatables.net/jquery.dataTables.js') }}"></script>
     <script src="{{ asset('/assets/vendors/datatables.net-bs4/dataTables.bootstrap4.js') }}"></script>
-    <script src="{{ asset('/assets/vendors/sweetalert/sweetalert.min.js') }}"></script>
-    <script src="{{ asset('/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
 
+    <script src="{{ asset('/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
 
     <script src="{{asset('/assets/vendors/jquery-toast-plugin/jquery.toast.min.js')}}"></script>
     <script src="{{ asset('/assets/vendors/sweetalert/sweetalert.min.js') }}"></script>
@@ -232,8 +318,76 @@ Planner
         })(jQuery);
     </script>
 
-
     <script>
+
+        function get_plans()
+        {
+            $("#planner-listing").dataTable().fnDestroy();
+            $('#planner-listing tbody').html('')
+            var loader_content  =
+            '<div class="jumping-dots-loader">'
+                +'<span></span>'
+                +'<span></span>'
+                +'<span></span>'
+                +'</div>'
+            $('#planner-listing tbody').html(loader_content)
+
+                result =" " ;
+                var url = "{{  url('') }}"+ '/get_plans';
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    data :{
+
+                    },
+                    success:function(response)
+                    {
+                        console.log(response)
+                        $.each(response.plans, function( index, value ) {
+
+                            correct_index = index + 1 ;
+                            result = result
+                                +'<tr class="odd ">'
+
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+correct_index+'</a></td>'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.name+'</a></td>'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.id+'</a></td>'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.cpl_uuid+'</a></td>'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.date_start+'</a></td>'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.date_end+'</a></td>'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.location_name+'</a></td>'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.screen_type+'</a></td>'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.template_position+'</a></td>'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.marker +'</a></td>'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.priority +'</a></td>'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.feature +'</a></td>'
+                                    +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.movie_title+'</a></td>'
+                                +'</tr>';
+                        });
+
+
+                        $('#planner-listing tbody').html(result)
+                        /***** refresh datatable ***** */
+
+                        var spl_datatable = $('#planner-listing').DataTable({
+
+                            "iDisplayLength": 100,
+                            destroy: true,
+                            "bDestroy": true,
+                            "language": {
+                                search: "_INPUT_",
+                                searchPlaceholder: "Search..."
+                            }
+
+                        });
+
+                    },
+                    error: function(response) {
+
+                    }
+                })
+        }
+        get_plans();
 
        // Example starter JavaScript for disabling form submissions if there are invalid fields
        (function () {
@@ -252,7 +406,94 @@ Planner
                     event.preventDefault()
                     event.stopPropagation()
                     }
+                    else
+                    {
 
+
+                        event.preventDefault()
+
+                        var name = $('#name').val();
+                        var location_id = $('#location_id').val();
+                        var cpl_uuid = $('#cpl_uuid').val();
+                        var date_start = $('#date_start').val();
+                        var date_end = $('#date_end').val();
+                        var screen_type = $('#screen_type').val();
+                        var movies_id = $('#movies_id').val();
+                        var template = $('#template').val();
+                        var template_position = $('#template_position').val();
+                        var position = $('#position').val();
+                        var marker = $('#marker').val();
+                        var priority = $('#priority').val();
+                        var position = $('#position').val();
+
+
+                        $.ajax({
+                            url: "{{  url('') }}"+ '/planner/store' ,
+                            method: 'POST',
+                            data :{
+                                name:name,
+                                location_id:location_id,
+                                cpl_uuid:cpl_uuid,
+                                date_start:date_start,
+                                date_end:date_end,
+                                screen_type:screen_type,
+                                movies_id:movies_id,
+                                template:template,
+                                template_position:template_position,
+                                position:position,
+                                marker:marker,
+                                priority:priority,
+                                position:position,
+                                "_token": "{{ csrf_token() }}",
+                            },
+                            success:function(response)
+                            {
+                                if(response="success")
+                                {
+
+                                    swal({
+                                            title: 'Done!',
+                                            text: 'Plan Created Successfully ',
+                                            icon: 'success',
+                                            button: {
+                                                text: "Continue",
+                                                value: true,
+                                                visible: true,
+                                                className: "btn btn-primary"
+                                            }
+                                        })
+                                        get_plans()
+                                        $('#create_planner').trigger("reset");
+                                }
+                                else
+                                {
+                                    swal({
+                                            title: 'Failed',
+                                            text: "Error occurred while sending the request.",
+                                            icon: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#3f51b5',
+                                            cancelButtonColor: '#ff4081',
+                                            confirmButtonText: 'Great ',
+                                            buttons: {
+                                                cancel: {
+                                                    text: "Cancel",
+                                                    value: null,
+                                                    visible: true,
+                                                    className: "btn btn-danger",
+                                                    closeModal: true,
+                                                },
+                                            }
+                                        })
+                                }
+
+                            },
+                            error: function(response) {
+
+                            }
+                        })
+
+                    }
 
                     form.classList.add('was-validated')
                 }, false)
@@ -289,7 +530,7 @@ Planner
                     result = '<option value=""> Movies </option>';
                     $.each(response.movies, function(index, value) {
                         result = result +
-                        '<option value="'+value.moviescods_id+'"> '+value.title+' </option>'
+                        '<option value="'+value.id+'"> '+value.title+' </option>'
 
                     });
                     $('#movie').html(result)
@@ -303,6 +544,55 @@ Planner
 
 
         });
+
+        $(document).on('click', '#create_new_plan_btn', function () {
+
+            $('#Create_new_plan').modal('show');
+        });
+
+
+
+
+        function get_templates(id_location)
+        {
+            var loader_content  =
+            '<div class="jumping-dots-loader">'
+                +'<span></span>'
+                +'<span></span>'
+                +'<span></span>'
+                +'</div>'
+            $('#spl-listing tbody').html(loader_content)
+
+            var url = "{{  url('') }}"+   "/get_templates/";
+
+            var result="";
+            $.ajax({
+                    url: url,
+                    method: 'GET',
+                    success:function(response)
+                    {
+                        $.each(response.templates, function( index, value ) {
+
+                            result = result
+                                +'<tr id="'+value.uuid+'">'
+                                    +'<td style="font-size: 14px; line-height: 22px; width: 12vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.spl_title+'</td>'
+                                    +'<td style="font-size: 14px;">'+value.created_at+'</td>'
+                                    +'<td style="font-size: 14px; line-height: 22px; width: 18vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.uuid+'</td>'
+                                +'</tr>'
+                        });
+
+                        $('#spl-listing tbody').html(result)
+
+                    },
+                    error: function(response) {
+
+                    }
+            })
+        }
+        $(document).on('click', '#spl-tab', function () {
+            get_templates();
+        });
+
 
     </script>
 @endsection

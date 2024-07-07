@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Planner extends Model
 {
@@ -20,6 +21,17 @@ class Planner extends Model
         'spl_uuid',
         'template_position',
         'position',
+        'marker',
+        'priority',
+        'feature',
     ];
+    public function location(): BelongsTo
+    {
+        return $this->belongsTo(Location::class);
+    }
+    public function movie(): BelongsTo
+    {
+        return $this->belongsTo(Moviescod::class,'moviescods','id');
+    }
 
 }

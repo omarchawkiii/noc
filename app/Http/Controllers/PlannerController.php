@@ -26,7 +26,21 @@ class PlannerController extends Controller
         $templates = Nocspl::where('is_template',1)->get() ;
         $cpls = null ;
 
-        return view('planner.index', compact('locations','templates'));
+        $plans = Planner::with('location')->get() ;
+
+        return view('planner.index', compact('locations','templates','plans'));
+    }
+    public function get_plans()
+    {
+        $plans = Planner::
+         leftJoin('moviescods', 'planners.movies_id', '=', 'moviescods.id')
+        ->leftJoin('locations', 'planners.location_id', '=', 'locations.id')
+        ->orderBy('planners.id', 'DESC')
+        ->select('locations.name as location_name','planners.*','moviescods.title as movie_title')
+
+        ->get() ;
+
+        return Response()->json(compact('plans'));
     }
     public function get_movies(Request $request)
     {
@@ -47,7 +61,7 @@ class PlannerController extends Controller
     public function store(Request $request)
     {
 
-        Planner::create([
+        $plan = Planner::create([
             'name'=> $request->name,
             'cpl_uuid'=> $request->cpl_uuid,
             'date_start'=> $request->date_start,
@@ -58,8 +72,25 @@ class PlannerController extends Controller
             'spl_uuid'=> null,
             'template_position'=> $request->template_position,
             'position'=> $request->position,
+            'marker'=> $request->marker,
+            'priority'=> $request->priority,
+            'feature'=> $request->feature,
         ]);
-        return redirect()->route('planner.index')->with('message' ,' The plan has been created ');
+        if($plan)
+        {
+            echo "success" ;
+        }
+        else
+        {
+            echo "faild" ;
+        }
+
+    }
+
+    public function get_templates()
+    {
+        $templates = Nocspl::where('is_template',1)->get() ;
+        return Response()->json(compact('templates'));
     }
 
 }
