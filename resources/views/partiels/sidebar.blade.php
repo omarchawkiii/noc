@@ -120,7 +120,14 @@
             <span class="menu-title">Transfer Content </span>
             </a>
         </li>
-
+        <li class="nav-item menu-items">
+            <a class="nav-link" href="{{ route('planner.index') }}">
+            <span class="menu-icon icon-box-success">
+                <i class="mdi mdi-chemical-weapon "></i>
+            </span>
+            <span class="menu-title">Planner </span>
+            </a>
+        </li>
 
 
         @if (Auth::user()->role == 1 )
