@@ -268,7 +268,7 @@ Planner
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="screen-model">  Target Feature   </label>
-                                    <select class="form-control" id="position" name="position" required>
+                                    <select class="form-control" id="feature" name="feature" required>
                                         <option value="All">All </option>
                                         <option value="Kingdom Of Apes">Kingdom Of Apes</option>
 
@@ -424,7 +424,7 @@ Planner
                         var position = $('#position').val();
                         var marker = $('#marker').val();
                         var priority = $('#priority').val();
-                        var position = $('#position').val();
+                        var feature = $('#feature').val();
 
 
                         $.ajax({
