@@ -93,7 +93,7 @@ Planner
                 </div>
                 <div class="modal-body  p-4">
 
-                    <form method="POST" action="" id="create_planner" class="needs-validation m-5" novalidate>
+                    <form method="POST" action="" id="create_planner" class="needs-validation m-2" novalidate>
                         @csrf
                         <div class="row">
                             <div class="col-md-6">
@@ -463,6 +463,7 @@ Planner
                                             }
                                         })
                                         get_plans()
+                                        $('#Create_new_plan').modal('hide');
                                         $('#create_planner').trigger("reset");
                                 }
                                 else
