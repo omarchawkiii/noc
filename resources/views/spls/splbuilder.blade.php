@@ -2394,7 +2394,7 @@
                                     +'</thead>'
                                     +'<tbody>'
                         }
-
+                        console.log(response.nocspls)
 
                         $.each(response.nocspls, function( index, value ) {
                             if(id_location.length)
@@ -2404,9 +2404,9 @@
                                             +'<td style="font-size: 14px; line-height: 22px; width: 12vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.spl_title+'</td>'
                                             +'<td style="font-size: 14px;">'+value.created_at+'</td>'
                                             +'<td style="font-size: 14px; line-height: 22px; width: 18vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.uuid+'</td>'
-                                            +'<td style="font-size: 14px; line-height: 22px; width: 18vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.location.name+'</td>'
+                                            +'<td style="font-size: 14px; line-height: 22px; width: 18vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</td>'
                                             +'<td> '
-                                                +'<i class="btn btn-primary mdi mdi-tooltip-edit open_spl" data-title="'+value.spl_title+'" data-uuid="'+value.uuid+'"></i> '
+                                                +'<i class="btn btn-primary mdi mdi-tooltip-edit open_spl" data-title="'+value.spl_title+'" data-location_id="'+value.location_id+'" data-uuid="'+value.uuid+'"></i> '
                                                 +'<i class="btn btn-danger mdi   mdi-delete-forever delete_spl" data-title="'+value.spl_title+'" data-uuid="'+value.uuid+'"></i>'
                                             +'</td>'
                                         +'</tr>'
@@ -3203,8 +3203,9 @@
 
             $('#opened_spl').attr('data-opened_spl_status', 1);
             var id_spl = $(this).data("uuid");
+            var id_location = $(this).data("location_id");
             var title = $(this).data("title");
-            openSpl(id_spl);
+            openSpl(id_spl,id_location);
             $('#opened_spl').html(title);
             $('#opened_spl').attr('data-opened_spl_status', 1);
             $("#spl-list").modal("hide");
@@ -3716,13 +3717,15 @@
         }
 
 
-        function openSpl(id_spl) {
+        function openSpl(id_spl,id_location) {
             $.ajax({
                 url : "{{  url('') }}"+   "/open_nocspl",
                 type: 'get',
                 data: {
                     action_control: "open_spl",
-                    id_spl: id_spl,
+                    id_location:id_location,
+                    id_spl: "id_spl",
+
                     "_token": "{{ csrf_token() }}",
                 },
                 success: function (response) {

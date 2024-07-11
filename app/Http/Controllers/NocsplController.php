@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use App\Models\splcomponents;
+use Illuminate\Support\Facades\DB;
 
 class NocsplController extends Controller
 {
@@ -222,9 +223,10 @@ class NocsplController extends Controller
     }
     public function openlocalspl(Request $request)
     {
-            $spl_data = Nocspl::where('uuid',$_GET["id_spl"])->first() ;
-            $path =  storage_path().'/app/xml_file/'.$spl_data->xmlpath ;
-            $spl_file = simplexml_load_file($path);
+        $spl = Spl::where('uuid',$_GET["id_spl"])->where('location_id', $request->id_location)->first() ;
+        $location = Location::findOrFail($request->id_location) ;
+        $splClass = new SplController() ;
+        $spl_file = simplexml_load_string($splClass->get_spl_from_API($location->connection_ip,$_GET["id_spl"],$location->email , $location->password) );
 
             if (property_exists($spl_file, 'EventList')) {
                 foreach ($spl_file->EventList->Event as $event) {
@@ -1099,7 +1101,24 @@ class NocsplController extends Controller
 
         if($request->id_location)
         {
-            $nocspls = Nocspl::with('location')->where('is_template',0)->whereIn('location_id',$request->id_location)->get() ;
+
+            $spls = DB::table('spls')
+            ->leftJoin('locations', 'spls.location_id', '=', 'locations.id')
+            ->whereIn('location_id',$request->id_location)
+            ->groupBy('uuid')->distinct()
+            ->select('locations.name','locations.id as location_id','spls.*','spls.name as spl_title')
+            ->get();
+
+            $spls_noc = DB::table('nocspls')
+            ->leftJoin('locations', 'nocspls.location_id', '=', 'locations.id')
+            ->whereIn('location_id',$request->id_location)
+            ->groupBy('uuid')->distinct()
+            ->select('locations.name','locations.id as location_id','nocspls.*','nocspls.spl_title as spl_title')
+            ->get();
+
+            $nocspls = $spls->merge($spls_noc)->unique('uuid');
+
+            //$nocspls =  Nocspl::with('location')->where('is_template',0)->whereIn('location_id',$request->id_location)->get() ;
         }
         else
         {
@@ -1277,13 +1296,11 @@ class NocsplController extends Controller
 
     public function uploadlocalspl(Request $request)
     {
-
         $ingest_success = array() ;
         $ingest_errors = array();
         $ingest_status= array();
 
         try {
-
             foreach ($request->splfiles as $splfiles )
             {
 
@@ -1335,25 +1352,21 @@ class NocsplController extends Controller
                                         ]);
                                     }
                                     array_push($ingest_success,  array("status" => 1 , "originalName" =>  $splfiles->getClientOriginalName() , "id" =>  "" , "AnnotationText" =>  "" ));
-
                             }
                             else
                             {
                                 array_push($ingest_errors,  array("status" => 0 , "originalName" =>  $splfiles->getClientOriginalName() , "id" =>  "",  "AnnotationText" =>  "This is not a KDM file"));
                             }
-
                         }
                         else
                         {
                             array_push($ingest_errors,  array("status" => 0 , "originalName" =>  $splfiles->getClientOriginalName() , "id" =>  "",  "AnnotationText" =>  "This is not a KDM file"));
                         }
-
                     }
                     else
                     {
                         array_push($ingest_errors,  array("status" => 0 , "originalName" =>  $splfiles->getClientOriginalName() , "id" =>  "",  "AnnotationText" =>  "This is not a KDM file"));
                     }
-
                 }
                 else
                 {

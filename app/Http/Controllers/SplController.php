@@ -330,12 +330,12 @@ class SplController extends Controller
         $location = Location::findOrFail($request->location) ;
 
         //$spl = Spl::where('uuid',$request->spl_id)->first() ;
-        $response = $this->get_spl_from_API($location->connection_ip,$request->spl_id,$location->email , $location->password) ;
-
+        $response = $this->get_spl_from_API_for_download($location->connection_ip,$request->spl_id,$location->email , $location->password) ;
+/*dd($response);
         dd($response) ;
         $spl_file = simplexml_load_file("/DATA/spl/$request->spl_id.xml");
         $xmlString = $spl_file->asXML();
-        print_r($xmlString);
+        print_r($xmlString);*/
     }
 
     public function get_spl_from_API($apiUrl,$uuid,$username,$password)
@@ -362,6 +362,42 @@ class SplController extends Controller
         }
         // Close cURL session
         curl_close($ch);
+
+           return  $response;
+        print_r($response);
+        // Process the API response
+        if (!$response) {
+            return ['error' => 'Error occurred while sending the request.'];
+        } else {
+            return json_decode($response, true);
+        }
+    }
+      public function get_spl_from_API_for_download($apiUrl,$uuid,$username,$password)
+    {
+        // Prepare the request data
+        $requestData = [
+            'action' => 'get_spl',
+            'uuid' => $uuid,
+            'username' => $username,
+            'password' => $password
+        ];
+        // Initialize cURL session
+
+        $ch = curl_init($apiUrl);
+        // Set cURL options
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($requestData));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // Execute cURL session and get the response
+        $response = curl_exec($ch);
+        // Check for cURL errors
+        if (curl_errno($ch)) {
+            return ['error' => 'Curl error: ' . curl_error($ch)];
+        }
+        // Close cURL session
+        curl_close($ch);
+
+
         print_r($response);
         // Process the API response
         if (!$response) {
