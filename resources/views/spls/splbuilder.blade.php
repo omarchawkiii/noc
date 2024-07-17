@@ -2582,7 +2582,7 @@
                         'id': $(this).data('id'),
                         'uuid': $(this).data('uuid'),
                         'source': $(this).data('source'),
-                        'title': $(this).data('title'),
+                        'title': $(this).attr('data-title'),
                         'IntrinsicDuration': $(this).data('time'),
                         'start_time': $(this).data('starttime'),
                         'time_seconds': $(this).data('time_seconds'),

@@ -54,7 +54,8 @@ class LogstitleController extends Controller
 
     public function lamp_reports()
     {
-        return view('soon');
+        $locations = Location::all();
+        return view('logs.lamp_reports',compact('locations'));
     }
 
     public function storage_reports()

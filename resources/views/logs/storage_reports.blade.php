@@ -1,14 +1,14 @@
 @extends('layouts.app')
 @section('title')
-    Upload
+    Storage Report
 @endsection
 @section('content')
     <div class="page-header library-shadow">
-        <h3 class="page-title">Upload </h3>
+        <h3 class="page-title">Storage Report </h3>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Upload </li>
+                <li class="breadcrumb-item active" aria-current="page">Storage Report </li>
             </ol>
         </nav>
     </div>
