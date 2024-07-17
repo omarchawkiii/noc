@@ -54,6 +54,7 @@
                 <li class="nav-item"> <a class="nav-link active_playlistbuilder " href="{{ route('logs.get_performance_log') }}"> <i class="mdi mdi-checkbox-blank-circle me-1"></i> Performance Logs</a></li>
                 <li class="nav-item"> <a class="nav-link active_playlistbuilder " href="{{ route('asset_infos.display_performance_log') }}"> <i class="mdi mdi-checkbox-blank-circle me-1"></i>  Asset Reports</a></li>
                 <li class="nav-item"> <a class="nav-link active_playlistbuilder " href="{{ route('lamp_reports') }}"> <i class="mdi mdi-checkbox-blank-circle  me-1"></i> Lamp Reports</a></li>
+                <li class="nav-item"> <a class="nav-link active_playlistbuilder " href="{{ route('storage_reports') }}"> <i class="mdi mdi-checkbox-blank-circle  me-1"></i> Storage Reports</a></li>
             </ul>
             </div>
         </li>

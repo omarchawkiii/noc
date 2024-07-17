@@ -2404,10 +2404,10 @@
                                             +'<td style="font-size: 14px; line-height: 22px; width: 12vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.spl_title+'</td>'
                                             +'<td style="font-size: 14px;">'+value.created_at+'</td>'
                                             +'<td style="font-size: 14px; line-height: 22px; width: 18vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.uuid+'</td>'
-                                            +'<td style="font-size: 14px; line-height: 22px; width: 18vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.name+'</td>'
+                                            +'<td style="font-size: 14px; line-height: 22px; width: 18vw; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">'+value.location_name+'</td>'
                                             +'<td> '
                                                 +'<i class="btn btn-primary mdi mdi-tooltip-edit open_spl" data-title="'+value.spl_title+'" data-location_id="'+value.location_id+'" data-uuid="'+value.uuid+'"></i> '
-                                                +'<i class="btn btn-danger mdi   mdi-delete-forever delete_spl" data-title="'+value.spl_title+'" data-uuid="'+value.uuid+'"></i>'
+                                                //+'<i class="btn btn-danger mdi   mdi-delete-forever delete_spl" data-title="'+value.spl_title+'" data-uuid="'+value.uuid+'"></i>'
                                             +'</td>'
                                         +'</tr>'
                             }
@@ -2931,11 +2931,13 @@
 
         //save edit SPL
         $(document).on('click', '#save_edited_spl', function () {
+
             let array_spl = [];
             let items_spl = [];
             let items_macro = [];
             let items_marker = [];
             let items_intermission = [];
+            var id_location =  $('#location').val();
             var title_spl = $('#spl_title').val();
             var action_type = $('#spl_action').val();
             if (title_spl == "") {
@@ -3060,6 +3062,7 @@
                             hfr: hfr,
                             action_control: action_control,
                             items_spl: items_spl,
+                            id_location:id_location,
                             "_token": "{{ csrf_token() }}",
                         },
                         success: function (response) {
@@ -3203,6 +3206,7 @@
 
             $('#opened_spl').attr('data-opened_spl_status', 1);
             var id_spl = $(this).data("uuid");
+
             var id_location = $(this).data("location_id");
             var title = $(this).data("title");
             openSpl(id_spl,id_location);
@@ -3724,7 +3728,7 @@
                 data: {
                     action_control: "open_spl",
                     id_location:id_location,
-                    id_spl: "id_spl",
+                    id_spl: id_spl,
 
                     "_token": "{{ csrf_token() }}",
                 },

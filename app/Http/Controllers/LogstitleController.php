@@ -6,6 +6,7 @@ use App\Models\Location;
 use App\Models\Logstitle;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Locale;
 
 class LogstitleController extends Controller
 {
@@ -54,6 +55,12 @@ class LogstitleController extends Controller
     public function lamp_reports()
     {
         return view('soon');
+    }
+
+    public function storage_reports()
+    {
+        $locations = Location::all();
+        return view('logs.storage_reports',compact('locations'));
     }
 
 }

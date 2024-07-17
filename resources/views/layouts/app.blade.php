@@ -32,7 +32,7 @@
         </div>
     </div>
 
-    <div class="modal fade show header-popup" id="header_kdm_errors_modal" tabindex="-1" aria-labelledby="ModalLabel" aria-modal="true" role="dialog">
+    <!--<div class="modal fade show header-popup" id="header_kdm_errors_modal" tabindex="-1" aria-labelledby="ModalLabel" aria-modal="true" role="dialog">
         <div class="modal-dialog  modal-xl" role="document" style="max-width: 93%; width: 93%;">
             <div class="modal-content">
                 <div class="modal-header">
@@ -186,7 +186,7 @@
 
             </div>
         </div>
-    </div>
+    </div> -->
 
     <div class="modal fade show" id="error_modal" tabindex="-1" role="dialog" aria-labelledby="delete_client_modalLabel" aria-modal="true" >
         <div class="modal-dialog modal-dialog-centered  modal-xl">
@@ -352,6 +352,13 @@
                         $('#header_kdm_errors').html('Healthy')
                         $('#icon_kdm_errors').css("color", "rgb(48, 255, 48)");
                     }
+                    if (response.kdm_errors > 0) {
+                        $('#header_kdm_errors').html(response.kdm_errors + ' Kdm Errors Detected ')
+                        $('#icon_kdm_errors').css("color", "rgb(255, 93, 93)");
+                    } else {
+                        $('#header_kdm_errors').html('Healthy')
+                        $('#icon_kdm_errors').css("color", "rgb(48, 255, 48)");
+                    }
 
                     if (response.nbr_sound_alert > 0) {
                         $('#header_sound_errors').html(response.nbr_sound_alert + ' Sound Errors Detected ')
@@ -398,7 +405,7 @@
         header_getdata();
 
 
-        $(document).on('click', '.header_kdm_errors_btn', function() {
+        $(document).on('click', '.header_kdm_errors_btn, #Kdms-tab', function() {
             var location = $(this).data('location');
             header_get_kdms_errors_list(location)
             $('#error_modal').modal('show')
@@ -448,7 +455,7 @@
 
         }
 
-        $(document).on('click', '.header_server_errors_btn', function() {
+        $(document).on('click', '.header_server_errors_btn, #Server-tab', function() {
 
             var location = $(this).data('location');
             header_get_server_errors_list(location)
@@ -459,6 +466,7 @@
         });
 
         function header_get_server_errors_list(location) {
+
             var url = "{{ url('') }}" + '/get_server_errors_list';
             $.ajax({
                 url: url,
@@ -502,7 +510,7 @@
             })
         }
 
-        $(document).on('click', '.header_projector_errors_btn', function() {
+        $(document).on('click', '.header_projector_errors_btn, #Projector-tab', function() {
 
             var location = $(this).data('location');
             console.log(location)
@@ -560,7 +568,7 @@
                 })
         }
 
-        $(document).on('click', '.show_storage_errors_details', function() {
+        $(document).on('click', '.show_storage_errors_details, #Storage-tab', function() {
 
             var location = $(this).data('location');
             console.log(location)

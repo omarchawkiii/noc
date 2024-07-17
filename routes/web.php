@@ -215,3 +215,6 @@ Route::get('get_palnner_form_data', [App\Http\Controllers\PlannerController::cla
 Route::post('planner/store', [App\Http\Controllers\PlannerController::class , 'store'])->name('planner.store')->middleware(['auth']);
 Route::get('get_plans', [App\Http\Controllers\PlannerController::class , 'get_plans'])->name('planner.get_plans')->middleware(['auth']);
 Route::get('get_templates', [App\Http\Controllers\PlannerController::class , 'get_templates'])->name('planner.get_templates')->middleware(['auth']);
+
+
+Route::get('storage_reports', [App\Http\Controllers\LogstitleController::class , 'storage_reports'])->name('storage_reports');
