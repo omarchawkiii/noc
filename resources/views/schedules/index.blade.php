@@ -1784,9 +1784,50 @@
                 },
                 success: function (response) {
                    //alert(response.spl)
+                   console.log(response.spl);
                     if(response.spl == null)
                     {
-                        $('.modal-body').html('No Data') ;
+
+                        $('#spl_title_details').html("(SPL no longer exists)")
+                        $('#details_spl_uuid').html("(SPL no longer exists)")
+                        $('#session_screen_details').html(response.schedule.screen.screen_name)
+                        $('#session_start_details').html(response.schedule.date_start)
+                        $('#session_end_details').html(response.schedule.date_end)
+                        $('#session_type_details').html(response.schedule.type)
+                        var result ="" ;
+                        $.each(response.cpls_with_kdms, function( index, value ) {
+                            var kdm_data_info ="" ;
+
+                            if(value.kdm_infos.length !=0)
+                            {
+                                kdm_data_info ='<span style="color:#00d25b">KDM Available </span>'
+                                            +'<hr class="custom-hr">'
+                                            +'KDM UUID : '+value.kdm_infos['kdm_uuid'] +' '
+                                            +'<hr class="custom-hr">'
+                                            +' Device Target : '+value.kdm_infos['device_target'] +' '
+                                            +'<hr class="custom-hr">'
+                                            +'<span class="">'+value.kdm_infos['kdm_status'] +'</span>'
+                            }
+                            else
+                            {
+                                kdm_data_info =value.kdm ;
+                            }
+                            result = result
+
+                                +'<tr class="odd ">'
+                                +'<td class="text-body align-middle fw-medium text-decoration-none">'+ value.title+' </td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.cpl_present+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none">'+value.cpl_playable+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+kdm_data_info+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.cpl_uuid+'</a></td>'
+                                +'<td><a class="text-body align-middle fw-medium text-decoration-none"> '+value.available_on+'</a></td>'
+
+
+                                +'</tr>';
+
+                        });
+                        $('#body_cpls_details').html(result)
+
                     }
                     else
                     {

@@ -421,6 +421,8 @@ class ScheduleContoller extends Controller
                         $kdm_response = "Non Encrypted" ;
                     }
                 }
+
+
                 array_push($cpls_with_kdms,array("title" => $cpl->contentTitleText, "cpl_present" => $cpl_present , "cpl_playable" => $cpl_playable , "cpl_uuid" => $cpl->uuid , "available_on" => $cpl->available_on , "kdm" => $kdm_response , 'kdm_infos' =>$kdm_infos) ) ;
             }
         }
@@ -429,6 +431,7 @@ class ScheduleContoller extends Controller
             $cpls_with_kdms = null ;
             $spl =null ;
         }
+
         return Response()->json(compact('cpls_with_kdms', 'spl' , 'schedule'));
     }
 

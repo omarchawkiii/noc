@@ -27,11 +27,8 @@ class LogController extends Controller
         //$url ="http://localhost/tms/system/api2.php" ;
         foreach($screens as $screen)
         {
+            $last_log= Log::latest('created_at')->where('screen_id',1)->first() ;
 
-
-            $last_log= Log::latest('created_at')->where('screen_id',13)->first() ;
-            //dd($last_log);
-            //dd($last_log);
             if($last_log != null)
             {
                 $lowID=  $last_log->recId + 1  ;
@@ -40,12 +37,8 @@ class LogController extends Controller
             {
                 $lowID = 0 ;
             }
-
-            //$lowID = 1 ;
             $highID = $lowID + 10000 ;
-
             while ($highID <= 1000000) {
-
                 $client = new Client();
                 $response = $client->request('POST', $url,[
                     'form_params' => [
@@ -53,7 +46,7 @@ class LogController extends Controller
                         'username'=>$location->email,
                         'password'=>$location->password,
                         //'screen_number'=>$screen->screen_number,
-                        'screen_number'=>14,
+                        'screen_number'=>1,
                         'lowID' =>$lowID,
                         'highID' =>$highID,
                     ]
@@ -61,13 +54,10 @@ class LogController extends Controller
                 $lowID =$highID ;
                  $highID = $lowID + 10000 ;
                 $contents = json_decode($response->getBody(), true);
-
                 if(count($contents['result']) > 0 )
                 {
-                    //dd($contents);
                     foreach($contents['result'] as $log)
                     {
-                    //echo $log['recId'] . "<br />" ;
                         Log::updateOrCreate([
                             'recId' => $log['recId'] ,
                             'location_id' => $location->id,
@@ -83,18 +73,17 @@ class LogController extends Controller
                             'Abbreviation' => $log['Abbreviation'],
                             'serverName' => $log['serverName'],
                             'location_id' => $location->id,
-                            'screen_id' =>13,//$screen->id ,
+                            'screen_id' =>1,//$screen->id ,
                         ]);
                     }
                 }
                 else
                 {
-                    //echo "break ";
-                 //   break ;
+
                 }
             }
 
-            dd('end  screen 13' ) ;
+            dd('end  screen 1' ) ;
         }
 
     }
