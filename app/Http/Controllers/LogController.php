@@ -25,10 +25,10 @@ class LogController extends Controller
         $screens = $location->screens ;
         $url = $location->connection_ip;
         //$url ="http://localhost/tms/system/api2.php" ;
+
         foreach($screens as $screen)
         {
-            $last_log= Log::latest('created_at')->where('screen_id',1)->first() ;
-
+            $last_log= Log::latest('created_at')->where('screen_id',$screen->id)->first() ;
             if($last_log != null)
             {
                 $lowID=  $last_log->recId + 1  ;
@@ -37,23 +37,27 @@ class LogController extends Controller
             {
                 $lowID = 0 ;
             }
-            $highID = $lowID + 10000 ;
-            while ($highID <= 1000000) {
+            $highID = $lowID + 1000 ;
+
+            $counter = 0  ;
+            while ($counter <= 10) {
+
                 $client = new Client();
                 $response = $client->request('POST', $url,[
                     'form_params' => [
                         'action' => 'getPerformanceLogs',
                         'username'=>$location->email,
                         'password'=>$location->password,
-                        //'screen_number'=>$screen->screen_number,
-                        'screen_number'=>1,
+                        'screen_number'=>$screen->screen_number,
+                      //  'screen_number'=>1,
                         'lowID' =>$lowID,
                         'highID' =>$highID,
                     ]
                 ]);
                 $lowID =$highID ;
-                 $highID = $lowID + 10000 ;
+                 $highID = $lowID + 1000 ;
                 $contents = json_decode($response->getBody(), true);
+
                 if(count($contents['result']) > 0 )
                 {
                     foreach($contents['result'] as $log)
@@ -73,21 +77,24 @@ class LogController extends Controller
                             'Abbreviation' => $log['Abbreviation'],
                             'serverName' => $log['serverName'],
                             'location_id' => $location->id,
-                            'screen_id' =>1,//$screen->id ,
+                            'screen_id' =>$screen->id ,
                         ]);
                     }
                 }
                 else
                 {
-
+                    echo "screen : ". $screen->id ."updated " ." <br /" ;;
                 }
+
+
+                echo "Counter : " .$counter ." <br />" ;
+                $counter ++ ;
             }
 
-            dd('end  screen 1' ) ;
+         echo "end  screen : ".$screen->id ." <br />" ; ;
         }
 
     }
-
     public function get_performance_log()
     {
         if( Auth::user()->role != 1)

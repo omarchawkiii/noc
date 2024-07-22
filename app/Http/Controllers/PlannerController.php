@@ -7,6 +7,7 @@ use App\Models\Location;
 use App\Models\Moviescod;
 use App\Models\Nocspl;
 use App\Models\Planner;
+use App\Models\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -32,12 +33,24 @@ class PlannerController extends Controller
     }
     public function get_plans()
     {
-        $plans = Planner::
+        /*$plans = Planner::
          leftJoin('moviescods', 'planners.movies_id', '=', 'moviescods.id')
         ->leftJoin('locations', 'planners.location_id', '=', 'locations.id')
         ->orderBy('planners.id', 'DESC')
         ->select('locations.name as location_name','planners.*','moviescods.title as movie_title')
 
+        ->get() ;*/
+
+        $plans = Planner::with('rules')
+        //->leftJoin('moviescods', 'rules.movies_id', '=', 'moviescods.id')
+        ->leftJoin('rules', 'planners.id', '=', 'rules.planner_id') // Jointure avec la table rules
+        ->leftJoin('moviescods', 'rules.movies_id', '=', 'moviescods.id')
+
+        ->leftJoin('locations', 'rules.location_id', '=', 'locations.id')
+        ->leftJoin('cpls', 'planners.cpl_uuid', '=', 'cpls.uuid')
+        ->orderBy('planners.id', 'DESC')
+        ->groupBy('planners.id')
+        ->select('locations.name as location_name','planners.*','moviescods.title as movie_title','cpls.contentTitleText as cpls_name')
         ->get() ;
 
         return Response()->json(compact('plans'));
@@ -86,6 +99,33 @@ class PlannerController extends Controller
         }
 
     }
+
+    public function rule_store(Request $request)
+    {
+
+        $rule = Rule::create([
+            'date_start'=> $request->date_start,
+            'date_end'=> $request->date_end,
+            'location_id'=> $request->location_id,
+            'target_screen_type'=> $request->target_screen_type,
+            'movies_id'=> $request->movies_id,
+            'template_selection'=> $request->template_selection,
+            'marker'=> $request->marker,
+            'priority'=> $request->priority,
+            'planner_id' => $request->planner_id,
+        ]);
+        if($rule)
+        {
+            echo "success" ;
+        }
+        else
+        {
+            echo "faild" ;
+        }
+
+    }
+
+
 
     public function get_templates()
     {

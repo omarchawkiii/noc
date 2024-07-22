@@ -6,36 +6,34 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Planner extends Model
+class Rule extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'cpl_uuid',
         'date_start',
         'date_end',
-        'location_id',
-        'screen_type',
+        'target_screen_type',
         'movies_id',
-        'spl_uuid',
-        'template_position',
-        'position',
+        'template_selection',
         'marker',
         'priority',
-        'feature',
+        'location_id',
+        'planner_id'
     ];
-    public function location(): BelongsTo
+
+
+    public function planner(): BelongsTo
     {
-        return $this->belongsTo(Location::class);
+        return $this->belongsTo(Planner::class);
     }
+
     public function movie(): BelongsTo
     {
         return $this->belongsTo(Moviescod::class,'moviescods','id');
     }
-    public function rules()
+    public function location(): BelongsTo
     {
-        return $this->hasMany(Rule::class);
+        return $this->belongsTo(Location::class);
     }
-
 }

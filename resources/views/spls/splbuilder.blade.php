@@ -1150,6 +1150,37 @@
         </div>
     </div>
 
+    <div class="modal fade" id="empty-location" tabindex="-1" aria-labelledby="delete_client_modalLabel" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ModalLabel"><i class="mdi mdi-alert btn btn-warning"></i> Warning
+                    </h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body minauto">
+                    <div class="tab-pane fade active show" id="home-1" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="row">
+                            <div class="col-md-12 ">
+                                <div class="form-group custom-form-group" style="text-align: center">
+                                    <label> Locations can't be empty </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col" style="text-align: center">
+                                <button class="btn btn-secondary btn-fw close" data-bs-dismiss="modal" aria-label="Close">Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @section('custom_script')
@@ -2042,7 +2073,7 @@
         });
         $(document).on('click', '.segment-details', function() {
             //let title = $(this).parent().parent().parent().parent().parent().data("title");
-            let title = $(this).closest('.card[data-title]').data("title");
+            let title = $(this).closest('.card[data-title]').attr('data-title');
             let uuid = $(this).parent().parent().parent().parent().parent().data("uuid");
 
             $("#pack_name").val(title);
@@ -2449,46 +2480,47 @@
                 $("#empty-spl-modal").modal('show');
             }
              else {
-         $("#status_edit").html("");
-        $("#status_edit").removeClass("badge-danger");
-        $("#status_edit").removeClass("badge-success");
-        var opened_spl_status = $('#opened_spl').attr("data-opened_spl_status");
-        $("#auto_ingest_on_after_edit").html("");
-        $("#available_on_after_edit").html("");
-        $("#available_on_after_edit_ingest_result").html(" ");
-        $("#parent_upload_spl_after_edit").addClass('hide_div');
+                $("#status_edit").html("");
+                $("#status_edit").removeClass("badge-danger");
+                $("#status_edit").removeClass("badge-success");
+                var opened_spl_status = $('#opened_spl').attr("data-opened_spl_status");
+                $("#auto_ingest_on_after_edit").html("");
+                $("#available_on_after_edit").html("");
+                $("#available_on_after_edit_ingest_result").html(" ");
+                $("#parent_upload_spl_after_edit").addClass('hide_div');
 
-        if (opened_spl_status == 1) {
-            $('#spl_action').val("edit");
-            $('#block_save_new_spl').addClass("hide_div");
-            $('#block_edit_spl').removeClass("hide_div");
+                if (opened_spl_status == 1) {
+                    $('#spl_action').val("edit");
+                    $('#block_save_new_spl').addClass("hide_div");
+                    $('#block_edit_spl').removeClass("hide_div");
 
-            $('#save_spl_title').html("<i class=\"btn btn-primary mdi mdi-tooltip-edit  \"  ></i> Edit Playlist");
-            var id_spl = $('#opened_spl').attr("data-uuid");
-            $('#spl_uuid_edit').val(id_spl);
-            var title = $('#opened_spl').text();
-            var mod = $('#opened_spl').attr("data-mod");
-            var hfr = $('#opened_spl').attr("data-hfr");
-            if (hfr == 1) {
-                $('#spl_properties_hfr').prop('checked', true);
-            } else {
-                $('#spl_properties_hfr').prop('checked', false);
+                    $('#save_spl_title').html("<i class=\"btn btn-primary mdi mdi-tooltip-edit  \"  ></i> Edit Playlist");
+                    var id_spl = $('#opened_spl').attr("data-uuid");
+                    console.log(id_spl)
+                    $('#spl_uuid_edit').val(id_spl);
+                    var title = $('#opened_spl').text();
+                    var mod = $('#opened_spl').attr("data-mod");
+                    var hfr = $('#opened_spl').attr("data-hfr");
+                    if (hfr == 1) {
+                        $('#spl_properties_hfr').prop('checked', true);
+                    } else {
+                        $('#spl_properties_hfr').prop('checked', false);
 
-            }
-            $('#uuid_spl_edit').val(id_spl);
-            $('#spl_title').val(title);
-            $('#display_mode').val(mod);
-            $("#spl-properties-modal").modal('show');
-        } else {
-            $('#block_edit_spl').addClass("hide_div");
-            $('#block_save_new_spl').removeClass("hide_div");
-            $('#save_spl_title').html(" <i class=\"mdi mdi-library-plus btn btn-primary\"></i>  Save New Playlist Properties");
-            $('#spl_action').val("insert");
-            $('#spl_uuid_edit').val(0);
-            $('#spl_title').val(" ");
-            $('#spl_properties_hfr').prop('checked', false);
-            $("#spl-properties-modal").modal('show');
-        }
+                    }
+                    $('#uuid_spl_edit').val(id_spl);
+                    $('#spl_title').val(title);
+                    $('#display_mode').val(mod);
+                    $("#spl-properties-modal").modal('show');
+                } else {
+                    $('#block_edit_spl').addClass("hide_div");
+                    $('#block_save_new_spl').removeClass("hide_div");
+                    $('#save_spl_title').html(" <i class=\"mdi mdi-library-plus btn btn-primary\"></i>  Save New Playlist Properties");
+                    $('#spl_action').val("insert");
+                    $('#spl_uuid_edit').val(0);
+                    $('#spl_title').val(" ");
+                    $('#spl_properties_hfr').prop('checked', false);
+                    $("#spl-properties-modal").modal('show');
+                }
             }
 
         });
@@ -2510,11 +2542,13 @@
                 is_template = false ;
             }
 
-
-
             if (title_spl == "") {
                 $('#spl_title').next().text("SPL Title can't be empty.");
-            } else {
+            } else if(id_location.length == 0 && is_template== false  )
+            {
+                $("#empty-location").modal('show');
+            }
+            else {
                 $('#spl_title').next().text(" ");
                 var display_mode = $('#display_mode').val();
 
@@ -3006,7 +3040,8 @@
                         'id': $(this).data('id'),
                         'uuid': $(this).data('uuid'),
                         'source': $(this).data('source'),
-                        'title': $(this).data('title'),
+                        //'title': $(this).data('title'),
+                        'title': $(this).attr('data-title'),
                         'IntrinsicDuration': $(this).data('time'),
                         'start_time': $(this).data('starttime'),
                         'time_seconds': $(this).data('time_seconds'),
@@ -3022,7 +3057,7 @@
                 array_length = array_spl.length;
 
 
-                if (array_length > 0) {
+                if (array_length > 0 || true ) {
                     var action_control = "edit_existing_spl";
                     var spl_title = $('#spl_title').val();
                     var spl_uuid_edit = $('#spl_uuid_edit').val();
@@ -3739,8 +3774,11 @@
                     let box = "";
 
                     try {
+                        console.log( obj.Id)
+                        console.log( obj)
                         $('#opened_spl').attr('data-uuid', obj.Id);
                         setSplOpenedData(capabilities);
+
                         if (obj.hasOwnProperty('EventList') && !obj.hasOwnProperty('PackList')) {
                             var pack = [obj.EventList];
                             var obj = {
@@ -3766,7 +3804,7 @@
 
                             if (Object.keys(pack.EventList).length === 0) {
                                 box +=
-                                    '<div class="card rounded border mb-2  segment-style"' +
+                                    '<div class="card rounded border mb-2 left-side-item  segment-style"' +
                                     '    data-uuid="' + pack.Id + '"' +
                                     '    data-title="' + pack.PackName + '" ' +
                                     '    data-type="segment" data-type_component="segment"' +
@@ -3998,7 +4036,7 @@
                         }
 
                         $('#dragula-right').html(box);
-                        var items = $('#dragula-right').find('.left-side-item');
+                        var items = $('#dragula-right').find('.left-side-item:not([data-type="segment"])');
 
                         var startTime = 0;
                         for (var i = 0; i < items.length; i++) {
