@@ -301,9 +301,21 @@
                             <div class="row " >
                                 <div class="col-md-12  preview-list multiplex" >
                                     <div class="row">
-                                        <div class="col-xl-12">
+                                        <div class="col-xl-6">
                                             <div class="input-group mb-3 mr-sm-2">
                                                 <input type="text" class="form-control search_linked_spl_films" id="" placeholder="Search In SPLs List Or Films">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-2">
+                                            <div class="input-group mb-3 mr-sm-2">
+                                                <button type="button " id="unlink" class=" btn btn-danger  btn-icon-text m-1 ">
+                                                    <i class="mdi mdi-delete "></i> Unlink   </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-2">
+                                            <div class="input-group mb-3 mr-sm-2">
+                                                <button type="button " id="unlink_all" class=" btn btn-danger  m-1 btn-icon-text ">
+                                                    <i class="mdi mdi-delete-forever "></i> Unlink All  </button>
                                             </div>
                                         </div>
                                     </div>
@@ -784,6 +796,21 @@
                 swal({
                     title: 'Done!',
                     text: 'SPL and movie are unlinked',
+                    icon: 'success',
+                    button: {
+                    text: "Continue",
+                    value: true,
+                    visible: true,
+                    className: "btn btn-primary"
+                    }
+                })
+
+            }
+
+            if (type === 'unlink-all-spl') {
+                swal({
+                    title: 'Done!',
+                    text: 'All SPLs and movies are unlinked',
                     icon: 'success',
                     button: {
                     text: "Continue",
@@ -1466,19 +1493,118 @@
         })
 
 
-
-
         $(document).on('click', '#linked_movies_spl_table tbody tr', function () {
-            movie_id = $(this).attr("id") ;
-            movie_title = $(this).children('td:first-child').text()
-            spl_title = $(this).children('td:nth-child(2)').text()
+
+            $('#linked_movies_spl_table tbody tr').removeClass('selected') ;
+            $(this).addClass('selected') ;
+
+        }) ;
+
+        $(document).on('click', '#unlink', function () {
+            var movie_id = $('#linked_movies_spl_table tr.selected').attr('id') ;
+            if(typeof movie_id === 'undefined')
+            {
+                swal({
+                        title: '',
+                        text: "Please Select SPl",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3f51b5',
+                        cancelButtonColor: '#ff4081',
+                        confirmButtonText: 'Great ',
+                        buttons: {
+                            cancel: {
+                                text: "Cancel",
+                                value: null,
+                                visible: true,
+                                className: "btn btn-danger",
+                                closeModal: true,
+                            },
+                        }
+                    })
+            }
+            else
+            {
+                movie_title = $('#linked_movies_spl_table tr.selected').children('td:first-child').text()
+                spl_title = $('#linked_movies_spl_table tr.selected').children('td:nth-child(2)').text()
+                $('#unlink-spl .modal-body').html('<p> Do you want to unlink '+movie_title+' from '+spl_title+'</p>')
+                $('#id-mivie-to-unlink').val(movie_id) ;
+                $('#unlink-spl').modal('show')
+            }
 
 
-            $('#unlink-spl .modal-body').html('<p> Do you want to unlink '+movie_title+' from '+spl_title+'</p>')
-            $('#id-mivie-to-unlink').val(movie_id) ;
-            $('#unlink-spl').modal('show')
+        }) ;
 
-        })
+        $(document).on('click', '#unlink_all', function () {
+
+            var location =  $('#location').val();
+            swal({
+                showCancelButton: true,
+                title: 'Unlink All !',
+                text: 'You are sure you want to unlink all SPLs',
+                icon: 'warning',
+                buttons: {
+                    cancel: {
+                        text: "Cancel",
+                        value: null,
+                        visible: true,
+                        className: "btn btn-primary",
+                        closeModal: true,
+                    },
+
+                    Confirm: {
+                        text: "Yes, Unlink!",
+                        value: true,
+                        visible: true,
+                        className: "btn btn-danger",
+                        closeModal: true,
+                    },
+                }
+            }).then((result) => {
+
+
+                $.ajax({
+                url:"{{  url('') }}"+ "/unlink_all_spl_movie",
+                type: 'post',
+                cache: false,
+                data: {
+                    location:location,
+                    "_token": "{{ csrf_token() }}",
+                },
+
+                success: function(response) {
+
+
+                    if(response )
+                    {
+                        swal.close();
+                        showSwal('unlink-all-spl') ;
+                        $('#linked_movies_spl_table tbody').html("")
+                        $('#movies_table tbody').html("")
+
+
+                    }
+                    else
+                    {
+                        swal.close();
+                        showSwal('warning-message-and-cancel')
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                },
+                complete: function(jqXHR, textStatus) {}
+            });
+
+
+            });
+
+        }) ;
+
+
+
+
+
 
         $(document).on('click', '#confirm_inlink', function () {
             var movie_id = $('#id-mivie-to-unlink').val() ;

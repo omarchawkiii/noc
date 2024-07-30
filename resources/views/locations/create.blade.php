@@ -5,7 +5,7 @@
         <h3 class="page-title "> Location </h3>
         <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="#">Tables</a></li>
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
             <li class="breadcrumb-item active" aria-current="page">Location</li>
         </ol>
         </nav>
@@ -28,15 +28,7 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label>Report Folder Title</label>
-                            <input type="text" class="form-control" placeholder="Report Folder Title"  value="{{ old('folder_title') }}"  name="folder_title" required>
-                            @error('folder_title')
-                                <div class="text-danger mt-1 ">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
+
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Connection IP</label>
@@ -50,7 +42,7 @@
                         <div class="form-group">
                             <label for="screen-model"> TMS System </label>
                             <select class="form-control" id="screen-model"   name="tms_system" required>
-                                <option value="Doremi TMS" {{ old('tms_system') == 'Doremi TMS' ? 'selected' : '' }} >Doremi TMS </option>
+                                <option value="Expersys TMS" {{ old('tms_system') == 'Expersys TMS' ? 'selected' : '' }} > Expersys TMS </option>
                                 <option value="TMS" {{ old('tms_system') == 'TMS' ? 'selected' : '' }}>TMS</option>
 
                             </select>
@@ -59,50 +51,23 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label>Rentrak ID</label>
-                            <input type="text" class="form-control" placeholder="Rentrak ID"    value="{{ old('connection_ip') }}"   name="rentrak_id" required>
-                            @error('rentrak_id')
-                                <div class="text-danger mt-1 ">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
+
                     </div>
 
                     <div class="row">
                         <h3 class="m-4 text-center">Location KDM Receiver</h3>
-                        <div class="col-md-2">
+
+
+                        <div class="col-md-4">
                             <div class="form-group">
-                                <label for="screen-model"> Type </label>
-                                <select class="form-control" id="screen-model"   name="type">
-                                    <option value="IMAP" {{ old('type') == 'IMAP' ? 'selected' : '' }}>IMAP </option>
-                                    <option value="POP" {{ old('type') == 'POP' ? 'selected' : '' }}>POP</option>
-                                </select>
-                                @error('type')
-                                <div class="text-danger mt-1 ">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label>Hostname</label>
-                                <input type="text" class="form-control" placeholder="Hostname"  value="{{ old('hostname') }}"  name="hostname">
-                                @error('hostname')
-                                    <div class="text-danger mt-1 ">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>E-mail Account</label>
-                                <input type="email" class="form-control" placeholder="E-mail Account"  value="{{ old('email') }}"  name="email">
+                                <label>Username</label>
+                                <input type="text" class="form-control" placeholder="E-mail Account"  value="{{ old('email') }}"  name="email">
                                 @error('email')
                                     <div class="text-danger mt-1 ">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>Password</label>
                                 <input type="text" class="form-control" placeholder="Password"  value="{{ old('password') }}"  name="password">
@@ -112,15 +77,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label>Port</label>
-                                <input type="text" class="form-control" placeholder="Port"  value="{{ old('port') }}"  name="port">
-                                @error('port')
-                                    <div class="text-danger mt-1 ">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
+
                     </div>
 
                     <div class="row">
@@ -143,15 +100,7 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label>Support E-mail</label>
-                            <input type="text" class="form-control" placeholder="Support E-mail"  value="{{ old('support_email') }}"  name="support_email">
-                            @error('support_email')
-                                <div class="text-danger mt-1 ">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
+
 
 
                     <div class="col-md-4">
@@ -380,8 +329,9 @@
 
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="screen-model"> State </label>
+                            <label for="screen-model"> Status </label>
                             <select class="form-control" id="screen-model"  value="{{ old('state') }}"  name="state" required>
+                                <option value="Activate" {{ old('state') == 'Activate' ? 'selected' : '' }}> Activate </option>
                                 <option value="Pending" {{ old('state') == 'Pending' ? 'selected' : '' }}> Pending </option>
 
                             </select>
@@ -399,15 +349,8 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label>Language</label>
-                            <input type="text" class="form-control" placeholder="Language"  value="{{ old('language') }}"  name="language">
-                            @error('language')
-                                <div class="text-danger mt-1 ">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
+
+
 
                     <div class="col-md-4">
                         <div class="form-group">

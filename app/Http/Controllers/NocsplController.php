@@ -20,6 +20,405 @@ use Illuminate\Support\Facades\DB;
 
 class NocsplController extends Controller
 {
+
+    /*public function createlocalspl(Request $request)
+    {
+        $ingest_errors = array() ;
+        $ingest_success = array() ;
+        if($request->is_template == "true" )
+        {
+            $uuid =  $this->generateUuid();
+
+            $IssueDate = Carbon::now();
+            $file = $this->generateSplXml($uuid, $request->title_spl, $request->hfr, $request->display_mode, $request->items_spl, $IssueDate, 'add') ;
+            $file_name = "$uuid.xml" ;
+            $file_url = Storage::disk('local')->put( $file_name, $file) ;
+
+            $duration = $this->calculateSplDuration(simplexml_load_string($file));
+
+            $is_template = true ;
+
+            $new_nocspl = Nocspl::create([
+                    'uuid' => $uuid ,
+                    'spl_title' => $request->title_spl,
+                    'display_mode'=>$request->display_mode,
+                    'spl_properties_hfr'=>$request->hfr ,
+                    'xmlpath'=>$file_name,
+                    'duration'=> $duration,
+                    'is_template' => $is_template ,
+                    'location_id'=> null,
+                    'source'=> "NOC",
+                ]) ;
+                $response = array("status" => 1 , "title" =>$new_nocspl->spl_title, "uuid"=>$new_nocspl->uuid , "locations_of_spl"=>null , "autoIngest"=>0 , "ingest_success"=>$ingest_success , "ingest_errors"=>$ingest_errors );
+                echo json_encode($response);
+
+        }
+        else
+        {
+            $is_template = false ;
+
+            if($request->action_type =="edit")
+            {
+                //Nocspl::where('uuid',$request->spl_uuid_edit)->delete() ;
+                splcomponents::where('uuid_spl',$request->spl_uuid_edit)->delete() ;
+
+                $uuid =  $request->spl_uuid_edit;
+
+                $IssueDate = Carbon::now();
+                $file = $this->generateSplXml($uuid, $request->title_spl, $request->hfr, $request->display_mode, $request->items_spl, $IssueDate, 'add') ;
+                $file_name = "$uuid.xml" ;
+                $file_url = Storage::disk('local')->put( $file_name, $file) ;
+
+                $duration = $this->calculateSplDuration(simplexml_load_string($file));
+
+
+                if($request->id_location)
+                {
+                    //$locations_of_spl = Nocspl::where('uuid',$uuid)->leftJoin('locations', 'locations.id', '=', 'nocspls.location_id')->select('locations.*' )->groupBy('location_id')->get();
+                    $locations_of_spl = Location::whereIn('id',$request->id_location)->get();
+
+
+
+
+                    foreach($locations_of_spl as $location)
+                    {
+
+                        $new_nocspl = Lmsspl::updateOrCreate([
+                            'uuid' => $uuid,
+                            'location_id'     =>$location->id,
+                        ],[
+                            'uuid'     => $uuid,
+                            'name'     => $request->title_spl,
+                            'duration'     => $duration ,
+                        ]);
+                        if($request->action_type !="edit" )
+                        {
+                            $created_spl = Nocspl::updateOrCreate([
+                                    'uuid' => $uuid,
+                                    'location_id' => $location->id,
+                                ],[
+                                    'uuid' => $uuid ,
+                                    'spl_title' => $request->title_spl,
+                                    'display_mode'=>$request->display_mode,
+                                    'spl_properties_hfr'=>$request->hfr ,
+                                    'xmlpath'=>$file_name,
+                                    'duration'=> $duration,
+                                    'is_template' => $is_template ,
+                                    'location_id'=> $location->id,
+                                    'source'=> "NOC",
+                                ]) ;
+                        }
+
+
+                        if($new_nocspl)
+                        {
+                            ////////////dd(Auth::user()->id , Auth::user()->email ) ;
+                            $this->savePlayListBuilderLogs("New SPL File  Saved ", $file,Auth::user()->id, Auth::user()->email);
+
+                            if($request->action_type =="edit" )
+                            {
+                                $splClass = new SplController() ;
+                                $spl_file = simplexml_load_string($splClass->get_spl_from_API($location->connection_ip,$new_nocspl->uuid,$location->email , $location->password) );
+                            }
+                            else
+                            {
+                                $path =  storage_path().'/app/xml_file/'.$created_spl->xmlpath ;
+
+                                $spl_file = simplexml_load_file($path);
+                            }
+
+
+
+                                $cpls = $this->getCplsFromSplArray($spl_file);
+                                foreach ($cpls as $cpl) {
+                                    splcomponents::updateOrCreate([
+
+                                        'uuid_spl' => $uuid,
+                                        'CompositionPlaylistId' => $cpl['CompositionPlaylistId'],
+                                    ],[
+                                        //'id_splcomponent' => $cpl['Id'],
+                                        'CompositionPlaylistId' => $cpl['CompositionPlaylistId'],
+                                        'AnnotationText' => $cpl['AnnotationText'],
+                                        'EditRate' => $cpl['EditRate'],
+                                        'editRate_numerator' => $cpl['editRate_numerator'],
+                                        'editRate_denominator' => $cpl['editRate_denominator'],
+                                        'uuid_spl' => $uuid,
+
+
+                                    ]);
+                                }
+
+                            $config = Config::all()->first() ;
+
+
+                            if($config->autoIngest)
+                            {
+                                $autoIngest = true ;
+                                if($request->action_type =="edit" )
+                                {
+                                    if(count($locations_of_spl)> 0 )
+                                    {
+                                        foreach($locations_of_spl as $location)
+                                        {
+                                            if(Lmsspl::where('location_id', $location->id)->where('uuid',$new_nocspl->uuid)->exists())
+                                            {
+                                                $response = $this->ingest_spl($new_nocspl->xmlpath,$location->connection_ip,$location->email, $location->password) ;
+
+                                                if($response != null)
+                                                {
+
+                                                    if($response->status== 1 )
+                                                    {
+                                                        array_push($ingest_success,  array("status" => $response->status , "id" =>  $location->id , "location_name" =>  $location->name));
+                                                    }
+                                                    else
+                                                    {
+                                                        array_push($ingest_errors,  array("status" => $response->status , "id" =>  $location->id , "location_name" =>  $location->name));
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    array_push($ingest_errors,  array("status" => null , "id" =>  $location->id , "location_name" =>  $location->name));
+                                                }
+                                            }
+                                        }
+
+                                    }
+                                }
+                                else
+                                {
+                                    if(count($locations_of_spl)> 0 )
+                                    {
+                                        foreach($locations_of_spl as $location)
+                                        {
+                                            $response = $this->ingest_spl($created_spl->xmlpath,$location->connection_ip,$location->email, $location->password) ;
+
+                                            if($response != null)
+                                            {
+
+                                                if($response->status== 1 )
+                                                {
+                                                    array_push($ingest_success,  array("status" => $response->status , "id" =>  $location->id , "location_name" =>  $location->name));
+                                                }
+                                                else
+                                                {
+                                                    array_push($ingest_errors,  array("status" => $response->status , "id" =>  $location->id , "location_name" =>  $location->name));
+                                                }
+                                            }
+                                            else
+                                            {
+                                                array_push($ingest_errors,  array("status" => null , "id" =>  $location->id , "location_name" =>  $location->name));
+                                            }
+
+                                        }
+
+                                    }
+                                }
+
+                            }
+                            else
+                            {
+                                $autoIngest = false ;
+                            }
+                            $response = array("status" => 1 , "title" =>$new_nocspl->spl_title, "uuid"=>$new_nocspl->uuid , "locations_of_spl"=>$locations_of_spl , "autoIngest"=>$autoIngest , "ingest_success"=>$ingest_success , "ingest_errors"=>$ingest_errors );
+                        }
+                        else
+                        {
+                            $response = array("status" => 0 , "title" =>"null" , "uuid"=>"null" , "ingest_success"=>null , "ingest_errors"=>null  );
+                        }
+
+                    }
+
+                }
+                else
+                {
+                    $created_spl = Nocspl::updateOrCreate([
+                        'uuid' => $uuid,
+                        'is_template' => true ,
+                    ],[
+                        'uuid' => $uuid ,
+                        'spl_title' => $request->title_spl,
+                        'display_mode'=>$request->display_mode,
+                        'spl_properties_hfr'=>$request->hfr ,
+                        'xmlpath'=>$file_name,
+                        'duration'=> $duration,
+                        'is_template' => true ,
+                        'location_id'=> null ,
+                        'source'=> "NOC",
+                    ]) ;
+                }
+
+                $response = array("status" => 1 , "title" =>$request->title_spl, "uuid"=>$uuid , "locations_of_spl"=>null , "autoIngest"=>null , "ingest_success"=>null , "ingest_errors"=>null );
+
+                echo json_encode($response);
+
+            }
+            else{
+                $uuid =  $this->generateUuid();
+                $locations_of_spl = Location::whereIn('id',$request->id_location)->get();
+
+                $IssueDate = Carbon::now();
+                $file = $this->generateSplXml($uuid, $request->title_spl, $request->hfr, $request->display_mode, $request->items_spl, $IssueDate, 'add') ;
+                $file_name = "$uuid.xml" ;
+                $file_url = Storage::disk('local')->put( $file_name, $file) ;
+
+                $duration = $this->calculateSplDuration(simplexml_load_string($file));
+
+                foreach($locations_of_spl as $location)
+                {
+
+                    $new_nocspl = Lmsspl::updateOrCreate([
+                        'uuid' => $uuid,
+                        'location_id'     =>$location->id,
+                    ],[
+                        'uuid'     => $uuid,
+                        'name'     => $request->title_spl,
+                        'duration'     => $duration ,
+                    ]);
+                    if($request->action_type !="edit" )
+                    {
+                    $created_spl = Nocspl::updateOrCreate([
+                            'uuid' => $uuid,
+                            'location_id' => $location->id,
+                        ],[
+                            'uuid' => $uuid ,
+                            'spl_title' => $request->title_spl,
+                            'display_mode'=>$request->display_mode,
+                            'spl_properties_hfr'=>$request->hfr ,
+                            'xmlpath'=>$file_name,
+                            'duration'=> $duration,
+                            'is_template' => $is_template ,
+                            'location_id'=> $location->id,
+                            'source'=> "NOC",
+                        ]) ;
+                    }
+
+
+                    if($new_nocspl)
+                    {
+                        ////////////dd(Auth::user()->id , Auth::user()->email ) ;
+                        $this->savePlayListBuilderLogs("New SPL File  Saved ", $file,Auth::user()->id, Auth::user()->email);
+
+                        if($request->action_type =="edit" )
+                        {
+                            $splClass = new SplController() ;
+                            $spl_file = simplexml_load_string($splClass->get_spl_from_API($location->connection_ip,$new_nocspl->uuid,$location->email , $location->password) );
+                        }
+                        else
+                        {
+                            $path =  storage_path().'/app/xml_file/'.$created_spl->xmlpath ;
+
+                            $spl_file = simplexml_load_file($path);
+                        }
+
+
+
+                            $cpls = $this->getCplsFromSplArray($spl_file);
+                            foreach ($cpls as $cpl) {
+                                splcomponents::updateOrCreate([
+
+                                    'uuid_spl' => $uuid,
+                                    'CompositionPlaylistId' => $cpl['CompositionPlaylistId'],
+                                ],[
+                                    //'id_splcomponent' => $cpl['Id'],
+                                    'CompositionPlaylistId' => $cpl['CompositionPlaylistId'],
+                                    'AnnotationText' => $cpl['AnnotationText'],
+                                    'EditRate' => $cpl['EditRate'],
+                                    'editRate_numerator' => $cpl['editRate_numerator'],
+                                    'editRate_denominator' => $cpl['editRate_denominator'],
+                                    'uuid_spl' => $uuid,
+
+
+                                ]);
+                            }
+
+                        $config = Config::all()->first() ;
+
+
+                        if($config->autoIngest)
+                        {
+                            $autoIngest = true ;
+                            if($request->action_type =="edit" )
+                            {
+                                if(count($locations_of_spl)> 0 )
+                                {
+                                    foreach($locations_of_spl as $location)
+                                    {
+                                        if(Lmsspl::where('location_id', $location->id)->where('uuid',$new_nocspl->uuid)->exists())
+                                        {
+                                            $response = $this->ingest_spl($new_nocspl->xmlpath,$location->connection_ip,$location->email, $location->password) ;
+
+                                            if($response != null)
+                                            {
+
+                                                if($response->status== 1 )
+                                                {
+                                                    array_push($ingest_success,  array("status" => $response->status , "id" =>  $location->id , "location_name" =>  $location->name));
+                                                }
+                                                else
+                                                {
+                                                    array_push($ingest_errors,  array("status" => $response->status , "id" =>  $location->id , "location_name" =>  $location->name));
+                                                }
+                                            }
+                                            else
+                                            {
+                                                array_push($ingest_errors,  array("status" => null , "id" =>  $location->id , "location_name" =>  $location->name));
+                                            }
+                                        }
+                                    }
+
+                                }
+                            }
+                            else
+                            {
+                                if(count($locations_of_spl)> 0 )
+                                {
+                                    foreach($locations_of_spl as $location)
+                                    {
+                                        $response = $this->ingest_spl($created_spl->xmlpath,$location->connection_ip,$location->email, $location->password) ;
+
+                                        if($response != null)
+                                        {
+
+                                            if($response->status== 1 )
+                                            {
+                                                array_push($ingest_success,  array("status" => $response->status , "id" =>  $location->id , "location_name" =>  $location->name));
+                                            }
+                                            else
+                                            {
+                                                array_push($ingest_errors,  array("status" => $response->status , "id" =>  $location->id , "location_name" =>  $location->name));
+                                            }
+                                        }
+                                        else
+                                        {
+                                            array_push($ingest_errors,  array("status" => null , "id" =>  $location->id , "location_name" =>  $location->name));
+                                        }
+
+                                    }
+
+                                }
+                            }
+
+                        }
+                        else
+                        {
+                            $autoIngest = false ;
+                        }
+                        $response = array("status" => 1 , "title" =>$new_nocspl->spl_title, "uuid"=>$new_nocspl->uuid , "locations_of_spl"=>$locations_of_spl , "autoIngest"=>$autoIngest , "ingest_success"=>$ingest_success , "ingest_errors"=>$ingest_errors );
+                    }
+                    else
+                    {
+                        $response = array("status" => 0 , "title" =>"null" , "uuid"=>"null" , "ingest_success"=>null , "ingest_errors"=>null  );
+                    }
+
+                }
+
+
+                echo json_encode($response);
+            }
+        }
+    }*/
+
     public function createlocalspl(Request $request)
     {
         $ingest_errors = array() ;
@@ -185,6 +584,22 @@ class NocsplController extends Controller
                             'xmlpath'=>$file_name,
                             'duration'=> $duration,
                         ]);
+
+                        /*$created_spl = Nocspl::updateOrCreate([
+                            'uuid' => $request->uuid,
+                            'is_template' => true ,
+                        ],[
+                            'uuid' => $request->uuid,
+                            'spl_title' => $request->title_spl,
+                            'display_mode'=>$request->display_mode,
+                            'spl_properties_hfr'=>$request->hfr ,
+                            'xmlpath'=>$file_name,
+                            'duration'=> $duration,
+                            'is_template' => true ,
+                            'location_id'=> null ,
+                            'source'=> "NOC",
+                        ]) ;-*/
+
                         $response = array("status" => 1 , "title" =>$request->spl_title, "uuid"=>$nocspl->uuid , "locations_of_spl"=>null , "autoIngest"=>null , "ingest_success"=>null , "ingest_errors"=>null );
                         echo json_encode($response);
                     }
@@ -298,6 +713,7 @@ class NocsplController extends Controller
         }
     }
 
+
     public function upload_spl_after_edit(Request $request)
     {
 
@@ -382,7 +798,6 @@ class NocsplController extends Controller
             $path =  storage_path().'/app/xml_file/'.$spl->xmlpath ;
             $spl_file = simplexml_load_file($path);
         }
-
 
 
             if (property_exists($spl_file, 'EventList')) {

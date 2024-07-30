@@ -2,20 +2,13 @@
 @section('title') Edit Location  @endsection
 @section('content')
 
-<div class="jq-toast-wrap top-right">
-    <div class="jq-toast-single jq-has-icon jq-icon-success" style="text-align: left; display: none;">
-        <span class="jq-toast-loader jq-toast-loaded" style="-webkit-transition: width 2.6s ease-in;                       -o-transition: width 2.6s ease-in;                       transition: width 2.6s ease-in;                       background-color: #f96868;"></span>
-        <span class="close-jq-toast-single">×</span>
-        <h2 class="jq-toast-heading">Success</h2>
-        And these were just the basic demos! Scroll down to check further details on how to customize the output.
-    </div>
-</div>
+
 
     <div class="page-header playbck-shadow">
         <h3 class="page-title"> Location </h3>
         <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="#">Tables</a></li>
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
             <li class="breadcrumb-item active" aria-current="page">Location</li>
         </ol>
         </nav>
@@ -28,82 +21,47 @@
                     @csrf
                     @method('PUT')
                     <div class="row">
-                    <h3 class="m-4 text-center">Location Configuration</h3>
-                    <div class="col-md-4">
-                        <div class="form-group  has-validation">
-                            <label>Location Name</label>
-                            <input type="text" class="form-control" placeholder="Location Name"  value="{{ $location->name }}"  name="name"  required>
-                            @error('name')
-                                <div class="text-danger mt-1 ">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label>Report Folder Title</label>
-                            <input type="text" class="form-control" placeholder="Report Folder Title"  value="{{ $location->folder_title }}"  name="folder_title" required>
-                            @error('folder_title')
-                                <div class="text-danger mt-1 ">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label>Connection IP</label>
-                            <input type="text" class="form-control" placeholder="Connection IP"  value="{{ $location->connection_ip }}"  name="connection_ip" required>
-                            @error('connection_ip')
-                                <div class="text-danger mt-1 ">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="screen-model"> TMS System </label>
-                            <select class="form-control" id="screen-model"   name="tms_system" required>
-                                <option value="Doremi TMS" {{ $location->tms_system == 'Doremi TMS' ? 'selected' : '' }} >Doremi TMS </option>
-                                <option value="TMS" {{ $location->tms_system == 'TMS' ? 'selected' : '' }}>TMS</option>
-
-                            </select>
-                            @error('tms_system')
-                                <div class="text-danger mt-1 ">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label>Rentrak ID</label>
-                            <input type="text" class="form-control" placeholder="Rentrak ID" value="{{ $location->rentrak_id  }}"    name="rentrak_id" required>
-                            @error('rentrak_id')
-                                <div class="text-danger mt-1 ">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    </div>
-
-                    <div class="row">
-                        <h3 class="m-4 text-center">Location KDM Receiver</h3>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="screen-model"> Type </label>
-                                <select class="form-control" id="screen-model"   name="type">
-                                    <option value="IMAP" {{ $location->type == 'IMAP' ? 'selected' : '' }}>IMAP </option>
-                                    <option value="POP" {{ $location->type == 'POP' ? 'selected' : '' }}>POP</option>
-                                </select>
-                                @error('type')
-                                <div class="text-danger mt-1 ">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label>Hostname</label>
-                                <input type="text" class="form-control" placeholder="Hostname"  value="{{ $location->hostname }}"  name="hostname">
-                                @error('hostname')
+                        <h3 class="m-4 text-center">Location Configuration</h3>
+                        <div class="col-md-4">
+                            <div class="form-group  has-validation">
+                                <label>Location Name</label>
+                                <input type="text" class="form-control" placeholder="Location Name"  value="{{ $location->name }}"  name="name"  required>
+                                @error('name')
                                     <div class="text-danger mt-1 ">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-3">
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Connection IP</label>
+                                <input type="text" class="form-control" placeholder="Connection IP"  value="{{ $location->connection_ip }}"  name="connection_ip" required>
+                                @error('connection_ip')
+                                    <div class="text-danger mt-1 ">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="screen-model"> TMS System </label>
+                                <select class="form-control" id="screen-model"   name="tms_system" required>
+                                    <option value="Expersys TMS" {{ $location->tms_system == 'Expersys TMS' ? 'selected' : '' }} >Expersys TMS </option>
+                                    <option value="TMS" {{ $location->tms_system == 'TMS' ? 'selected' : '' }}>TMS</option>
+
+                                </select>
+                                @error('tms_system')
+                                    <div class="text-danger mt-1 ">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <h3 class="m-4 text-center">Location KDM Receiver</h3>
+
+
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>Username</label>
                                 <input type="text" class="form-control" placeholder="Username"  value=" {{  $location->email }}"  name="email">
@@ -112,7 +70,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>Password</label>
                                 <input type="text" class="form-control" placeholder="Password"  value="{{ $location->password }}"  name="password">
@@ -122,15 +80,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label>Port</label>
-                                <input type="text" class="form-control" placeholder="Port"  value="{{ $location->port }}"  name="port">
-                                @error('port')
-                                    <div class="text-danger mt-1 ">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
+
                     </div>
 
                     <div class="row">
@@ -153,15 +103,7 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label>Support E-mail</label>
-                            <input type="text" class="form-control" placeholder="Support E-mail"  value="{{ $location->support_email }}"  name="support_email">
-                            @error('support_email')
-                                <div class="text-danger mt-1 ">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
+
 
 
                     <div class="col-md-4">
@@ -383,8 +325,9 @@
 
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="screen-model"> State </label>
+                            <label for="screen-model"> status </label>
                             <select class="form-control" id="screen-model"  value="{{ $location->state }}"  name="state" required>
+                                <option value="Activate" {{ $location->state == 'Activate' ? 'selected' : '' }}> Activate </option>
                                 <option value="Pending" {{ $location->state == 'Pending' ? 'selected' : '' }}> Pending </option>
 
                             </select>
@@ -402,15 +345,7 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label>Language</label>
-                            <input type="text" class="form-control" placeholder="Language"  value="{{ $location->language }}"  name="language">
-                            @error('language')
-                                <div class="text-danger mt-1 ">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
+
 
                     <div class="col-md-4">
                         <div class="form-group">

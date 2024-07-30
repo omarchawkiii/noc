@@ -177,11 +177,7 @@
                             style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
                 </div>
                 <div class="modal-body  row p-4 pt-0">
-
-
                 </div>
-
-
             </div>
         <!--end modal-content-->
         </div>
@@ -353,7 +349,7 @@
 
          playback_icon_interval = setInterval(function() {
             get_playback_screen_infos(id) ;
-        }, 5000);
+        }, 3000);
 
 
     });

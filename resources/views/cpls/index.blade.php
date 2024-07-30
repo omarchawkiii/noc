@@ -772,18 +772,11 @@
                            +'</div>'
                 }
 
-
-
-
-                    
+                    $('#Properties').html(result)
                    $('#infos_modal').modal('show');
-
-
-
 
                },
                error: function(response) {
-
                }
        })
 
@@ -1900,6 +1893,7 @@
                 });
             }
         });
+
 
     })(jQuery);
 

@@ -217,11 +217,8 @@ class MoviescodController extends Controller
 
     public function unlink_spl_movie(Request $request)
     {
-
         //$apiUrl = 'http://localhost/tms/system/api2.php';
-
         $moviescod = Moviescod::findOrFail($request->movie_id) ;
-
         $location = Location::findOrFail($request->location) ;
         $apiUrl = $location->connection_ip ;
         $response = $this->sendUnlinkSplRequest($apiUrl, $moviescod->code, $location->email , $location->password);
@@ -247,8 +244,54 @@ class MoviescodController extends Controller
         {
             echo "Failed" ;
         }
+    }
+
+    public function unlink_all_spl_movie(Request $request)
+    {
+
+        $moviescod = Moviescod::where('location_id',$request->location)->get();
+        $unlink_success =array() ;
+        $unlink_errors =array() ;
+        foreach($moviescod as $moviescod)
+        {
+            $location = Location::findOrFail($request->location) ;
+            $apiUrl = $location->connection_ip ;
+
+            $response = $this->sendUnlinkSplRequest($apiUrl, $moviescod->code, $location->email , $location->password);
+            // $response['result'] = 1 ;
+            $status = 1 ;
+            if($response['result'] === 1 )
+            {
+                $moviescod = $moviescod->update([
+                    'spl_uuid' => null,
+                    'status' => "unlinked"
+                ]);
+
+                if($moviescod)
+                {
+                    array_push($unlink_success,  array("status" => $response['result'] , "title" =>  $moviescod->title , "message" =>  ""));
+                }
+                else
+                {
+                    $status = 0 ;
+                    array_push($unlink_errors,  array("status" => $response['result'] , "title" =>  $moviescod->title , "message" =>  ""));
+                }
+            }
+            else
+            {
+                $status = 0 ;
+                array_push($unlink_errors,  array("status" => $response['result'] , "title" =>  $moviescod->title , "message" =>  ""));
+            }
+        }
+
+        $response = array("status" => $status , "unlink_success"=>$unlink_success , "unlink_errors"=>$unlink_errors );
+        //$response = array("status" => 1 , "unlink_success"=>$unlink_success , "unlink_errors"=>$unlink_errors );
+       // return json_encode($response);
+
+       echo $status ;
 
     }
+
 
     function sendUpdateLinksRequest($apiUrl, $cod, $uuid,$username,$password) {
         // Prepare the request data

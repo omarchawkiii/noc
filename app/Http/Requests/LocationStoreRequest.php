@@ -21,10 +21,10 @@ class LocationStoreRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'folder_title' => ['required', 'string', 'max:255'],
+            'folder_title' => [ 'string', 'max:255'],
             'connection_ip' => ['required', 'string', 'max:255'],
             'tms_system' => ['required', 'string', 'max:255'],
-            'rentrak_id' => ['required', 'string', 'max:255'],
+            'rentrak_id' => ['string', 'max:255'],
             'address' => ['required', 'string', 'max:255'],
             'city' => ['required', 'string', 'max:255'],
             'zip' => ['required', 'string', 'max:255'],
