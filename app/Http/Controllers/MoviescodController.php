@@ -217,8 +217,7 @@ class MoviescodController extends Controller
 
     public function unlink_spl_movie(Request $request)
     {
-        //$apiUrl = 'http://localhost/tms/system/api2.php';
-        $moviescod = Moviescod::findOrFail($request->movie_id) ;
+        $moviescod = Moviescod::where('moviescods_id',$request->movie_id)->where('location_id',$request->location)->first() ;
         $location = Location::findOrFail($request->location) ;
         $apiUrl = $location->connection_ip ;
         $response = $this->sendUnlinkSplRequest($apiUrl, $moviescod->code, $location->email , $location->password);
@@ -249,17 +248,20 @@ class MoviescodController extends Controller
     public function unlink_all_spl_movie(Request $request)
     {
 
-        $moviescod = Moviescod::where('location_id',$request->location)->get();
+        $moviescods = Moviescod::where('location_id',$request->location)->where('status' , 'linked')->get();
         $unlink_success =array() ;
         $unlink_errors =array() ;
-        foreach($moviescod as $moviescod)
+        $status = 1 ;
+       foreach($moviescods as $moviescod)
         {
+
+            //dd($moviescod->title);
             $location = Location::findOrFail($request->location) ;
             $apiUrl = $location->connection_ip ;
 
             $response = $this->sendUnlinkSplRequest($apiUrl, $moviescod->code, $location->email , $location->password);
             // $response['result'] = 1 ;
-            $status = 1 ;
+
             if($response['result'] === 1 )
             {
                 $moviescod = $moviescod->update([
@@ -269,25 +271,27 @@ class MoviescodController extends Controller
 
                 if($moviescod)
                 {
-                    array_push($unlink_success,  array("status" => $response['result'] , "title" =>  $moviescod->title , "message" =>  ""));
+                    //array_push($unlink_success,  array("status" => $response['result'] , "title" =>  $moviescod->title , "message" =>  ""));
                 }
                 else
                 {
                     $status = 0 ;
-                    array_push($unlink_errors,  array("status" => $response['result'] , "title" =>  $moviescod->title , "message" =>  ""));
+                   // array_push($unlink_errors,  array("status" => $response['result'] , "title" =>  $moviescod->title , "message" =>  ""));
                 }
             }
             else
             {
                 $status = 0 ;
-                array_push($unlink_errors,  array("status" => $response['result'] , "title" =>  $moviescod->title , "message" =>  ""));
+              //  array_push($unlink_errors,  array("status" => $response['result'] , "title" =>  $moviescod->title , "message" =>  ""));
             }
         }
 
         $response = array("status" => $status , "unlink_success"=>$unlink_success , "unlink_errors"=>$unlink_errors );
         //$response = array("status" => 1 , "unlink_success"=>$unlink_success , "unlink_errors"=>$unlink_errors );
        // return json_encode($response);
+        app(\App\Http\Controllers\ScheduleContoller::class)->getschedules($request->location);
 
+        $status = 1 ;
        echo $status ;
 
     }
@@ -400,5 +404,33 @@ class MoviescodController extends Controller
             ->get();
         return Response()->json(compact('movies'));
     }
+
+
+
+
+    public function cancel_movies_to_spls(Request $request)
+    {
+        $moviescod = Moviescod::where('moviescods_id',$request->movie_id)->where('location_id',$request->location)->first() ;
+        if($moviescod->status == "linked")
+        {
+            echo "linked" ;
+        }
+        else
+        {
+            $moviescod->update([
+                'spl_uuid' => "null",
+                'date_linking'=>null ,
+                'status' => "unlinked"
+            ]);
+            echo "Success" ;
+        }
+
+
+    }
+
+
+
+
+
 
 }

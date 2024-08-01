@@ -400,9 +400,15 @@
                             <div class="row " >
                                 <div class="col-md-12  preview-list multiplex" >
                                     <div class="row">
-                                        <div class="col-xl-12">
+                                        <div class="col-xl-8">
                                             <div class="input-group mb-3 mr-sm-2">
                                                 <input type="text" class="form-control search_linked_spl_films" id="" placeholder="Search In SPLs List Or Films">
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-4">
+                                            <div class="input-group mb-3 mr-sm-2">
+                                                <button type="button " id="cancel_schedule_linking" class=" btn btn-danger  btn-icon-text m-1 ">
+                                                    <i class="mdi mdi-delete "></i> Cancel   </button>
                                             </div>
                                         </div>
                                     </div>
@@ -423,7 +429,7 @@
                                         </div>
                                     </div>
 
-                                    <table class="table" id="linked_movies_spl_table">
+                                    <table class="table" id="scheduled_movies_spl_table">
                                         <tbody>
                                         </tbody>
                                     </table>
@@ -1044,6 +1050,19 @@
                 $('#location-listing tbody').html('<div id="table_logs_processing" class="dataTables_processing card">Please Select Location</div>')
             }
         }
+        /*const interval = setInterval(function() {
+            var screen =  $('#screen').val();
+            var location =  $('#location').val();
+            var refresh_screen = false ;
+            var date = new Date($('#scheduleDatePicker').val());
+            if(location != 'Locations')
+            {
+                get_schedule(location, screen, date,false)
+            }
+
+
+        }, 9000);*/
+
         $('#screen').change(function(){
             var screen =  $('#screen').val();
             var date = new Date($('#scheduleDatePicker').val());
@@ -1175,7 +1194,7 @@
                             }
 
                             movies_table +=
-                            '<tr id="'+value.id+'">'
+                            '<tr id="'+value.moviescods_id+'">'
                                 +'<td style="width:50%" class="text-body spl_title align-middle fw-medium text-decoration-none" data-id="'+ value.nocspl_id+'"  >'+ value.title_spl+' </td>'
                                   +'<td style="width:50%" class="text-body film_title align-middle fw-medium text-decoration-none" data-id="'+ value.id+'"  >'+ title+' </td>'
 
@@ -1318,13 +1337,13 @@
                             }
 
                             movies_table +=
-                            '<tr id="'+value.id+'">'
+                            '<tr id="'+value.moviescods_id+'">'
                                 +'<td style="width:50%" class="text-body spl_title align-middle fw-medium text-decoration-none" data-id="'+ value.nocspl_id+'"  >'+ value.title_spl+' </td>'
                                 +'<td style="width:50%" class="text-body film_title align-middle fw-medium text-decoration-none" data-id="'+ value.id+'"  >'+ title+' </td>'
 
                             '</tr >'
                         });
-                        $('#linked_movies_spl_table tbody').html(movies_table)
+                        $('#scheduled_movies_spl_table tbody').html(movies_table)
 
 
 
@@ -1492,6 +1511,151 @@
 
         })
 
+        $(document).on('click', '#scheduled_movies_spl_table tbody tr', function () {
+
+            $('#scheduled_movies_spl_table tbody tr').removeClass('selected') ;
+            $(this).addClass('selected') ;
+
+        }) ;
+
+
+        $(document).on('click', '#cancel_schedule_linking', function () {
+
+            var movie_id = $('#scheduled_movies_spl_table tr.selected').attr('id') ;
+            var location =  $('#location').val();
+            if(typeof movie_id === 'undefined')
+            {
+                swal({
+                        title: '',
+                        text: "Please Select SPl",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3f51b5',
+                        cancelButtonColor: '#ff4081',
+                        confirmButtonText: 'Great ',
+                        buttons: {
+                            cancel: {
+                                text: "Cancel",
+                                value: null,
+                                visible: true,
+                                className: "btn btn-danger",
+                                closeModal: true,
+                            },
+                        }
+                    })
+            }
+            else
+            {
+                swal({
+                    showCancelButton: true,
+                    title: 'Cancel Sheduling !',
+                    text: 'You are sure you want to unlink all SPLs',
+                    icon: 'warning',
+                    buttons: {
+                        cancel: {
+                            text: "Cancel",
+                            value: null,
+                            visible: true,
+                            className: "btn btn-primary",
+                            closeModal: true,
+                        },
+
+                        Confirm: {
+                            text: "Yes, Cancel Sheduling !",
+                            value: true,
+                            visible: true,
+                            className: "btn btn-danger",
+                            closeModal: true,
+                        },
+                    }
+                }).then((result) => {
+                    if (result) {
+
+                        $.ajax({
+                            url:"{{  url('') }}"+ "/cancel_movies_to_spls",
+                            type: 'post',
+                            cache: false,
+                            data: {
+                                movie_id: movie_id,
+                                location:location,
+                                "_token": "{{ csrf_token() }}",
+                            },
+                            beforeSend: function() {
+                                swal({
+                                    title: 'Refreshing',
+                                    allowEscapeKey: false,
+                                    allowOutsideClick: true,
+                                    onOpen: () => {
+                                        swal.showLoading();
+                                    }
+                                });
+                            },
+                            success: function(response) {
+
+
+
+                                if(response == "Success")
+                                {
+                                    swal.close();
+                                    $('#scheduled_movies_spl_table tr.selected').hide() ;
+                                    $('#scheduled_movies_spl_table tr').removeClass('selected') ;
+
+
+                                    swal({
+                                        title: 'Done!',
+                                        text: 'Schedule linked canceled successfully ',
+                                        icon: 'success',
+                                        button: {
+                                            text: "Continue",
+                                            value: true,
+                                            visible: true,
+                                            className: "btn btn-primary"
+                                        }
+                                    })
+                                    $(this).hide() ;
+                                }
+                                else if(response == "linked")
+                                {
+                                    swal.close();
+                                    $('#scheduled_movies_spl_table tr.selected').hide() ;
+                                    $('#scheduled_movies_spl_table tr').removeClass('selected') ;
+
+                                    swal({
+                                            title: 'Failed',
+                                            text: "This Film Is already linked",
+                                            icon: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#3f51b5',
+                                            cancelButtonColor: '#ff4081',
+                                            confirmButtonText: 'Great ',
+                                            buttons: {
+                                                cancel: {
+                                                    text: "Cancel",
+                                                    value: null,
+                                                    visible: true,
+                                                    className: "btn btn-danger",
+                                                    closeModal: true,
+                                                },
+                                            }
+                                        })
+
+                                }
+                                else
+                                {
+                                    swal.close();
+                                    showSwal('warning-message-and-cancel')
+                                }
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                console.log(errorThrown);
+                            },
+                            complete: function(jqXHR, textStatus) {}
+                        });
+                    }
+                });
+            }
+        })
+
 
         $(document).on('click', '#linked_movies_spl_table tbody tr', function () {
 
@@ -1561,50 +1725,64 @@
                     },
                 }
             }).then((result) => {
-
+                if (result) {
 
                 $.ajax({
-                url:"{{  url('') }}"+ "/unlink_all_spl_movie",
-                type: 'post',
-                cache: false,
-                data: {
-                    location:location,
-                    "_token": "{{ csrf_token() }}",
-                },
+                    url:"{{  url('') }}"+ "/unlink_all_spl_movie",
+                    type: 'post',
+                    cache: false,
+                    beforeSend: function () {
+                            swal({
+                                title: 'Refreshing',
+                                closeOnEsc: false,
+                                allowOutsideClick: false,
+                                timerProgressBar: true,
+                                closeModal: false,
+                                onOpen: () => {
+                                    swal.showLoading();
+                                }
+                            });
+                        },
+                    data: {
+                        location:location,
+                        "_token": "{{ csrf_token() }}",
+                    },
 
-                success: function(response) {
+                    success: function(response) {
 
 
-                    if(response )
-                    {
-                        swal.close();
-                        showSwal('unlink-all-spl') ;
-                        $('#linked_movies_spl_table tbody').html("")
-                        $('#movies_table tbody').html("")
+                        if(response )
+                        {
+                            swal.close();
+                            showSwal('unlink-all-spl') ;
+                            $('#linked_movies_spl_table tbody').html("")
+                            $('#movies_table tbody').html("")
 
-
-                    }
-                    else
-                    {
-                        swal.close();
-                        showSwal('warning-message-and-cancel')
-                    }
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.log(errorThrown);
-                },
-                complete: function(jqXHR, textStatus) {}
-            });
-
+                            var screen =  $('#screen').val();
+                            var location =  $('#location').val();
+                            var refresh_screen = false ;
+                            var date = new Date($('#scheduleDatePicker').val());
+                            if(location != 'Locations')
+                            {
+                                get_schedule(location, screen, date,false)
+                            }
+                        }
+                        else
+                        {
+                            swal.close();
+                            showSwal('warning-message-and-cancel')
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    },
+                    complete: function(jqXHR, textStatus) {}
+                });
+            }
 
             });
 
         }) ;
-
-
-
-
-
 
         $(document).on('click', '#confirm_inlink', function () {
             var movie_id = $('#id-mivie-to-unlink').val() ;

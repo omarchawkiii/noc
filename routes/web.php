@@ -142,6 +142,8 @@ Route::post('unlink_spl_movie', [App\Http\Controllers\MoviescodController::class
 Route::post('unlink_all_spl_movie', [App\Http\Controllers\MoviescodController::class , 'unlink_all_spl_movie'])->name('moviescod.unlink_spl_movie')->middleware(['auth']);
 Route::get('get_spl_and_movies_to_schedule/{location}', [App\Http\Controllers\MoviescodController::class , 'get_spl_and_movies_to_schedule'])->name('moviescod.get_spl_and_movies_to_schedule')->middleware(['auth']);
 Route::get('get_spl_and_movies_scheduled/{location}', [App\Http\Controllers\MoviescodController::class , 'get_spl_and_movies_scheduled'])->name('moviescod.get_spl_and_movies_scheduled')->middleware(['auth']);
+Route::post('cancel_movies_to_spls', [App\Http\Controllers\MoviescodController::class , 'cancel_movies_to_spls'])->name('moviescod.cancel_movies_to_spls')->middleware(['auth']);
+
 
 Route::post('uploadlocalkdm', [App\Http\Controllers\NockdmController::class , 'uploadlocalkdm'])->name('nockdm.uploadlocalkdm')->middleware(['auth']);
 Route::get('get_nockdm', [App\Http\Controllers\NockdmController::class , 'get_nockdm'])->name('nockdm.get_nockdm')->middleware(['auth']);
