@@ -306,7 +306,7 @@
     }
     const interval = setInterval(function() {
         get_playback_data() ;
-    }, 5000);
+    }, 60000);
 
 
     'use strict';
@@ -347,9 +347,9 @@
 
         get_playback_screen_infos(id) ;
 
-         playback_icon_interval = setInterval(function() {
+         /*playback_icon_interval = setInterval(function() {
             get_playback_screen_infos(id) ;
-        }, 3000);
+        }, 3000);*/
 
 
     });
@@ -375,11 +375,11 @@
                     var _time = calculateRuntimeDifference(response.playback.remaining_runtime ,response.playback.elapsed_runtime)
                       var progress_bar= '<div class="col-md-8">'
                                         +'<div class="progress progress-lg p-0 " style="margin-top:15px">'
-                                            +'<div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" role="progressbar" style="height: 17px ; width: '+response.playback.progress_bar+'%; " aria-valuenow="'+response.playback.progress_bar+'" aria-valuemin="0" aria-valuemax="100">'+ parseFloat(response.playback.progress_bar).toFixed(2) +'%</div>'
+                                            +'<div id="progress-bar" class="progress-bar bg-primary progress-bar-striped progress-bar-animated" role="progressbar" style="height: 17px ; width: '+response.playback.progress_bar+'%; " aria-valuenow="'+response.playback.progress_bar+'" aria-valuemin="0" aria-valuemax="100">'+ parseFloat(response.playback.progress_bar).toFixed(2) +'%</div>'
                                         +'</div>'
                                         +'<div class="d-flex justify-content-between mt-2">'
-                                            +'<span>'+response.playback.elapsed_runtime+'</span>'
-                                            +'<span>'+ response.playback.elapsed_runtime+'/'+ response.playback.remaining_runtime+'</span>'
+                                            +'<span id="elapsed-time">'+response.playback.elapsed_runtime+'</span>'
+                                            +'<span id="total-time">'+ response.playback.elapsed_runtime+'/'+ response.playback.remaining_runtime+'</span>'
                                         +'</div>'
                                     +'</div>'
 
@@ -429,8 +429,6 @@
                     }
                     else
                     {
-
-
                         if(response.playback.dowser_status =="Open")
                         {
                             dowser_status = '<button type="button" class="btn btn-inverse-success btn-icon-text"><i class=" btn-icon-prepend"></i> Open </button>';
@@ -440,9 +438,7 @@
                         {
                             dowser_status = '<button type="button" class="btn btn-inverse-danger btn-icon-text"><i class=" btn-icon-prepend"></i> Closed </button>';
                         }
-
                     }
-
 
                     if(response.playback.ip_sound_status == 0)
                     {
@@ -458,7 +454,6 @@
                         {
                             sound_status = '<button type="button" class="btn btn-inverse-success btn-icon-text"><i class="mdi mdi mdi-check btn-icon-prepend"></i> OK </button>' ;
                         }
-
                     }
                     if(response.playback.securityManager != 'Normal')
                     {
@@ -488,6 +483,38 @@
                     $('#infos_modal .modal-body').html(data) ;
                     $('#infos_modal .modal-header h4').html("Screen : " + response.screen_info.screen_name) ;
 
+                    var elapsedRuntime = new Date('1970-01-01T' + response.playback.elapsed_runtime + 'Z'); // assuming the format HH:mm:ss
+                    var remainingRuntime = new Date('1970-01-01T' + response.playback.remaining_runtime + 'Z');
+                    var totalRuntime = (elapsedRuntime.getTime() / 1000) + (remainingRuntime.getTime() / 1000); // total runtime in seconds
+                    function updateTime() {
+                        elapsedRuntime.setSeconds(elapsedRuntime.getSeconds() + 1);
+                        remainingRuntime.setSeconds(remainingRuntime.getSeconds() - 1);
+
+                        var elapsedTimeStr = elapsedRuntime.toISOString().substr(11, 8);
+                        var totalTimeStr = elapsedRuntime.toISOString().substr(11, 8) + '/' + remainingRuntime.toISOString().substr(11, 8);
+
+                        $('#elapsed-time').text(elapsedTimeStr);
+
+                            // Calculate and update progress bar
+                        var elapsedSeconds = elapsedRuntime.getTime() / 1000;
+                        var progressPercentage = (elapsedSeconds / totalRuntime) * 100;
+
+                        console.log(progressPercentage)
+
+                        $('#progress-bar').css('width', progressPercentage + '%');
+                        $('#progress-bar').attr('aria-valuenow', progressPercentage.toFixed(2));
+                        $('#progress-bar').text(progressPercentage.toFixed(2) + '%');
+
+
+                    }
+
+                    if( response.playback.playback_status == 'Play')
+                    {
+                        updateTime();
+                        playback_icon_interval = setInterval(function() {
+                            updateTime() ;
+                        }, 1000);
+                    }
 
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
@@ -558,8 +585,6 @@
                 complete: function(jqXHR, textStatus) {}
         });
     });
-
-
 
 
 

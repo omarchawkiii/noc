@@ -35,6 +35,10 @@ class ScheduleContoller extends Controller
                 {
                     foreach($content as $schedule)
                     {
+                        if($schedule['status'] != "unlinked")
+                        {
+                            dd($schedule);
+                        }
                         if( isset($schedule['cpls']))
                         {
                             $cpls = $schedule['cpls'] ;
@@ -133,7 +137,6 @@ class ScheduleContoller extends Controller
                                 'titleShort' => $schedule['titleShort'],
                                 'uuid_spl' => $schedule['uuid_spl'],
                                 'screen_number' => $schedule['number'],
-                                //'duration' => $schedule['Lorem'],
                                 'cod_film' => $schedule['cod_film'],
                                 'id_film' => $schedule['id_film'],
                                 'color' => $schedule['color'],
