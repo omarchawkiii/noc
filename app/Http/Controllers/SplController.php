@@ -331,11 +331,7 @@ class SplController extends Controller
 
         //$spl = Spl::where('uuid',$request->spl_id)->first() ;
         $response = $this->get_spl_from_API_for_download($location->connection_ip,$request->spl_id,$location->email , $location->password) ;
-/*dd($response);
-        dd($response) ;
-        $spl_file = simplexml_load_file("/DATA/spl/$request->spl_id.xml");
-        $xmlString = $spl_file->asXML();
-        print_r($xmlString);*/
+
     }
 
     public function get_spl_from_API($apiUrl,$uuid,$username,$password)
@@ -405,6 +401,69 @@ class SplController extends Controller
         } else {
             return json_decode($response, true);
         }
+    }
+
+
+    public function clean_spls(Request $request)
+    {
+
+        $lms = $request->lms;
+        $location = Location::find($request->location) ;
+
+        if($lms == "true")
+        {
+            $apiUrl = $location->connection_ip;
+            $requestData = [
+                'action' => 'clean_lms_spls',
+                'username' =>$location->email,
+                'password' =>$location->password
+            ];
+
+        }
+        else
+        {
+            $screen = Screen::find($request->screen) ;
+            $apiUrl = $location->connection_ip;
+            $requestData = [
+                'action' => 'clean_screen_spls',
+                'screen_number' => $screen->screen_number,
+                'username' =>$location->email,
+                'password' =>$location->password
+            ];
+
+        }
+
+
+            // Initialize cURL session
+        $ch = curl_init($apiUrl);
+
+        // Set cURL options
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($requestData));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        // Execute cURL session and get the response
+        $response = curl_exec($ch);
+        // print_r($response);
+
+        // Check for cURL errors
+        if (curl_errno($ch)) {
+            return ['error' => 'Curl error: ' . curl_error($ch)];
+        }
+
+        // Close cURL session
+        curl_close($ch);
+
+        // Process the API response
+        if (!$response) {
+            return ['error' => 'Error occurred while sending the request.'];
+        } else {
+
+            dd($response) ;
+            return json_decode($response, true);
+        }
+
+
     }
 
     /*public function get_spl_from_API($apiUrl,$uuid,$username,$password)

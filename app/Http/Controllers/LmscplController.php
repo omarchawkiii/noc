@@ -11,7 +11,7 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
-
+use Illuminate\Support\Str;
 class LmscplController extends Controller
 {
     public function getlmscpls($location)
@@ -96,7 +96,16 @@ class LmscplController extends Controller
     }
     public function get_lmscpl_infos($cplid )
     {
-        $cpl = Lmscpl::find($cplid) ;
+
+        if (Str::startsWith($cplid, 'urn:uuid:'))
+        {
+            $cpl = Lmscpl::where('uuid',$cplid)->first() ;
+        }
+        else
+        {
+            $cpl = Lmscpl::find($cplid) ;
+        }
+
         if($cpl)
         {
             $spls = DB::table('splcomponents')
@@ -111,7 +120,16 @@ class LmscplController extends Controller
         else
         {
 
-            $cpl = Cpl::find($cplid) ;
+            //$cpl = Cpl::find($cplid) ;
+            if (Str::startsWith($cplid, 'urn:uuid:'))
+            {
+                $cpl = Lmscpl::where('uuid',$cplid)->first() ;
+            }
+            else
+            {
+                $cpl = Lmscpl::find($cplid) ;
+            }
+            dd(Str::isUuid($cplid), $cplid ) ;
             $spls = DB::table('splcomponents')
                 ->where('splcomponents.CompositionPlaylistId',$cpl->uuid)
                 ->leftJoin('spls', 'splcomponents.uuid_spl', '=', 'spls.uuid')

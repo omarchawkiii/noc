@@ -3955,6 +3955,9 @@
                                         var duration_seconds = Composition.IntrinsicDuration * editRate_denominator / editRate_numerator;
                                         var hms_time = convertSecondsToHMS(duration_seconds);
                                         console.log("composition");
+
+
+
                                         box +=
                                             '<div class="card rounded border mb-2 left-side-item"' +
                                             '      data-type="Composition"' +
@@ -3971,6 +3974,13 @@
                                             '    <div class="card-body  ">\n' +
                                             '       <div class="media-body  ">\n' +
                                             '            <h6 class="mb-1" style="font-size: 17px;color:#52d4f7">' + Composition.AnnotationText + ' </h6>\n' +
+
+                                            '                      <h6 class="mb-1"  style="font-size: 17px;color:' +
+                                (value.type === "Flat" ? "#52d4f7" :
+                                    (value.type === "Scope" ? "#00d25b" : "white"))
+                                + '">' + value.contentTitleText +
+                                ((value.pictureEncryptionAlgorithm == "None" || value.pictureEncryptionAlgorithm == 0) ? " " : "<i class=\"mdi mdi-lock-outline  cpl_need_kdm\" aria-hidden=\"true\"></i>") +
+                                '</h6>\n' +
                                             '       </div>\n' +
                                             '      <div class="media-body">\n' +
                                             '            <p class="mb-0 text-muted float-left">00:00:00</p>\n' +
@@ -4347,6 +4357,7 @@
                 {
                     var url = "{{  url('') }}"+   "/get_lmscpl_infos/"+cpl_id;
                     $('#kdms-tab').hide();
+                    var id_type = "uuid";
                 }
 
 

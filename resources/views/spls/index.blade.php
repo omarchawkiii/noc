@@ -61,6 +61,12 @@
                             </button>
                         </div>
                         <div class="col-xl-2">
+                            <button type="button" class="btn btn-danger btn-icon-text" id="clean_spl">
+                                <i class="mdi mdi-delete-sweep btn-icon-prepend"></i> Clean SPLs
+                            </button>
+                        </div>
+
+                        <div class="col-xl-2">
                             <button type="button" id="refresh_lms"  class="btn btn-icon-text " style="color: #6f6f6f;background: #2a3038; height: 37px; display:none">
                                 <i class="mdi mdi-server-network"></i> LMS </button>
                         </div>
@@ -311,7 +317,42 @@
         </div>
     </div>
 
+    <div class="modal fade " id="cpl_to_clean_model" tabindex="-1" aria-labelledby="ModalLabel"aria-modal="true" role="dialog">
+        <div class="modal-dialog" style="max-width: 60%; width: 60%;" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 15px;">
+                    <h5 class="modal-title" id=" " style="font-size: 23px;">
+                        <i class="mdi mdi-delete-sweep custom-search  btn-inverse-danger "></i>Screen SPLs to Clean  </h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table" id="cpl_to_clean_table">
+                        <thead>
+                            <tr>
+                                <th>UUID</th>
+                                <th>SPL Name</th>
 
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                      </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer" style=" margin: auto;">
+                    <button type="button" id="confirm_clean_spl" class="btn btn-danger"  data-dismiss="modal">
+                        Confirm
+                    </button>
+                    <button  data-bs-dismiss="modal" aria-label="Close" type="button"  class="btn btn-light" data-dismiss="modal" >
+                        Cancel
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
 @endsection
 
@@ -1129,6 +1170,179 @@
                         complete: function(jqXHR, textStatus) {}
                 });
             }
+        });
+
+        $(document).on('click', '#clean_spl', function (event) {
+
+            var location = $('#location').val() ;
+            var screen =  $('#screen').val();
+            var lms = false ;
+            if( $('#refresh_lms').hasClass("activated"))
+            {
+                lms = true ;
+                $('#cpl_to_clean_model h5.modal-title').html("LMS CPLs to Clean")
+            }
+            else
+            {
+                lms = false ;
+                $('#cpl_to_clean_model h5.modal-title').html("Screen CPLs to Clean")
+            }
+            if(screen == 'null' && lms == false )
+            {
+                swal({
+                        title: '',
+                        text: "Please Select Locaion And Screen .",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3f51b5',
+                        cancelButtonColor: '#ff4081',
+                        confirmButtonText: 'Great ',
+                        buttons: {
+                            cancel: {
+                                text: "Cancel",
+                                value: null,
+                                visible: true,
+                                className: "btn btn-danger",
+                                closeModal: true,
+                            },
+                        }
+                    })
+            }
+            else
+            {
+
+
+                var url = "{{  url('') }}"+ '/spls/clean_spls/';
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    data: {
+                        location :location,
+                        lms :lms ,
+                        screen:screen
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    beforeSend: function () {
+                    },
+                    success: function (response) {
+                        if(response.content_to_clean.length>0 )
+                        {
+                            var result="" ;
+                            $.each(response.content_to_clean, function( index, value ) {
+                                result =  result +
+                                    '<tr>'
+                                        +'<td>'+value.uuid+'</td>'
+                                        +'<td>'+value.contentTitleText+'</td>'
+                                    +'</t>'
+                            });
+
+
+                            $('#cpl_to_clean_table tbody').html(result)
+                            $('#cpl_to_clean_model').modal('show');
+
+                            $('#confirm_clean_cpl').click(function(){
+
+                                $.ajax({
+                                    url : "{{  url('') }}"+ '/cpls/confirm_clean_cpls/',
+                                    type: 'GET',
+                                    data: {
+                                        location :location,
+                                        lms :lms,
+                                        screen:screen
+                                    },
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                    },
+                                    beforeSend: function () {
+                                    },
+                                    success: function (response) {
+                                        result ="" ;
+                                        if (response.status )
+                                        {
+
+                                            $('#cpl_delete_model').modal('hide');
+                                            $('#cpl_deleted_model .modal-body').html(result) ;
+                                            $('#cpl_deleted_model').modal('show') ;
+                                            //showSwal('warning-message-and-cancel')
+                                            if( $('#refresh_lms').hasClass("activated"))
+                                            {
+                                                get_cpls(location , screen , true , multiplex)
+                                            }
+                                            else
+                                            {
+                                                get_cpls(location , screen , false , multiplex)
+                                            }
+
+                                        } else {
+                                            swal({
+                                                title: 'Failed',
+                                                text: "Error occurred while sending the request.",
+                                                icon: 'warning',
+                                                showCancelButton: true,
+                                                confirmButtonColor: '#3f51b5',
+                                                cancelButtonColor: '#ff4081',
+                                                confirmButtonText: 'Great ',
+                                                buttons: {
+                                                    cancel: {
+                                                        text: "Cancel",
+                                                        value: null,
+                                                        visible: true,
+                                                        className: "btn btn-danger",
+                                                        closeModal: true,
+                                                    },
+                                                }
+                                            })
+                                        }
+
+                                    },
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        console.log(errorThrown);
+                                    },
+                                    complete: function (jqXHR, textStatus) {
+                                    }
+                                });
+
+                            });
+
+                        }
+                        else
+                        {
+                            swal({
+                                title: '',
+                                text: "Nothnothing To Delete .",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3f51b5',
+                                cancelButtonColor: '#ff4081',
+                                confirmButtonText: 'Great ',
+                                buttons: {
+                                    cancel: {
+                                        text: "Cancel",
+                                        value: null,
+                                        visible: true,
+                                        className: "btn btn-danger",
+                                        closeModal: true,
+                                    },
+                                }
+                            })
+                        }
+
+
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    },
+                    complete: function (jqXHR, textStatus) {
+                    }
+                });
+
+
+
+            }
+
+
         });
 
     })(jQuery);
