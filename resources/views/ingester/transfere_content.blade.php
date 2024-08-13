@@ -47,6 +47,9 @@
                                                         <button style="margin-right : 10px ; " type="button" class="btn btn-primary btn-icon-text col-md-3 ml-1" id="ingest_content">
                                                             <i class="mdi mdi-upload btn-icon-prepend"></i> Transfer
                                                         </button>
+                                                        <button style="margin-right : 10px ; " type="button" class="btn btn-primary btn-icon-text col-md-4 ml-1" id="multi_ingest_content">
+                                                            <i class="mdi mdi mdi-monitor-multiple"></i> Multi-Transfer
+                                                        </button>
 
                                                         <button type="button" class="btn btn-danger  btn-icon-text col-md-3 ml-1 " id="delete_file">
                                                             <i class="mdi mdi-delete-forever btn-icon-prepend"></i> Delete
@@ -349,13 +352,44 @@
         <!--end modal-content-->
         </div>
     </div>
+    <div class="modal fade " id="locations_modal" tabindex="-1" role="dialog" aria-labelledby="delete_client_modalLabel" aria-modal="true">
+        <div class="modal-dialog modal-dialog-centered  ">
+            <div class="modal-content border-0">
+                <div class="modal-header">
+                    <h4>Locations</h4>
+                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
+                </div>
+                <div class="modal-body row  ">
+                    <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="multi_locations" name="multi_locations[]" multiple="multiple">
+                        <option selected="">Locations</option>
+                        @foreach ($locations as $location )
+                            <option value="{{ $location->id }}">{{ $location->name }}</option>
+                        @endforeach
+                    </select>
+
+                    <div class=" m-2">
+                        <button class="btn btn-success me-2" id="confirm_multi_trensfer">  <i class="mdi mdi-upload btn-icon-prepend"> </i> Transfer</button>
+                        <button class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close" type="button"><i class="mdi mdi mdi-close"> </i> Cancel</button>
+
+                    </div>
+
+                </div>
+            </div>
+        <!--end modal-content-->
+        </div>
+    </div>
 @endsection
 
 @section('custom_script')
 <!-- ------- DATA TABLE ---- -->
 <script src="{{asset('/assets/vendors/datatables.net/jquery.dataTables.js')}}"></script>
 <script src="{{asset('/assets/vendors/datatables.net-bs4/dataTables.bootstrap4.js')}}"></script>
-
+<script src="{{ asset('assets/js//select2.min.js') }}"></script>
+<script>
+    $(document).ready(function() {
+        $('#multi_locations').select2();
+    });
+</script>
 <script>
 
 (function($) {
@@ -657,6 +691,165 @@
         }
     });
 
+    $(document).on('click', '#multi_ingest_content', function (event) {
+        var array_files = [];
+        $("#files-listing  .item-content.selected").each(function() {
+            var id = $(this).data("id_cpl");
+            array_files.push(id);
+        });
+
+        if (array_files.length ==  0 ) {
+                $("#no-file-selected").modal('show');
+        }
+        else
+        {
+            $('#mySelect').select2({
+                width: '100%' // Ajuste la largeur de Select2
+            });
+            $("#locations_modal").modal('show');
+        }
+
+
+    });
+
+    $(document).on('click', '#confirm_multi_trensfer', function (event) {
+       // alert('Comming soon ') ;
+       var locations =  $('#multi_locations').val();
+
+        var array_files = [];
+        $("#files-listing  .item-content.selected").each(function() {
+            var id = $(this).data("id_cpl");
+            array_files.push(id);
+        });
+        if(locations != "Locations")
+        {
+            if (array_files.length ==  0 ) {
+                $("#no-file-selected").modal('show');
+            }else{
+            var url = "{{  url('') }}"+ '/ingester/generate_torrent_file_multi_locations';
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {
+                        array_files:array_files,
+                        locations:locations,
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    beforeSend: function () {
+                    },
+                    success: function (response) {
+                        var result ;
+                        console.log(response) ;
+                        if (response.ingest_status.status == 1 )
+                        {
+                            if (response.ingest_errors.length> 0 )
+                            {
+
+                                $('#cpl_ingest_error').modal('show') ;
+                                result = "<h4> Failed Cpls Ingest  </h4>" ;
+                                $.each(response.ingest_errors, function( index, value ) {
+
+                                    result = result
+                                    +'<p>'
+                                        +'<span class="align-middle fw-medium text-danger ">'+value.pkl_description+' </span>'
+                                        +'<span class="align-middle fw-medium text-danger "> '+value.message+' </span>'
+                                    +'</p>';
+                                });
+
+                                if (response.ingest_success.length> 0 )
+                                {
+                                    result = result + "<br /> <br /> <h4>  Succeeded  kdms Ingest   </h4>" ;
+                                    $.each(response.ingest_success, function( index, value )
+                                    {
+                                        result = result
+                                        +'<p>'
+                                            +'<span class="align-middle fw-medium text-danger ">'+value.pkl_description+' </span>'
+                                            +'<span class="align-middle fw-medium text-danger "> '+value.message+' </span>'
+                                        +'</p>';
+                                    });
+                                }
+                                $('#cpl_ingest_error .modal-body').html(result) ;
+
+
+                            }
+                            else
+                            {
+
+
+                                swal({
+                                    title: 'Done!',
+                                    text: 'Ingest Created Successfully ',
+                                    icon: 'success',
+                                    button: {
+                                        text: "Close",
+                                        value: true,
+                                        visible: true,
+                                        className: "btn btn-primary"
+                                    }
+                                })
+
+                            }
+                        }
+                        else
+                        {
+
+
+                                swal({
+                                title: 'Failed',
+                                text: "Error occurred while sending the request.",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3f51b5',
+                                cancelButtonColor: '#ff4081',
+                                confirmButtonText: 'Great ',
+                                buttons: {
+                                    cancel: {
+                                        text: "Cancel",
+                                        value: null,
+                                        visible: true,
+                                        className: "btn btn-danger",
+                                        closeModal: true,
+                                    },
+                                }
+                            })
+                        }
+
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    },
+                    complete: function (jqXHR, textStatus) {
+                    }
+                });
+            }
+        }
+        else
+        {
+
+            swal({
+                        title: '',
+                        text: "Please Select Locaions .",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3f51b5',
+                        cancelButtonColor: '#ff4081',
+                        confirmButtonText: 'Great ',
+                        buttons: {
+                            cancel: {
+                                text: "Cancel",
+                                value: null,
+                                visible: true,
+                                className: "btn btn-danger",
+                                closeModal: true,
+                            },
+                        }
+                    })
+
+
+        }
+    });
     // search source
     var search_screens_source = document.getElementById('search_screens_source');
     search_screens_source.onkeyup = function () {
@@ -1120,6 +1313,54 @@
 
 <link rel="stylesheet" href="{{asset('/assets/vendors/datatables.net-bs4/dataTables.bootstrap4.css')}}">
 <link rel="stylesheet" href="{{asset('/assets/vendors/jquery-toast-plugin/jquery.toast.min.css')}}">
+<link href="{{ asset('assets/css/select2.min.css') }}" rel="stylesheet" />
+<style>
 
+
+    /* Forcer le z-index de Select2 pour qu'il soit au-dessus du modal */
+    .select2-container {
+        z-index: 1055; /* Ajuster ce z-index si nécessaire */
+    }
+
+.select2.select2-container.select2-container--default {
+    width: 80% !important;
+    background: #2a3038;
+}
+
+.select2-container--default .select2-selection--multiple {
+    border: none;
+    background: #2a3038;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice,
+.select2-container--default .select2-selection--multiple .select2-selection__choice:nth-child(5n+1) {
+    font-size: 14px;
+    background: #2a3038;
+}
+
+.select2-container--default .select2-results__option--selected {
+    background-color: #297eee;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    padding: 5px;
+    padding-left: 21px;
+
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    padding: 5px;
+}
+
+#locations_modal .modal-body
+{
+    min-height: 150px ;
+}
+#locations_modal .select2.select2-container.select2-container--default {
+    width: 100% !important;
+    background: #191c24;
+    height: 50px ;
+}
+</style>
 
 @endsection

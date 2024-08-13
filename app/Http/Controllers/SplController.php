@@ -458,49 +458,11 @@ class SplController extends Controller
         if (!$response) {
             return ['error' => 'Error occurred while sending the request.'];
         } else {
-
-            dd($response) ;
             return json_decode($response, true);
         }
 
 
     }
 
-    /*public function get_spl_from_API($apiUrl,$uuid,$username,$password)
-    {
-          // Prepare the request data
-          $requestData = [
-            'action' => 'get_spl',
-            'uuid' => $uuid,
-            'username' =>$username,
-            'password' =>$password
-        ];
 
-        // Initialize cURL session
-        $ch = curl_init($apiUrl);
-
-        // Set cURL options
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($requestData));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-        // Execute cURL session and get the response
-        $response = curl_exec($ch);
-       // print_r($response);
-
-        // Check for cURL errors
-        if (curl_errno($ch)) {
-            return ['error' => 'Curl error: ' . curl_error($ch)];
-        }
-
-        // Close cURL session
-        curl_close($ch);
-
-        // Process the API response
-        if (!$response) {
-            return ['error' => 'Error occurred while sending the request.'];
-        } else {
-            return json_decode($response, true);
-        }
-    }*/
 }

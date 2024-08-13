@@ -317,7 +317,7 @@
         </div>
     </div>
 
-    <div class="modal fade " id="cpl_to_clean_model" tabindex="-1" aria-labelledby="ModalLabel"aria-modal="true" role="dialog">
+    <div class="modal fade " id="spl_to_clean_model" tabindex="-1" aria-labelledby="ModalLabel"aria-modal="true" role="dialog">
         <div class="modal-dialog" style="max-width: 60%; width: 60%;" role="document">
             <div class="modal-content">
                 <div class="modal-header" style="padding: 15px;">
@@ -328,11 +328,12 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <table class="table" id="cpl_to_clean_table">
+                    <table class="table" id="spl_to_clean_table">
                         <thead>
                             <tr>
                                 <th>UUID</th>
                                 <th>SPL Name</th>
+                                <th>Issue Date</th>
 
                             </tr>
                         </thead>
@@ -1180,12 +1181,12 @@
             if( $('#refresh_lms').hasClass("activated"))
             {
                 lms = true ;
-                $('#cpl_to_clean_model h5.modal-title').html("LMS CPLs to Clean")
+                $('#spl_to_clean_model h5.modal-title').html("LMS SPLs to Clean")
             }
             else
             {
                 lms = false ;
-                $('#cpl_to_clean_model h5.modal-title').html("Screen CPLs to Clean")
+                $('#spl_to_clean_model h5.modal-title').html("Screen SPLs to Clean")
             }
             if(screen == 'null' && lms == false )
             {
@@ -1227,22 +1228,23 @@
                     beforeSend: function () {
                     },
                     success: function (response) {
-                        if(response.content_to_clean.length>0 )
+                        if(response.list_spls.length>0 )
                         {
                             var result="" ;
-                            $.each(response.content_to_clean, function( index, value ) {
+                            $.each(response.list_spls, function( index, value ) {
                                 result =  result +
                                     '<tr>'
                                         +'<td>'+value.uuid+'</td>'
-                                        +'<td>'+value.contentTitleText+'</td>'
+                                        +'<td>'+value.title+'</td>'
+                                        +'<td>'+value.IssueDate+'</td>'
                                     +'</t>'
                             });
 
 
-                            $('#cpl_to_clean_table tbody').html(result)
-                            $('#cpl_to_clean_model').modal('show');
+                            $('#spl_to_clean_table tbody').html(result)
+                            $('#spl_to_clean_model').modal('show');
 
-                            $('#confirm_clean_cpl').click(function(){
+                            /*$('#confirm_clean_spl').click(function(){
 
                                 $.ajax({
                                     url : "{{  url('') }}"+ '/cpls/confirm_clean_cpls/',
@@ -1304,7 +1306,7 @@
                                     }
                                 });
 
-                            });
+                            });*/
 
                         }
                         else

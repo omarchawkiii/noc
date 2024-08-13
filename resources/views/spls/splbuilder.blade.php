@@ -1186,7 +1186,7 @@
 @section('custom_script')
     <script src="{{ asset('assets/vendors/dragula/dragula.min.js') }}"></script>
     <script src="{{ asset('assets/js/dragula.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="{{ asset('assets/js//select2.min.js') }}"></script>
     <script src="{{ asset('/assets/vendors/sweetalert/sweetalert.min.js') }}"></script>
 
     <script>
@@ -4792,7 +4792,7 @@
 @endsection
 
 @section('custom_css')
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="{{ asset('assets/css/select2.min.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('assets/vendors/dragula/dragula.min.css') }}">
     <style>
         /* ** custom ****/

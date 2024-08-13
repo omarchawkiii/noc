@@ -66,7 +66,7 @@ Route::get('upload', [App\Http\Controllers\SplController::class , 'upload_spl'])
 Route::get('get_screens_from_spls', [App\Http\Controllers\SplController::class , 'get_screens_from_spls'])->name('cpls.get_screens_from_spls')->middleware(['auth']);
 Route::get('spls/delete_spls', [App\Http\Controllers\SplController::class , 'delete_spls'])->name('spls.delete_spls')->middleware(['auth']);
 Route::get('spls/download_spl', [App\Http\Controllers\SplController::class , 'download_spl'])->name('spls.delete_spls')->middleware(['auth']);
-Route::get('spls/clean_spls', [App\Http\Controllers\CplController::class , 'clean_spls'])->name('spls.clean_spls')->middleware(['auth']);
+Route::get('spls/clean_spls', [App\Http\Controllers\SplController::class , 'clean_spls'])->name('spls.clean_spls')->middleware(['auth']);
 
 
 
@@ -181,6 +181,7 @@ Route::post('ingester/action_contoller', [App\Http\Controllers\IngersterControll
 Route::get('transfere_content', [App\Http\Controllers\IngersterController::class , 'transfere_content'])->name('ingester.transfere_content')->middleware(['auth']);
 Route::delete('ingester/delete_transfered_file', [App\Http\Controllers\IngersterController::class , 'delete_transfered_file'])->name('ingester.delete_transfered_file')->middleware(['auth']);
 Route::post('ingester/generate_torrent_file', [App\Http\Controllers\IngersterController::class , 'generate_torrent_file'])->name('ingester.generate_torrent_file')->middleware(['auth']);
+Route::post('ingester/generate_torrent_file_multi_locations', [App\Http\Controllers\IngersterController::class , 'generate_torrent_file_multi_locations'])->name('ingester.generate_torrent_file_multi_locations')->middleware(['auth']);
 Route::get('ingest/logs', [App\Http\Controllers\IngersterController::class , 'logs'])->name('ingester.logs')->middleware(['auth']);
 Route::get('ingest/monitors', [App\Http\Controllers\IngersterController::class , 'monitors'])->name('ingester.monitors')->middleware(['auth']);
 Route::get('ingest/logs_details', [App\Http\Controllers\IngersterController::class , 'logs_details'])->name('ingester.logs_details')->middleware(['auth']);

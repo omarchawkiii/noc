@@ -503,6 +503,64 @@ class IngersterController extends Controller
 
     }
 
+    public function generate_torrent_file_multi_locations(Request $request)
+    {
+        $ingest_success = array() ;
+        $ingest_errors = array();
+        $ingest_status= array();
+
+
+        foreach($request->locations as $location)
+        {
+            $location = Location::find($request->location) ;
+            try
+            {
+                foreach ($request->array_files as $file )
+                {
+                    $cpl = $result = DB::table('ingests')
+                        ->where('cpl_id', $file)
+                        ->first();
+
+                    if($cpl)
+                    {
+                        $pkl_size = $this->getFolderSize($cpl->tms_dir);
+
+                        $response = $this->ingestDcp($location->connection_ip,$cpl->cpl_id, $pkl_size, $cpl->cpl_description,$location->email, $location->password);
+                        if($response['status'] === 1 )
+                        {
+
+                            Dcp_trensfer::updateOrCreate([
+                                'id_cpl' => $cpl->cpl_id ,
+                                'location_id' => $location->id
+                            ],[
+                                'status'     =>"Pending",
+                                "torrent_path" =>$response['dcp_path'],
+                                'pkl_size' => $pkl_size ,
+                                "source" =>$cpl->tms_dir,
+                                "progress" => 0 ,
+                                "id_ingest"=> $cpl->id,
+                                "id_cpl" => $cpl->cpl_id,
+                                'location_id' => $location->id
+                            ]);
+                            array_push($ingest_success,  array("status" => 1, "pkl_description" =>  $cpl->pkl_description , "message" =>  "DCP Ingested successfully" , "id" =>  $cpl->id ));
+                        }
+                        else
+                        {
+                            array_push($ingest_errors,  array("status" => 0, "pkl_description" =>  $cpl->pkl_description, "message" =>  $response['result'], "id" =>  $cpl->id ));
+                        }
+                    }
+                }
+                $ingest_status = array("status" => 1,  "message " => "") ;
+                return Response()->json(compact('ingest_errors','ingest_success','ingest_status'));
+            } catch (Exception $e) {
+                $ingest_status = array("status" => 0 , "message " => $e->getMessage()) ;
+                return Response()->json(compact('ingest_errors','ingest_success','ingest_status'));
+                echo "Failed" ;
+
+            }
+        }
+    }
+
 
     public function ingestDcp($apiUrl,$cpl_uuid, $dcp_size, $title,$username, $password)
     {

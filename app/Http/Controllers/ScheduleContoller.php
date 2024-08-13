@@ -35,10 +35,6 @@ class ScheduleContoller extends Controller
                 {
                     foreach($content as $schedule)
                     {
-                        if($schedule['status'] != "unlinked")
-                        {
-                            dd($schedule);
-                        }
                         if( isset($schedule['cpls']))
                         {
                             $cpls = $schedule['cpls'] ;
@@ -159,13 +155,13 @@ class ScheduleContoller extends Controller
 
                     }
                     $uuid_schedule = array_column($content, 'id');
-                    $schedules = Schedule::where('location_id',$location->id)->where('date_start','>=',Carbon::now())->get();
+                    $schedules = Schedule::where('location_id',$location->id)->where('date_start','>',Carbon::now('Asia/Kuala_Lumpur'))->get();
 
                     foreach($schedules as $schedule)
                     {
                         if (! in_array( $schedule->scheduleId , $uuid_schedule  ))
                         {
-                            //$schedule->delete() ;
+                            $schedule->delete() ;
                         }
                     }
                 }
