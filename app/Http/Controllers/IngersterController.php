@@ -503,16 +503,17 @@ class IngersterController extends Controller
 
     }
 
-    public function generate_torrent_file_multi_locations(Request $request)
+        public function generate_torrent_file_multi_locations(Request $request)
     {
         $ingest_success = array() ;
         $ingest_errors = array();
         $ingest_status= array();
 
-
-        foreach($request->locations as $location)
+        //$locations_of_spl = Location::whereIn('id',$request->id_location)->get();
+        $locations = Location::whereIn('id',$request->locations)->get();
+        foreach($locations as $location)
         {
-            $location = Location::find($request->location) ;
+            //$location = Location::find($request->location) ;
             try
             {
                 foreach ($request->array_files as $file )

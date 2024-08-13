@@ -361,7 +361,7 @@
                 </div>
                 <div class="modal-body row  ">
                     <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" id="multi_locations" name="multi_locations[]" multiple="multiple">
-                        <option selected="">Locations</option>
+
                         @foreach ($locations as $location )
                             <option value="{{ $location->id }}">{{ $location->name }}</option>
                         @endforeach
