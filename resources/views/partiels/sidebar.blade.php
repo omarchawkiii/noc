@@ -158,6 +158,42 @@
             </div>
         </li>
 
+        <li class="nav-item menu-items ">
+            <a class="nav-link" data-bs-toggle="collapse" href="#inventory_settings" aria-expanded="false" aria-controls="icons">
+            <span class="menu-icon icon-box-performance">
+                <i class="mdi mdi-settings"></i>
+            </span>
+            <span class="menu-title">Inventory Settings</span>
+            <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse " id="inventory_settings">
+            <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link active_playlistbuilder " href="{{ route('inventory_category.index') }}"> <i class="mdi mdi-checkbox-blank-circle me-1"></i> Categories </a></li>
+                <li class="nav-item"> <a class="nav-link active_playlistbuilder " href="{{ route('part.index') }}"> <i class="mdi mdi-checkbox-blank-circle me-1"></i> Parts </a></li>
+                <li class="nav-item"> <a class="nav-link active_playlistbuilder " href="{{ route('supplier.index') }}"> <i class="mdi mdi-checkbox-blank-circle me-1"></i> Suppliers </a></li>
+                <li class="nav-item"> <a class="nav-link active_playlistbuilder " href="{{ route('storage_location.index') }}"> <i class="mdi mdi-checkbox-blank-circle me-1"></i> Storage Location </a></li>
+                <li class="nav-item"> <a class="nav-link active_playlistbuilder " href="{{ route('cinema_location.index') }}"> <i class="mdi mdi-checkbox-blank-circle me-1"></i> Cinema Location </a></li>
+
+            </ul>
+            </div>
+        </li>
+
+        <li class="nav-item menu-items ">
+            <a class="nav-link" data-bs-toggle="collapse" href="#consumables_tracker" aria-expanded="false" aria-controls="icons">
+            <span class="menu-icon icon-box-playlistbuilder">
+                <i class="mdi mdi-call-split"></i>
+            </span>
+            <span class="menu-title">Consumables Tracker</span>
+            <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse " id="consumables_tracker">
+            <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link active_playlistbuilder " href="{{ route('inventory_in.index') }}"> <i class="mdi mdi-checkbox-blank-circle me-1"></i> Inventory In  </a></li>
+                <li class="nav-item"> <a class="nav-link active_playlistbuilder " href="{{ route('inventory_out.index') }}"> <i class="mdi mdi-checkbox-blank-circle me-1"></i> Inventory Out  </a></li>
+                <li class="nav-item"> <a class="nav-link active_playlistbuilder " href="{{ route('transfer_request.index') }}"> <i class="mdi mdi-checkbox-blank-circle me-1"></i> Inventory Out  </a></li>
+            </ul>
+            </div>
+        </li>
 
 
         <li>

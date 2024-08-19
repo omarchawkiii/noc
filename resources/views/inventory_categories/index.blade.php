@@ -1,34 +1,18 @@
 @extends('layouts.app')
 @section('title')
-    Users
+    Category
 @endsection
 @section('content')
     <div class="page-header user-shadow">
-        <h3 class="page-title ">Users </h3>
+        <h3 class="page-title ">Categories </h3>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">users</li>
+                <li class="breadcrumb-item active" aria-current="page">Categories</li>
             </ol>
         </nav>
     </div>
-    <div class="row  ">
-        <div class="col-xl-4">
-            <div class="input-group mb-2 mr-sm-2">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text"><i class="mdi mdi-home-map-marker"></i></div>
-                    </div>
-                    <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example"
-                        id="location" name="location[]" multiple="multiple">
-                        @foreach ($locations as $location)
-                            <option value="{{ $location->id }}">{{ $location->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-        </div>
-    </div>
+
     <div class="card">
         <div class="card-body">
 
@@ -36,13 +20,13 @@
                 <div class="d-flex flex-row justify-content-between mt-2 mb-3">
 
                     <div>
-                        <h4 class="card-title ">Users</h4>
+                        <h4 class="card-title ">Categories</h4>
                     </div>
 
                     <div>
 
-                        <a id="create_user_btn" class="btn btn-primary  btn-icon-text">
-                            <i class="mdi mdi-plus btn-icon-prepend"></i> Create user
+                        <a id="create_category_btn" class="btn btn-primary  btn-icon-text">
+                            <i class="mdi mdi-plus btn-icon-prepend"></i> Create New Category
                         </a>
 
                     </div>
@@ -55,47 +39,19 @@
                                 <tr>
                                     <th class="sorting text-center  sorting_asc">Order #</th>
                                     <th class="sorting text-center ">Name</th>
-                                    <th class="sorting text-center ">Email</th>
-                                    <th class="sorting text-center ">Role</th>
-                                    <th class="sorting text-center ">Locations</th>
+
                                     <th class="sorting text-center ">option</th>
 
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($users as $key => $user)
+                                @foreach ($inventory_categories as $key => $category)
                                     <tr class="odd text-center  ">
                                         <td class="sorting_1">{{ $key + 1 }} </td>
-                                        <td> {{ $user->name }} </td>
-                                        <td>{{ $user->email }} </td>
-                                        <td>@if( $user->role =="1") Admin @else Manager @endif
-                                        </td>
+                                        <td> {{ $category->name }} </td>
                                         <td>
-                                                @if ($user->locations)
-                                                    @foreach ($user->locations as $location)
-                                                        <div class="badge badge-outline-primary m-1"> {{ $location->name }}
-                                                        </div>
-                                                    @endforeach
-                                                @endif
-                                        </td>
-
-
-                                        <td>
-                                            <div class="dropdown">
-                                                <button class="btn btn-outline-primary dropdown-toggle" type="button"
-                                                    id="dropdownMenuOutlineButton6" data-bs-toggle="dropdown"
-                                                    aria-haspopup="true" aria-expanded="false"> Actions </button>
-                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuOutlineButton6"
-                                                    style="">
-                                                    <a class="btn btn-outline-primary dropdown-item edit_user"
-                                                        id="{{ $user->id }}">Edit</a>
-                                                    <a class="btn btn-outline-primary dropdown-item edit_password_btn"
-                                                        id="{{ $user->id }}">Edit password</a>
-                                                    <a class="btn btn-outline-primary dropdown-item delete_user"
-                                                        id="{{ $user->id }}">Delete</a>
-
-                                                </div>
-                                            </div>
+                                            <button data-id="{{ $category->id }}" type="button" class="btn btn-inverse-warning btn-icon m-1 edit"><i class="mdi mdi-border-color "></i></button>
+                                            <button data-id="{{ $category->id }}" type="button" class="btn btn-inverse-danger btn-icon m-1 delete"><i class="mdi mdi-delete-forever "></i></button>
                                         </td>
 
                                     </tr>
@@ -111,89 +67,32 @@
     </div>
 
 
-    <div id="create_user_modal" class="modal hide fade" role="dialog" aria-labelledby="edit_user_modal" aria-hidden="true">
+    <div id="create_category_modal" class="modal hide fade" role="dialog" aria-labelledby="edit_user_modal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered  ">
             <div class="modal-content border-0">
                 <div class="modal-header">
-                    <h5>Create User</h5>
+                    <h5>Create New Category </h5>
                     <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal"
                         aria-label="Close"><span aria-hidden="true"
                             style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
                 </div>
                 <div class="modal-body text-center p-4">
                     <div class="">
-                        <form method="POST" id="create_user_form" class="needs-validation" novalidate action="{{ route('users.store') }}">
+                        <form method="POST" id="create_category_form" class="needs-validation" novalidate >
                             @csrf
                             <div class="row">
 
                                 <div class="col-md-12">
                                     <div class="form-group  has-validation">
                                          <label class="w-100 " style="text-align: left"> Name</label>
-                                        <input type="text" class="form-control" placeholder="User Name"
-                                            value="{{ old('name') }}" name="name" required>
+                                        <input type="text" class="form-control" placeholder="Name"
+                                            value="{{ old('name') }}" name="name" id="name" required>
                                         @error('name')
                                             <div class="text-danger mt-1 ">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                         <label class="w-100 " style="text-align: left">Email</label>
-                                        <input type="Email" class="form-control" placeholder="Email"
-                                            value="{{ old('email') }}" name="email" required>
-                                        @error('email')
-                                            <div class="text-danger mt-1 ">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                         <label class="w-100 " style="text-align: left">Password</label>
-                                        <input type="password" class="form-control" placeholder="Password"
-                                            value="{{ old('password') }}" name="password" required>
-                                        @error('password')
-                                            <div class="text-danger mt-1 ">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
 
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                         <label class="w-100 " style="text-align: left"> Confirm Password </label>
-                                        <input type="password" class="form-control" placeholder=" Confirm Password "
-                                            value="{{ old('confirm_password') }}" name="confirm_password" required>
-                                        @error('confirm_password')
-                                            <div class="text-danger mt-1 ">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="input-group mb-2 mr-sm-2">
-                                        <label class="w-100 " style="text-align: left"> Role </label>
-                                        <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" name="role" required>
-                                            <option selected="" value>Role</option>
-                                                    <option value="1">Admin</option>
-                                                    <option value="2">Manager</option>
-                                            </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="input-group mb-2 mr-sm-2">
-                                         <label class="w-100 " style="text-align: left"> Location </label>
-                                        <div class="input-group">
-
-                                            <select class="form-select  form-control form-select-sm"
-                                                aria-label=".form-select-sm example" id="location_create_user" name="location[]"
-                                                multiple="multiple" required>
-
-
-                                                @foreach ($locations as $location)
-                                                    <option value="{{ $location->id }}">{{ $location->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
 
 
                                 <div class=" m-2">
@@ -213,65 +112,30 @@
 
 
     <!-- Edit  user -->
-    <div id="edit_user_modal" class="modal hide fade" role="dialog" aria-labelledby="edit_user_modal"
+    <div id="edit_category_modal" class="modal hide fade" role="dialog" aria-labelledby="edit_user_modal"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered  ">
             <div class="modal-content border-0">
                 <div class="modal-header">
-                    <h5>Edit User</h5>
+                    <h5>Edit Category</h5>
                     <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal"
                         aria-label="Close"><span aria-hidden="true"
                             style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
                 </div>
                 <div class="modal-body minauto text-center p-4">
                     <div class="">
-                        <form method="PUT" class="needs-validation" novalidate id="edit_user_form">
+                        <form method="PUT" class="needs-validation" novalidate id="edit_category_form">
+                            <input type="hidden" id="category_id" value="">
                             @csrf
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group  has-validation">
                                         <label class="w-100 " style="text-align: left"> Name</label>
                                         <input id="name" type="text" class="form-control"
-                                            placeholder="User Name" value="{{ old('name') }}" name="name" required>
+                                            placeholder="User Name" value="{{ old('name') }}" name="name" id="name" required>
                                         @error('name')
                                             <div class="text-danger mt-1 ">{{ $message }}</div>
                                         @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="w-100 " style="text-align: left">Email</label>
-                                        <input id="Email" type="Email" class="form-control" placeholder="Email"
-                                            value="{{ old('email') }}" name="email" required>
-                                        @error('email')
-                                            <div class="text-danger mt-1 ">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <div class="input-group mb-2 mr-sm-2">
-                                        <label class="w-100 " style="text-align: left"> Role </label>
-                                        <select id="role" class="form-select  form-control form-select-sm" id="role" aria-label=".form-select-sm example" name="role" required>
-                                                <option value>Role</option>
-                                                <option value="1">Admin</option>
-                                                <option value="2">Manager</option>
-                                            </select>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <div class="input-group mb-2 mr-sm-2">
-                                        <label class="w-100 " style="text-align: left"> Location </label>
-                                        <div class="input-group">
-
-                                            <select class="form-select  form-control form-select-sm"
-                                                aria-label=".form-select-sm example" id="location_edit_user"
-                                                name="location[]" multiple="multiple" required>
-
-
-                                            </select>
-                                        </div>
                                     </div>
                                 </div>
 
@@ -363,7 +227,7 @@
             'use strict'
 
             // Fetch all the forms we want to apply custom Bootstrap validation styles to
-            var forms =$( "#edit_user_form, #edit_password_form, #create_user_form" )
+            var forms =$( "#edit_category_form, #edit_password_form, #create_category_form" )
 
             // Loop over them and prevent submission
             Array.prototype.slice.call(forms)
@@ -383,28 +247,7 @@
             })()
         </script>
 
-    <script>
 
-
-        $(document).ready(function() {
-            $('#location').select2({
-                placeholder: "Select a location",
-                allowClear: true
-            });
-
-            $('#location_edit_user').select2({
-                placeholder: "Select a location",
-                allowClear: true
-            });
-
-            $('#location_create_user').select2({
-                placeholder: "Select a location",
-                allowClear: true
-            });
-
-
-        });
-    </script>
 
     <script>
         (function($) {
@@ -494,7 +337,7 @@
         })(jQuery);
 
 
-        function get_users(location) {
+        function get_categories() {
 
             $("#users-listing").dataTable().fnDestroy();
             var loader_content =
@@ -505,62 +348,35 @@
                 '</div>'
             $('#users-listing tbody').html(loader_content)
 
-            var url = "{{ url('') }}" + '/get_users/';
+            var url = "{{ url('') }}" + '/inventory_category/get_categories';
             var result = " ";
 
             $.ajax({
                 url: url,
                 method: 'GET',
-                data: {
-                    location: location,
-                },
+
                 success: function(response) {
 
-                    $.each(response.users, function(index, value) {
-                        var user_locations = "";
-
-                        $.each(value.locations, function(index, value) {
-                            console.log(value)
-                            user_locations += '<div class="badge badge-outline-primary m-1">' +
-                                value.name + '</div>';
-                        })
+                    $.each(response.inventory_categories, function(index, value) {
 
                         index++;
-                        var role="";
-                        if(value.role ==1)
-                        {
-                            role="Admin";
-                        }
-                        else
-                        {
-                            role="Manager";
-                        }
+
                         result = result +
                             '<tr class="odd text-center">' +
                             '<td class="text-body align-middle fw-medium text-decoration-none">' +
                             index + ' </td>' +
                             '<td class="text-body align-middle fw-medium text-decoration-none">' + value
                             .name + ' </td>' +
-                            '<td class="text-body align-middle fw-medium text-decoration-none">' + value
-                            .email + ' </td>' +
-                            '<td class="text-body align-middle fw-medium text-decoration-none">' + role + ' </td>' +
-                            '<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> ' +
-                            user_locations + '</a></td>' +
-                            '<td class="text-body align-middle fw-medium text-decoration-none">' +
-                            '<div class="dropdown">' +
-                            '<button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuOutlineButton6" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Actions </button>' +
-                            '<div class="dropdown-menu" aria-labelledby="dropdownMenuOutlineButton6" style="">' +
-                            '<a class="btn btn-outline-primary dropdown-item edit_user" id="' + value
-                            .id + '">Edit</a>' +
-                            '<a class="btn btn-outline-primary dropdown-item edit_password_btn" id="' + value
-                            .id + '">Edit Password</a>' +
-                            '<a class="btn btn-outline-primary dropdown-item delete_user" id="' + value
-                            .id + '">Delete</a>' +
-                            '</div>' +
-                            '</div>' +
-                            '</td>' +
+
+                            '<td>'+
+
+                                '<button data-id="'+value.id+'" type="button" class="btn btn-inverse-warning btn-icon m-1 edit"><i class="mdi mdi-border-color "></i></button>'+
+                                '<button data-id="'+value.id+'" type="button" class="btn btn-inverse-danger btn-icon m-1 delete"><i class="mdi mdi-delete-forever "></i></button>'+
+                            '</td>'+
+
                             '</tr>';
                     });
+
                     $('#users-listing tbody').html(result)
 
                     /***** refresh datatable **** **/
@@ -582,21 +398,18 @@
             })
 
         }
-        $('#location').change(function() {
-            var location = $('#location').val();
-            get_users(location)
-        });
+
 
         //Delete NOC SPLs
-        $(document).on('click', '.delete_user', function() {
+        $(document).on('click', '.delete', function() {
 
-            var id = $(this).attr('id');
-            var url = '{{ url('') }}' + '/user/' + id + '/destroy';
-            var location = $('#location').val();
+            var id = $(this).attr('data-id');
+            var url = '{{ url('') }}' + '/inventory_category/' + id + '/destroy';
+
             swal({
                 showCancelButton: true,
-                title: 'User Deletion!',
-                text: 'You are sure you want to delete this User',
+                title: 'Category Deletion!',
+                text: 'You are sure you want to delete this Category',
                 icon: 'warning',
                 buttons: {
                     cancel: {
@@ -649,10 +462,10 @@
                             swal.close();
 
                             if (response == 'Success') {
-                                get_users(location)
+                                get_categories()
                                 swal({
                                     title: 'Done!',
-                                    text: 'User Deleted Successfully ',
+                                    text: 'Cateory Deleted Successfully ',
                                     icon: 'success',
                                     button: {
                                         text: "Continue",
@@ -686,9 +499,27 @@
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
                             swal.close();
-                            showSwal('warning-message-and-cancel');
+                            swal({
+                                    title: 'Failed',
+                                    text: "Error occurred while sending the request.",
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3f51b5',
+                                    cancelButtonColor: '#ff4081',
+                                    confirmButtonText: 'Great ',
+                                    buttons: {
+                                        cancel: {
+                                            text: "Cancel",
+                                            value: null,
+                                            visible: true,
+                                            className: "btn btn-danger",
+                                            closeModal: true,
+                                        },
+                                    }
+                                })
+                          //  showSwal('warning-message-and-cancel');
 
-                            //console.log(response) ;
+                            console.log(response) ;
                         }
                     })
 
@@ -699,21 +530,14 @@
 
         })
 
-        $(document).on('click', '.edit_user', function() {
+        $(document).on('click', '.edit', function() {
 
-            var id = $(this).attr('id');
-            var url = '{{ url('') }}' + '/user/' + id + '/show';
-            var location = $('#location').val();
-            var location_option =""  ;
-            var selected = false ;
+            $('#edit_category_modal #edit_category_form')[0].reset();
+            $('#edit_category_modal #category_id').val("")
+            var id = $(this).attr('data-id');
+            var url = '{{ url('') }}' + '/inventory_category/' + id + '/show';
 
-            $('#edit_user_modal').modal('show');
-
-            $('#location_edit_user').select2({
-                placeholder: "Select a location",
-                allowClear: true
-            });
-
+            $('#edit_category_modal').modal('show');
 
 
             $.ajax({
@@ -722,48 +546,12 @@
                 method: 'GET',
                 data: {
                     id: id,
-                    "_token": "{{ csrf_token() }}",
                 },
 
-                headers: {
-                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
-                    "_token": "{{ csrf_token() }}",
-                },
                 success: function(response) {
                     console.log(response)
-                    $('#edit_user_modal #name').val(response.user.name)
-                    $('#edit_user_modal #Email').val(response.user.email)
-
-                    $('#edit_user_modal #location').select2({
-                        placeholder: "Select a location",
-                        allowClear: true
-                    });
-
-                    $("#edit_user_modal #role option[value="+ response.user.role+"]").prop("selected", true)
-
-
-                    $.each(response.locations, function(index, value) {
-
-                        $.each(response.user.locations, function(index, selected_element) {
-                            if(selected_element.id === value.id)
-                            {
-                                selected = true ;
-                            }
-                        })
-                        if(selected)
-                        {
-                            location_option  =location_option
-                            +'<option selected value="'+value.id+'">'+value.name+'</option>' ;
-                        }
-                        else
-                        {
-                            location_option  =location_option
-                            +'<option value="'+value.id+'">'+value.name+'</option>' ;
-                        }
-                        selected = false ;
-                    })
-                    $('#edit_user_modal #location_edit_user').html(location_option)
-
+                    $('#edit_category_modal #name').val(response.inventory_category.name)
+                    $('#edit_category_modal #category_id').val(response.inventory_category.id)
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.log(response);
@@ -771,33 +559,27 @@
             })
         })
 
-        $(document).on('click', '#create_user_btn', function() {
-            $('#create_user_modal').modal('show');
+        $(document).on('click', '#create_category_btn', function() {
+            $('#create_category_modal #create_category_form')[0].reset();
+            $('#create_category_modal').modal('show');
         })
 
-        $(document).on("submit","#edit_user_form" , function(event) {
+        $(document).on("submit","#create_category_form" , function(event) {
 
             event.preventDefault();
 
 
-            var name = $('#name').val();
-            var email = $('#Email').val();
-            var role = $('#role').val();
-            var location = $('#location_edit_user').val();
-            var all_location = $('#location').val();
-            var url = '{{ url('') }}' + '/user/update';
+            var name = $('#create_category_modal #name').val();
 
+            var url = '{{ url('') }}' + '/inventory_category/store';
+            console.log(url)
             //$('#edit_user_modal').modal('show');
             $.ajax({
                 url: url,
-                type: 'PUT',
-                method: 'PUT',
+                type: 'POST',
+                method: 'POST',
                 data: {
-                    url: url,
                     name: name,
-                    email: email,
-                    role: role,
-                    location: location,
                     "_token": "{{ csrf_token() }}",
                 },
 
@@ -807,10 +589,10 @@
                 },
                 success: function(response) {
 
-                    get_users(all_location)
+                    get_categories()
                         swal({
                             title: 'Done!',
-                            text: 'User Updated Successfully ',
+                            text: 'Category Created Successfully ',
                             icon: 'success',
                             button: {
                                 text: "Continue",
@@ -819,7 +601,7 @@
                                 className: "btn btn-primary"
                             }
                         })
-                        $('#edit_user_modal').modal('hide') ;
+                        $('#create_category_modal').modal('hide') ;
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.log(response);
@@ -829,27 +611,22 @@
 
         })
 
+        $(document).on("submit","#edit_category_form" , function(event) {
 
-        $(document).on('click', '.edit_password_btn', function() {
-            var id = $(this).attr('id');
-            $('#id_user_password').val(id)
-            $('#edit_password_modal').modal('show');
-        })
-        $(document).on("submit","#edit_password_form" , function(event) {
             event.preventDefault();
-            var id = $('#id_user_password').val();
-            var password = $('#password').val();
-            var url = '{{ url('') }}' + '/user/update_password';
-            var all_location = $('#location').val();
-            //$('#edit_user_modal').modal('show');
+
+            var id = $('#edit_category_modal #category_id').val()
+            var name = $('#edit_category_modal #name').val()
+            console.log(id)
+            var url = '{{ url('') }}' + '/inventory_category/update';
+
             $.ajax({
                 url: url,
                 type: 'PUT',
                 method: 'PUT',
                 data: {
+                    name : name ,
                     id: id,
-                    password: password,
-
                     "_token": "{{ csrf_token() }}",
                 },
 
@@ -858,19 +635,22 @@
                     "_token": "{{ csrf_token() }}",
                 },
                 success: function(response) {
-                    get_users(all_location)
-                    swal({
-                        title: 'Done!',
-                        text: 'Password Updated Successfully ',
-                        icon: 'success',
-                        button: {
-                            text: "Continue",
-                            value: true,
-                            visible: true,
-                            className: "btn btn-primary"
-                        }
-                    })
-                    $('#edit_password_modal').modal('hide') ;
+
+                    get_categories()
+                        swal({
+                            title: 'Done!',
+                            text: 'Category Updated Successfully ',
+                            icon: 'success',
+                            button: {
+                                text: "Continue",
+                                value: true,
+                                visible: true,
+                                className: "btn btn-primary"
+                            }
+                        })
+
+                        $('#edit_category_modal').modal('hide');
+
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.log(response);
@@ -878,7 +658,7 @@
             })
 
         })
-        // fix page hight
+
 
         var t = $(window).height();
         $("#content_page").css("height", t - 300);
@@ -947,6 +727,9 @@
             width: 100% !important;
 
         }
-
+        #create_category_modal .modal-body
+        {
+            min-height: auto !important;
+        }
     </style>
 @endsection

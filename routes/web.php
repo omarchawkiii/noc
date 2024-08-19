@@ -206,7 +206,6 @@ Route::get('get_asset_infos_with_filter', [App\Http\Controllers\AssetinfoControl
 Route::get('generate_pdf_asset_info', [App\Http\Controllers\AssetinfoController::class , 'generate_pdf_asset_info'])->name('asset_infos.generate_pdf_asset_info')->middleware(['auth']);
 Route::get('refresh_asset_infos_data', [App\Http\Controllers\LocationController::class , 'refresh_asset_infos_data'])->name('location.refresh_asset_infos_data')->middleware(['auth']);
 
-
 Route::get('get_error_list/{location}', [App\Http\Controllers\Error_listController::class , 'get_error_list'])->name('error_list.get_error_list')->middleware(['auth']);
 Route::get('get_header_error', [App\Http\Controllers\Error_listController::class , 'header_errors'])->name('error_list.get_error_list')->middleware(['auth']);
 Route::get('get_kdm_errors_list', [App\Http\Controllers\Error_listController::class , 'kdms_errors_list'])->name('error_list.kdms_errors_list')->middleware(['auth']);
@@ -214,7 +213,6 @@ Route::get('get_server_errors_list', [App\Http\Controllers\Error_listController:
 Route::get('get_projector_errors_list', [App\Http\Controllers\Error_listController::class , 'projector_errors_list'])->name('error_list.get_projector_errors_list')->middleware(['auth']);
 Route::get('get_storage_errors_list', [App\Http\Controllers\Error_listController::class , 'storage_errors_list'])->name('error_list.get_storage_errors_list')->middleware(['auth']);
 Route::get('get_unlinked_sessions_errors_list', [App\Http\Controllers\Error_listController::class , 'get_unlinked_sessions_errors_list'])->name('error_list.get_unlinked_sessions_errors_list')->middleware(['auth']);
-
 
 Route::get('planner', [App\Http\Controllers\PlannerController::class , 'index'])->name('planner.index')->middleware(['auth']);
 Route::get('get_palnner_form_data', [App\Http\Controllers\PlannerController::class , 'get_palnner_form_data'])->name('planner.get_palnner_form_data')->middleware(['auth']);
@@ -224,5 +222,61 @@ Route::get('get_templates', [App\Http\Controllers\PlannerController::class , 'ge
 
 Route::post('rule/store', [App\Http\Controllers\PlannerController::class , 'rule_store'])->name('planner.rule_store')->middleware(['auth']);
 
-
 Route::get('storage_reports', [App\Http\Controllers\LogstitleController::class , 'storage_reports'])->name('storage_reports');
+
+
+Route::get('inventory_category', [App\Http\Controllers\InventoryCategoryController::class , 'index'])->name('inventory_category.index')->middleware(['auth']);
+Route::get('inventory_category/get_categories', [App\Http\Controllers\InventoryCategoryController::class , 'get_categories'])->name('inventory_category.get_categories')->middleware(['auth']);
+Route::post('inventory_category/store', [App\Http\Controllers\InventoryCategoryController::class , 'store'])->name('inventory_category.store')->middleware(['auth']);
+Route::delete('inventory_category/{id}/destroy', [App\Http\Controllers\InventoryCategoryController::class , 'destroy'])->name('inventory_category.destroy')->middleware(['auth']);
+Route::get('inventory_category/{id}/show', [App\Http\Controllers\InventoryCategoryController::class , 'show'])->name('inventory_category.show')->middleware(['auth']);
+Route::put('inventory_category/update', [App\Http\Controllers\InventoryCategoryController::class , 'update'])->name('inventory_category.update')->middleware(['auth']);
+
+Route::get('part', [App\Http\Controllers\PartController::class , 'index'])->name('part.index')->middleware(['auth']);
+Route::get('part/get_parts', [App\Http\Controllers\PartController::class , 'get_parts'])->name('part.get_parts')->middleware(['auth']);
+Route::post('part/store', [App\Http\Controllers\PartController::class , 'store'])->name('part.store')->middleware(['auth']);
+Route::delete('part/{id}/destroy', [App\Http\Controllers\PartController::class , 'destroy'])->name('part.destroy')->middleware(['auth']);
+Route::get('part/{id}/show', [App\Http\Controllers\PartController::class , 'show'])->name('part.show')->middleware(['auth']);
+Route::put('part/update', [App\Http\Controllers\PartController::class , 'update'])->name('part.update')->middleware(['auth']);
+
+Route::get('supplier', [App\Http\Controllers\SupplierController::class , 'index'])->name('supplier.index')->middleware(['auth']);
+Route::get('supplier/get_suppliers', [App\Http\Controllers\SupplierController::class , 'get_suppliers'])->name('supplier.get_suppliers')->middleware(['auth']);
+Route::post('supplier/store', [App\Http\Controllers\SupplierController::class , 'store'])->name('supplier.store')->middleware(['auth']);
+Route::delete('supplier/{id}/destroy', [App\Http\Controllers\SupplierController::class , 'destroy'])->name('supplier.destroy')->middleware(['auth']);
+Route::get('supplier/{id}/show', [App\Http\Controllers\SupplierController::class , 'show'])->name('supplier.show')->middleware(['auth']);
+Route::put('supplier/update', [App\Http\Controllers\SupplierController::class , 'update'])->name('supplier.update')->middleware(['auth']);
+
+Route::get('cinema_location', [App\Http\Controllers\CinemaLocationController::class , 'index'])->name('cinema_location.index')->middleware(['auth']);
+Route::get('cinema_location/get_cinema_locations', [App\Http\Controllers\CinemaLocationController::class , 'get_cinema_locations'])->name('cinema_location.get_cinema_locations')->middleware(['auth']);
+Route::post('cinema_location/store', [App\Http\Controllers\CinemaLocationController::class , 'store'])->name('cinema_location.store')->middleware(['auth']);
+Route::delete('cinema_location/{id}/destroy', [App\Http\Controllers\CinemaLocationController::class , 'destroy'])->name('cinema_location.destroy')->middleware(['auth']);
+Route::get('cinema_location/{id}/show', [App\Http\Controllers\CinemaLocationController::class , 'show'])->name('cinema_location.show')->middleware(['auth']);
+Route::put('cinema_location/update', [App\Http\Controllers\CinemaLocationController::class , 'update'])->name('cinema_location.update')->middleware(['auth']);
+
+Route::get('storage_location', [App\Http\Controllers\StorageLocationController::class , 'index'])->name('storage_location.index')->middleware(['auth']);
+Route::get('storage_location/get_storage_locations', [App\Http\Controllers\StorageLocationController::class , 'get_storage_locations'])->name('storage_location.get_storage_locations')->middleware(['auth']);
+Route::post('storage_location/store', [App\Http\Controllers\StorageLocationController::class , 'store'])->name('storage_location.store')->middleware(['auth']);
+Route::delete('storage_location/{id}/destroy', [App\Http\Controllers\StorageLocationController::class , 'destroy'])->name('storage_location.destroy')->middleware(['auth']);
+Route::get('storage_location/{id}/show', [App\Http\Controllers\StorageLocationController::class , 'show'])->name('storage_location.show')->middleware(['auth']);
+Route::put('storage_location/update', [App\Http\Controllers\StorageLocationController::class , 'update'])->name('storage_location.update')->middleware(['auth']);
+
+Route::get('inventory_in', [App\Http\Controllers\InventoryInController::class , 'index'])->name('inventory_in.index')->middleware(['auth']);
+Route::get('inventory_in/get_part_from_category', [App\Http\Controllers\InventoryInController::class , 'get_part_from_category'])->name('inventory_in.get_part_from_category')->middleware(['auth']);
+Route::get('inventory_in/get_description_from_part', [App\Http\Controllers\InventoryInController::class , 'get_description_from_part'])->name('inventory_in.get_description_from_part')->middleware(['auth']);
+Route::post('inventory_in/store', [App\Http\Controllers\InventoryInController::class , 'store'])->name('InventoryInController.store')->middleware(['auth']);
+Route::get('inventory_in/get_inventories_in', [App\Http\Controllers\InventoryInController::class , 'get_inventories_in'])->name('InventoryInController.get_inventories_in')->middleware(['auth']);
+
+Route::get('inventory_out', [App\Http\Controllers\InventoryOutController::class , 'index'])->name('inventory_out.index')->middleware(['auth']);
+Route::get('inventory_out/get_part_from_category', [App\Http\Controllers\InventoryOutController::class , 'get_part_from_category'])->name('inventory_out.get_part_from_category')->middleware(['auth']);
+Route::get('inventory_out/get_description_from_part', [App\Http\Controllers\InventoryOutController::class , 'get_description_from_part'])->name('inventory_out.get_description_from_part')->middleware(['auth']);
+Route::post('inventory_out/store', [App\Http\Controllers\InventoryOutController::class , 'store'])->name('inventory_out.store')->middleware(['auth']);
+Route::get('inventory_out/get_inventories_out', [App\Http\Controllers\InventoryOutController::class , 'get_inventories_out'])->name('inventory_out.get_inventories_out')->middleware(['auth']);
+Route::put('inventory_out/{id}/approuve', [App\Http\Controllers\InventoryOutController::class , 'approuve'])->name('inventory_out.approuve')->middleware(['auth']);
+
+
+Route::get('transfer_request', [App\Http\Controllers\TransferRequestController::class , 'index'])->name('transfer_request.index')->middleware(['auth']);
+Route::get('transfer_request/get_part_from_category', [App\Http\Controllers\TransferRequestController::class , 'get_part_from_category'])->name('transfer_request.get_part_from_category')->middleware(['auth']);
+Route::get('transfer_request/get_description_from_part', [App\Http\Controllers\TransferRequestController::class , 'get_description_from_part'])->name('transfer_request.get_description_from_part')->middleware(['auth']);
+Route::post('transfer_request/store', [App\Http\Controllers\TransferRequestController::class , 'store'])->name('transfer_request.store')->middleware(['auth']);
+Route::get('transfer_request/get_transfer_requests', [App\Http\Controllers\TransferRequestController::class , 'get_transfer_requests'])->name('transfer_request.get_transfer_requests')->middleware(['auth']);
+Route::put('transfer_request/{id}/approuve', [App\Http\Controllers\TransferRequestController::class , 'approuve'])->name('transfer_request.approuve')->middleware(['auth']);

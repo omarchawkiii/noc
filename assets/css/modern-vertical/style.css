@@ -22908,7 +22908,7 @@ div.tagsinput {
         .sidebar .nav .nav-item .nav-link .menu-title {
           color: inherit;
           display: inline-block;
-          font-size: 0.9375rem;
+          font-size: 0.8375rem;
           line-height: 1;
           vertical-align: middle; }
         .sidebar .nav .nav-item .nav-link .badge {
@@ -23853,9 +23853,8 @@ table .btn
 
 table td ,
 table th ,
-
 {
-    text-align: center !important;
+    text-align :center !important;
 }
 
 table th a ,
