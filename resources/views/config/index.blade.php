@@ -51,7 +51,11 @@
                                                                             Playlist Builder Settings
                                                                         </a>
                                                                     </li>
-
+                                                                    <li class="nav-item">
+                                                                        <a class="nav-link " id="transfer-tab" data-bs-toggle="tab" href="#transfer-2" role="tab" aria-controls="home" aria-selected="false"> <i class="mdi mdi-file-import ms-2" style="color : #ffab00 !important"></i>
+                                                                            Transfer  Settings
+                                                                        </a>
+                                                                    </li>
 
                                                                 </ul>
                                                             </div>
@@ -140,7 +144,35 @@
                                                                             </button>
                                                                         </div>
                                                                     </div>
+                                                                    <div class="tab-pane fade " id="transfer-2" role="tabpanel" aria-labelledby="home-tab">
+                                                                        <div class="row">
+                                                                            <div class="col-xl-6 ">
+                                                                                <div class="col-md-12">
+                                                                                    <h4 class="card-title">   Transfer  Settings </h4>
+                                                                                    <div class="form-group row" style="margin-left: 10px;">
+                                                                                        <div class=" col-md-12">
+                                                                                            <label for="transfer_simultaneously" class="w-100 " style="text-align: left">Transfer Simultaneously</label>
 
+                                                                                                <input type="number" min="1" class="form-control" placeholder="Transfer Simultaneously " name="transfer_simultaneously" id="transfer_simultaneously"  @if($config->transfer_simultaneously)   value="{{ $config->transfer_simultaneously }}" @else value="0" @endif />
+                                                                                        </div>
+
+                                                                                        <div class=" col-md-12 mt-3">
+                                                                                            <label for="transfer_simultaneously"   class="w-100 " style="text-align: left">Maximum Transfer Rate</label>
+
+                                                                                                <input type="number" min="1" class="form-control" placeholder="Maximum Transfer Rate " name="maximum_transfer_rate" id="maximum_transfer_rate"  @if($config->maximum_transfer_rate)   value="{{ $config->maximum_transfer_rate }}" @else value="0" @endif />
+                                                                                        </div>
+
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <button type="button" class="btn btn-primary btn-fw col-md-2" id="edit_transfer_settings_settings" style="margin: auto">
+                                                                                <h4>Save</h4>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
 
                                                                 </div>
                                                             </div>
@@ -296,7 +328,57 @@
             })
 
 
+        })
+
+        $(document).on("click","#edit_transfer_settings_settings" , function(event) {
+
+            var transfer_simultaneously = $("#transfer_simultaneously").val();
+            var maximum_transfer_rate = $("#maximum_transfer_rate").val();
+
+            event.preventDefault();
+            var url = '{{ url('') }}' + '/settings/transfer_settings';
+
+            //$('#edit_user_modal').modal('show');
+            $.ajax({
+                url: url,
+                type: 'PUT',
+                method: 'PUT',
+                data: {
+                    transfer_simultaneously: transfer_simultaneously,
+                    maximum_transfer_rate: maximum_transfer_rate,
+                },
+
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                },
+                success: function(response) {
+                    console.log(response)
+                    if(response)
+                    {
+                        swal({
+                            title: 'Done!',
+                            text: 'Settings Updated Successfully ',
+                            icon: 'success',
+                            button: {
+                                text: "Continue",
+                                value: true,
+                                visible: true,
+                                className: "btn btn-primary"
+                            }
+                        })
+                    }
+
+
+
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(response);
+                }
             })
+
+
+        })
+
     })(jQuery);
 
 

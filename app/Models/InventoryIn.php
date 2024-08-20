@@ -47,5 +47,8 @@ class InventoryIn extends Model
     {
         return $this->belongsTo(InventoryCategory::class);
     }
-
+    public function serialNumbers()
+    {
+        return $this->hasMany(SerialNumber::class);
+    }
 }

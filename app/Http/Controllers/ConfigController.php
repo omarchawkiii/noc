@@ -53,6 +53,29 @@ class ConfigController extends Controller
     }
 
 
+    public function transfer_settings(Request $request)
+    {
+        $config = Config::all()->first();
+
+        $new_config = $config->update([
+            'transfer_simultaneously' => $request->transfer_simultaneously ,
+            'maximum_transfer_rate' => $request->maximum_transfer_rate ,
+        ]);
+        if($new_config)
+        {
+           return true ;
+        }
+        else
+        {
+            return false ;
+        }
+
+    }
+
+
+
+
+
 
 
 }

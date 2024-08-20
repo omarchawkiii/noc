@@ -5,18 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Config extends Model
+class SerialNumber extends Model
 {
     use HasFactory;
+
     protected $fillable = [
-        'timeStart',
-        'timeEnd',
-        'autoIngest' ,
-        'dayStart',
-        'transfer_simultaneously',
-        'maximum_transfer_rate',
+        "inventory_in_id" ,
+        "serial",
     ];
 
-
-
+    public function inventoryIn()
+    {
+        return $this->belongsTo(InventoryIn::class);
+    }
 }

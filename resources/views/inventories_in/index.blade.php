@@ -59,9 +59,13 @@
                                         <td> {{ $inventory_in->part->part_number }} </td>
                                         <td> {{ $inventory_in->part->part_description }} </td>
                                         <td> {{ $inventory_in->quantity }} </td>
-                                        <td> {{ $inventory_in->serials }} </td>
+                                        <td>
+                                            @foreach ( $inventory_in->serialNumbers as $serial)
+                                                <div class="badge badge-outline-primary m-1"> {{ $serial->serial }} </div><br />
+                                            @endforeach
+                                            {{ $inventory_in->serials }}  </td>
                                         <td> {{ $inventory_in->storageLocation->name }} </td>
-                                        <td> {{ $inventory_in->supplier->name }} </td>
+                                        <td> {{ $inventory_in->supplier->company_name }} </td>
                                         <td> {{ $inventory_in->po_reference }} </td>
                                         <td> {{ $inventory_in->do_reference }} </td>
 
@@ -126,14 +130,8 @@
                                             name="quantity" id="quantity" required>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="form-group  has-validation">
-                                         <label class="w-100 " style="text-align: left"> Serials</label>
-                                        <input type="text" class="form-control" placeholder="Serials "
-                                            name="serials" id="serials" required>
+                                <div id="serial-number-container"></div>
 
-                                    </div>
-                                </div>
 
                                 <div class="col-md-12">
                                     <div class="form-group  has-validation">
@@ -202,9 +200,6 @@
     </div>
 
 
-
-
-
 @endsection
 
 @section('custom_script')
@@ -269,9 +264,6 @@
     <script src="{{ asset('/assets/vendors/sweetalert/sweetalert.min.js') }}"></script>
 
 
-
-
-
     <script>
         (function($) {
             'use strict';
@@ -331,12 +323,18 @@
                 success: function(response) {
 
                     $.each(response.inventories_in, function(index, value) {
-                        console.log(value,value.quantity)
+
+                        console.log(value)
+
+                        var serialsHtml = '';
+                        $.each(value.serial_numbers, function(i, serial) {
+                            console.log(serial)
+                            serialsHtml += '<div class="badge badge-outline-primary m-1">' + serial.serial + '</div><br />';
+                        });
                         index++;
 
                         result = result +
                             '<tr class="odd text-center">' +
-
                             '<td class="text-body align-middle fw-medium text-decoration-none">' + formatDate(value
                             .created_at) + ' </td>' +
                             '<td class="text-body align-middle fw-medium text-decoration-none">' + value
@@ -349,12 +347,11 @@
                             .part.part_description + ' </td>' +
                             '<td class="text-body align-middle fw-medium text-decoration-none">' + value
                             .quantity+ ' </td>' +
-                            '<td class="text-body align-middle fw-medium text-decoration-none">' + value
-                            .serials + ' </td>' +
+                            '<td class="text-body align-middle fw-medium text-decoration-none">' + serialsHtml  + ' </td>' +
                             '<td class="text-body align-middle fw-medium text-decoration-none">' + value
                             .storage_location.name + ' </td>' +
                             '<td class="text-body align-middle fw-medium text-decoration-none">' + value
-                            .supplier.name + ' </td>' +
+                            .supplier.company_name + ' </td>' +
                             '<td class="text-body align-middle fw-medium text-decoration-none">' + value
                             .po_reference + ' </td>' +
                             '<td class="text-body align-middle fw-medium text-decoration-none">' + value
@@ -384,7 +381,7 @@
             })
 
         }
-       // get_inventories_in()
+        get_inventories_in()
 
         //Delete NOC SPLs
         $(document).on('click', '.delete', function() {
@@ -567,13 +564,15 @@
             var inventory_category_id = $('#create_inventory_in_modal #inventory_category_id').val();
             var part_number = $('#create_inventory_in_modal #part_number').val();
             var quantity = $('#create_inventory_in_modal #quantity').val();
-            var serials = $('#create_inventory_in_modal #serials').val();
+            //var serials = $('#create_inventory_in_modal #serials').val();
             var supplier_id = $('#create_inventory_in_modal #supplier_id').val();
             var po_reference = $('#create_inventory_in_modal #po_reference').val();
             var do_reference = $('#create_inventory_in_modal #do_reference').val();
             var storage_id = $('#create_inventory_in_modal #storage_id').val();
-
-
+            var serials = [] ;
+            $('input[name="serials[]"]').each(function() {
+                serials.push($(this).val());
+            });
 
 
             var url = '{{ url('') }}' + '/inventory_in/store';
@@ -728,6 +727,20 @@
 
 
         });
+
+        $('#quantity').on('change', function() {
+            var quantity = $(this).val();
+            var serialNumberContainer = $('#serial-number-container');
+
+            // Réinitialiser les champs de numéro de série
+            serialNumberContainer.empty();
+
+            for (var i = 0; i < quantity; i++) {
+
+                serialNumberContainer.append('<div class="form-group has-validation"><label class="w-100 " style="text-align: left" for="serials_' + i + '">Serial Number ' + (i + 1) + ':</label><input type="text" name="serials[]" id="serials_' + i + '" class="form-control" ></div>');
+            }
+        });
+
 
         var t = $(window).height();
         $("#content_page").css("height", t - 300);

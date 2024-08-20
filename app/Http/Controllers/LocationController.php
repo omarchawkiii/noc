@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\changeDataEvent;
 use App\Http\Requests\LocationStoreRequest;
+use App\Models\Config;
 use App\Models\Cpl;
 use App\Models\Dcp_trensfer;
 use App\Models\Lmscpl;
@@ -827,17 +828,22 @@ class LocationController extends Controller
 
     public function execute_dcp_command()
     {
+        $config = Config::all()->first();
         $check_processing = Dcp_trensfer::where('dcp_trensfers.status', '=','Running')->get() ;
         if($check_processing->isEmpty())
         {
             $dcps = Dcp_trensfer::where('dcp_trensfers.status', '=','Pending')->get() ;
             foreach($dcps as $dcp)
             {
+
                 $password = "noc";
                 $source = $dcp['source'];
-
+                $limite = $config->maximum_transfer_rate ;
                 $destination = "noc@172.17.42.2:".$dcp['torrent_path'];
-                $rsync_command = "sshpass -p " . escapeshellarg($password) . " rsync -avz --partial --no-t " . escapeshellarg($source) . " " . escapeshellarg($destination);
+              //  $rsync_command = "sshpass -p " . escapeshellarg($password) . " rsync -avz --partial --no-t " . escapeshellarg($source) . " " . escapeshellarg($destination);
+
+                $rsync_command = "sshpass -p " . escapeshellarg($password) . " rsync -avz --partial --no-t --bwlimit=" . escapeshellarg($limite) . " " . escapeshellarg($source) . " " . escapeshellarg($destination);
+
                 $return_code = 0;
                 $output = [];
                 exec($rsync_command, $output, $return_code);

@@ -196,7 +196,7 @@ Route::post('ingestersources/store', [App\Http\Controllers\IngestsourceControlle
 Route::get('settings', [App\Http\Controllers\ConfigController::class , 'edit'])->name('config.edit');
 Route::put('settings/update', [App\Http\Controllers\ConfigController::class , 'update'])->name('config.update')->middleware(['auth']);
 Route::put('settings/update_auto_ingest', [App\Http\Controllers\ConfigController::class , 'update_auto_ingest'])->name('config.update_auto_ingest')->middleware(['auth']);
-
+Route::put('settings/transfer_settings', [App\Http\Controllers\ConfigController::class , 'transfer_settings'])->name('config.transfer_settings')->middleware(['auth']);
 
 Route::get('get_asset_infos/{location}', [App\Http\Controllers\AssetinfoController::class , 'get_asset_infos'])->name('asset_infos.get_asset_infos')->middleware(['auth']);
 Route::get('asset_reports', [App\Http\Controllers\AssetinfoController::class , 'display_performane_log'])->name('asset_infos.display_performance_log')->middleware(['auth']);

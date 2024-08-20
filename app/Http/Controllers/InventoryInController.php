@@ -33,25 +33,38 @@ class InventoryInController extends Controller
     }
     public function get_inventories_in(Request $request)
     {
-        $inventories_in = InventoryIn::with(['InventoryCategory','supplier','user','storageLocation','part','part.inventoryCategory'])->get();
+        $inventories_in = InventoryIn::with(['InventoryCategory','supplier','user','storageLocation','part','part.inventoryCategory','serialNumbers'])->get();
 
         return Response()->json(compact('inventories_in'));
     }
 
     public function store(Request $request)
     {
+
+
        $inventory_in = InventoryIn::create([
 
             'inventory_category_id' => $request->inventory_category_id ,
             'part_id' => $request->part_number ,
             'quantity' => $request->quantity ,
-            'serials' => $request->serials ,
+           // 'serials' => $request->serials ,
             'supplier_id' => $request->supplier_id ,
             'po_reference' => $request->po_reference ,
             'do_reference' => $request->do_reference ,
             'storage_location_id' => $request->storage_id ,
             'user_id' => Auth::user()->id ,
         ]);
+
+        foreach ($request->serials as $serial) {
+            if($request->serial != null)
+            {
+                $inventory_in->serialNumbers()->create([
+                    'serial' => $serial,
+                ]);
+            }
+
+        }
+
         if($inventory_in)
         {
             echo "Success" ;
