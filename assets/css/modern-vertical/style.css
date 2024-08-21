@@ -23945,3 +23945,14 @@ table td a
 {
     margin-right: 5px ;
 }
+select::placeholder,
+input::placeholder,
+select:invalid,
+select option,
+select:focus option,
+select option[value=""]
+{
+    color :white  !important;
+}
+
+

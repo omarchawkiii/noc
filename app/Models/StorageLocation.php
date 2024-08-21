@@ -13,5 +13,12 @@ class StorageLocation extends Model
         'address',
         'contact',
         'email',
+        'adress_1',
+        'adress_2',
+        'city',
+        'state',
+        'zip_code',
+        'country',
+
     ];
 }

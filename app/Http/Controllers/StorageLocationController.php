@@ -26,6 +26,12 @@ class StorageLocationController extends Controller
             'address'=> $request->address ,
             'contact'=> $request->contact ,
             'email'=> $request->email ,
+            'adress_1' => $request->adress_1,
+            'adress_2' => $request->adress_2,
+            'city' => $request->city,
+            'state' => $request->state,
+            'zip_code' => $request->zip_code,
+            'country' => $request->country,
         ]);
         if($storage_location)
         {
@@ -61,6 +67,12 @@ class StorageLocationController extends Controller
             'address'=> $request->address ,
             'contact'=> $request->contact ,
             'email'=> $request->email ,
+            'adress_1' => $request->adress_1,
+            'adress_2' => $request->adress_2,
+            'city' => $request->city,
+            'state' => $request->state,
+            'zip_code' => $request->zip_code,
+            'country' => $request->country,
         ]);
         if($storage_location)
        {

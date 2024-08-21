@@ -187,13 +187,11 @@ class IngersterController extends Controller
             }
 
             if ($_POST["action_control"] == "start_ingest") {
-                //$soapManagement = new SoapManagement();
-                //$SPLManagement_clientSoap = $soapManagement->LoadWsdl2("Dolby_IMS_WSDL/SPLManagement.wsdl");
+
 
                 $ingester_manager = new IngesterManager();
                 $tms_hard_drive = "/DATA";
-                // $manager_server = new ServerManager();
-                //$server = $manager_server->getServerData($_POST["id_source"]);
+
                 $server = Ingestsource::find($_POST["id_source"]) ;
                 /*if (!empty($_POST["spl_content"])) {
                     if ($manager_server->getScreenTypeById($_POST["id_source"]) == "Screen") {
@@ -389,15 +387,7 @@ class IngersterController extends Controller
 
         }
 
-       /* if (isset($_GET['action_control'])) {
 
-            if ($_GET["action_control"] == "get_scan_errors") {
-                //$manager_server = new ServerManager(getdb());
-                $ingester_manager = new IngesterManager();
-                $ingester_manager->getErrorsScan();
-            }
-
-        }*/
     }
 
 
@@ -468,6 +458,7 @@ class IngersterController extends Controller
                     $pkl_size = $this->getFolderSize($cpl->tms_dir);
 
                     $response = $this->ingestDcp($location->connection_ip,$cpl->cpl_id, $pkl_size, $cpl->cpl_description,$location->email, $location->password);
+                    dd($response) ;
                     if($response['status'] === 1 )
                     {
 
