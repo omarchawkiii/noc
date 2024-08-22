@@ -41,13 +41,20 @@ class UserController extends Controller
             foreach($request->location as $location)
             {
                 $location_data = Location::find($location) ;
-                $this->api_request($location->connection_ip,"create_user", $user->email, $user->$request->password, $user->username, $user->name, $user->last_name, 1, 1, 0, $location->email, $location->password);
+             //   $this->api_request($location_data->connection_ip,"create_user", $user->email, $request->password, $user->username, $user->name, $user->last_name, 1, 1, 0, $location_data->email, $location_data->password);
             }
             $user->locations()->sync($request->location);
         }
+        if($user)
+        {
+         echo "Success" ;
+        }
+        else
+        {
+         echo "Faild" ;
+        }
 
-
-        return redirect()->route('users.index')->with('message' ,'User Has Been Added ');
+       // return redirect()->route('users.index')->with('message' ,'User Has Been Added ');
     }
 
     public function show($id)
@@ -155,6 +162,11 @@ class UserController extends Controller
         }
     }
 
+    public function check_email(Request $request)
+    {
+        $exists = User::where('email', $request->email)->exists();
+        return response()->json(['exists' => $exists]);
+    }
 
 
 }

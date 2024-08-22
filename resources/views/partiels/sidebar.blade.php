@@ -121,14 +121,14 @@
             <span class="menu-title">Transfer Content </span>
             </a>
         </li>
-        <li class="nav-item menu-items">
+        <!--<li class="nav-item menu-items">
             <a class="nav-link" href="{{ route('planner.index') }}">
             <span class="menu-icon icon-box-success">
                 <i class="mdi mdi-chemical-weapon "></i>
             </span>
             <span class="menu-title">Planner </span>
             </a>
-        </li>
+        </li>-->
 
 
         @if (Auth::user()->role == 1 )
@@ -158,7 +158,7 @@
             </div>
         </li>
 
-        <li class="nav-item menu-items ">
+        <!--<li class="nav-item menu-items ">
             <a class="nav-link" data-bs-toggle="collapse" href="#inventory_settings" aria-expanded="false" aria-controls="icons">
             <span class="menu-icon icon-box-performance">
                 <i class="mdi mdi-settings"></i>
@@ -193,7 +193,7 @@
                 <li class="nav-item"> <a class="nav-link active_playlistbuilder " href="{{ route('transfer_request.index') }}"> <i class="mdi mdi-checkbox-blank-circle me-1"></i> Inventory Out  </a></li>
             </ul>
             </div>
-        </li>
+        </li> -->
 
 
         <li>

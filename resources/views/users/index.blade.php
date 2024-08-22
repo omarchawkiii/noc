@@ -150,7 +150,7 @@
                                     <div class="form-group  has-validation">
                                          <label class="w-100 " style="text-align: left"> First Name</label>
                                         <input type="text" class="form-control" placeholder="First Name"
-                                            value="{{ old('name') }}" name="name" required>
+                                            value="{{ old('name') }}" name="name" required id="name">
                                         @error('name')
                                             <div class="text-danger mt-1 ">{{ $message }}</div>
                                         @enderror
@@ -169,7 +169,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="w-100 " style="text-align: left">Username</label>
-                                        <input id="username" type="text" class="form-control" placeholder="Username"
+                                        <input type="text" class="form-control" placeholder="Username"
                                             value="{{ old('username') }}" name="username" required id="username">
                                         @error('username')
                                             <div class="text-danger mt-1 ">{{ $message }}</div>
@@ -180,7 +180,7 @@
                                     <div class="form-group">
                                          <label class="w-100 " style="text-align: left">Email</label>
                                         <input type="Email" class="form-control" placeholder="Email"
-                                            value="{{ old('email') }}" name="email" required>
+                                            value="{{ old('email') }}" name="email" required id="email">
                                         @error('email')
                                             <div class="text-danger mt-1 ">{{ $message }}</div>
                                         @enderror
@@ -190,7 +190,7 @@
                                     <div class="form-group">
                                          <label class="w-100 " style="text-align: left">Password</label>
                                         <input type="password" class="form-control" placeholder="Password"
-                                            value="{{ old('password') }}" name="password" required>
+                                            value="{{ old('password') }}" name="password" required id="password">
                                         @error('password')
                                             <div class="text-danger mt-1 ">{{ $message }}</div>
                                         @enderror
@@ -201,7 +201,7 @@
                                     <div class="form-group">
                                          <label class="w-100 " style="text-align: left"> Confirm Password </label>
                                         <input type="password" class="form-control" placeholder=" Confirm Password "
-                                            value="{{ old('confirm_password') }}" name="confirm_password" required>
+                                            value="{{ old('confirm_password') }}" name="confirm_password" id="confirm_password" required>
                                         @error('confirm_password')
                                             <div class="text-danger mt-1 ">{{ $message }}</div>
                                         @enderror
@@ -210,7 +210,7 @@
                                 <div class="col-md-12">
                                     <div class="input-group mb-2 mr-sm-2">
                                         <label class="w-100 " style="text-align: left"> Role </label>
-                                        <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" name="role" required>
+                                        <select class="form-select  form-control form-select-sm" aria-label=".form-select-sm example" name="role" id="role" required>
                                             <option selected="" value>Role</option>
                                                     <option value="1">Admin</option>
                                                     <option value="2">Manager</option>
@@ -429,12 +429,46 @@
             Array.prototype.slice.call(forms)
                 .forEach(function (form) {
                 form.addEventListener('submit', function (event) {
-
+                    event.preventDefault()
                     if (!form.checkValidity()) {
 
-                    event.preventDefault()
-                    event.stopPropagation()
+                        event.stopPropagation()
                     }
+                    event.stopPropagation()
+                    var emailInput= $('#create_user_form #email')
+                    var email =emailInput.val();
+                    $.ajax({
+                        url: '{{ url('') }}' + '/user/check_email', // Assurez-vous que la route est définie correctement
+                        type: 'POST',
+                        data: {
+                            email: email,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            console.log(response)
+                            if (response.exists) {
+                                // Email already exists
+
+                                $(emailInput).addClass('is-invalid');
+                                $(emailInput).next('.invalid-feedback').remove(); // Remove any existing feedback
+                                $(emailInput).after('<div class="invalid-feedback">This email is already in used.</div>');
+                                alert('test');
+
+                                event.stopPropagation()
+                            } else {
+                                // Email does not exist, proceed with form submission
+                                $(emailInput).removeClass('is-invalid');
+                                $(emailInput).addClass('is-valid');
+                                $(emailInput).next('.invalid-feedback').remove();
+
+
+                            }
+                        },
+                        error: function(xhr) {
+                            console.log(xhr.responseText);
+                        }
+                    });
+
 
 
                     form.classList.add('was-validated')
@@ -553,7 +587,41 @@
             });
         })(jQuery);
 
+        function check_email(email) {
 
+
+            $.ajax({
+                        url: '{{ url('') }}' + '/user/check_email', // Assurez-vous que la route est définie correctement
+                        type: 'POST',
+                        data: {
+                            email: email,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            console.log(response)
+                            if (response.exists) {
+                                // Email already exists
+
+                                $(emailInput).addClass('is-invalid');
+                                $(emailInput).next('.invalid-feedback').remove(); // Remove any existing feedback
+                                $(emailInput).after('<div class="invalid-feedback">This email is already in used.</div>');
+
+                                event.stopPropagation()
+                            } else {
+                                // Email does not exist, proceed with form submission
+                                $(emailInput).removeClass('is-invalid');
+                                $(emailInput).addClass('is-valid');
+                                $(emailInput).next('.invalid-feedback').remove();
+
+
+                            }
+                        },
+                        error: function(xhr) {
+                            console.log(xhr.responseText);
+                        }
+                    });
+
+        }
         function get_users(location) {
 
             $("#users-listing").dataTable().fnDestroy();
@@ -899,6 +967,87 @@
 
 
         })
+
+        $(document).on("submit","#create_user_form" , function(event) {
+
+            event.preventDefault();
+            var name = $('#create_user_form #name').val();
+            var last_name = $('#create_user_form #last_name').val();
+            var username = $('#create_user_form #username').val();
+            var email = $('#create_user_form #email').val();
+            var password = $('#create_user_form #password').val();
+            var role = $('#create_user_form #role').val();
+            var location = $('#create_user_form #location_create_user').val();
+
+            var url = '{{ url('') }}' + '/user/store';
+            var all_location = $('#edit_user_form #location').val();
+            //$('#edit_user_modal').modal('show');
+            $.ajax({
+                url: url,
+                type: 'POST',
+                method: 'POST',
+                data: {
+                    url: url,
+                    name: name,
+                    last_name: last_name,
+                    email:email,
+                    role: role,
+                    location: location,
+                    username:username,
+                    password:password,
+                    "_token": "{{ csrf_token() }}",
+                },
+
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                    "_token": "{{ csrf_token() }}",
+                },
+                success: function(response) {
+                    if (response == 'Success') {
+                        get_users(all_location)
+                            swal({
+                                title: 'Done!',
+                                text: 'User Created Successfully ',
+                                icon: 'success',
+                                button: {
+                                    text: "Continue",
+                                    value: true,
+                                    visible: true,
+                                    className: "btn btn-primary"
+                                }
+                            })
+                            $('#create_user_modal').modal('hide') ;
+                    }
+                    else
+                    {
+                        swal({
+                            title: 'Failed',
+                            text: "Error occurred while sending the request.",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3f51b5',
+                            cancelButtonColor: '#ff4081',
+                            confirmButtonText: 'Great ',
+                            buttons: {
+                                cancel: {
+                                    text: "Cancel",
+                                    value: null,
+                                    visible: true,
+                                    className: "btn btn-danger",
+                                    closeModal: true,
+                                },
+                            }
+                        })
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(response);
+                }
+            })
+
+
+        })
+
 
 
         $(document).on('click', '.edit_password_btn', function() {

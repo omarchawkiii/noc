@@ -836,7 +836,9 @@ class LocationController extends Controller
             foreach($dcps as $dcp)
             {
 
-                $password = "noc";
+                //$password = "noc";
+                $password = "enoc@2023";
+
                 $source = $dcp['source'];
                 $limite = $config->maximum_transfer_rate ;
                 $destination = "noc@172.17.42.2:".$dcp['torrent_path'];
