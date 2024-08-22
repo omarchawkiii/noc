@@ -54,7 +54,9 @@
                             <thead>
                                 <tr>
                                     <th class="sorting text-center  sorting_asc">Order #</th>
-                                    <th class="sorting text-center ">Name</th>
+                                    <th class="sorting text-center ">First Name</th>
+                                    <th class="sorting text-center ">Last Name</th>
+                                    <th class="sorting text-center ">Username</th>
                                     <th class="sorting text-center ">Email</th>
                                     <th class="sorting text-center ">Role</th>
                                     <th class="sorting text-center ">Locations</th>
@@ -67,6 +69,8 @@
                                     <tr class="odd text-center  ">
                                         <td class="sorting_1">{{ $key + 1 }} </td>
                                         <td> {{ $user->name }} </td>
+                                        <td> {{ $user->last_name }} </td>
+                                        <td> {{ $user->usernamess }} </td>
                                         <td>{{ $user->email }} </td>
                                         <td>@if( $user->role =="1") Admin @else Manager @endif
                                         </td>
@@ -125,13 +129,49 @@
                         <form method="POST" id="create_user_form" class="needs-validation" novalidate action="{{ route('users.store') }}">
                             @csrf
                             <div class="row">
+                                <div class="col-md-12">
+                                    <div class="input-group mb-2 mr-sm-2">
+                                         <label class="w-100 " style="text-align: left"> Locations </label>
+                                        <div class="input-group">
 
+                                            <select class="form-select  form-control form-select-sm"
+                                                aria-label=".form-select-sm example" id="location_create_user" name="location[]"
+                                                multiple="multiple" required>
+
+
+                                                @foreach ($locations as $location)
+                                                    <option value="{{ $location->id }}">{{ $location->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-md-12">
                                     <div class="form-group  has-validation">
-                                         <label class="w-100 " style="text-align: left"> Name</label>
-                                        <input type="text" class="form-control" placeholder="User Name"
+                                         <label class="w-100 " style="text-align: left"> First Name</label>
+                                        <input type="text" class="form-control" placeholder="First Name"
                                             value="{{ old('name') }}" name="name" required>
                                         @error('name')
+                                            <div class="text-danger mt-1 ">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group  has-validation">
+                                         <label class="w-100 " style="text-align: left"> Last Name</label>
+                                        <input type="text" class="form-control" placeholder="Last Name"
+                                            value="{{ old('last_name') }}" name="last_name" required id="last_name">
+                                        @error('last_name')
+                                            <div class="text-danger mt-1 ">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="w-100 " style="text-align: left">Username</label>
+                                        <input id="username" type="text" class="form-control" placeholder="Username"
+                                            value="{{ old('username') }}" name="username" required id="username">
+                                        @error('username')
                                             <div class="text-danger mt-1 ">{{ $message }}</div>
                                         @enderror
                                     </div>
@@ -177,23 +217,7 @@
                                             </select>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="input-group mb-2 mr-sm-2">
-                                         <label class="w-100 " style="text-align: left"> Location </label>
-                                        <div class="input-group">
 
-                                            <select class="form-select  form-control form-select-sm"
-                                                aria-label=".form-select-sm example" id="location_create_user" name="location[]"
-                                                multiple="multiple" required>
-
-
-                                                @foreach ($locations as $location)
-                                                    <option value="{{ $location->id }}">{{ $location->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
 
 
                                 <div class=" m-2">
@@ -201,6 +225,13 @@
                                     <button class="btn btn-dark" data-bs-dismiss="modal" aria-label="Close" type="button" >Cancel</button>
 
                                 </div>
+
+                                <br />
+                                <br />
+                                <br />
+                                <br />
+                                <br />
+                                <br />
                             </div>
                         </form>
                     </div>
@@ -228,16 +259,56 @@
                         <form method="PUT" class="needs-validation" novalidate id="edit_user_form">
                             @csrf
                             <div class="row">
+
+                                <div class="col-md-12">
+                                    <div class="input-group mb-2 mr-sm-2">
+                                        <label class="w-100 " style="text-align: left"> Locations </label>
+                                        <div class="input-group">
+
+                                            <select class="form-select  form-control form-select-sm"
+                                                aria-label=".form-select-sm example" id="location_edit_user"
+                                                name="location[]" multiple="multiple" required>
+
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="col-md-12">
                                     <div class="form-group  has-validation">
                                         <label class="w-100 " style="text-align: left"> Name</label>
                                         <input id="name" type="text" class="form-control"
-                                            placeholder="User Name" value="{{ old('name') }}" name="name" required>
+                                            placeholder="User Name" value="{{ old('name') }}" name="name" required id="name">
                                         @error('name')
                                             <div class="text-danger mt-1 ">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group  has-validation">
+                                         <label class="w-100 " style="text-align: left"> Last Name</label>
+                                        <input type="text" class="form-control" placeholder="Last Name"
+                                            value="{{ old('last_name') }}" name="last_name" required id="last_name">
+                                        @error('last_name')
+                                            <div class="text-danger mt-1 ">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="w-100 " style="text-align: left">Username</label>
+                                        <input id="username" type="text" class="form-control" placeholder="Username"
+                                            value="{{ old('username') }}" name="username"  required>
+                                        @error('username')
+                                            <div class="text-danger mt-1 ">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="w-100 " style="text-align: left">Email</label>
@@ -260,26 +331,15 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-12">
-                                    <div class="input-group mb-2 mr-sm-2">
-                                        <label class="w-100 " style="text-align: left"> Location </label>
-                                        <div class="input-group">
 
-                                            <select class="form-select  form-control form-select-sm"
-                                                aria-label=".form-select-sm example" id="location_edit_user"
-                                                name="location[]" multiple="multiple" required>
-
-
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
 
 
                                 <div class=" m-2">
                                     <button type="submit" class="btn btn-success me-2" id="submit_update">Submit</button>
                                     <button data-bs-dismiss="modal" aria-label="Close" type="button"  class="btn btn-dark">Cancel</button>
                                 </div>
+
+
                             </div>
                         </form>
                     </div>
@@ -542,6 +602,10 @@
                             '<td class="text-body align-middle fw-medium text-decoration-none">' + value
                             .name + ' </td>' +
                             '<td class="text-body align-middle fw-medium text-decoration-none">' + value
+                            .last_name + ' </td>' +
+                            '<td class="text-body align-middle fw-medium text-decoration-none">' + value
+                            .username + ' </td>' +
+                            '<td class="text-body align-middle fw-medium text-decoration-none">' + value
                             .email + ' </td>' +
                             '<td class="text-body align-middle fw-medium text-decoration-none">' + role + ' </td>' +
                             '<td><a class="text-body align-middle fw-medium text-decoration-none" style="width: 150px;"> ' +
@@ -732,7 +796,9 @@
                 success: function(response) {
                     console.log(response)
                     $('#edit_user_modal #name').val(response.user.name)
+                    $('#edit_user_modal #last_name').val(response.user.last_name)
                     $('#edit_user_modal #Email').val(response.user.email)
+                    $('#edit_user_modal #username').val(response.user.username)
 
                     $('#edit_user_modal #location').select2({
                         placeholder: "Select a location",
@@ -780,11 +846,14 @@
             event.preventDefault();
 
 
-            var name = $('#name').val();
-            var email = $('#Email').val();
-            var role = $('#role').val();
-            var location = $('#location_edit_user').val();
-            var all_location = $('#location').val();
+            var name = $('#edit_user_form #name').val();
+            var last_name = $('#edit_user_form #last_name').val();
+            var username = $('#edit_user_form #username').val();
+            console.log('user name : ' + username)
+            var email = $('#edit_user_form #Email').val();
+            var role = $('#edit_user_form #role').val();
+            var location = $('#edit_user_form #location_edit_user').val();
+            var all_location = $('#edit_user_form #location').val();
             var url = '{{ url('') }}' + '/user/update';
 
             //$('#edit_user_modal').modal('show');
@@ -795,9 +864,11 @@
                 data: {
                     url: url,
                     name: name,
+                    last_name: last_name,
                     email: email,
                     role: role,
                     location: location,
+                    username:username,
                     "_token": "{{ csrf_token() }}",
                 },
 

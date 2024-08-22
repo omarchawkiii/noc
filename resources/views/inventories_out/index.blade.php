@@ -673,32 +673,38 @@
 
         })
 
-        $('#inventory_category_id').change(function() {
+        $('#inventory_category_id, #storage_id').change(function() {
             var inventory_category_id = $('#inventory_category_id').val();
+            var storage_id = $('#storage_id').val();
+            //console.log(inventory_category_id,storage_id)
+            if(storage_id  && inventory_category_id )
+            {
+                var url = "{{ url('') }}" + '/inventory_out/get_part_from_category';
+                var result = "";
+
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    data: {
+                        inventory_category_id: inventory_category_id,
+                        storage_id:storage_id,
+                    },
+                    success: function(response) {
+
+                        result = '<option value=""> Part Number </option>';
+                        $.each(response.parts, function(index, value) {
+                            result = result +
+                            '<option value="'+value.id+'"> '+value.part_number+' </option>'
+
+                        });
+                        $('#part_number').html(result)
+                    },
+                    error: function(response) {
+                    }
+                })
+            }
 
 
-            var url = "{{ url('') }}" + '/inventory_out/get_part_from_category';
-            var result = "";
-
-            $.ajax({
-                url: url,
-                method: 'GET',
-                data: {
-                    inventory_category_id: inventory_category_id,
-                },
-                success: function(response) {
-
-                    result = '<option value=""> Part Number </option>';
-                    $.each(response.parts, function(index, value) {
-                        result = result +
-                        '<option value="'+value.id+'"> '+value.part_number+' </option>'
-
-                    });
-                    $('#part_number').html(result)
-                },
-                error: function(response) {
-                }
-            })
 
 
         });

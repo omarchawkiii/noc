@@ -20,4 +20,8 @@ class Part extends Model
     {
         return $this->belongsTo(InventoryCategory::class);
     }
+    public function inventoryIns()
+    {
+        return $this->hasMany(InventoryIn::class);
+    }
 }

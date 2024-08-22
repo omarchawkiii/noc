@@ -31,10 +31,21 @@ class UserController extends Controller
             'password' => Hash::make($request->password) ,
             'email_verified_at' =>now() ,
             'role' => $request->role ,
+            'username' => $request->username ,
+            'last_name'=> $request->last_name ,
         ]);
 
         $new_user =User::find($user->id) ;
-        $user->locations()->sync($request->location);
+        if($request->location)
+        {
+            foreach($request->location as $location)
+            {
+                $location_data = Location::find($location) ;
+                $this->api_request($location->connection_ip,"create_user", $user->email, $user->$request->password, $user->username, $user->name, $user->last_name, 1, 1, 0, $location->email, $location->password);
+            }
+            $user->locations()->sync($request->location);
+        }
+
 
         return redirect()->route('users.index')->with('message' ,'User Has Been Added ');
     }
@@ -53,11 +64,10 @@ class UserController extends Controller
             'name' => $request->name ,
             'email' => $request->email ,
             'role' => $request->role ,
-
+            'username' => $request->username ,
+            'last_name'=> $request->last_name ,
         ]);
-
         $user->locations()->sync($request->location);
-
     }
 
     public function update_password(Request $request)
@@ -102,6 +112,49 @@ class UserController extends Controller
         return Response()->json(compact('users'));
 
     }
+    function api_request($apiUrl,$action, $email_user, $password_user, $user_name_user, $first_name, $last_name, $add_user_status, $add_user_group, $enable_email_notifications, $username,$password) {
+        // Prepare the request data
+        $requestData = [
+            'action' => $action,
+
+            'email_user' => $email_user,
+            'password_user' => $password_user,
+            'user_name_user' => $user_name_user,
+            'first_name' => $first_name,
+            'last_name' => $last_name,
+            'add_user_status'=> $add_user_status,
+            'add_user_group' => $add_user_group,
+            'enable_email_notifications' => $enable_email_notifications,
+            'username' => $username,
+            'password' => $password,
+        ];
+        // Initialize cURL session
+        $ch = curl_init($apiUrl);
+        // Set cURL options
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($requestData));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        // Execute cURL session and get the response
+        $response = curl_exec($ch);
+       // print_r($response);
+
+        // Check for cURL errors
+        if (curl_errno($ch)) {
+            return ['error' => 'Curl error: ' . curl_error($ch)];
+        }
+
+        // Close cURL session
+        curl_close($ch);
+
+        // Process the API response
+        if (!$response) {
+            return ['error' => 'Error occurred while sending the request.'];
+        } else {
+            return json_decode($response, true);
+        }
+    }
+
 
 
 }

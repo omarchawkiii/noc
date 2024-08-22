@@ -25,7 +25,12 @@ class InventoryOutController extends Controller
 
     public function get_part_from_category(Request $request)
     {
-        $parts = Part::where('inventory_category_id',$request->inventory_category_id)->get();
+        //$parts = Part::where('inventory_category_id',$request->inventory_category_id)->get();
+        $parts = Part::where('inventory_category_id', $request->inventory_category_id)
+            ->whereHas('inventoryIns', function($query) use ($request) {
+                $query->where('storage_location_id', $request->storage_id);
+            })
+            ->get();
         return Response()->json(compact('parts'));
     }
 
