@@ -423,52 +423,18 @@
             'use strict'
 
             // Fetch all the forms we want to apply custom Bootstrap validation styles to
-            var forms =$( "#edit_user_form, #edit_password_form, #create_user_form" )
+            var forms = $( "#edit_user_form, #edit_password_form, #create_user_form" )
 
             // Loop over them and prevent submission
             Array.prototype.slice.call(forms)
                 .forEach(function (form) {
                 form.addEventListener('submit', function (event) {
-                    event.preventDefault()
+
                     if (!form.checkValidity()) {
 
-                        event.stopPropagation()
-                    }
+                    event.preventDefault()
                     event.stopPropagation()
-                    var emailInput= $('#create_user_form #email')
-                    var email =emailInput.val();
-                    $.ajax({
-                        url: '{{ url('') }}' + '/user/check_email', // Assurez-vous que la route est définie correctement
-                        type: 'POST',
-                        data: {
-                            email: email,
-                            _token: '{{ csrf_token() }}'
-                        },
-                        success: function(response) {
-                            console.log(response)
-                            if (response.exists) {
-                                // Email already exists
-
-                                $(emailInput).addClass('is-invalid');
-                                $(emailInput).next('.invalid-feedback').remove(); // Remove any existing feedback
-                                $(emailInput).after('<div class="invalid-feedback">This email is already in used.</div>');
-                                alert('test');
-
-                                event.stopPropagation()
-                            } else {
-                                // Email does not exist, proceed with form submission
-                                $(emailInput).removeClass('is-invalid');
-                                $(emailInput).addClass('is-valid');
-                                $(emailInput).next('.invalid-feedback').remove();
-
-
-                            }
-                        },
-                        error: function(xhr) {
-                            console.log(xhr.responseText);
-                        }
-                    });
-
+                    }
 
 
                     form.classList.add('was-validated')
@@ -587,8 +553,7 @@
             });
         })(jQuery);
 
-        function check_email(email) {
-
+        function checkEmailExists(emailInput,email) {
 
             $.ajax({
                         url: '{{ url('') }}' + '/user/check_email', // Assurez-vous que la route est définie correctement
@@ -604,24 +569,94 @@
 
                                 $(emailInput).addClass('is-invalid');
                                 $(emailInput).next('.invalid-feedback').remove(); // Remove any existing feedback
-                                $(emailInput).after('<div class="invalid-feedback">This email is already in used.</div>');
-
-                                event.stopPropagation()
+                                $(emailInput).after('<div class="invalid-feedback">This email is already  used.</div>');
+                                $('button[type="submit"]').prop('disabled', true);
+                               return false ;
                             } else {
                                 // Email does not exist, proceed with form submission
                                 $(emailInput).removeClass('is-invalid');
                                 $(emailInput).addClass('is-valid');
                                 $(emailInput).next('.invalid-feedback').remove();
-
-
+                                $('button[type="submit"]').prop('disabled', false);
+                                return true ;
                             }
                         },
                         error: function(xhr) {
+                            return false ;
                             console.log(xhr.responseText);
                         }
                     });
 
         }
+
+
+        function checkUsernameExists(usernameInput,username) {
+
+            $.ajax({
+                        url: '{{ url('') }}' + '/user/check_username', // Assurez-vous que la route est définie correctement
+                        type: 'POST',
+                        data: {
+                            username: username,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            console.log(response)
+                            if (response.exists) {
+                                // Email already exists
+
+                                $(usernameInput).addClass('is-invalid');
+                                $(usernameInput).next('.invalid-feedback').remove(); // Remove any existing feedback
+                                $(usernameInput).after('<div class="invalid-feedback">This username is already used.</div>');
+                                $('button[type="submit"]').prop('disabled', true);
+                            return false ;
+                            } else {
+                                // Email does not exist, proceed with form submission
+                                $(usernameInput).removeClass('is-invalid');
+                                $(usernameInput).addClass('is-valid');
+                                $(usernameInput).next('.invalid-feedback').remove();
+                                $('button[type="submit"]').prop('disabled', false);
+                                return true ;
+                            }
+                        },
+                        error: function(xhr) {
+                            return false ;
+                            console.log(xhr.responseText);
+                        }
+                    });
+
+        }
+
+
+        var timer;
+        $('#email').on('keyup', function() {
+            var emailInput = $(this);
+            var email = emailInput.val();
+            clearTimeout(timer);
+
+            if (email.length > 7) {
+                timer = setTimeout(function() {
+                    checkEmailExists(emailInput, email);
+                }, 1000);
+            }
+        });
+
+        $('#username').on('keyup', function() {
+            var usernameInput = $(this);
+            var username = usernameInput.val();
+
+
+            clearTimeout(timer);
+
+            if (username.length >2) {
+
+                timer = setTimeout(function() {
+                   checkUsernameExists(usernameInput, username);
+                }, 1000);
+            }
+        });
+
+
+
         function get_users(location) {
 
             $("#users-listing").dataTable().fnDestroy();
@@ -971,10 +1006,12 @@
         $(document).on("submit","#create_user_form" , function(event) {
 
             event.preventDefault();
+            var email = $('#create_user_form #email').val();
+
             var name = $('#create_user_form #name').val();
             var last_name = $('#create_user_form #last_name').val();
             var username = $('#create_user_form #username').val();
-            var email = $('#create_user_form #email').val();
+
             var password = $('#create_user_form #password').val();
             var role = $('#create_user_form #role').val();
             var location = $('#create_user_form #location_create_user').val();
@@ -1044,6 +1081,9 @@
                     console.log(response);
                 }
             })
+
+
+
 
 
         })

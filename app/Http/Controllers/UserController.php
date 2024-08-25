@@ -41,9 +41,15 @@ class UserController extends Controller
             foreach($request->location as $location)
             {
                 $location_data = Location::find($location) ;
-             //   $this->api_request($location_data->connection_ip,"create_user", $user->email, $request->password, $user->username, $user->name, $user->last_name, 1, 1, 0, $location_data->email, $location_data->password);
+                $response = $this->api_request($location_data->connection_ip,"create_user", $user->email, $request->password, $user->username, $user->name, $user->last_name, 1, 1, 0, $location_data->email, $location_data->password);
+                $tms_user_id = $response['user_id'] ?? null;
+
+                if ($tms_user_id) {
+                    // Ajouter l'association dans la table pivot avec l'external_user_id
+                    $locations[$location] = ['tms_user_id' => $tms_user_id];
+                }
             }
-            $user->locations()->sync($request->location);
+            $user->locations()->sync($locations);
         }
         if($user)
         {
@@ -53,7 +59,6 @@ class UserController extends Controller
         {
          echo "Faild" ;
         }
-
        // return redirect()->route('users.index')->with('message' ,'User Has Been Added ');
     }
 
@@ -165,6 +170,12 @@ class UserController extends Controller
     public function check_email(Request $request)
     {
         $exists = User::where('email', $request->email)->exists();
+        return response()->json(['exists' => $exists]);
+    }
+
+    public function check_username(Request $request)
+    {
+        $exists = User::where('username', $request->username)->exists();
         return response()->json(['exists' => $exists]);
     }
 
