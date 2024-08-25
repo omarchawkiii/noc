@@ -38,10 +38,12 @@ class UserController extends Controller
         $new_user =User::find($user->id) ;
         if($request->location)
         {
+            $locations = [];
             foreach($request->location as $location)
             {
                 $location_data = Location::find($location) ;
                 $response = $this->api_request($location_data->connection_ip,"create_user", $user->email, $request->password, $user->username, $user->name, $user->last_name, 1, 1, 0, $location_data->email, $location_data->password);
+                dd($response) ;
                 $tms_user_id = $response['user_id'] ?? null;
 
                 if ($tms_user_id) {

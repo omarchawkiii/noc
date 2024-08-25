@@ -6,6 +6,7 @@ use App\Models\CinemaLocation;
 use App\Models\InventoryCategory;
 use App\Models\InventoryOut;
 use App\Models\Part;
+use App\Models\SerialNumberOut;
 use App\Models\StorageLocation;
 use App\Models\Supplier;
 use Carbon\Carbon;
@@ -42,7 +43,7 @@ class InventoryOutController extends Controller
 
     public function get_inventories_out(Request $request)
     {
-        $inventories_out = InventoryOut::with(['user','storageLocation','part','CinemaLocation','approvedBy'])->get();
+        $inventories_out = InventoryOut::with(['user','storageLocation','part','CinemaLocation','approvedBy','SerialNumberOuts'])->get();
 
         return Response()->json(compact('inventories_out'));
     }
@@ -52,13 +53,25 @@ class InventoryOutController extends Controller
        $inventory_out = InventoryOut::create([
             'part_id' => $request->part_number ,
             'quantity' => $request->quantity ,
-            'serials' => $request->serials ,
+            //'serials' => $request->serials ,
             'storage_location_id' => $request->storage_id ,
             'cinema_location_id' => $request->cinema_location_id ,
 
             'user_id' => Auth::user()->id ,
             'date_out' => Carbon::now() ,
         ]);
+
+        foreach ($request->serials as $serial) {
+            if($serial != null)
+            {
+                SerialNumberOut::create([
+                    'serial' => $serial,
+                    'inventory_out_id' =>$inventory_out->id
+                ]);
+
+            }
+        }
+
         if($inventory_out)
         {
             echo "Success" ;

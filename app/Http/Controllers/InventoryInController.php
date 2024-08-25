@@ -56,7 +56,7 @@ class InventoryInController extends Controller
         ]);
 
         foreach ($request->serials as $serial) {
-            if($request->serial != null)
+            if($serial != null)
             {
                 $inventory_in->serialNumbers()->create([
                     'serial' => $serial,

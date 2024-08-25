@@ -63,7 +63,7 @@
                                             @foreach ( $inventory_in->serialNumbers as $serial)
                                                 <div class="badge badge-outline-primary m-1"> {{ $serial->serial }} </div><br />
                                             @endforeach
-                                            {{ $inventory_in->serials }}  </td>
+                                        </td>
                                         <td> {{ $inventory_in->storageLocation->name }} </td>
                                         <td> {{ $inventory_in->supplier->company_name }} </td>
                                         <td> {{ $inventory_in->po_reference }} </td>

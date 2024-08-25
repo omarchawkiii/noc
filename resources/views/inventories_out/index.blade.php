@@ -61,7 +61,11 @@
                                         <td> {{ $inventory_out->part->part_number }} </td>
                                         <td> {{ $inventory_out->part->part_description }} </td>
                                         <td> {{ $inventory_out->quantity }} </td>
-                                        <td> {{ $inventory_out->serials }} </td>
+                                        <td>
+                                            @foreach ( $inventory_out->SerialNumberOuts as $serial)
+                                                <div class="badge badge-outline-primary m-1"> {{ $serial->serial }} </div><br />
+                                            @endforeach
+                                        </td>
                                         <td> {{ $inventory_out->user->name }} </td>
                                         <td> @if($inventory_out->approvedBy) {{ $inventory_out->approvedBy->name }}@else - @endif</td>
                                         <td> {{ $inventory_out->approved_date }} </td>
@@ -93,7 +97,18 @@
                         <form method="POST" id="create_inventory_out_form" class="needs-validation" novalidate >
                             @csrf
                             <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group  has-validation">
+                                         <label class="w-100 " style="text-align: left" for="storage_id"> From (Storage Name)</label>
+                                         <select class="form-control form-control-sm" id="storage_id" name="storage_id" required>
+                                            <option value="" selected>Please Select Storage Name</option>
+                                            @foreach ($storage_locations as $storage_location )
+                                                <option value="{{ $storage_location->id }}" >{{ $storage_location->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
 
+                                </div>
                                 <div class="col-md-12">
                                     <div class="form-group  has-validation">
                                          <label class="w-100 " style="text-align: left"> Category</label>
@@ -126,7 +141,8 @@
                                             name="quantity" id="quantity" required>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
+                                <div id="serial-number-container"></div>
+                               <!-- <div class="col-md-12">
                                     <div class="form-group  has-validation">
                                          <label class="w-100 " style="text-align: left"> Serials  (If the part is serialized)</label>
                                         <input type="text" class="form-control" placeholder="Serials "
@@ -134,21 +150,10 @@
 
                                     </div>
                                 </div>
+                            -->
 
 
 
-                                <div class="col-md-12">
-                                    <div class="form-group  has-validation">
-                                         <label class="w-100 " style="text-align: left" for="storage_id"> From (Storage Name)</label>
-                                         <select class="form-control form-control-sm" id="storage_id" name="storage_id" required>
-                                            <option value="" selected>Please Select Storage Name</option>
-                                            @foreach ($storage_locations as $storage_location )
-                                                <option value="{{ $storage_location->id }}" >{{ $storage_location->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-
-                                </div>
 
                                 <div class="col-md-12">
                                     <div class="form-group  has-validation">
@@ -307,7 +312,10 @@
 
             var url = "{{ url('') }}" + '/inventory_out/get_inventories_out';
             var result = " ";
-            console.log(url)
+
+
+
+
             $.ajax({
                 url: url,
                 method: 'GET',
@@ -315,6 +323,13 @@
                 success: function(response) {
 
                     $.each(response.inventories_out, function(index, value) {
+
+                        var serialsHtml = '';
+                        $.each(value.serial_number_outs, function(i, serial) {
+
+                            serialsHtml += '<div class="badge badge-outline-primary m-1">' + serial.serial + '</div><br />';
+                        });
+
                         console.log(value,value.quantity)
                         index++;
 
@@ -350,8 +365,7 @@
                             .part.part_description + ' </td>' +
                             '<td class="text-body align-middle fw-medium text-decoration-none">' + value
                             .quantity+ ' </td>' +
-                            '<td class="text-body align-middle fw-medium text-decoration-none">' + value
-                            .serials + ' </td>' +
+                            '<td class="text-body align-middle fw-medium text-decoration-none">' + serialsHtml  + ' </td>' +
                             '<td class="text-body align-middle fw-medium text-decoration-none">' + value
                             .user.name+ ' </td>' +
 
@@ -570,7 +584,10 @@
 
             var storage_id = $('#create_inventory_out_modal #storage_id').val();
 
-
+            var serials = [] ;
+            $('input[name="serials[]"]').each(function() {
+                serials.push($(this).val());
+            });
 
 
             var url = '{{ url('') }}' + '/inventory_out/store';
@@ -728,6 +745,20 @@
 
 
         });
+
+        $('#quantity').on('change', function() {
+            var quantity = $(this).val();
+            var serialNumberContainer = $('#serial-number-container');
+
+            // Réinitialiser les champs de numéro de série
+            serialNumberContainer.empty();
+
+            for (var i = 0; i < quantity; i++) {
+
+                serialNumberContainer.append('<div class="form-group has-validation"><label class="w-100 " style="text-align: left" for="serials_' + i + '">Serial Number ' + (i + 1) + ':</label><input type="text" name="serials[]" id="serials_' + i + '" class="form-control" ></div>');
+            }
+        });
+
 
         var t = $(window).height();
         $("#content_page").css("height", t - 300);

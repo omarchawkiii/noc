@@ -49,4 +49,9 @@ class InventoryOut extends Model
         return $this->belongsTo(User::class,'approved_by_id');
     }
 
+    public function SerialNumberOuts()
+    {
+        return $this->hasMany(SerialNumberOut::class);
+    }
+
 }
