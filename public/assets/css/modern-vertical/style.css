@@ -18044,7 +18044,7 @@ select.tt-hint {
       outline: 1px solid #0d0d0d; }
 
 .form-group label {
-  font-size: 0.875rem;
+  font-size: 0.955rem;
   line-height: 1;
   vertical-align: top; }
 
@@ -22650,6 +22650,7 @@ div.tagsinput {
         line-height: 1.5;
         top: -4px;
         padding: 3px;
+        min-width: 20px;
       }
     .navbar .navbar-menu-wrapper .navbar-nav {
       flex-direction: row;
@@ -22907,7 +22908,7 @@ div.tagsinput {
         .sidebar .nav .nav-item .nav-link .menu-title {
           color: inherit;
           display: inline-block;
-          font-size: 0.9375rem;
+          font-size: 0.8375rem;
           line-height: 1;
           vertical-align: middle; }
         .sidebar .nav .nav-item .nav-link .badge {
@@ -23569,6 +23570,12 @@ footer .footer-box
   color: #00a5ff;
 }
 
+.sidebar .nav .menu-items .nav-link .menu-icon.icon-box-console i
+{
+  color: #ffab00;
+}
+
+
 .sidebar .nav .menu-items .nav-link .menu-icon.icon-box-yallow i
 {
   color: #feff00;
@@ -23702,6 +23709,23 @@ footer .footer-box
 {
   box-shadow : 0px -44px 41px #F24EB1;
 }
+.performance-shadow {
+    box-shadow: 0px -44px 41px #61c4d8;
+}
+.icon-box-performance i
+{
+    color : #61c4d8 !important;
+}
+
+.icon-user-performance i
+{
+    color : #e242fc !important;
+}
+
+.user-shadow
+{
+    box-shadow: 0px -44px 41px #e242fc;
+}
 
 .breadcrumb-item a
 {
@@ -23735,7 +23759,7 @@ footer .footer-box
 .preview-list.multiplex ,
 .fixed-hight
 {
-  margin: 5px;
+/*  margin: 5px;*/
   padding: 5px;
 
   height: 450px;
@@ -23806,8 +23830,8 @@ footer .footer-box
 
 .modal-body
 {
-    max-height: 60vh;
-    overflow-y: auto;
+    /*max-height: 60vh;
+    overflow-y: auto; */
 }
 
 .tab-content .card
@@ -23829,9 +23853,8 @@ table .btn
 
 table td ,
 table th ,
-
 {
-    text-align: center !important;
+    text-align :center !important;
 }
 
 table th a ,
@@ -23840,8 +23863,96 @@ table td a
     color : #fff ;
     text-decoration: none ;
 }
-
 .bg-no-playable
 {
     background-color: #551616;
 }
+
+.modal-body
+{
+    padding: 5px;
+    max-height: 680px;
+    min-height: 500px;
+    overflow: auto;
+    text-align: justify;
+    overflow-x: hidden;
+}
+.modal-body.minauto
+{
+    min-height: auto !important;
+}
+.modal
+{
+    overflow: hidden !important;
+}
+.table thead th, .jsgrid .jsgrid-table thead th
+{
+    color : white ;
+}
+
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link
+{
+    background-color: #121a2f !important;
+
+}
+.modal .modal-dialog
+{
+    margin-top: 50px;
+}
+
+.table, .jsgrid .jsgrid-table
+{
+    color: #e3e3e3;
+}
+
+.modal  .btn-close {
+    border: solid #394c5fe0 ;
+    padding: 8px;
+    line-height: 0;
+    background: #121a2f;
+}
+.dataTables_processing.card, .jumping-dots-loader
+{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200px;
+    margin-left: -100px;
+    margin-top: -26px;
+    text-align: center;
+    padding: 1em 0;
+}
+.activated
+{
+    background: #297eee !important ;
+    color: white !important;
+}
+.navbar .nav-errors .dropdown-menu
+{
+    width: max-content !important;
+    left: 0 !important;
+}
+.height-auto
+{
+    min-height: initial !important ;
+    max-height: initial !important ;
+}
+.modal-height-xl
+{
+    max-height: 750px ;
+}
+.mr-1
+{
+    margin-right: 5px ;
+}
+select::placeholder,
+input::placeholder,
+select:invalid,
+select option,
+select:focus option,
+select option[value=""]
+{
+    color :white  !important;
+}
+
+

@@ -1,19 +1,4 @@
-// (function($) {
-//   'use strict';
-//   var iconTochange;
-//   dragula([document.getElementById("dragula-left"), document.getElementById("dragula-right")]);
-//   dragula([document.getElementById("profile-list-left"), document.getElementById("profile-list-right")]);
-//   dragula([document.getElementById("dragula-event-left"), document.getElementById("dragula-event-right")])
-//     .on('drop', function(el) {
-//       console.log($(el));
-//       iconTochange = $(el).find('.mdi');
-//       if (iconTochange.hasClass('mdi-check')) {
-//         iconTochange.removeClass('mdi-check text-primary').addClass('mdi-check-all text-success');
-//       } else if (iconTochange.hasClass('mdi-check-all')) {
-//         iconTochange.removeClass('mdi-check-all text-success').addClass('mdi-check text-primary');
-//       }
-//     })
-// })(jQuery);
+
 
 // Set up Dragula containers
 var leftContainer = document.getElementById('dragula-left');
@@ -51,6 +36,7 @@ var drake = dragula([leftContainer, rightContainer], {
 
         beforeDrop: function (el, target, source, sibling) {
 
+
             // Modify the content of the dragged element before drop
             modifyContentBeforeDrop(el);
         }
@@ -64,24 +50,76 @@ drake.on('drop', function (el, target, source, sibling) {
     if (target && target.id === 'dragula-right') {
         // Perform actions related to the right container
         // Get the data-time_seconds from the dropped element
-        var timeSeconds = $(el).data('time_seconds');
-        console.log('Dropped on right with time_seconds:', timeSeconds);
-        modifyContentBeforeDrop(el);
 
-        var items =  $('#dragula-right').find('.left-side-item');
-        var startTime = 0;
-
-        for (var i = 0; i < items.length; i++) {
-
-            var duration = parseInt(items[i].getAttribute('data-time_seconds'));
-
-            items[i].setAttribute('data-starttime',   formatTime(startTime));
-            var composition_start_time=   items[i].getAttribute('data-starttime');
-
-            items[i].querySelector('.mb-0.text-muted.float-left').innerText = formatTime(startTime);
-            startTime += duration;
-            var composition_end_time=   startTime;
+        var item_type = $(el).data('type');
+        if(item_type =="Pattern" && source.id ==  'dragula-left'){
+           var droppedBeforeElement = sibling;
+            if (droppedBeforeElement) {
+                var uuid_before_item = droppedBeforeElement.getAttribute('data-uuid');
+            } else {
+                // If the container is empty or dropped at the end, set a default value or handle as needed
+                var   uuid_before_item = 'default_uuid'; // Change this to your default value or handle it accordingly
             }
+
+            drake.cancel(true);
+            $("#uuid_before_item").val(uuid_before_item);
+            $("#pattern_title").val($(el).data('title'));
+            $("#display_pattern_title").html($(el).data('title'));
+            $("#pattern_Minutes").val('0');
+            $("#pattern_Seconds").val('0');
+            $("#type_action").val('drag');
+            $("#pattern_modal").modal('show');
+        }
+        else if(item_type =="Macros"){
+            drake.cancel(true);
+            var selected_item = $('#dragula-right .left-side-item.selected-item');
+            if (selected_item.length === 0) {
+
+                $("#no-cpl-selected").modal('show');
+            }else{
+                var destination_title = selected_item.data('title');
+
+                $("#parent_title").html(destination_title);
+                $("#macro_title").html($(el).data('title'));
+                $("#macro_command").val($(el).data('command'));
+                $("#macro_title_val").val($(el).data('title'));
+
+                $("#macro_time_hms").html('00:00:00');
+                $("#Hours_macro").val(0);
+                $("#Minutes_macro").val(0);
+                $("#Seconds_macro").val(0);
+                $("#start_macro").prop("checked", true);
+                $("#end_macro").prop("checked", false);
+                $('#macro_time_hms').next().text("  ");
+                $("#macro-modal").modal('show');
+            }
+
+        }
+        else if(item_type =="segment"){
+
+        }
+        else{
+            var timeSeconds = $(el).data('time_seconds');
+            console.log('Dropped on right with time_seconds:', timeSeconds);
+            modifyContentBeforeDrop(el);
+
+            var items =  $('#dragula-right').find('.left-side-item:not([data-type="segment"])');
+            var startTime = 0;
+
+            for (var i = 0; i < items.length; i++) {
+
+                var duration = parseInt(items[i].getAttribute('data-time_seconds'));
+
+                items[i].setAttribute('data-starttime',   formatTime(startTime));
+                var composition_start_time=   items[i].getAttribute('data-starttime');
+
+                items[i].querySelector('.mb-0.text-muted.float-left').innerText = formatTime(startTime);
+                startTime += duration;
+                var composition_end_time=   startTime;
+            }
+            reorderRightList();
+        }
+
         // You can reorder the items on the left based on the drop
         // For example, you might want to re-render the left container
         // with the updated order after each drop.
@@ -115,6 +153,8 @@ function preventDefaultDragover(event) {
 // Function to modify content before drop
 function modifyContentBeforeDrop(el) {
 
+    el.setAttribute('data-id',  'urn:uuid:'+uuidv4());
+
     // Find and modify the content within the dragged element
     var floatLeftElement = el.querySelector('.mb-0.text-muted.float-left');
 
@@ -130,10 +170,21 @@ function modifyContentBeforeDrop(el) {
     floatRightElement.innerHTML = '';
 
     // Add new content
-    floatRightElement.innerHTML = `
-
+    if($(el).data('type')=="Pattern"){
+        floatRightElement.innerHTML = `
         <span class=" ">
-            <i class="btn btn-primary  mdi mdi-magnify cpl-details" data-uuid="`+el.getAttribute('data-uuid')+`" data-need_kdm="`+el.getAttribute('data-need_kdm')+`"></i>
-            <i class="btn btn-danger mdi mdi-delete-forever remove-cpl"></i>
+            <i class="btn btn-primary  mdi mdi-magnify custom-search   pattern-details" data-uuid="`+el.getAttribute('data-uuid')+`" data-need_kdm="`+el.getAttribute('data-need_kdm')+`"></i>
+            <i class="btn btn-danger mdi mdi-delete-forever remove-cpl custom-search"></i>
         </span>`;
+    }else{
+        floatRightElement.innerHTML = `
+        <span class=" ">
+            <i class="btn btn-primary  mdi mdi-magnify custom-search  cpl-details" data-uuid="`+el.getAttribute('data-uuid')+`" id="`+el.getAttribute('data-idcpl')+`" data-need_kdm="`+el.getAttribute('data-need_kdm')+`"></i>
+            <i class="btn btn-danger mdi mdi-delete-forever remove-cpl custom-search"></i>
+        </span>`;
+    }
+
+
+
+
 }
