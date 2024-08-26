@@ -96,6 +96,12 @@ class UserController extends Controller
 
     public function destroy($id)
     {
+        $user = User::find($id) ;
+        foreach($user->locations as $location)
+        {
+            $response = api_delete_user($location->connection_ip,"delete_user",$location->pivot->tms_user_id, $location->email,$location->password);
+            dd($response) ;
+        }
        if(User::find($id)->delete())
        {
         echo "Success" ;
@@ -139,6 +145,41 @@ class UserController extends Controller
             'add_user_status'=> $add_user_status,
             'add_user_group' => $add_user_group,
             'enable_email_notifications' => $enable_email_notifications,
+            'username' => $username,
+            'password' => $password,
+        ];
+        // Initialize cURL session
+        $ch = curl_init($apiUrl);
+        // Set cURL options
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($requestData));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        // Execute cURL session and get the response
+        $response = curl_exec($ch);
+       // print_r($response);
+
+        // Check for cURL errors
+        if (curl_errno($ch)) {
+            return ['error' => 'Curl error: ' . curl_error($ch)];
+        }
+
+        // Close cURL session
+        curl_close($ch);
+
+        // Process the API response
+        if (!$response) {
+            return ['error' => 'Error occurred while sending the request.'];
+        } else {
+            return json_decode($response, true);
+        }
+    }
+
+    function api_delete_user($apiUrl,$action,$id_user, $username,$password) {
+        // Prepare the request data
+        $requestData = [
+            'action' => $action,
+            'id_user' => $id_user,
             'username' => $username,
             'password' => $password,
         ];

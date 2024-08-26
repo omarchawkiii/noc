@@ -50,7 +50,7 @@ class User extends Authenticatable
 
     public function locations(): BelongsToMany
     {
-        return $this->belongsToMany(Location::class,'locations_users');
+        return $this->belongsToMany(Location::class,'locations_users')->withPivot('tms_user_id');
     }
 
 }
