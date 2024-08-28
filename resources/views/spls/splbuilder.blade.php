@@ -2689,7 +2689,7 @@
 
                                     result = result
                                     +'<p >'
-                                        +'<span class="align-middle fw-medium text-danger">SPL Not Ingest to '+value.location_name+' |</span>'
+                                        +'<span class="align-middle fw-medium text-danger">SPL Not Ingest to '+value.location_name+' |  ' + value.error_message+' </span>'
                                     +'</p>';
                                 });
                             }

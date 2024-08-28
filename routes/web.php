@@ -18,24 +18,24 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('locations.index');
 });*/
-//Route::get('/', [App\Http\Controllers\LocationController::class , 'index'])->name('location.index');
+//Route::get('/', [App\Http\Controllers\LocationController::class , 'index'])->name('location.index2');
 
 Route::get('/', [App\Http\Controllers\SnmpController::class , 'get_snmp_with_map'])->name('snmp.get_snmp_with_map')->middleware(['auth']);
-
+/*
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+});*/
 
 
 require __DIR__.'/auth.php';
 
-Auth::routes(['verify' => true,'register' => false, 'reset' => false]);
+Auth::routes(['verify' => true,'register' => true, 'reset' => true]);
 
 
 Route::resource('location', App\Http\Controllers\LocationController::class)->middleware(['auth']);
-Route::delete('location/destroy', [App\Http\Controllers\LocationController::class , 'destroy'])->name('location.destroy')->middleware(['auth']);
+Route::delete('location/destroy', [App\Http\Controllers\LocationController::class , 'destroy'])->name('location.delete')->middleware(['auth']);
 Route::get('location_infos/{location}', [App\Http\Controllers\LocationController::class , 'location_infos'])->name('location.location_infos')->middleware(['auth']);
 Route::get('location/{location}/getscreens', [App\Http\Controllers\LocationController::class , 'getscreens'])->name('location.getscreens');
 Route::get('sync_spl_cpl/{location}', [App\Http\Controllers\LocationController::class , 'sync_spl_cpl'])->name('location.sync_spl_cpl');
@@ -65,7 +65,7 @@ Route::get('spl_builder', [App\Http\Controllers\SplController::class , 'spl_buil
 Route::get('upload', [App\Http\Controllers\SplController::class , 'upload_spl'])->name('spls.upload_spl')->middleware(['auth']);
 Route::get('get_screens_from_spls', [App\Http\Controllers\SplController::class , 'get_screens_from_spls'])->name('cpls.get_screens_from_spls')->middleware(['auth']);
 Route::get('spls/delete_spls', [App\Http\Controllers\SplController::class , 'delete_spls'])->name('spls.delete_spls')->middleware(['auth']);
-Route::get('spls/download_spl', [App\Http\Controllers\SplController::class , 'download_spl'])->name('spls.delete_spls')->middleware(['auth']);
+Route::get('spls/download_spl', [App\Http\Controllers\SplController::class , 'download_spl'])->name('spls.download_spl')->middleware(['auth']);
 Route::get('spls/clean_spls', [App\Http\Controllers\SplController::class , 'clean_spls'])->name('spls.clean_spls')->middleware(['auth']);
 
 
@@ -78,7 +78,7 @@ Route::get('get_cpl_with_filter_for_noc', [App\Http\Controllers\CplController::c
 Route::get('get_screens_from_cpls', [App\Http\Controllers\CplController::class , 'get_screens_from_cpls'])->name('cpls.get_screens_from_cpls')->middleware(['auth']);
 Route::get('delete_cpls', [App\Http\Controllers\CplController::class , 'delete_cpl'])->name('cpls.delete_cpl')->middleware(['auth']);
 Route::get('cpls/clean_cpls', [App\Http\Controllers\CplController::class , 'clean_cpls'])->name('cpls.clean_cpls')->middleware(['auth']);
-Route::get('cpls/confirm_clean_cpls', [App\Http\Controllers\CplController::class , 'confirm_clean_cpls'])->name('cpls.clean_cpls')->middleware(['auth']);
+Route::get('cpls/confirm_clean_cpls', [App\Http\Controllers\CplController::class , 'confirm_clean_cpls'])->name('cpls.confirm_clean_cpls')->middleware(['auth']);
 
 
 
@@ -106,7 +106,7 @@ Route::get('getdiskusage/{location}', [App\Http\Controllers\DiskusageController:
 
 Route::get('getsnmp/{location}', [App\Http\Controllers\SnmpController::class , 'getsnmp'])->name('snmp.getsnmp')->middleware(['auth']);
 Route::get('snmp', [App\Http\Controllers\SnmpController::class , 'get_snmp_with_filter'])->name('snmp.get_snmp_with_filter')->middleware(['auth']);
-Route::get('error_map', [App\Http\Controllers\SnmpController::class , 'get_snmp_with_map'])->name('snmp.get_snmp_with_map')->middleware(['auth']);
+Route::get('error_map', [App\Http\Controllers\SnmpController::class , 'get_snmp_with_map'])->name('snmp.error_map')->middleware(['auth']);
 
 
 
@@ -141,7 +141,7 @@ Route::get('get_spl_and_movies/{location}', [App\Http\Controllers\MoviescodContr
 Route::post('add_movies_to_spls', [App\Http\Controllers\MoviescodController::class , 'add_movies_to_spls'])->name('moviescod.MoviescodController')->middleware(['auth']);
 Route::get('get_spl_and_movies_linked/{location}', [App\Http\Controllers\MoviescodController::class , 'get_spl_and_movies_linked'])->name('moviescod.get_spl_and_movies_linked')->middleware(['auth']);
 Route::post('unlink_spl_movie', [App\Http\Controllers\MoviescodController::class , 'unlink_spl_movie'])->name('moviescod.unlink_spl_movie')->middleware(['auth']);
-Route::post('unlink_all_spl_movie', [App\Http\Controllers\MoviescodController::class , 'unlink_all_spl_movie'])->name('moviescod.unlink_spl_movie')->middleware(['auth']);
+Route::post('unlink_all_spl_movie', [App\Http\Controllers\MoviescodController::class , 'unlink_all_spl_movie'])->name('moviescod.unlink_all_spl_movie')->middleware(['auth']);
 Route::get('get_spl_and_movies_to_schedule/{location}', [App\Http\Controllers\MoviescodController::class , 'get_spl_and_movies_to_schedule'])->name('moviescod.get_spl_and_movies_to_schedule')->middleware(['auth']);
 Route::get('get_spl_and_movies_scheduled/{location}', [App\Http\Controllers\MoviescodController::class , 'get_spl_and_movies_scheduled'])->name('moviescod.get_spl_and_movies_scheduled')->middleware(['auth']);
 Route::post('cancel_movies_to_spls', [App\Http\Controllers\MoviescodController::class , 'cancel_movies_to_spls'])->name('moviescod.cancel_movies_to_spls')->middleware(['auth']);
@@ -209,7 +209,7 @@ Route::get('generate_pdf_asset_info', [App\Http\Controllers\AssetinfoController:
 Route::get('refresh_asset_infos_data', [App\Http\Controllers\LocationController::class , 'refresh_asset_infos_data'])->name('location.refresh_asset_infos_data')->middleware(['auth']);
 
 Route::get('get_error_list/{location}', [App\Http\Controllers\Error_listController::class , 'get_error_list'])->name('error_list.get_error_list')->middleware(['auth']);
-Route::get('get_header_error', [App\Http\Controllers\Error_listController::class , 'header_errors'])->name('error_list.get_error_list')->middleware(['auth']);
+Route::get('get_header_error', [App\Http\Controllers\Error_listController::class , 'header_errors'])->name('error_list.header_errors')->middleware(['auth']);
 Route::get('get_kdm_errors_list', [App\Http\Controllers\Error_listController::class , 'kdms_errors_list'])->name('error_list.kdms_errors_list')->middleware(['auth']);
 Route::get('get_server_errors_list', [App\Http\Controllers\Error_listController::class , 'server_errors_list'])->name('error_list.server_errors_list')->middleware(['auth']);
 Route::get('get_projector_errors_list', [App\Http\Controllers\Error_listController::class , 'projector_errors_list'])->name('error_list.get_projector_errors_list')->middleware(['auth']);

@@ -43,9 +43,9 @@ class UserController extends Controller
             {
                 $location_data = Location::find($location) ;
                 $response = $this->api_request($location_data->connection_ip,"create_user", $user->email, $request->password, $user->username, $user->name, $user->last_name, 1, 1, 0, $location_data->email, $location_data->password);
-                dd($response) ;
-                $tms_user_id = $response['user_id'] ?? null;
 
+                $tms_user_id = $response['id_user'] ?? null;
+                //$tms_user_id = 15 ;
                 if ($tms_user_id) {
                     // Ajouter l'association dans la table pivot avec l'external_user_id
                     $locations[$location] = ['tms_user_id' => $tms_user_id];
@@ -87,20 +87,21 @@ class UserController extends Controller
     public function update_password(Request $request)
     {
         $user = User::find($request->id);
+        foreach($user->locations as $location)
+        {
+            $response = $this->api_change_password($location->connection_ip,"delete_user",$location->pivot->tms_user_id,$request->password ,$location->email,$location->password);
+        }
         $user->update([
             'password' => $request->password ,
         ]);
-
     }
-
 
     public function destroy($id)
     {
         $user = User::find($id) ;
         foreach($user->locations as $location)
         {
-            $response = api_delete_user($location->connection_ip,"delete_user",$location->pivot->tms_user_id, $location->email,$location->password);
-            dd($response) ;
+            $response = $this->api_delete_user($location->connection_ip,"delete_user",$location->pivot->tms_user_id, $location->email,$location->password);
         }
        if(User::find($id)->delete())
        {
@@ -110,7 +111,6 @@ class UserController extends Controller
        {
         echo "Faild" ;
        }
-
 
     }
 
@@ -180,6 +180,42 @@ class UserController extends Controller
         $requestData = [
             'action' => $action,
             'id_user' => $id_user,
+            'username' => $username,
+            'password' => $password,
+        ];
+        // Initialize cURL session
+        $ch = curl_init($apiUrl);
+        // Set cURL options
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($requestData));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        // Execute cURL session and get the response
+        $response = curl_exec($ch);
+       // print_r($response);
+
+        // Check for cURL errors
+        if (curl_errno($ch)) {
+            return ['error' => 'Curl error: ' . curl_error($ch)];
+        }
+
+        // Close cURL session
+        curl_close($ch);
+
+        // Process the API response
+        if (!$response) {
+            return ['error' => 'Error occurred while sending the request.'];
+        } else {
+            return json_decode($response, true);
+        }
+    }
+
+    function api_change_password($apiUrl,$action,$id_user, $edit_user_password, $username,$password) {
+        // Prepare the request data
+        $requestData = [
+            'action' => $action,
+            'id_user' => $id_user,
+            'edit_user_password' => $edit_user_password,
             'username' => $username,
             'password' => $password,
         ];

@@ -674,21 +674,51 @@ class NocsplController extends Controller
                             if($config->autoIngest)
                             {
                                 $autoIngest = true ;
-                                $response = $this->ingest_spl($created_spl->xmlpath,$location->connection_ip,$location->email, $location->password) ;
-                                if($response != null)
+
+                                $response_api = $this->ingest_spl($created_spl->xmlpath,$location->connection_ip,$location->email, $location->password) ;
+
+                                //dd($response);
+                                if($response_api != null)
                                 {
-                                    if($response->status== 1 )
+
+                                    if(property_exists($response_api, 'status'))
                                     {
-                                        array_push($ingest_success,  array("status" => $response->status , "id" =>  $location->id , "location_name" =>  $location->name));
+
+
+                                        if($response_api->status== 1 )
+                                        {
+                                            array_push($ingest_success,  array("status" => $response_api->status , "id" =>  $location->id , "location_name" =>  $location->name));
+                                        }
+                                        else
+                                        {
+                                            array_push($ingest_errors,  array("status" => $response_api->status , "id" =>  $location->id , "location_name" =>  $location->name));
+                                        }
                                     }
                                     else
                                     {
-                                        array_push($ingest_errors,  array("status" => $response->status , "id" =>  $location->id , "location_name" =>  $location->name));
+                                        if(property_exists($response_api, 'error'))
+                                        {
+                                            $error_message = $response_api->error ;
+                                        }
+                                        else
+                                        {
+                                            $error_message = null  ;
+                                        }
+                                        array_push($ingest_errors,  array("status" => 0 , "id" =>  $location->id , "location_name" =>  $location->name, "error_message" =>  $error_message));
                                     }
                                 }
                                 else
                                 {
-                                    array_push($ingest_errors,  array("status" => null , "id" =>  $location->id , "location_name" =>  $location->name));
+                                    $error_message = null;
+                                    /*if(property_exists($response_api, 'error'))
+                                    {
+                                        $error_message = $response_api->error ;
+                                    }
+                                    else
+                                    {
+                                        $error_message = null  ;
+                                    }*/
+                                    array_push($ingest_errors,  array("status" => 0 , "id" =>  $location->id , "location_name" =>  $location->name, "error_message" =>  $error_message));
                                 }
 
                             }
@@ -702,11 +732,11 @@ class NocsplController extends Controller
                         {
                             $response = array("status" => 0 , "title" =>"null" , "uuid"=>"null" , "ingest_success"=>null , "ingest_errors"=>null  );
                         }
-                        echo json_encode($response);
+                        //dd($response);
+
                     }
+                    echo json_encode($response);
                 }
-
-
 
 
             }
