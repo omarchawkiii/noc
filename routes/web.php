@@ -211,6 +211,7 @@ Route::get('refresh_asset_infos_data', [App\Http\Controllers\LocationController:
 Route::get('get_error_list/{location}', [App\Http\Controllers\Error_listController::class , 'get_error_list'])->name('error_list.get_error_list')->middleware(['auth']);
 Route::get('get_header_error', [App\Http\Controllers\Error_listController::class , 'header_errors'])->name('error_list.header_errors')->middleware(['auth']);
 Route::get('get_kdm_errors_list', [App\Http\Controllers\Error_listController::class , 'kdms_errors_list'])->name('error_list.kdms_errors_list')->middleware(['auth']);
+Route::get('get_sound_errors_list', [App\Http\Controllers\Error_listController::class , 'sound_errors_list'])->name('error_list.sound_errors_list')->middleware(['auth']);
 Route::get('get_server_errors_list', [App\Http\Controllers\Error_listController::class , 'server_errors_list'])->name('error_list.server_errors_list')->middleware(['auth']);
 Route::get('get_projector_errors_list', [App\Http\Controllers\Error_listController::class , 'projector_errors_list'])->name('error_list.get_projector_errors_list')->middleware(['auth']);
 Route::get('get_storage_errors_list', [App\Http\Controllers\Error_listController::class , 'storage_errors_list'])->name('error_list.get_storage_errors_list')->middleware(['auth']);

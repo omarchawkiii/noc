@@ -8,6 +8,7 @@ use App\Models\Location;
 use App\Models\Projector_errors_list;
 use App\Models\Schedule;
 use App\Models\Server_error_list;
+use App\Models\Sound_error_list;
 use App\Models\Storage_errors_list;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
@@ -134,6 +135,26 @@ class Error_listController extends Controller
                 }
             }
 
+            Sound_error_list::where('location_id',$location->id)->delete();
+
+            if( $contents['errors_list']['list_sound_errors'] )
+            {
+                foreach($contents['errors_list']['list_sound_errors'] as $sound_error)
+                {
+                    Storage_errors_list::create([
+                        'alarmId' => $sound_error['alarmId'],
+                        'date_saved' => $sound_error['timestamp'],
+                        'severity' => $sound_error['severity'],
+                        'title' => $sound_error['title'],
+                        'clearable' => $sound_error['clearable'],
+                        'hardware' => $sound_error['hardware'],
+                        'screen' => $sound_error['serverName'],
+
+                        'location_id' => $location->id,
+                    ]);
+                }
+            }
+
         }
         return Redirect::back()->with('message' ,' The Errors list  has been updated');
     }
@@ -209,6 +230,22 @@ class Error_listController extends Controller
         }
 
         return Response()->json(compact('projector_errors_list'));
+    }
+
+    public function sound_errors_list(Request $request)
+    {
+        $location = $request->location;
+
+        if($location)
+        {
+            $sounds_errors_list = Projector_errors_list::with('location')->where('location_id',$location)->get() ;
+        }
+        else
+        {
+            $sounds_errors_list = Projector_errors_list::with('location')->get() ;
+        }
+
+        return Response()->json(compact('sound_errors_list'));
     }
 
     public function storage_errors_list(Request $request)

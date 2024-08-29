@@ -315,6 +315,44 @@
             </div>
         </div>
     </div>
+    <div class="modal fade show" id="sound_errors_modal" tabindex="-1" aria-labelledby="ModalLabel"  aria-modal="true" role="dialog">
+        <div class="modal-dialog  modal-xl"  role="document"  style="max-width: 93%; width: 93%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"> KDMS Errors List</h5>
+                    <input type="hidden">
+                    <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
+                </div>
+                <div class="modal-body">
+
+
+                    <div id="list_sound_errors"  class="table-responsive preview-list multiplex">
+
+                        <table class="table " id="table_list_sound_errors">
+                            <thead>
+                            <tr>
+
+                                <th>Alarm Id</th>
+                                <th>Date Saved </th>
+                                <th>Severity</th>
+                                <th>Clearable</th>
+                                <th>Hardware</th>
+                                <th>Screen</th>
+
+                            </tr>
+                            </thead>
+                            <tbody id="body_list_sound_errors">
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
 
     <div class="modal fade show" id="unlinked_sessions_errors_modal" tabindex="-1" aria-labelledby="ModalLabel"  aria-modal="true" role="dialog">
         <div class="modal-dialog  modal-xl"  role="document"  style="max-width: 93%; width: 93%;">
@@ -440,7 +478,7 @@
                                     +'<td class="sorting_1 storage_errors" data-location="'+ error.location.id+'"> '+ error.nbr_storage_errors+'  </td>'
                                     +'<td class="sorting_1 server_errors"  data-location="'+ error.location.id+'"> '+ error.nbr_server_alert+'  </td>'
                                     +'<td class="sorting_1 projector_errors"  data-location="'+ error.location.id+'"> '+ error.nbr_projector_alert+'  </td>'
-                                    +'<td class="sorting_1"> '+ error.nbr_sound_alert+'  </td>'
+                                    +'<td class="sorting_1 sound_errors"  data-location="'+ error.location.id+'"> '+ error.nbr_sound_alert+'  </td>'
                                 +'</tr>'
 
                             })
@@ -585,6 +623,61 @@
 
         }
 
+        $(document).on('click', '.sound_errors', function() {
+
+            var location = $(this).data('location');
+            get_kdms_errors_list(location)
+            $('#sound_errors_modal').modal('show');
+         });
+
+        function get_sound_errors_list(location)
+        {
+
+            var url = "{{ url('') }}" + '/get_sound_errors_list';
+            $.ajax({
+                url: url,
+                data: {
+                    location: location,
+                },
+                method: 'GET',
+                success: function(response) {
+
+                    var data ;
+                    if(response.sounds_errors_list.length > 0)
+                    {
+                            $.each(response.sounds_errors_list, function(index, sound) {
+
+                            data +=
+                                '<tr class="odd ">'
+                                    +'<td class="sorting_1"> '+ sound.alarm_id+'  </td>'
+                                    +'<td class="sorting_1"> ' + sound.date_saved+'  </td>'
+                                    +'<td class="sorting_1"> '+ sound.severity+'  </td>'
+                                    +'<td class="sorting_1"> '+ sound.title+'  </td>'
+                                    +'<td class="sorting_1"> '+ sound.clearable+'  </td>'
+                                    +'<td class="sorting_1"> '+ sound.hardware+'  </td>'
+                                    +'<td class="sorting_1"> '+ sound.screen+'  </td>'
+                                +'</tr>'
+
+                            })
+
+                            $('#body_list_sound_errors').html(data) ;
+
+                    }
+                    else
+                    {
+                        $('#body_list_sound_errors').html('<div id="table_logs_processing" class="dataTables_processing card">No data available </div>') ;
+                    }
+
+
+                },
+                error: function(response) {
+
+                }
+            })
+
+
+
+        }
 
         $(document).on('click', '.server_errors', function() {
 
