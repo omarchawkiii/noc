@@ -238,11 +238,11 @@ class Error_listController extends Controller
 
         if($location)
         {
-            $sounds_errors_list = Projector_errors_list::with('location')->where('location_id',$location)->get() ;
+            $sounds_errors_list = Sound_error_list::with('location')->where('location_id',$location)->get() ;
         }
         else
         {
-            $sounds_errors_list = Projector_errors_list::with('location')->get() ;
+            $sounds_errors_list = Sound_error_list::with('location')->get() ;
         }
 
         return Response()->json(compact('sound_errors_list'));

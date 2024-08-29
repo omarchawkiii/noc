@@ -319,7 +319,7 @@
         <div class="modal-dialog  modal-xl"  role="document"  style="max-width: 93%; width: 93%;">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title"> KDMS Errors List</h5>
+                    <h5 class="modal-title"> Sound Errors List</h5>
                     <input type="hidden">
                     <button type="button" class="btn-close" id="createMemberBtn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="color:white;font-size: 26px;line-height: 18px;">×</span></button>
                 </div>
@@ -626,7 +626,7 @@
         $(document).on('click', '.sound_errors', function() {
 
             var location = $(this).data('location');
-            get_kdms_errors_list(location)
+            get_sound_errors_list(location)
             $('#sound_errors_modal').modal('show');
          });
 

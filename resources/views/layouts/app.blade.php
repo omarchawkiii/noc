@@ -476,54 +476,7 @@
         }
 
 
-        function header_get_sound_errors_list(location)
-        {
 
-            var url = "{{ url('') }}" + '/get_sound_errors_list';
-            $.ajax({
-                url: url,
-                data: {
-                    location: location,
-                },
-                method: 'GET',
-                success: function(response) {
-
-                    var data ;
-                    if(response.sounds_errors_list.length > 0)
-                    {
-                            $.each(response.sounds_errors_list, function(index, sound) {
-
-                            data +=
-                                '<tr class="odd ">'
-                                    +'<td class="sorting_1"> '+ sound.alarm_id+'  </td>'
-                                    +'<td class="sorting_1"> ' + sound.date_saved+'  </td>'
-                                    +'<td class="sorting_1"> '+ sound.severity+'  </td>'
-                                    +'<td class="sorting_1"> '+ sound.title+'  </td>'
-                                    +'<td class="sorting_1"> '+ sound.clearable+'  </td>'
-                                    +'<td class="sorting_1"> '+ sound.hardware+'  </td>'
-                                    +'<td class="sorting_1"> '+ sound.screen+'  </td>'
-                                +'</tr>'
-
-                            })
-
-                            $('#header_body_list_sound_errors').html(data) ;
-
-                    }
-                    else
-                    {
-                        $('#header_body_list_sound_errors').html('<div id="table_logs_processing" class="dataTables_processing card">No data available </div>') ;
-                    }
-
-
-                },
-                error: function(response) {
-
-                }
-            })
-
-
-
-        }
         $(document).on('click', '.header_server_errors_btn, #Server-tab', function() {
 
             var location = $(this).data('location');
@@ -696,12 +649,62 @@
 
             var location = $(this).data('location');
             console.log(location)
-            header_get_storage_errors_list(location)
+            header_get_sound_errors_list(location)
             $('#error_modal').modal('show');
             $('.nav-tabs #Sound-tab').tab('show');
 
             //$('#header_storage_errors_modal').modal('show');
         });
+
+        function header_get_sound_errors_list(location)
+        {
+
+            var url = "{{ url('') }}" + '/get_sound_errors_list';
+            $.ajax({
+                url: url,
+                data: {
+                    location: location,
+                },
+                method: 'GET',
+                success: function(response) {
+
+                    var data ;
+                    if(response.sounds_errors_list.length > 0)
+                    {
+                            $.each(response.sounds_errors_list, function(index, sound) {
+
+                            data +=
+                                '<tr class="odd ">'
+                                    +'<td class="sorting_1"> '+ sound.alarm_id+'  </td>'
+                                    +'<td class="sorting_1"> ' + sound.date_saved+'  </td>'
+                                    +'<td class="sorting_1"> '+ sound.severity+'  </td>'
+                                    +'<td class="sorting_1"> '+ sound.title+'  </td>'
+                                    +'<td class="sorting_1"> '+ sound.clearable+'  </td>'
+                                    +'<td class="sorting_1"> '+ sound.hardware+'  </td>'
+                                    +'<td class="sorting_1"> '+ sound.screen+'  </td>'
+                                +'</tr>'
+
+                            })
+
+                            $('#header_body_list_sound_errors').html(data) ;
+
+                    }
+                    else
+                    {
+                        $('#header_body_list_sound_errors').html('<div id="table_logs_processing" class="dataTables_processing card">No data available </div>') ;
+                    }
+
+
+                },
+                error: function(response) {
+
+                }
+            })
+
+
+
+        }
+
 
     </script>
 
