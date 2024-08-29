@@ -335,6 +335,7 @@
                                 <th>Alarm Id</th>
                                 <th>Date Saved </th>
                                 <th>Severity</th>
+                                <th>Title</th>
                                 <th>Clearable</th>
                                 <th>Hardware</th>
                                 <th>Screen</th>

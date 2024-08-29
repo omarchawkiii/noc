@@ -141,8 +141,8 @@ class Error_listController extends Controller
             {
                 foreach($contents['errors_list']['list_sound_errors'] as $sound_error)
                 {
-                    Storage_errors_list::create([
-                        'alarmId' => $sound_error['alarmId'],
+                    Sound_error_list::create([
+                        'alarm_id' => $sound_error['alarmId'],
                         'date_saved' => $sound_error['timestamp'],
                         'severity' => $sound_error['severity'],
                         'title' => $sound_error['title'],
@@ -245,7 +245,7 @@ class Error_listController extends Controller
             $sounds_errors_list = Sound_error_list::with('location')->get() ;
         }
 
-        return Response()->json(compact('sound_errors_list'));
+        return Response()->json(compact('sounds_errors_list'));
     }
 
     public function storage_errors_list(Request $request)

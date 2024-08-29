@@ -285,6 +285,7 @@
                                             <th>Alarm Id</th>
                                             <th>Date Saved </th>
                                             <th>Severity</th>
+                                            <th>Title</th>
                                             <th>Clearable</th>
                                             <th>Hardware</th>
                                             <th>Screen</th>
@@ -655,7 +656,24 @@
 
             //$('#header_storage_errors_modal').modal('show');
         });
+        function convertTimestampToDate(timestamp) {
+            // Convert the timestamp to an integer (assuming it is in seconds)
+            const seconds = Math.floor(timestamp);
 
+            // Create a Date object using the timestamp (in milliseconds)
+            const date = new Date(seconds * 1000);
+
+            // Format the date into a string
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const secondsStr = String(date.getSeconds()).padStart(2, '0');
+
+            // Return the formatted date string
+            return `${year}-${month}-${day} ${hours}:${minutes}:${secondsStr}`;
+        }
         function header_get_sound_errors_list(location)
         {
 
@@ -675,8 +693,9 @@
 
                             data +=
                                 '<tr class="odd ">'
+                                    +'<td class="sorting_1"> ' + sound.location.name + '  </td>'
                                     +'<td class="sorting_1"> '+ sound.alarm_id+'  </td>'
-                                    +'<td class="sorting_1"> ' + sound.date_saved+'  </td>'
+                                    +'<td class="sorting_1"> ' + convertTimestampToDate(sound.date_saved)+'  </td>'
                                     +'<td class="sorting_1"> '+ sound.severity+'  </td>'
                                     +'<td class="sorting_1"> '+ sound.title+'  </td>'
                                     +'<td class="sorting_1"> '+ sound.clearable+'  </td>'
