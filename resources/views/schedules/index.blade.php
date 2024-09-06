@@ -1133,13 +1133,13 @@
                             '</tr >'
 
                         });
-                        $.each(response.nos_spls, function( index, value ) {
+                        /*$.each(response.nos_spls, function( index, value ) {
                             noc_spl_table +=
                             '<tr>'
                                 +'<td class="text-body align-middle fw-medium text-decoration-none" data-id="'+ value.uuid+'"  >'+ value.spl_title+' </td>'
                             '</tr >'
 
-                        });
+                        });*/
 
 
                         $('#spls_table tbody').html(noc_spl_table)

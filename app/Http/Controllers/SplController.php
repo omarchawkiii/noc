@@ -12,6 +12,7 @@ use App\Models\Spl;
 use App\Models\splcomponents;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -29,49 +30,54 @@ class SplController extends Controller
         $location = Location::find($location) ;
 
         $url = $location->connection_ip . "?request=getSplListInfoByScreenNumber&screen_number=".$screen->screen_number;
-
-        $client = new Client();
-        $response = $client->request('GET', $url);
-        $contents = json_decode($response->getBody(), true);
-        if($contents)
-        {
-            foreach($contents as $content)
+        try{
+            $client = new Client();
+            $response = $client->request('GET', $url);
+            $contents = json_decode($response->getBody(), true);
+            if($contents)
             {
-                if($content)
+                foreach($contents as $content)
                 {
-                    foreach($content as $spl)
+                    if($content)
                     {
-                        Spl::updateOrCreate([
-                            'uuid' => $spl["uuid"],
-                            'screen_id' => $screen->id,
+                        foreach($content as $spl)
+                        {
+                            Spl::updateOrCreate([
+                                'uuid' => $spl["uuid"],
+                                'screen_id' => $screen->id,
 
-                        ],[
-                            'uuid'     => $spl["uuid"],
-                            'name'     => $spl["title"],
-                            'duration'     => gmdate("H:i:s", $spl["duration"]) ,
-                            'available_on'     => $spl["available_on"],
-                            'screen_id'     =>$screen->id,
-                            'location_id'     =>$location->id,
-                        ]);
-                    }
+                            ],[
+                                'uuid'     => $spl["uuid"],
+                                'name'     => $spl["title"],
+                                'duration'     => gmdate("H:i:s", $spl["duration"]) ,
+                                'available_on'     => $spl["available_on"],
+                                'screen_id'     =>$screen->id,
+                                'location_id'     =>$location->id,
+                            ]);
+                        }
 
 
-                    if(count($content) != $screen->spls->count() )
-                    {
-                        $uuid_spls = array_column($content, 'uuid');
-                            foreach($screen->spls as $spl)
-                            {
-                                if (! in_array( $spl->uuid , $uuid_spls))
+                        if(count($content) != $screen->spls->count() )
+                        {
+                            $uuid_spls = array_column($content, 'uuid');
+                                foreach($screen->spls as $spl)
                                 {
-                                    // delete deleted screen
-                                    $spl->delete() ;
+                                    if (! in_array( $spl->uuid , $uuid_spls))
+                                    {
+                                        // delete deleted screen
+                                        $spl->delete() ;
+                                    }
                                 }
-                            }
+                        }
                     }
                 }
             }
+            return Redirect::back()->with('message' ,' The Screens  has been updated');
         }
-        return Redirect::back()->with('message' ,' The Screens  has been updated');
+        catch (RequestException $e) {
+            // Log de l'erreur ou traitement spécifique
+            echo " message: " . $e->getMessage();
+        }
     }
 
     public function get_spl_infos($spl)

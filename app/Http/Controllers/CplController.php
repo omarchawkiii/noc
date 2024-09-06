@@ -14,6 +14,7 @@ use App\Models\Screen;
 use App\Models\Spl;
 use App\Models\splcomponents;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -27,89 +28,94 @@ class CplController extends Controller
         $screen = Screen::find($screen);
         $location = Location::find($location) ;
         $url = $location->connection_ip."?request=getCplListByScreenNumber&screen_number=".$screen->screen_number;
-        $client = new Client();
-        $response = $client->request('GET', $url);
-        $contents = json_decode($response->getBody(), true);
+        try{
+            $client = new Client();
+            $response = $client->request('GET', $url);
+            $contents = json_decode($response->getBody(), true);
 
-        if($contents)
-        {
-            foreach($contents as $content)
+            if($contents)
             {
-                if($content)
+                foreach($contents as $content)
                 {
-                    foreach($content as $cpl)
+                    if($content)
                     {
-                        $id = $cpl["uuid"] ."-".$location->id.'-'.$screen->id ;
-                        if(isset($cpl["playable"]))
+                        foreach($content as $cpl)
                         {
-                            if($cpl["playable"] == 1 )
+                            $id = $cpl["uuid"] ."-".$location->id.'-'.$screen->id ;
+                            if(isset($cpl["playable"]))
                             {
-                                $playable  = 1 ;
+                                if($cpl["playable"] == 1 )
+                                {
+                                    $playable  = 1 ;
+                                }
+                                else
+                                {
+                                    $playable  =0;
+                                }
                             }
                             else
                             {
                                 $playable  =0;
                             }
+
+                            Cpl::updateOrCreate([
+                                'id' => $id ,
+                                'location_id' => $location->id
+                            ],[
+                                'id' => $id,
+                                'uuid' => $cpl["uuid"],
+                                'id_dcp' => $cpl["id_dcp"],
+                                'contentTitleText' => $cpl["contentTitleText"],
+                                'contentKind' => $cpl["contentKind"],
+                                'EditRate' => $cpl["EditRate"],
+                                'is_3D' => $cpl["is_3D"],
+                                'totalSize' => $cpl["totalSize"],
+                                'soundChannelCount' => $cpl["soundChannelCount"],
+                                'durationEdits' => $cpl["durationEdits"],
+                                'ScreenAspectRatio' => $cpl["ScreenAspectRatio"],
+                                'available_on' => $cpl["available_on"],
+                                'serverName' => $cpl["serverName"],
+                                'cpl_is_linked' => $cpl["cpl_is_linked"],
+                                'screen_id'     =>$screen->id,
+                                'location_id'     =>$location->id,
+                                'playable' => $playable ,
+                                'pictureEncodingAlgorithm' => $cpl['pictureEncodingAlgorithm'] ,
+                                'pictureEncryptionAlgorithm' => $cpl['pictureEncryptionAlgorithm'] ,
+                                'soundQuantizationBits' => $cpl['soundQuantizationBits'] ,
+                                'soundEncodingAlgorithm' => $cpl['soundEncodingAlgorithm'] ,
+                                'soundEncryptionAlgorithm' => $cpl['soundEncryptionAlgorithm'] ,
+                                'markersCount' => $cpl['markersCount'] ,
+                                'pictureWidth' => $cpl['pictureWidth'],
+                                'pictureHeight' => $cpl['pictureHeight'] ,
+                                'type' => $cpl['type'] ,
+                                'editRate_numerator' => $cpl['editRate_numerator'] ,
+                                'editRate_denominator' => $cpl['editRate_denominator'] ,
+                                'cinema_DCP' => $cpl['Cinema_DCP'] ,
+                                'aspect_Ratio' => $cpl['Aspect_Ratio'],
+
+
+                            ]);
                         }
-                        else
+
+                        if(count($content) != $screen->cpls->count() )
                         {
-                            $playable  =0;
-                        }
-
-                        Cpl::updateOrCreate([
-                            'id' => $id ,
-                            'location_id' => $location->id
-                        ],[
-                            'id' => $id,
-                            'uuid' => $cpl["uuid"],
-                            'id_dcp' => $cpl["id_dcp"],
-                            'contentTitleText' => $cpl["contentTitleText"],
-                            'contentKind' => $cpl["contentKind"],
-                            'EditRate' => $cpl["EditRate"],
-                            'is_3D' => $cpl["is_3D"],
-                            'totalSize' => $cpl["totalSize"],
-                            'soundChannelCount' => $cpl["soundChannelCount"],
-                            'durationEdits' => $cpl["durationEdits"],
-                            'ScreenAspectRatio' => $cpl["ScreenAspectRatio"],
-                            'available_on' => $cpl["available_on"],
-                            'serverName' => $cpl["serverName"],
-                            'cpl_is_linked' => $cpl["cpl_is_linked"],
-                            'screen_id'     =>$screen->id,
-                            'location_id'     =>$location->id,
-                            'playable' => $playable ,
-                            'pictureEncodingAlgorithm' => $cpl['pictureEncodingAlgorithm'] ,
-                            'pictureEncryptionAlgorithm' => $cpl['pictureEncryptionAlgorithm'] ,
-                            'soundQuantizationBits' => $cpl['soundQuantizationBits'] ,
-                            'soundEncodingAlgorithm' => $cpl['soundEncodingAlgorithm'] ,
-                            'soundEncryptionAlgorithm' => $cpl['soundEncryptionAlgorithm'] ,
-                            'markersCount' => $cpl['markersCount'] ,
-                            'pictureWidth' => $cpl['pictureWidth'],
-                            'pictureHeight' => $cpl['pictureHeight'] ,
-                            'type' => $cpl['type'] ,
-                            'editRate_numerator' => $cpl['editRate_numerator'] ,
-                            'editRate_denominator' => $cpl['editRate_denominator'] ,
-                            'cinema_DCP' => $cpl['Cinema_DCP'] ,
-                            'aspect_Ratio' => $cpl['Aspect_Ratio'],
-
-
-                        ]);
-                    }
-
-                    if(count($content) != $screen->cpls->count() )
-                    {
-                        $uuid_cpls = array_column($content, 'uuid');
-                            foreach($screen->cpls as $cpl)
-                            {
-                                if (! in_array( $cpl->uuid , $uuid_cpls))
+                            $uuid_cpls = array_column($content, 'uuid');
+                                foreach($screen->cpls as $cpl)
                                 {
-                                    $cpl->delete() ;
+                                    if (! in_array( $cpl->uuid , $uuid_cpls))
+                                    {
+                                        $cpl->delete() ;
+                                    }
                                 }
-                            }
+                        }
                     }
                 }
             }
         }
-        //return Redirect::back()->with('message' ,' The cpls  has been updated');
+        catch (RequestException $e) {
+            // Log de l'erreur ou traitement spécifique
+            echo " message: " . $e->getMessage();
+        }
     }
 
     public function cpl_by_screen(Screen $screen)

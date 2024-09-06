@@ -8,6 +8,7 @@ use App\Models\Schedule;
 use App\Models\splcomponents;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
@@ -19,46 +20,52 @@ class LmssplController extends Controller
         $location = Location::find($location) ;
         $url = $location->connection_ip . "?request=getLmsSplList";
        // echo "URL : " . $url . " <br />" ;
-        $client = new Client();
-        $response = $client->request('GET', $url);
-        $contents = json_decode($response->getBody(), true);
-        if($contents)
-        {
-            foreach($contents as $content)
+       try{
+            $client = new Client();
+            $response = $client->request('GET', $url);
+            $contents = json_decode($response->getBody(), true);
+            if($contents)
             {
-                if($content)
+                foreach($contents as $content)
                 {
-                    foreach($content as $lmsspl)
+                    if($content)
                     {
-                        Lmsspl::updateOrCreate([
-                            'uuid' => $lmsspl["uuid"],
-                            'location_id'     =>$location->id,
-                        ],[
-                            'uuid'     => $lmsspl["uuid"],
-                            'name'     => $lmsspl["title"],
-                            'duration'     => gmdate("H:i:s", $lmsspl["duration"]) ,
-                            'available_on'     => $lmsspl["available_on"],
-                            'location_id'     =>$location->id,
-                        ]);
-                    }
-                    // check if SPLs deleted
-                    if(count($content) != $location->lmsspls->count() )
-                    {
-                        $uuid_lmsspls = array_column($content, 'uuid');
-                        foreach($location->lmsspls as $lmsspl)
+                        foreach($content as $lmsspl)
                         {
-                            if (! in_array( $lmsspl->uuid , $uuid_lmsspls))
-                            {
-                                // delete deleted screen
-                                $lmsspl->delete() ;
-                            }
+                            Lmsspl::updateOrCreate([
+                                'uuid' => $lmsspl["uuid"],
+                                'location_id'     =>$location->id,
+                            ],[
+                                'uuid'     => $lmsspl["uuid"],
+                                'name'     => $lmsspl["title"],
+                                'duration'     => gmdate("H:i:s", $lmsspl["duration"]) ,
+                                'available_on'     => $lmsspl["available_on"],
+                                'location_id'     =>$location->id,
+                            ]);
                         }
+                        // check if SPLs deleted
+                        if(count($content) != $location->lmsspls->count() )
+                        {
+                            $uuid_lmsspls = array_column($content, 'uuid');
+                            foreach($location->lmsspls as $lmsspl)
+                            {
+                                if (! in_array( $lmsspl->uuid , $uuid_lmsspls))
+                                {
+                                    // delete deleted screen
+                                    $lmsspl->delete() ;
+                                }
+                            }
 
+                        }
                     }
                 }
             }
+            return Redirect::back()->with('message' ,' The Screens  has been updated');
+            }
+        catch (RequestException $e) {
+            // Log de l'erreur ou traitement spécifique
+            echo " message: " . $e->getMessage();
         }
-        return Redirect::back()->with('message' ,' The Screens  has been updated');
     }
 
     public function get_lmsspl_infos($spl )

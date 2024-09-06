@@ -6,6 +6,7 @@ use App\Models\Assetinfo;
 use App\Models\Location;
 use App\Models\Screen;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -19,45 +20,51 @@ class AssetinfoController extends Controller
         $location = Location::find($location) ;
         $url = $location->connection_ip."?request=get_asset_info";
         //dd($url);
-        $client = new Client();
-        $response = $client->request('GET', $url);
-        $contents = json_decode($response->getBody(), true);
-       // dd($contents);
-        if($contents)
-        {
-            foreach($contents as $asset_info)
+        try {
+            $client = new Client();
+            $response = $client->request('GET', $url);
+            $contents = json_decode($response->getBody(), true);
+        // dd($contents);
+            if($contents)
             {
-                if($asset_info ['screen_status'] == 1 )
+                foreach($contents as $asset_info)
                 {
-                    $screen = Screen::where('screen_number','=',$asset_info ['screen_number'])->where('location_id','=',$location->id)->first() ;
-                    Assetinfo::updateOrCreate([
-                        'screen_number' => $asset_info["screen_number"] ,
-                        'location_id' => $location->id
-                    ],[
+                    if($asset_info ['screen_status'] == 1 )
+                    {
+                        $screen = Screen::where('screen_number','=',$asset_info ['screen_number'])->where('location_id','=',$location->id)->first() ;
+                        Assetinfo::updateOrCreate([
+                            'screen_number' => $asset_info["screen_number"] ,
+                            'location_id' => $location->id
+                        ],[
 
-                        'screen_status' => $asset_info['screen_status'],
-                        'screen_number' => $asset_info['screen_number'],
-                        'screen_name' => $asset_info['screen_name'],
-                        'server_product_name' => $asset_info['server_product_name'],
-                        'server_esn' => $asset_info['server_esn'],
-                        'server_software' => $asset_info['server_software'],
-                        'projector_model_number' => $asset_info['projector_model_number'],
-                        'projector_serial_number' => $asset_info['projector_serial_number'],
-                        'sound_model' => $asset_info['sound_model'],
-                        'sound_chasis_serial' => $asset_info['sound_chasis_serial'],
-                        'sound_esn' => $asset_info['sound_esn'],
-                        'projector_version'=> $asset_info['projector_version'],
-                        'sound_software_version'=> $asset_info['sound_software_version'],
-                        'server_firmware_version' =>  $asset_info['server_firmware_version'],
+                            'screen_status' => $asset_info['screen_status'],
+                            'screen_number' => $asset_info['screen_number'],
+                            'screen_name' => $asset_info['screen_name'],
+                            'server_product_name' => $asset_info['server_product_name'],
+                            'server_esn' => $asset_info['server_esn'],
+                            'server_software' => $asset_info['server_software'],
+                            'projector_model_number' => $asset_info['projector_model_number'],
+                            'projector_serial_number' => $asset_info['projector_serial_number'],
+                            'sound_model' => $asset_info['sound_model'],
+                            'sound_chasis_serial' => $asset_info['sound_chasis_serial'],
+                            'sound_esn' => $asset_info['sound_esn'],
+                            'projector_version'=> $asset_info['projector_version'],
+                            'sound_software_version'=> $asset_info['sound_software_version'],
+                            'server_firmware_version' =>  $asset_info['server_firmware_version'],
 
-                        'screen_id'     =>$screen->id,
-                        'location_id'     =>$location->id,
-                    ]);
+                            'screen_id'     =>$screen->id,
+                            'location_id'     =>$location->id,
+                        ]);
+                    }
+
                 }
-
             }
+            return Redirect::back()->with('message' ,' The Assent infos  has been updated');
         }
-        return Redirect::back()->with('message' ,' The Assent infos  has been updated');
+        catch (RequestException $e) {
+            // Log de l'erreur ou traitement spécifique
+            echo " message: " . $e->getMessage();
+        }
     }
 
 

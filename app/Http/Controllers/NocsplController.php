@@ -709,7 +709,7 @@ class NocsplController extends Controller
                                 }
                                 else
                                 {
-                                    $error_message = null;
+                                    $error_message = "TMS Offline";
                                     /*if(property_exists($response_api, 'error'))
                                     {
                                         $error_message = $response_api->error ;

@@ -12,6 +12,7 @@ use App\Models\Sound_error_list;
 use App\Models\Storage_errors_list;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
@@ -22,141 +23,146 @@ class Error_listController extends Controller
 
         $location = Location::find($location) ;
         $url = $location->connection_ip . "?request=get_errors_list";
+        try{
+            $client = new Client();
+            $response = $client->request('GET', $url);
+            $contents = json_decode($response->getBody(), true);
 
-        $client = new Client();
-        $response = $client->request('GET', $url);
-        $contents = json_decode($response->getBody(), true);
-
-        if($contents)
-        {
-
-            Error_list::updateOrCreate([
-                'location_id' => $location->id
-            ],[
-
-                'kdm_errors' => $contents['errors_list']['kdm_errors'],
-                'nbr_sound_alert' => $contents['errors_list']['nbr_sound_alert'],
-                'nbr_projector_alert' => $contents['errors_list']['nbr_projector_alert'],
-                'nbr_server_alert' => $contents['errors_list']['nbr_server_alert'],
-                'nbr_storage_errors' => $contents['errors_list']['nbr_storage_errors'],
-                'location_id' => $location->id,
-            ]);
-            Server_error_list::where('location_id',$location->id)->delete();
-
-            if( $contents['errors_list']['list_server_errors'] )
+            if($contents)
             {
-                foreach($contents['errors_list']['list_server_errors'] as $list_server_error)
+
+                Error_list::updateOrCreate([
+                    'location_id' => $location->id
+                ],[
+
+                    'kdm_errors' => $contents['errors_list']['kdm_errors'],
+                    'nbr_sound_alert' => $contents['errors_list']['nbr_sound_alert'],
+                    'nbr_projector_alert' => $contents['errors_list']['nbr_projector_alert'],
+                    'nbr_server_alert' => $contents['errors_list']['nbr_server_alert'],
+                    'nbr_storage_errors' => $contents['errors_list']['nbr_storage_errors'],
+                    'location_id' => $location->id,
+                ]);
+                Server_error_list::where('location_id',$location->id)->delete();
+
+                if( $contents['errors_list']['list_server_errors'] )
                 {
+                    foreach($contents['errors_list']['list_server_errors'] as $list_server_error)
+                    {
 
-               // dd($contents['errors_list']['list_server_errors']);
-                    Server_error_list::updateOrCreate([
-                        'id_server_error' => $list_server_error['id'] ,
-                        'location_id' => $location->id
-                    ],[
+                // dd($contents['errors_list']['list_server_errors']);
+                        Server_error_list::updateOrCreate([
+                            'id_server_error' => $list_server_error['id'] ,
+                            'location_id' => $location->id
+                        ],[
 
-                        'class' => $list_server_error['class'],
-                        'criticity' => $list_server_error['criticity'],
-                        'date' => $list_server_error['date'],
-                        'errorCode' => $list_server_error['errorCode'],
-                        'eventId' => $list_server_error['eventId'],
-                        'id_sever_error' => $list_server_error['id'],
-                        'id_screen' => $list_server_error['id_screen'],
-                        'number' => $list_server_error['number'],
-                        'serverName' => $list_server_error['serverName'],
-                        'subType' => $list_server_error['subType'],
-                        'type' => $list_server_error['type'],
-                        'location_id' => $location->id,
-                    ]);
+                            'class' => $list_server_error['class'],
+                            'criticity' => $list_server_error['criticity'],
+                            'date' => $list_server_error['date'],
+                            'errorCode' => $list_server_error['errorCode'],
+                            'eventId' => $list_server_error['eventId'],
+                            'id_sever_error' => $list_server_error['id'],
+                            'id_screen' => $list_server_error['id_screen'],
+                            'number' => $list_server_error['number'],
+                            'serverName' => $list_server_error['serverName'],
+                            'subType' => $list_server_error['subType'],
+                            'type' => $list_server_error['type'],
+                            'location_id' => $location->id,
+                        ]);
+                    }
                 }
-            }
 
-            Kdm_error_list::where('location_id',$location->id)->delete();
+                Kdm_error_list::where('location_id',$location->id)->delete();
 
-            if( $contents['errors_list']['list_kdm_errors'] )
-            {
-                foreach($contents['errors_list']['list_kdm_errors'] as $list_kdm_error)
+                if( $contents['errors_list']['list_kdm_errors'] )
                 {
+                    foreach($contents['errors_list']['list_kdm_errors'] as $list_kdm_error)
+                    {
 
-                    Kdm_error_list::updateOrCreate([
-                        'location_id' => $location->id,
-                        'cpl_id' => $list_kdm_error['cpl_id'],
-                        'screen_id' => $list_kdm_error['screen_id'],
-                    ],[
+                        Kdm_error_list::updateOrCreate([
+                            'location_id' => $location->id,
+                            'cpl_id' => $list_kdm_error['cpl_id'],
+                            'screen_id' => $list_kdm_error['screen_id'],
+                        ],[
 
-                        'annotationText' => $list_kdm_error['AnnotationText'],
-                        'cpl_id' => $list_kdm_error['cpl_id'],
-                        'date_time' => $list_kdm_error['date_time'],
-                        'details' => $list_kdm_error['details'],
-                        'screen_id' => $list_kdm_error['screen_id'],
-                        'serverName' => $list_kdm_error['serverName'],
-                        'location_id' => $location->id,
-                    ]);
+                            'annotationText' => $list_kdm_error['AnnotationText'],
+                            'cpl_id' => $list_kdm_error['cpl_id'],
+                            'date_time' => $list_kdm_error['date_time'],
+                            'details' => $list_kdm_error['details'],
+                            'screen_id' => $list_kdm_error['screen_id'],
+                            'serverName' => $list_kdm_error['serverName'],
+                            'location_id' => $location->id,
+                        ]);
+                    }
                 }
-            }
 
-            Projector_errors_list::where('location_id',$location->id)->delete();
+                Projector_errors_list::where('location_id',$location->id)->delete();
 
-            if( $contents['errors_list']['list_projector_errors'] )
-            {
-                foreach($contents['errors_list']['list_projector_errors'] as $projector_error)
+                if( $contents['errors_list']['list_projector_errors'] )
                 {
+                    foreach($contents['errors_list']['list_projector_errors'] as $projector_error)
+                    {
 
-                    Projector_errors_list::updateOrCreate([
-                        'location_id' => $location->id,
-                        'id_projector_errors' => $projector_error['id'],
-                    ],[
-                        'code' => $projector_error['code'],
-                        'id_projector_errors' => $projector_error['id'],
-                        'id_screen' => $projector_error['id_screen'],
-                        'ip_projector' => $projector_error['ip_projector'],
-                        'message' => $projector_error['message'],
-                        'number' => $projector_error['number'],
-                        'serverName' => $projector_error['serverName'],
-                        'severity' => $projector_error['severity'],
-                        'time_saved' => $projector_error['time_saved'],
-                        'title' => $projector_error['title'],
-                        'location_id' => $location->id,
-                    ]);
+                        Projector_errors_list::updateOrCreate([
+                            'location_id' => $location->id,
+                            'id_projector_errors' => $projector_error['id'],
+                        ],[
+                            'code' => $projector_error['code'],
+                            'id_projector_errors' => $projector_error['id'],
+                            'id_screen' => $projector_error['id_screen'],
+                            'ip_projector' => $projector_error['ip_projector'],
+                            'message' => $projector_error['message'],
+                            'number' => $projector_error['number'],
+                            'serverName' => $projector_error['serverName'],
+                            'severity' => $projector_error['severity'],
+                            'time_saved' => $projector_error['time_saved'],
+                            'title' => $projector_error['title'],
+                            'location_id' => $location->id,
+                        ]);
+                    }
                 }
-            }
 
-            Storage_errors_list::where('location_id',$location->id)->delete();
+                Storage_errors_list::where('location_id',$location->id)->delete();
 
-            if( $contents['errors_list']['list_storage_errors'] )
-            {
-                foreach($contents['errors_list']['list_storage_errors'] as $projector_error)
+                if( $contents['errors_list']['list_storage_errors'] )
                 {
-                    Storage_errors_list::create([
-                        'screen_number' => $projector_error['screen_number'],
-                        'storage_generale_status' => $projector_error['storage_generale_status'],
-                        'serverName' => $projector_error['serverName'],
-                        'location_id' => $location->id,
-                    ]);
+                    foreach($contents['errors_list']['list_storage_errors'] as $projector_error)
+                    {
+                        Storage_errors_list::create([
+                            'screen_number' => $projector_error['screen_number'],
+                            'storage_generale_status' => $projector_error['storage_generale_status'],
+                            'serverName' => $projector_error['serverName'],
+                            'location_id' => $location->id,
+                        ]);
+                    }
                 }
-            }
 
-            Sound_error_list::where('location_id',$location->id)->delete();
+                Sound_error_list::where('location_id',$location->id)->delete();
 
-            if( $contents['errors_list']['list_sound_errors'] )
-            {
-                foreach($contents['errors_list']['list_sound_errors'] as $sound_error)
+                if( $contents['errors_list']['list_sound_errors'] )
                 {
-                    Sound_error_list::create([
-                        'alarm_id' => $sound_error['alarmId'],
-                        'date_saved' => $sound_error['timestamp'],
-                        'severity' => $sound_error['severity'],
-                        'title' => $sound_error['title'],
-                        'clearable' => $sound_error['clearable'],
-                        'hardware' => $sound_error['hardware'],
-                        'screen' => $sound_error['serverName'],
+                    foreach($contents['errors_list']['list_sound_errors'] as $sound_error)
+                    {
+                        Sound_error_list::create([
+                            'alarm_id' => $sound_error['alarmId'],
+                            'date_saved' => $sound_error['timestamp'],
+                            'severity' => $sound_error['severity'],
+                            'title' => $sound_error['title'],
+                            'clearable' => $sound_error['clearable'],
+                            'hardware' => $sound_error['hardware'],
+                            'screen' => $sound_error['serverName'],
 
-                        'location_id' => $location->id,
-                    ]);
+                            'location_id' => $location->id,
+                        ]);
+                    }
                 }
-            }
 
+            }
+            return Redirect::back()->with('message' ,' The Errors list  has been updated');
         }
-        return Redirect::back()->with('message' ,' The Errors list  has been updated');
+        catch (RequestException $e) {
+            // Log de l'erreur ou traitement spécifique
+            echo " message: " . $e->getMessage();
+        }
     }
 
     public function header_errors()

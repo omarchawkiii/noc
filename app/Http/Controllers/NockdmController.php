@@ -40,14 +40,29 @@ class NockdmController extends Controller
                                 $kdm_file_data ["MessageId"] = (string)$kdm_file_content->AuthenticatedPublic->MessageId;
                                 $kdm_file_data ["AnnotationText"] = (string)$kdm_file_content->AuthenticatedPublic->AnnotationText;
                                 $kdm_file_data ["CompositionPlaylistId"] = (string)$kdm_file_content->AuthenticatedPublic->RequiredExtensions->KDMRequiredExtensions->CompositionPlaylistId;
-                                $kdm_file_data ["ContentTitleText"] = (string)$kdm_file_content->AuthenticatedPublic->RequiredExtensions->KDMRequiredExtensions->ContentTitleText;
-                                $kdm_file_data ["ContentKeysNotValidBefore"] = (string)$kdm_file_content->AuthenticatedPublic->RequiredExtensions->KDMRequiredExtensions->ContentKeysNotValidBefore;
-                                $kdm_file_data ["ContentKeysNotValidAfter"] = (string)$kdm_file_content->AuthenticatedPublic->RequiredExtensions->KDMRequiredExtensions->ContentKeysNotValidAfter;
-                                $kdm_file_data ["SubjectName"] = (string)$kdm_file_content->AuthenticatedPublic->RequiredExtensions->KDMRequiredExtensions->Recipient->X509SubjectName;
-                                $kdm_file_data ["SerialNumber"] = (string)$kdm_file_content->Signer->X509SerialNumber;
-                                $kdm_file_data ["DeviceListDescription"] = (string)$kdm_file_content->AuthenticatedPublic->RequiredExtensions->KDMRequiredExtensions->AuthorizedDeviceInfo->DeviceListDescription;
 
-                                $SubjectName=(string)$kdm_file_content->AuthenticatedPublic->RequiredExtensions->KDMRequiredExtensions->Recipient->X509SubjectName;
+                                if((string)$kdm_file_content->AuthenticatedPublic->RequiredExtensions->KDMRequiredExtensions)
+                                {
+                                    $kdm_file_data ["SubjectName"] = (string)$kdm_file_content->AuthenticatedPublic->RequiredExtensions->KDMRequiredExtensions->Recipient->X509SubjectName;
+                                    $kdm_file_data ["DeviceListDescription"] = (string)$kdm_file_content->AuthenticatedPublic->RequiredExtensions->KDMRequiredExtensions->AuthorizedDeviceInfo->DeviceListDescription;
+                                    $SubjectName=(string)$kdm_file_content->AuthenticatedPublic->RequiredExtensions->KDMRequiredExtensions->Recipient->X509SubjectName;
+                                    $kdm_file_data ["ContentTitleText"] = (string)$kdm_file_content->AuthenticatedPublic->RequiredExtensions->KDMRequiredExtensions->ContentTitleText;
+                                    $kdm_file_data ["ContentKeysNotValidBefore"] = (string)$kdm_file_content->AuthenticatedPublic->RequiredExtensions->KDMRequiredExtensions->ContentKeysNotValidBefore;
+                                    $kdm_file_data ["ContentKeysNotValidAfter"] = (string)$kdm_file_content->AuthenticatedPublic->RequiredExtensions->KDMRequiredExtensions->ContentKeysNotValidAfter;
+                                }
+                                else
+                                {
+                                    $kdm_file_data ["SubjectName"] = (string)$kdm_file_content->AuthenticatedPublic->RequiredExtensions->Recipient->X509SubjectName;
+                                    $kdm_file_data ["DeviceListDescription"] = "null";
+                                    $SubjectName=(string)$kdm_file_content->AuthenticatedPublic->RequiredExtensions->Recipient->X509SubjectName;
+                                    $kdm_file_data ["ContentTitleText"] = (string)$kdm_file_content->AuthenticatedPublic->RequiredExtensions->ContentTitleText;
+                                    $kdm_file_data ["ContentKeysNotValidBefore"] = (string)$kdm_file_content->AuthenticatedPublic->RequiredExtensions->ContentKeysNotValidBefore;
+                                    $kdm_file_data ["ContentKeysNotValidAfter"] = (string)$kdm_file_content->AuthenticatedPublic->RequiredExtensions->ContentKeysNotValidAfter;
+                                }
+                                $kdm_file_data ["SerialNumber"] = (string)$kdm_file_content->Signer->X509SerialNumber;
+
+
+
                                 $pattern = '/\b\d{6}\b/';
                                 if (preg_match($pattern, $SubjectName, $matches)) {
                                     // Extract the matched 6-digit number
@@ -90,6 +105,7 @@ class NockdmController extends Controller
                                     $error = "-" ;
                                     /*dd($response != null);
                                     dd($response,$location->connection_ip,$kdm_file_data ["MessageId"],$xmlFilePath,$location->email,$location->password );*/
+
                                     if($response != null)
                                     {
                                         if($response['status']== 1 )
@@ -100,6 +116,7 @@ class NockdmController extends Controller
                                         }
                                         else
                                         {
+
                                             $tms_ingested = false ;
                                             $error = "TMS Offline";
                                             array_push($ingest_errors,  array("status" => $response['status'], "originalName" =>  $kdmfile->getClientOriginalName() , "id" =>  $kdm_file_data ["MessageId"],  "AnnotationText" =>  "TMS Offline"));
@@ -113,7 +130,7 @@ class NockdmController extends Controller
                                         array_push($ingest_errors,  array("status" => 0 , "originalName" =>  $kdmfile->getClientOriginalName() , "id" =>  $kdm_file_data ["MessageId"],  "AnnotationText" =>  "TMS Offline"));
                                     }
 
-                                    Kdm::updateOrCreate([
+                                   /* $new_kdm = Kdm::updateOrCreate([
                                         'uuid' => $kdm_file_data['MessageId'],
                                         'location_id' =>  $location_id ,
                                     ],[
@@ -121,16 +138,39 @@ class NockdmController extends Controller
                                         'name' => $kdm_file_data ["ContentTitleText"],
                                         'ContentKeysNotValidBefore' => $kdm_file_data ["ContentKeysNotValidBefore"],
                                         'ContentKeysNotValidAfter' => $kdm_file_data ["ContentKeysNotValidAfter"],
-                                        /* 'kdm_installed' => $kdm['kdm_installed'],
-                                        'content_present' => $kdm['content_present'], */
+                                        //'kdm_installed' => $kdm['kdm_installed'],
+                                        //'content_present' => $kdm['content_present'],
                                         'serverName_by_serial' => $kdm_file_data ["SerialNumber"],
                                         'cpl_uuid' => null,
                                         'cpl_id' => null,
                                         'screen_id' => $screen_id,
                                         'location_id' => $location_id,
 
+                                    ]);*/
+
+
+                                    $noc_kdm = Nockdm::updateOrCreate([
+                                        'uuid' => $kdm_file_data['MessageId'],
+                                        'location_id' =>  $location_id ,
+                                    ],[
+                                        'uuid' => $kdm_file_data['MessageId'],
+                                        'name' => $kdm_file_data ["ContentTitleText"],
+                                        'xmlpath'=> $file_name ,
+                                        'ContentKeysNotValidBefore' => $kdm_file_data ["ContentKeysNotValidBefore"],
+                                        'ContentKeysNotValidAfter' => $kdm_file_data ["ContentKeysNotValidAfter"],
+                                        /* 'kdm_installed' => $kdm['kdm_installed'],
+                                        'content_present' => $kdm['content_present'], */
+                                        'serverName_by_serial' => $kdm_file_data ["SerialNumber"],
+                                        'cpl_uuid' => $kdm_file_data['CompositionPlaylistId'],
+                                        'error' => $error,
+                                        'tms_ingested' => $tms_ingested,
+                                        'cpl_id' => $cpl_id,
+                                        'screen_id' => $screen_id,
+                                        'location_id' => $location_id,
                                     ]);
 
+
+                                    //dd($new_kdm,$new_kdm->location_id);
 
                                 }
                                 else
@@ -141,9 +181,9 @@ class NockdmController extends Controller
                                     $error = "This KDM does not belong to any screen";
                                     array_push($ingest_errors,  array("status" => 0 , "originalName" =>  $kdmfile->getClientOriginalName() , "id" =>  $kdm_file_data ["MessageId"],  "AnnotationText" =>  $error));
                                 }
-                                $location_id = 1 ;
 
-                                $noc_kdm = Nockdm::updateOrCreate([
+
+                                /*$noc_kdm = Nockdm::updateOrCreate([
                                     'uuid' => $kdm_file_data['MessageId'],
                                     'location_id' =>  $location_id ,
                                 ],[
@@ -152,8 +192,7 @@ class NockdmController extends Controller
                                     'xmlpath'=> $file_name ,
                                     'ContentKeysNotValidBefore' => $kdm_file_data ["ContentKeysNotValidBefore"],
                                     'ContentKeysNotValidAfter' => $kdm_file_data ["ContentKeysNotValidAfter"],
-                                    /* 'kdm_installed' => $kdm['kdm_installed'],
-                                    'content_present' => $kdm['content_present'], */
+
                                     'serverName_by_serial' => $kdm_file_data ["SerialNumber"],
                                     'cpl_uuid' => $kdm_file_data['CompositionPlaylistId'],
                                     'error' => $error,
@@ -161,7 +200,7 @@ class NockdmController extends Controller
                                     'cpl_id' => $cpl_id,
                                     'screen_id' => $screen_id,
                                     'location_id' => $location_id,
-                                ]);
+                                ]);*/
 
 
 

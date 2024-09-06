@@ -9,6 +9,7 @@ use App\Models\Schedule;
 use App\Models\Snmp;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -19,49 +20,55 @@ class SnmpController extends Controller
     {
         $location = Location::find($location) ;
         $url = $location->connection_ip."?request=getSnmpErrors";
-        $client = new Client();
-        $response = $client->request('GET', $url);
-        $contents = json_decode($response->getBody(), true);
-        if($contents)
-        {
-            foreach($contents as $content)
+        try{
+            $client = new Client();
+            $response = $client->request('GET', $url);
+            $contents = json_decode($response->getBody(), true);
+            if($contents)
             {
-                if($content)
+                foreach($contents as $content)
                 {
-                    foreach($content as $snmp)
+                    if($content)
                     {
-                        Snmp::updateOrCreate([
-                            'id_snmp' => $snmp["id"],
-                            'location_id' => $location->id,
-                        ],[
-                            'id_snmp'=> $snmp['id'],
-                            'ip_address'=> $snmp['ip_address'],
-                            'type'=> $snmp['type'],
-                            'trap_data'=> $snmp['trap_data'],
-                            'snmp_created_at'=> $snmp['created_at'],
-                            'category'=> $snmp['category'],
-                            'severity'=> $snmp['severity'],
-                            'serverName'=> $snmp['serverName'],
-                            'location_id' => $location->id ,
-                        ]);
-                    }
+                        foreach($content as $snmp)
+                        {
+                            Snmp::updateOrCreate([
+                                'id_snmp' => $snmp["id"],
+                                'location_id' => $location->id,
+                            ],[
+                                'id_snmp'=> $snmp['id'],
+                                'ip_address'=> $snmp['ip_address'],
+                                'type'=> $snmp['type'],
+                                'trap_data'=> $snmp['trap_data'],
+                                'snmp_created_at'=> $snmp['created_at'],
+                                'category'=> $snmp['category'],
+                                'severity'=> $snmp['severity'],
+                                'serverName'=> $snmp['serverName'],
+                                'location_id' => $location->id ,
+                            ]);
+                        }
 
-                    /*if(count($content) != $location->snmps->count() )
-                    {
-                        $snmp_ids = array_column($content, 'id_snmp');
-                            foreach($location->snmps as $snmp)
-                            {
-                                if (! in_array( $snmp->id_snmp , $snmp_ids))
+                        /*if(count($content) != $location->snmps->count() )
+                        {
+                            $snmp_ids = array_column($content, 'id_snmp');
+                                foreach($location->snmps as $snmp)
                                 {
-                                   $snmp->delete() ;
+                                    if (! in_array( $snmp->id_snmp , $snmp_ids))
+                                    {
+                                    $snmp->delete() ;
+                                    }
                                 }
-                            }
-                    }*/
+                        }*/
 
+                    }
                 }
+
+
             }
-
-
+        }
+        catch (RequestException $e) {
+            // Log de l'erreur ou traitement spécifique
+            echo " message: " . $e->getMessage();
         }
 
     }

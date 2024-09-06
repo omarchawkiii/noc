@@ -10,6 +10,7 @@ use App\Models\Nocspl;
 use App\Models\Spl;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -19,68 +20,74 @@ class MoviescodController extends Controller
     {
         $location = Location::find($location) ;
         $url = $location->connection_ip."?request=getMoviesCods";
-        $client = new Client();
-        $response = $client->request('GET', $url);
-        $contents = json_decode($response->getBody(), true);
-        //dd($contents);
-        if($contents)
-        {
-            foreach($contents as $content)
+        try{
+            $client = new Client();
+            $response = $client->request('GET', $url);
+            $contents = json_decode($response->getBody(), true);
+            //dd($contents);
+            if($contents)
             {
-                if($content)
+                foreach($contents as $content)
                 {
-                    foreach($content as $moviescod)
+                    if($content)
                     {
-                        if($moviescod['exist_inPos'] == 1 )
+                        foreach($content as $moviescod)
                         {
-                            $exist_inPos = 1 ;
-                        }
-                        else
-                        {
-                            $exist_inPos = 0 ;
-                        }
-                        $moviecod = Moviescod::where('moviescods_id',$moviescod['id'])
-                        ->where('location_id',$location->id)
-                        ->where('status','pending')->get() ;
-                        if($moviecod->isEmpty())
-                        {
-                            Moviescod::updateOrCreate([
-                                'moviescods_id' => $moviescod['id'],
-                                'location_id' => $location->id,
-                            ],[
-
-                                'moviescods_id' => $moviescod['id'],
-                                'code' => $moviescod['code'],
-                                'title' => $moviescod['title'],
-                                'titleShort' => $moviescod['titleShort'],
-                                'last_update' => $moviescod['last_update'],
-                                'status' => $moviescod['status'],
-                                'exist_inPos' =>$exist_inPos,
-                                'location_id'     =>$location->id,
-                                'spl_uuid'     =>$moviescod['id_spl'],
-                            ]);
-                        }
-
-                    }
-
-                    if(count($content) != $location->moviescod->count() )
-                    {
-                        $uuid_moviescod = array_column($content, 'id');
-                            foreach($location->moviescod as $moviecod)
+                            if($moviescod['exist_inPos'] == 1 )
                             {
-                                if (! in_array( $moviecod->moviescods_id , $uuid_moviescod))
-                                {
-                                    $moviecod->delete() ;
-                                }
+                                $exist_inPos = 1 ;
                             }
+                            else
+                            {
+                                $exist_inPos = 0 ;
+                            }
+                            $moviecod = Moviescod::where('moviescods_id',$moviescod['id'])
+                            ->where('location_id',$location->id)
+                            ->where('status','pending')->get() ;
+                            if($moviecod->isEmpty())
+                            {
+                                Moviescod::updateOrCreate([
+                                    'moviescods_id' => $moviescod['id'],
+                                    'location_id' => $location->id,
+                                ],[
+
+                                    'moviescods_id' => $moviescod['id'],
+                                    'code' => $moviescod['code'],
+                                    'title' => $moviescod['title'],
+                                    'titleShort' => $moviescod['titleShort'],
+                                    'last_update' => $moviescod['last_update'],
+                                    'status' => $moviescod['status'],
+                                    'exist_inPos' =>$exist_inPos,
+                                    'location_id'     =>$location->id,
+                                    'spl_uuid'     =>$moviescod['id_spl'],
+                                ]);
+                            }
+
+                        }
+
+                        if(count($content) != $location->moviescod->count() )
+                        {
+                            $uuid_moviescod = array_column($content, 'id');
+                                foreach($location->moviescod as $moviecod)
+                                {
+                                    if (! in_array( $moviecod->moviescods_id , $uuid_moviescod))
+                                    {
+                                        $moviecod->delete() ;
+                                    }
+                                }
+                        }
+
                     }
-
                 }
+
+
             }
-
-
         }
-     //   return Redirect::back()->with('message' ,' The cpls  has been updated');
+        catch (RequestException $e) {
+            // Log de l'erreur ou traitement spécifique
+            echo " message: " . $e->getMessage();
+        }
+
     }
 
     public function get_spl_and_movies(Request $request)
