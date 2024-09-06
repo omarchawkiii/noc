@@ -9,6 +9,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class PlaybackController extends Controller
 {
@@ -84,6 +85,11 @@ class PlaybackController extends Controller
         catch (RequestException $e) {
             // Log de l'erreur ou traitement spécifique
             echo " message: " . $e->getMessage();
+        }
+        catch (\Exception $e) {
+            // Capture d'autres exceptions générales
+            echo " message: " . $e->getMessage();
+            //return Redirect::back()->with('error', 'Unexpected error for location: ' . $location->id);
         }
 
     }

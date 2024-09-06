@@ -130,5 +130,10 @@ class LmskdmController extends Controller
             // Log de l'erreur ou traitement spécifique
             echo " message: " . $e->getMessage();
         }
+        catch (\Exception $e) {
+            // Capture d'autres exceptions générales
+            echo " message: " . $e->getMessage();
+            return Redirect::back()->with('error', 'Unexpected error for location: ' . $location->id);
+        }
     }
 }
