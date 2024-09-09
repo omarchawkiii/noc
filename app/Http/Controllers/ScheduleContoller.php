@@ -55,7 +55,7 @@ class ScheduleContoller extends Controller
                                 $kdm = null ;
                             }
 
-                            $screen = Screen::where('screen_number', $schedule['number'])->first() ;
+                            $screen = Screen::where('screen_number', $schedule['number'])->where('location_id', $location->id)->first() ;
                             if($screen)
                             {
                                 if( $schedule['status'] != "linked" || $schedule['uuid_spl'] == 'null'  )
@@ -351,37 +351,33 @@ class ScheduleContoller extends Controller
     public function get_schedule_infos(Request $request)
     {
         $cpls_with_kdms=array() ;
-        $schedule = Schedule::with('screen')->where('id',  $request->schedule_idd)->first() ;
-
+        $schedule = Schedule::with('screen')->where('id',  $request->schedule_idd)->where('location_id',$request->location )->first() ;
 
         $spl = Spl::where('uuid',$schedule->uuid_spl)->where('screen_id',$schedule->screen_id)->where('location_id',$schedule->location_id)->first() ;
 
         if($spl)
         {
-
-            $cpls_from_splcomponent = splcomponents::where('uuid_spl',$spl->uuid)->where('location_id',$spl->location_id)->groupBy('CompositionPlaylistId')->get() ;
-
-
+            $cpls_from_splcomponent = splcomponents::where('uuid_spl',$spl->uuid)->where('location_id',$spl->location_id)->groupBy('CompositionPlaylistId')->orderBy('uuid_spl')->get() ;
             foreach($cpls_from_splcomponent as $cpl_from_splcomponent)
             {
-                $cpl = Cpl::where('uuid',$cpl_from_splcomponent->CompositionPlaylistId)->where('location_id',$schedule->location_id)->first() ;
-
+                $cpl = Cpl::where('uuid',$cpl_from_splcomponent->CompositionPlaylistId)->where('location_id',$schedule->location_id)->where('screen_id',$schedule->screen_id)->first() ;
                 $kdm_infos = array() ;
                 if($cpl == null)
                 {
-                    $cpl_present = "No" ;
+                    $cpl_present = "<spna class='text-danger' >No </span>" ;
+                    $cpl_playable = "<spna class='text-danger' > No </span>" ;
                 }
 
                 else
                 {
-                    $cpl_present = "Yes" ;
+                    $cpl_present = "<spna class='text-success' >Yes </span>" ;
                     if($cpl->playable != 1)
                     {
-                        $cpl_playable = "No" ;
+                        $cpl_playable = "<spna class='text-danger' > No </span>" ;
                     }
                     else
                     {
-                        $cpl_playable = "Yes" ;
+                        $cpl_playable = "<spna class='text-success' >Yes </span>" ;
                     }
                 }
 
@@ -427,10 +423,24 @@ class ScheduleContoller extends Controller
                     {
                         $kdm_response = "Non Encrypted" ;
                     }
+                    array_push($cpls_with_kdms,array("title" => $cpl->contentTitleText, "cpl_present" => $cpl_present , "cpl_playable" => $cpl_playable , "cpl_uuid" => $cpl->uuid , "available_on" => $cpl->available_on , "kdm" => $kdm_response , 'kdm_infos' =>$kdm_infos) ) ;
+                }
+                else
+                {
+                    $cpl = Cpl::where('uuid',$cpl_from_splcomponent->CompositionPlaylistId)->where('location_id',$schedule->location_id)->first() ;
+                    if($cpl != null)
+                    {
+                        $available_on  = $cpl->available_on ;
+                    }
+                    else
+                    {
+                        $available_on = '';
+                    }
+                    array_push($cpls_with_kdms,array("title" => $cpl_from_splcomponent->AnnotationText, "cpl_present" => $cpl_present , "cpl_playable" => $cpl_playable , "cpl_uuid" => $cpl_from_splcomponent->CompositionPlaylistId , "available_on" => $available_on , "kdm" => "Unknown" , 'kdm_infos' =>"") ) ;
                 }
 
 
-                array_push($cpls_with_kdms,array("title" => $cpl->contentTitleText, "cpl_present" => $cpl_present , "cpl_playable" => $cpl_playable , "cpl_uuid" => $cpl->uuid , "available_on" => $cpl->available_on , "kdm" => $kdm_response , 'kdm_infos' =>$kdm_infos) ) ;
+
             }
         }
         else

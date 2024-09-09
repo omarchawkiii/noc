@@ -61,7 +61,6 @@ class LocationController extends Controller
 
     public function store(LocationStoreRequest $request)
     {
-
         $location = Location::create($request->validated());
         return redirect()->route('location.index')->with('message' ,' The location has been created ');
     }
@@ -351,7 +350,7 @@ class LocationController extends Controller
 
             app(\App\Http\Controllers\LmssplController::class)->getlmsspls($location->id);
             app(\App\Http\Controllers\LmscplController::class)->getlmscpls($location->id);
-            $this->sync_lms_spl_cpl($location->id );
+            //$this->sync_lms_spl_cpl($location->id );
             app(\App\Http\Controllers\LmskdmController::class)->getlmskdms($location->id);
         }
     }

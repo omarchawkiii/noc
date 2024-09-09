@@ -1076,6 +1076,22 @@
             var location =  $('#location').val();
             var country =  $('#country').val();
             var screen =  null;
+
+
+            var currentDate = new Date();
+            selectedDate = new Date();  // Remettre selectedDate à aujourd'hui
+            startDate = new Date();
+            endDate = new Date();
+
+            selectedDate.setDate(currentDate.getDate());
+            startDate.setDate(currentDate.getDate() - 7);
+            endDate.setDate(currentDate.getDate() + 7);
+
+            var datepicker = $('#scheduleDatePicker').data('kendoDatePicker');
+            datepicker.value(selectedDate);
+            datepicker.min(startDate);
+            datepicker.max(endDate);
+
             var date = new Date($('#scheduleDatePicker').val());
 
             get_schedule(location, screen, date,true)
@@ -2283,40 +2299,37 @@
         });
 
 
-        var currentDate = new Date();
-         var selectedDate = new Date();
-         var startDate = new Date();
-         var endDate = new Date();
+       var currentDate = new Date();
+        var selectedDate = new Date();
+        var startDate = new Date();
+        var endDate = new Date();
 
-         selectedDate.setDate(currentDate.getDate());
-         startDate.setDate(currentDate.getDate() - 7);
-         endDate.setDate(currentDate.getDate() + 7);
+        selectedDate.setDate(currentDate.getDate());
+        startDate.setDate(currentDate.getDate() - 7);
+        endDate.setDate(currentDate.getDate() + 7);
 
-         $("#scheduleDatePicker").kendoDatePicker({
+        $("#scheduleDatePicker").kendoDatePicker({
             value: selectedDate,
             min: startDate,
             max: endDate,
             change: function (e) {
-
                 var datepicker = $('#scheduleDatePicker').data('kendoDatePicker');
-
                 selectedDate.setDate(datepicker.value().getDate());
-
                 if (selectedDate.getDate() == endDate.getDate()) {
                      //$('#btnNextDate').prop('disabled', true);
                  } else if (selectedDate.getDate() == startDate.getDate()) {
                      //$('#btnPrevDate').prop('disabled', true);
                  }
-
                  if (selectedDate.getDate() != endDate.getDate()) {
                      //$('#btnNextDate').prop('disabled', false);
                  }
                  if (selectedDate.getDate() != startDate.getDate()) {
                      //$('#btnPrevDate').prop('disabled', false);
                  }
-
             }
-         });
+        });
+
+
 
          $('#btnPrevDate').on('click', function () {
             //$('#btnPrevDate').prop('disabled', true);
@@ -3005,6 +3018,32 @@
     {
         cursor: unset;
     }
+
+    .btn-success:not(.btn-light):not(.btn-secondary):focus,
+    .btn-success:not(.btn-light):not(.btn-secondary):active,
+    .btn-success
+    {
+        background: #109a4c;
+        border-color: #109a4c;
+        font-weight: 700 !important;
+    }
+    .text-success
+    {
+        color: #109a4c !important ;
+    }
+
+    .input-group-text i {
+        color: #ffffff !important;
+    }
+    #btnPrevDate,
+    #btnNextDate,
+    #scheduleDatePicker
+    {
+        color: #ffffff !important;
+    }
+
+
+
 </style>
 
 @endsection

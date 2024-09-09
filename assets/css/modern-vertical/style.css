@@ -23955,4 +23955,26 @@ select option[value=""]
     color :white  !important;
 }
 
+select {
+    color: white !important;
+}
 
+select option:first-child
+{
+  color: white !important;
+}
+
+select:focus
+{
+  color: white !important;
+}
+
+select
+{
+  color: white !important;
+}
+
+select option:checked
+{
+    color: white  !important ;
+}
