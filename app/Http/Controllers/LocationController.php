@@ -824,6 +824,17 @@ class LocationController extends Controller
 
     }
 
+    public function refresh_asset_infos()
+    {
+        $start_time = Carbon::now();
+        echo $start_time->toDateTimeString();
+        $locations = Location::all() ;
+        foreach($locations as $location)
+        {
+            app(\App\Http\Controllers\AssetinfoController::class)->get_asset_infos($location->id);
+        }
+    }
+
 
     public function execute_dcp_command()
     {
